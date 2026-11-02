@@ -1,15 +1,15 @@
 {
-  "name": "jaderealm",
-  "version": "0.5.0",
+  "name": "grindoria",
+  "version": "0.6.0",
   "private": true,
-  "description": "Offline browser action RPG with four classes, eight skill schools and four maps.",
+  "description": "Grindoria — Definitely not Metin. Offline browser action RPG.",
   "author": {
     "name": "ndxnraw",
     "url": "https://github.com/ndxnraw"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ndxnraw/JadeRealm.git"
+    "url": "https://github.com/ndxnraw/Grindoria.git"
   },
   "engines": {
     "node": ">=22"
@@ -18,6 +18,7 @@
     "start": "node scripts/serve.mjs",
     "build": "node scripts/build.mjs",
     "check": "node scripts/check.mjs",
+    "check:dist": "node scripts/check-dist.mjs",
     "test": "node --test tests/*.test.*",
     "release": "node scripts/release.mjs"
   }

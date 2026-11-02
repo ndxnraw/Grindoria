@@ -23,7 +23,7 @@ export function validateChangelog(changelog, currentVersion) {
     assert(!Number.isNaN(date.valueOf()) && date.toISOString().startsWith(release[2]), 'Invalid release date.');
     const body = changelog.slice(release.index + release[0].length, releases[i + 1]?.index);
     assert(/^- \S/m.test(body), `Empty release ${release[1]}.`);
-    assert(changelog.includes(`[${release[1]}]: https://github.com/ndxnraw/JadeRealm/`), 'Missing version comparison link.');
+    assert(changelog.includes(`[${release[1]}]: https://github.com/ndxnraw/Grindoria/`), 'Missing version comparison link.');
   }
   return releases.map(r => r[1]);
 }
@@ -36,8 +36,8 @@ export function planRelease(pkg, html, changelog, next, date) {
   assert(match && /^- \S/m.test(match[1]), 'Add a real bullet entry under Unreleased before releasing.');
   const header = `## [Unreleased]\n\n### Added\n\n### Changed\n\n### Fixed\n\n## [${next}] - ${date}\n${match[1].trimEnd()}\n`;
   let updated = changelog.replace(match[0], header);
-  updated = updated.replace(/^\[Unreleased\]:.*$/m, `[Unreleased]: https://github.com/ndxnraw/JadeRealm/compare/v${next}...HEAD`);
-  updated = updated.trimEnd() + `\n[${next}]: https://github.com/ndxnraw/JadeRealm/compare/v${pkg.version}...v${next}\n`;
+  updated = updated.replace(/^\[Unreleased\]:.*$/m, `[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v${next}...HEAD`);
+  updated = updated.trimEnd() + `\n[${next}]: https://github.com/ndxnraw/Grindoria/compare/v${pkg.version}...v${next}\n`;
   const nextHTML = html.replace(`ALPHA ${pkg.version}`, `ALPHA ${next}`);
   assert.notEqual(nextHTML, html, 'Missing game version marker.');
   validateChangelog(updated, next);

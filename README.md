@@ -1,4 +1,6 @@
-# JadeRealm
+# Grindoria
+
+**Definitely not Metin**
 
 Hrateľné fantasy akčné RPG v prehliadači. Projekt vlastní a spravuje [@ndxnraw](https://github.com/ndxnraw).
 
@@ -20,7 +22,7 @@ Otvor [http://127.0.0.1:4173](http://127.0.0.1:4173). Zmeny zdrojov sa prejavia 
 npm run build
 ```
 
-Otvor `dist/Jade-Realm.html` dvojklikom v prehliadači. Celá hra je v jednom súbore bez externých fontov, obrázkov či servera. `dist/index.html` je rovnaký výstup pre prípadné statické hostovanie. Generovaný priečinok `dist/` sa necommituje.
+Otvor `dist/Grindoria.html` dvojklikom v prehliadači. Celá hra je v jednom súbore bez externých fontov, obrázkov či servera. `dist/index.html` je rovnaký výstup pre prípadné statické hostovanie. Priečinok `dist/` je súčasťou každého vydania v repozitári. [Stiahni Grindoria.html](https://github.com/ndxnraw/Grindoria/raw/refs/heads/main/dist/Grindoria.html) a otvor uložený súbor.
 
 ## Ovládanie
 
@@ -50,10 +52,11 @@ Kliknutie v teréne presúva postavu, kliknutie na blízku príšeru útočí. D
 - Strely, plošné útoky, jed, popálenie, omráčenie, aury a liečenie.
 - Pomalé levelovanie, tréning atribútov, stupne schopností, biologické úlohy, alchýmia, relikvie, špecializácia a endgame trhliny.
 - Husté skupinové spawny v štyroch úrovňových oblastiach každej mapy; elitné a vzácne varianty s lepšou korisťou.
+- Bežné, elitné a vzácne príšery útočia až po zásahu hráča alebo privolaní plášťom. Bossovia útočia automaticky.
 - Plášť statočnosti v konečnej zásobe: dosah 650, priťahovanie na 18 s, nákup a dopĺňanie z koristi.
 - Respawn: bežné príšery 5 s, elity 8 s, vzácne varianty 20 s, hliadky 75 s, kamene 18 s a bossovia 40 s aktívneho času mapy.
 
-Postup sa ukladá v `localStorage` pod kľúčom `jade-realm-save-v1`. Závisí od prehliadača a umiestnenia súboru; medzi zariadeniami a adresami sa automaticky neprenáša. Stav neaktívnej mapy vrátane časovačov je pozastavený.
+Postup sa ukladá v `localStorage` pod kľúčom `grindoria-save-v1`. Závisí od prehliadača a umiestnenia súboru; medzi zariadeniami a adresami sa automaticky neprenáša. Stav neaktívnej mapy vrátane časovačov je pozastavený.
 
 ## Dlhodobá progresia
 
@@ -80,6 +83,7 @@ scripts/               Server, zostavenie, kontroly a vydávanie
 tests/                 Herné mechaniky a nástroje
 docs/                  Architektúra a vydávanie
 .github/workflows/     Automatické kontroly
+dist/                  Hotové offline HTML súbory
 CHANGELOG.md           História a pripravované zmeny
 ```
 
@@ -89,11 +93,12 @@ CHANGELOG.md           História a pripravované zmeny
 npm run check
 npm test
 npm run build
+npm run check:dist
 ```
 
 Testy pokrývajú všetkých 48 schopností, postup, ukladanie, mapy, respawn a prípravu vydania. Nenahrádzajú vizuálnu kontrolu v prehliadači. Rovnaké príkazy používa GitHub Actions na Windows a Linuxe.
 
-Zmeny zapisuj pod `[Unreleased]` v [CHANGELOG.md](CHANGELOG.md). Príkaz `npm run release -- 0.5.1` presunie poznámky do novej verzie, pridá dátum a odkazy, zosúladí verziu hry a vytvorí offline súbor. Sám necommituje ani neposiela zmeny na GitHub.
+Zmeny zapisuj pod `[Unreleased]` v [CHANGELOG.md](CHANGELOG.md). Príkaz `npm run release -- 0.6.1` presunie poznámky do novej verzie, pridá dátum a odkazy, zosúladí verziu hry a vytvorí offline súbor. Sám necommituje ani neposiela zmeny na GitHub.
 
 Podrobnosti: [vydávanie](docs/RELEASING.md), [architektúra](docs/ARCHITECTURE.md), [prispievanie](CONTRIBUTING.md).
 

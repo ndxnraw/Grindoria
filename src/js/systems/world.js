@@ -9,7 +9,7 @@ function snapshotMap() {
   };
 }
 
-function save(){snapshotMap();try{localStorage.setItem(SAVE,JSON.stringify(p));}catch{}}
+function save(){if(pendingSaveImports.length)return;snapshotMap();try{localStorage.setItem(SAVE,JSON.stringify(p));}catch{}}
 
 function loadMap(id, initial=false) {
   if (!MAPS[id]) return false;

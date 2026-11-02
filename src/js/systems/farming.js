@@ -174,12 +174,12 @@ function updateEnemySpawns(dt, safe) {
     if (m.type !== 'wolf' || m.stun > 0) continue;
     const d = Math.hypot(m.x - p.x, m.y - p.y), home = Math.hypot(m.x - m.homeX, m.y - m.homeY);
     const forced = m.taunt > 0 || m.engaged > 0;
-    const chasing = !safe && !active('stealth') && (forced || (d < SPAWN_RULES.aggroRadius && home < SPAWN_RULES.leash));
+    const chasing = !safe && !active('stealth') && forced && (m.taunt > 0 || home < SPAWN_RULES.leash);
     if (chasing) {
       const slow = (active('fear') && d < 300 ? .5 : 1) * (m.slow > 0 ? .55 : 1);
       const angle = (m.spawnSlot || 0) * 2.39996, spread = d < 110 ? 28 : 0;
       if (d > 33) walkEnemy(m, p.x + Math.cos(angle) * spread, p.y + Math.sin(angle) * spread, map().mobSpeed * (m.speedScale || 1) * slow, dt, grid);
-      if (d < 55 && m.cd <= 0) { takeDamage(Math.max(4, Math.round(9 * (m.attackScale || map().scale) - p.level * .5)), m); m.cd = 1.3; }
+      if (d < 55 && m.cd <= 0) { m.engaged = Math.max(m.engaged || 0, 8); takeDamage(Math.max(4, Math.round(9 * (m.attackScale || map().scale) - p.level * .5)), m); m.cd = 1.3; }
     } else if (home > 4) {
       m.taunt = 0; m.engaged = 0;
       walkEnemy(m, m.homeX, m.homeY, map().mobSpeed * 1.15, dt, grid);
@@ -222,3 +222,4 @@ function dropFarmEquipment(m) {
   if (m.type === 'boss') return awardItem(true, m);
   if (m.type === 'stone' || rare || rand() < (elite ? .75 : .32)) return awardItem(rare ? rand() < .25 : elite && rand() < .08, m);
 }
+

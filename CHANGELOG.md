@@ -1,6 +1,6 @@
 # Changelog
 
-Zmeny projektu JadeRealm. Používame sémantické verzie a sekciu `[Unreleased]` pre ďalšie vydanie. Záznamy 0.1.0–0.3.0 opisujú vývoj prototypu pred založením repozitára; nepredstavujú spätne vytvorené Git commity alebo tagy.
+Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]` pre ďalšie vydanie. Záznamy 0.1.0–0.3.0 opisujú vývoj prototypu pred založením repozitára; nepredstavujú spätne vytvorené Git commity alebo tagy.
 
 ## [Unreleased]
 
@@ -9,6 +9,24 @@ Zmeny projektu JadeRealm. Používame sémantické verzie a sekciu `[Unreleased]
 ### Changed
 
 ### Fixed
+
+## [0.6.0] - 2026-11-02
+
+### Added
+
+- Publikované offline súbory `dist/Grindoria.html` a `dist/index.html` priamo v repozitári.
+- Kontrola zhody publikovaného zostavenia so zdrojmi v CI.
+- Prenos kompatibilného uloženého postupu pod nový kľúč; výber postavy pri viacerých profiloch.
+
+### Changed
+
+- Názov hry Grindoria a slogan „Definitely not Metin“ v rozhraní, dokumentácii a zostavení.
+- Odkazy a názvy súborov zjednotené s repozitárom `ndxnraw/Grindoria`.
+- Bežné, elitné a vzácne príšery sú neutrálne, kým ich hráč nezasiahne alebo neprivolá plášťom. Bossovia si zachovávajú automatické aggro.
+
+### Fixed
+
+- Zostavenie odstraňuje zastarané názvy HTML výstupov a skúšobné vydanie nemení publikovaný dist.
 
 ## [0.5.0] - 2026-11-02
 
@@ -105,10 +123,11 @@ Zmeny projektu JadeRealm. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/JadeRealm/compare/v0.5.0...HEAD
-[0.3.1]: https://github.com/ndxnraw/JadeRealm/tree/v0.3.1
-[0.3.0]: https://github.com/ndxnraw/JadeRealm/blob/main/CHANGELOG.md#030---2026-11-02
-[0.2.0]: https://github.com/ndxnraw/JadeRealm/blob/main/CHANGELOG.md#020---2026-11-02
-[0.1.0]: https://github.com/ndxnraw/JadeRealm/blob/main/CHANGELOG.md#010---2026-11-02
-[0.4.0]: https://github.com/ndxnraw/JadeRealm/compare/v0.3.1...v0.4.0
-[0.5.0]: https://github.com/ndxnraw/JadeRealm/compare/v0.4.0...v0.5.0
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.6.0...HEAD
+[0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
+[0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
+[0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
+[0.1.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#010---2026-11-02
+[0.4.0]: https://github.com/ndxnraw/Grindoria/compare/v0.3.1...v0.4.0
+[0.5.0]: https://github.com/ndxnraw/Grindoria/compare/v0.4.0...v0.5.0
+[0.6.0]: https://github.com/ndxnraw/Grindoria/compare/v0.5.0...v0.6.0

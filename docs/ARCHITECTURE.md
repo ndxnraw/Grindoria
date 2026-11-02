@@ -1,4 +1,4 @@
-# Architektúra JadeRealm
+# Architektúra Grindoria
 
 ## Zdroj a zostavenie
 
@@ -9,7 +9,7 @@ Hra používa HTML, CSS, Canvas 2D a klasické JavaScript skripty. Nevyžaduje k
 Poradie načítania je:
 
 1. `data/`: povolania, šesť schopností každej školy a mapy.
-2. `core/state.js`: pripojenie k rozhraniu, herné premenné, načítanie a doplnenie uloženého hráča.
+2. `core/persistence.js`: rozpoznanie kompatibilného uloženého postupu, potom `core/state.js`: pripojenie k rozhraniu, herné premenné, načítanie a doplnenie uloženého hráča.
 3. Funkcie `core/`, `systems/`, `ui/` a `render/`.
 4. `main.js`: prvé načítanie mapy, nastavenie ovládania, HUD a animovanej slučky.
 
@@ -33,7 +33,9 @@ Funkcie môžu medzi súbormi volať zdieľané pomenované funkcie. Načítanie
 
 ## Uložený stav
 
-`localStorage['jade-realm-save-v1']` obsahuje hráča, výbavu, splnené úlohy, školy a snímky navštívených máp. Chýbajúce polia starších verzií dostávajú predvolené hodnoty v `state.js`. `snapshotMap()` uchováva aj životy, zostávajúci čas respawnu a korisť; `loadMap()` snímku obnoví.
+`localStorage['grindoria-save-v1']` obsahuje hráča, výbavu, splnené úlohy, školy a snímky navštívených máp. Chýbajúce polia starších verzií dostávajú predvolené hodnoty v `state.js`. `snapshotMap()` uchováva aj životy, zostávajúci čas respawnu a korisť; `loadMap()` snímku obnoví.
+
+`core/persistence.js` najprv uprednostní platný aktuálny kľúč. Ak chýba, vyhľadá kompatibilné profily podľa formátu dát medzi kľúčmi končiacimi na `-save-v1`. Jediný profil skopíruje pod nový kľúč; pri viacerých hráč vyberá pred spustením hry. Pôvodné dáta ponechá nedotknuté. Prenos funguje iba v rovnakom úložisku prehliadača.
 
 Pri načítaní sa postava presunie do útočiska aktuálnej mapy. Aktívne aury a rozletené strely sa cez cestovanie neprenášajú. Lokálny postup nie je zabezpečený proti úprave hráčom a hra zatiaľ nemá server, multiplayer ani cloudové účty.
 
@@ -49,4 +51,6 @@ Plášť je uložený ako stoh `p.braveryCapes`, podobne ako elixíry. Výzva na
 
 `npm run check` overuje skripty a súlad verzie s changelogom. Herné testy používajú `node:vm` s malou náhradou DOM a Canvas API. Overujú logiku vrátane 48 schopností a migrácie postupu; vzhľad animácií treba kontrolovať v skutočnom prehliadači.
 
-Zostavenie vytvorí `dist/Jade-Realm.html` a totožné `dist/index.html`. Obsah vloží cez náhradné funkcie, aby JavaScriptové znaky `$` nemenili text počas zostavovania. Vložený kód prejde syntaktickou kontrolou a výstup nesmie obsahovať externé runtime závislosti.
+`renderBuild()` pripraví deterministický obsah bez zápisu; testy a skúšobné vydanie nemenia publikované súbory. `check:dist` porovná commitnuté HTML so zdrojmi pred spustením testov v CI.
+
+Zostavenie vytvorí `dist/Grindoria.html` a totožné `dist/index.html`; oba sa verzujú v repozitári. Pri zostavení sa odstránia zastarané HTML názvy v tomto priečinku. Obsah vloží cez náhradné funkcie, aby JavaScriptové znaky `$` nemenili text počas zostavovania. Vložený kód prejde syntaktickou kontrolou a výstup nesmie obsahovať externé runtime závislosti.

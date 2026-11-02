@@ -1,6 +1,6 @@
 const SPAWN_RULES = {
   schema: 1, packSize: 6, sanctuaryRadius: 190, spawnClearance: 290,
-  aggroRadius: 240, leash: 700, capeRange: 650, capeDuration: 18,
+  leash: 700, capeRange: 650, capeDuration: 18,
   capeCooldown: 2, capeBundle: 10, capePrice: 100,
   rareChance: .02, eliteChance: .12
 };
@@ -17,3 +17,4 @@ const FARM_AREAS = [
   { id: 'northwest', name: 'Severné hliadky', offset: 4, x1: 140, x2: 820, y1: 140, y2: 820 },
   { id: 'northeast', name: 'Územie strážcu', offset: 6, x1: 1180, x2: 1860, y1: 140, y2: 820 }
 ];
+

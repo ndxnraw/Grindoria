@@ -39,12 +39,14 @@ test('Windows line endings are accepted', () => {
 });
 
 test('release CLI dry run leaves files untouched; real run builds the new offline version', () => {
-  const fixture = mkdtempSync(path.join(os.tmpdir(), 'jaderealm-release-'));
+  const fixture = mkdtempSync(path.join(os.tmpdir(), 'grindoria-release-'));
   try {
     for (const dir of ['src', 'scripts']) cpSync(path.join(root, dir), path.join(fixture, dir), { recursive: true });
     writeFileSync(path.join(fixture, 'package.json'), JSON.stringify(pkg));
     writeFileSync(path.join(fixture, 'CHANGELOG.md'), pending);
     mkdirSync(path.join(fixture, 'tests'));
+    mkdirSync(path.join(fixture, 'dist'));
+    writeFileSync(path.join(fixture, 'dist/obsolete.html'), 'unchanged during dry run');
     writeFileSync(path.join(fixture, 'tests/smoke.test.cjs'), "require('node:test')('fixture checks',()=>{});\n");
     const run = args => spawnSync(process.execPath, ['scripts/release.mjs', ...args], { cwd: fixture, encoding: 'utf8', timeout: 30000 });
     const original = readFileSync(path.join(fixture, 'CHANGELOG.md'), 'utf8');
@@ -52,14 +54,15 @@ test('release CLI dry run leaves files untouched; real run builds the new offlin
     assert.equal(dryRun.status, 0, dryRun.stdout + dryRun.stderr);
     assert.equal(readFileSync(path.join(fixture, 'CHANGELOG.md'), 'utf8'), original);
     assert.equal(JSON.parse(readFileSync(path.join(fixture, 'package.json'))).version, pkg.version);
+    assert.equal(readFileSync(path.join(fixture, 'dist/obsolete.html'), 'utf8'), 'unchanged during dry run');
     const released = run([nextVersion]);
     assert.equal(released.status, 0, released.stdout + released.stderr);
     assert.equal(JSON.parse(readFileSync(path.join(fixture, 'package.json'))).version, nextVersion);
-    assert(readFileSync(path.join(fixture, 'dist/Jade-Realm.html'), 'utf8').includes(`ALPHA ${nextVersion}`));
+    assert(readFileSync(path.join(fixture, 'dist/Grindoria.html'), 'utf8').includes(`ALPHA ${nextVersion}`));
     assert.equal(validateChangelog(readFileSync(path.join(fixture, 'CHANGELOG.md'), 'utf8'), nextVersion)[0], nextVersion);
   } finally {
     const absolute = path.resolve(fixture), base = path.resolve(os.tmpdir());
-    assert(absolute.startsWith(base + path.sep) && path.basename(absolute).startsWith('jaderealm-release-'));
+    assert(absolute.startsWith(base + path.sep) && path.basename(absolute).startsWith('grindoria-release-'));
     rmSync(absolute, { recursive: true, force: true });
   }
 });

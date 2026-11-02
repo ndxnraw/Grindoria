@@ -1,0 +1,1238 @@
+<!doctype html>
+<html lang="sk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101a1a"><title>Grindoria — Definitely not Metin</title><style>
+:root{color-scheme:dark;--gold:#d2b67a;--muted:#85958c;--panel:rgba(14,26,25,.86)}*{box-sizing:border-box}body{margin:0;background:#101a1a;color:#e8e9db;font:13px Manrope,Segoe UI,sans-serif}button,a{-webkit-tap-highlight-color:transparent}button{font:inherit;color:inherit;cursor:pointer}button:focus-visible,a:focus-visible{outline:2px solid #e7cc8b;outline-offset:4px}header{height:91px;padding:0 4%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff0c;background:#111c1b}.brand{display:flex;align-items:center;gap:13px;text-decoration:none;color:#e5d6ae;font-family:Georgia,serif;font-size:23px;letter-spacing:3px}.seal{width:43px;height:45px;border:1px solid #b3a16b;display:grid;place-items:center;font-size:29px;transform:rotate(-4deg)}.brand small{display:block;font:8px Manrope,sans-serif;letter-spacing:3px;margin-top:6px;color:#91a298}nav{display:flex;height:100%;align-items:center;gap:32px;font-size:10px;letter-spacing:1.5px}nav .active{height:100%;display:flex;align-items:center;border-bottom:2px solid var(--gold);color:var(--gold)}nav button,footer button{background:none;border:0;color:#9da99e}kbd{font:9px Manrope,sans-serif;border:1px solid #ffffff25;background:#ffffff06;padding:3px 5px;border-radius:3px;color:#bbc5b8}nav kbd{margin-left:8px}.version{font-size:9px;letter-spacing:1.2px;color:#99a99a}.version i,footer>span>i{display:inline-block;width:5px;height:5px;background:#8ea888;border-radius:50%;margin-right:7px}.version b{display:block;text-align:right;font-size:8px;color:#6f8177;font-weight:500;margin-top:6px}main{max-width:1600px;padding:34px 4% 0;margin:auto}.world-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.eyebrow{color:var(--gold);font-size:9px;letter-spacing:2px;font-weight:700}h1{font:500 36px Cormorant Garamond,Georgia,serif;margin:8px 0 5px;letter-spacing:.3px}.world-title p{color:var(--muted);font-size:11px;margin:0}.world-info{font-size:9px;color:#a3b29e;letter-spacing:1.5px;text-align:right}.world-info small{display:block;color:#6f8478;letter-spacing:0;margin-top:9px}.game-shell{height:min(70vh,790px);min-height:510px;position:relative;border:1px solid #55644b;border-radius:5px;overflow:hidden;background:#334c3c;box-shadow:0 20px 70px #0003}#game{width:100%;height:100%;display:block;outline:none;touch-action:none}.vignette{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 100px 30px #08171550}.hud{position:absolute;background:var(--panel);border:1px solid #d2b67a35;border-radius:4px;box-shadow:0 4px 16px #0002;backdrop-filter:blur(8px)}.player{left:22px;top:22px;padding:11px 14px 10px 10px;display:flex;gap:11px;align-items:center;width:250px}.portrait{display:grid;place-items:center;font:32px Georgia;color:#d6bc86;border:1px solid #88764b;width:48px;height:53px;background:linear-gradient(135deg,#5d6a51,#1b2927)}.player-name{font-size:12px;font-weight:700;margin-bottom:7px}.player-name span{font-size:9px;color:var(--gold);margin-left:45px}.bar{height:9px;width:159px;background:#291d20;border-radius:2px;overflow:hidden;position:relative}.bar>div{height:100%;transition:width .2s}.health>div{background:linear-gradient(90deg,#9e4546,#c16c61)}.bar span{position:absolute;inset:0;text-align:center;font-size:7px;line-height:9px;color:#f4e1d0}.xp{height:3px;background:#25372e;margin-top:5px}.xp>div{background:#d6b56e}.player small{font-size:7px;display:block;color:#8d9e8e;margin-top:4px}.map{right:22px;top:22px;width:156px;padding:8px;background:#102321d9}.map canvas{width:100%;display:block;opacity:.9}.map>span{display:block;font-size:6px;text-align:center;color:#becea8;letter-spacing:1.3px;margin-top:6px}.quest{right:22px;top:188px;width:220px;padding:17px}.quest .eyebrow{font-size:7px}.quest h3{font:600 20px Cormorant Garamond,Georgia;margin:8px 0 5px}.quest p{font-size:9px;color:#859b8b;margin:0 0 16px}.quest>div{font-size:9px;color:#b9c4af;margin-top:12px}.quest b{float:right;color:#d6c394;font-size:9px}.quest small{display:block;font-size:7px;color:#738a79;margin-top:17px;border-top:1px solid #ffffff10;padding-top:11px}#claim{background:#927b45;border:1px solid #d2b67a70;font-size:8px;padding:8px;margin-top:10px;width:100%}.location{bottom:25px;left:22px;font-size:8px;padding:9px 12px;color:#a9b99e;letter-spacing:.5px}.hotbar{position:absolute;bottom:21px;left:50%;transform:translateX(-50%);display:flex;gap:7px;padding:9px;background:#10201deb;border:1px solid #d2b67a55;border-radius:5px}.hotbar button{position:relative;width:64px;height:62px;background:linear-gradient(135deg,#35453a,#1c2d29);border:1px solid #87906b60;border-radius:3px;display:flex;flex-direction:column;align-items:center;justify-content:center}.hotbar button:hover{border-color:#d1bb7c;background:#43513b}.hotbar kbd{position:absolute;top:-6px;left:5px;background:#152620;font-size:7px;padding:1px 4px}.hotbar button>span{font-size:26px;line-height:30px;color:#ddca94}.hotbar small{font-size:7px;color:#b4bd9e}.hotbar em{position:absolute;inset:0;display:grid;place-items:center;background:#10201dcc;color:#ead6a1;font-size:20px;font-style:normal;pointer-events:none}.hotbar em:empty{display:none}.divider{width:1px;background:#ffffff14;margin:5px}.wallet{bottom:25px;right:22px;padding:10px 13px;font-size:11px}.wallet>span{color:#d5b367;margin-right:6px}.wallet small{font-size:7px;color:#7d927e;margin-left:7px}footer{display:flex;align-items:center;justify-content:space-between;padding:17px 0 22px;font-size:9px;color:#718779}footer kbd{font-size:8px;margin:0 4px}footer span>i{margin:0 9px;font-style:normal}footer button{font-size:9px}#toast{position:absolute;top:25%;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none;white-space:pre-line;color:#f1dda6;font:500 24px Cormorant Garamond,Georgia;text-shadow:0 2px 5px #000;transition:opacity .3s;opacity:0}.overlay{position:absolute;inset:0;background:#0817148a;display:grid;place-items:center;backdrop-filter:blur(5px);z-index:5}.overlay[hidden]{display:none}.intro-card{width:470px;max-width:90%;text-align:center;padding:30px 38px;border:1px solid #cfbd7b50;background:linear-gradient(145deg,#1e312eed,#10231fec);box-shadow:0 20px 100px #0006}.intro-card h2{font:500 47px/1.05 Cormorant Garamond,Georgia;margin:20px 0}.intro-card h2 em{font-style:normal;color:#d4bb80}.intro-card p{font-size:11px;color:#b1c0ad;line-height:1.9}.intro-controls{display:grid;grid-template-columns:1fr 1fr;gap:16px;text-align:left;margin:24px 0;font-size:9px;color:#96aa96}.intro-controls kbd{margin-right:8px}.primary{background:#c4ac74;color:#172a23;width:100%;padding:14px 20px;border:1px solid #e8d5a3;font-weight:800;font-size:11px}.primary:hover{background:#e1ca90}.primary span{float:right}.intro-card>small{display:block;margin-top:15px;font-size:8px;color:#6d8878}.modal-card{position:relative;background:#172b25;border:1px solid #c4ac7460;padding:30px;width:400px;max-width:90%;box-shadow:0 20px 80px #0008}.modal-card h2{font:30px Cormorant Garamond,Georgia;margin-top:0;color:#d4bd86}.modal-card p{font-size:11px;line-height:1.9;color:#b4c3ae}.modal-card .primary{margin-top:10px}.close{position:absolute;top:10px;right:12px;border:0;background:transparent;font-size:23px;color:#9eaf97}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}.stats>div{background:#ffffff04;padding:12px;color:#8fa48e;font-size:10px}.stats b{display:block;color:#e5cf9c;font-size:18px;margin-top:5px}.touch{display:none;position:absolute;bottom:115px;left:20px;text-align:center}.touch button{width:38px;height:38px;background:#132d25bb;border:1px solid #bda77277;margin:2px;touch-action:none}body.started #intro{display:none}@media(max-width:850px){header{height:70px}.brand{font-size:18px}.version,nav .active,.world-info{display:none}nav{gap:10px}main{padding:22px 3% 0}h1{font-size:29px}.world-title{margin-bottom:17px}.game-shell{height:72vh;min-height:510px}.quest{right:12px;top:158px;width:170px;padding:12px}.quest h3{font-size:18px}.quest p{font-size:8px}.map{right:12px;top:12px;width:130px}.map canvas{height:97px}.player{top:12px;left:12px;width:225px;padding:8px;gap:8px}.bar{width:143px}.player-name span{margin-left:25px}.location{display:none}.wallet{right:12px;bottom:108px}footer>span:nth-child(2){display:none}.hotbar{bottom:16px}.touch{display:block}.intro-card{padding:24px}.intro-card h2{font-size:40px}}@media(max-width:450px){.player{width:190px}.portrait{width:38px;font-size:26px}.bar{width:120px}.player-name span{margin-left:10px}.quest{width:145px;top:151px}.quest h3{font-size:17px}.quest>div,.quest b{font-size:8px}.map{width:110px}.map canvas{height:87px}.hotbar button{width:55px}.hotbar{gap:5px}.eyebrow{font-size:8px}.world-title p{font-size:9px}h1{font-size:27px}}
+/* Character progression and loot */
+.modal-card{width:560px;max-height:90%;overflow:auto;scrollbar-width:thin;scrollbar-color:#796d46 #172b25}.modal-card h3{font:600 20px Cormorant Garamond,Georgia;color:#d8c491;margin:18px 0 10px}.modal-card h3 small{float:right;color:#9caf91;font:10px Manrope,Segoe UI,sans-serif;margin-top:5px}.attributes>div{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:#ffffff05;border-bottom:1px solid #ffffff09;font-size:12px}.attributes b{margin-left:8px;color:#e0c789}.attributes small,.item small{display:block;color:#8ca68e;font-size:9px;margin-top:4px}.attributes button{width:30px;height:30px;font-size:20px;background:#b49c5c;color:#10251c;border:0;border-radius:3px}button:disabled{opacity:.4;cursor:default}.bag{max-height:230px;overflow:auto}.item{display:flex;gap:6px;align-items:center;padding:11px 8px;border:1px solid #ffffff10;margin-bottom:6px;background:#ffffff03;border-left:3px solid #91a388}.item>div{flex:1}.item b{font-size:11px}.item button{font-size:9px;background:#233b2e;border:1px solid #a9b17a44;padding:6px}.item.rarity-1{border-left-color:#7caedb}.rarity-1 b{color:#a2cfee}.item.rarity-2{border-left-color:#ba88da}.rarity-2 b{color:#d7b1ed}.class-select{display:flex;gap:7px;margin:15px 0 5px}.class-option{flex:1;padding:11px 5px;background:#ffffff04;border:1px solid #b5bf9755;color:#c9d0b7}.class-option b{font:600 18px Cormorant Garamond,Georgia}.class-option small{display:none}.class-option.selected{background:#b5a56a22;border-color:#cfb879;color:#f0d797}.class-hint{min-height:38px;font-size:10px!important;margin:8px 0 14px!important;line-height:1.6!important}.intro-card{padding-top:24px;padding-bottom:24px;max-height:95%;overflow:auto}.intro-card h2{margin:14px 0;font-size:41px}.intro-controls{margin:16px 0;gap:11px}.journal-entry{border-bottom:1px solid #b8ad7130;padding-bottom:15px}.journal-entry:last-child{border:0}.journal-entry h3{margin-bottom:4px}.journal-entry p{margin:7px 0}.journal-entry .primary{padding:10px}.player-name{display:flex;justify-content:space-between}.player-name span{margin-left:12px!important}.stats{margin:12px 0}.stats b{font-size:16px}.player-name b{font-weight:700}.modal-card .stats{gap:7px}.modal-card .stats>div{padding:9px}
+@media(max-width:450px){nav{gap:5px;font-size:8px;letter-spacing:0}nav button{font-size:8px}nav kbd{display:none}.brand{font-size:14px;letter-spacing:2px}.brand small{font-size:6px;letter-spacing:2px}.seal{width:32px;height:36px;font-size:24px}.modal-card{padding:24px 16px}.intro-card h2{font-size:33px}.intro-card p{font-size:10px}.intro-controls{font-size:8px;gap:10px}.class-option b{font-size:16px}.intro-card{padding:16px 22px}.intro-card>small{font-size:7px}.item{gap:4px}.item button{font-size:8px;padding:5px}}
+/* Schools, mana, spell controls and travel */
+nav{gap:18px}.player{min-height:92px}.mana{height:7px;margin-top:4px;background:#1c2d42}.mana>div{background:linear-gradient(90deg,#426b9b,#8dbde0)}.mana span{font-size:6px;line-height:7px}.school-select{display:flex;gap:7px;margin:9px 0}.school-option{flex:1;padding:8px 4px;font-size:10px;background:#142821;border:1px solid #8e9c7155;color:#a4b798}.school-option.selected{border-color:#c8b474;color:#edd6a2;background:#b9a96e17}.class-select{gap:5px;margin-bottom:9px}.class-option{padding:9px 3px}.class-option b{font-size:17px}.intro-card{width:510px}.intro-card h2{font-size:36px;margin:10px 0}.intro-card .intro-controls{margin:12px 0}.intro-card .class-hint{min-height:32px;margin:6px 0 11px!important}.intro-card .eyebrow{font-size:8px}.intro-card>small{line-height:1.5}.hotbar{gap:5px;padding:8px}.hotbar button{width:57px;flex-shrink:0}.hotbar small{font-size:6px;max-width:54px;min-height:14px;text-align:center;line-height:1.15}.hotbar kbd{font-size:7px}.hotbar button>span{font-size:23px;line-height:27px}.hotbar .divider{margin:4px 1px}.buffs{position:absolute;top:124px;left:23px;max-width:44%;font-size:9px;color:#c8b8e7;text-shadow:0 1px 3px #14231a;pointer-events:none;line-height:1.7}.map-list{display:grid;gap:9px}.map-card{display:block;width:100%;text-align:left;background:linear-gradient(100deg,var(--map-color),#172b25 65%);border:1px solid #b0ad7644;padding:14px;color:#e1d8b9}.map-card.selected{border-color:#d0b878}.map-card b{font:600 21px Cormorant Garamond,Georgia}.map-card small{display:block;font-size:9px;color:#bfc6ae;margin:6px 0}.map-card span{display:block;font-size:10px;color:#b8c1ac}.map-card:hover{border-color:#e6c989}.spell-list>div{display:flex;gap:13px;padding:13px 0;border-bottom:1px solid #b0a57025}.spell-list kbd{align-self:flex-start;padding:5px 8px;color:#d9c492}.spell-list b{font-size:12px;color:#d7c391}.spell-list small{display:block;margin-top:6px;font-size:10px;line-height:1.8;color:#a2b499}.game-shell{min-height:550px}.hotbar button:hover{z-index:1}
+@media(max-width:1000px){.wallet{bottom:113px}.location{bottom:113px}nav{gap:10px}.version{display:none}.brand{font-size:20px}}
+@media(max-width:650px){header{height:auto;min-height:95px;flex-wrap:wrap;padding:12px 4%;gap:10px}.brand{font-size:18px}header nav{height:25px;width:100%;justify-content:space-between;gap:5px}nav button{font-size:9px}nav .active{display:none}nav kbd{display:inline;font-size:7px;padding:2px 3px;margin-left:3px}.world-title{margin-bottom:14px}h1{font-size:27px;line-height:1.1}.game-shell{min-height:600px;height:78vh}.hotbar{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));width:94%;max-width:470px;gap:6px;bottom:14px}.hotbar button{width:auto;height:54px}.hotbar small{font-size:6px;max-width:64px}.hotbar .divider{display:none}.touch{bottom:150px;left:12px}.wallet{bottom:155px}.buffs{top:115px;left:12px;font-size:7px;max-width:49%}.player{min-height:90px}.quest{top:151px}.intro-card{padding:17px 24px;max-height:95%;width:92%}.intro-card h2{font-size:33px}.intro-card p{font-size:10px;line-height:1.7}.class-option b{font-size:15px}.intro-controls{font-size:8px;gap:9px}.class-hint{font-size:9px!important}.world-title p{font-size:9px}}
+/* Long-term progression hub */
+.career-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));height:auto;gap:6px;margin:18px 0;align-items:stretch;letter-spacing:0}
+.career-tabs button{background:#203b30;border:1px solid #8d9e7250;padding:9px 5px;color:#b2c5a7;font-size:10px}
+.career-tabs button[aria-pressed="true"]{border-color:#d2b67a;color:#f0d49b;background:#b7a76c22}
+.career-card{border:1px solid #9d9e7240;border-left:3px solid #a89a66;background:#ffffff03;padding:13px 15px;margin:12px 0}
+.career-card h3{margin:0 0 9px}.career-card p{margin:7px 0}.career-card.completed{border-left-color:#8cb18a}
+.career-card small{font-size:9px;color:#879f86}.career-card .primary{font-size:10px;padding:11px}
+.career-card .secondary{width:100%;margin-top:10px;padding:10px;border:1px solid #bd907a66;background:#633d3222;color:#cfaa91;font-size:10px}
+.career-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:15px 0}
+.career-metrics>div{padding:12px;background:#ffffff05;color:#9cb193;font-size:10px}.career-metrics b{display:block;font-size:23px;color:#d9c38f;margin:5px 0}
+.career-metrics small{font-size:8px}.material-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.material-grid>div{display:flex;justify-content:space-between;gap:8px;background:#ffffff04;padding:9px;font-size:9px;color:#9eb196}
+.material-grid b{color:#e0c592}#career-message{padding:9px 0;color:#dfc18f;min-height:14px;font-size:10px}
+@media(max-width:450px){.career-tabs{gap:5px}.career-tabs button{font-size:9px;padding:8px 3px}.career-card{padding:11px}.career-metrics b{font-size:20px}.material-grid{grid-template-columns:1fr}.career-card .primary{font-size:9px}}
+.hotbar #bravery{background:linear-gradient(135deg,#574533,#2e3026);border-color:#bf9b6677}
+.hotbar #bravery>span,.hotbar #capes{color:#f0c98b}
+@media(min-width:651px){.hotbar{gap:4px}.hotbar button{width:54px}}
+
+.brand small{font-size:9px;letter-spacing:.7px}@media(max-width:450px){.brand small{font-size:8px;letter-spacing:.3px}}
+</style></head>
+<body>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b>ALPHA 0.6.0</b></span></header>
+<main><div class="world-title"><div><span class="eyebrow">KAPITOLA I · PREBUDENIE</span><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Pod pokojnými korunami sa prebúdza stará temnota.</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
+<section class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb WASD, útok medzerník, schopnosť Q, liečenie E."></canvas><div class="vignette"></div>
+<div class="hud player"><div class="portrait">侍</div><div><div class="player-name"><b id="playerclass">Bojovník</b> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 60 skúseností</small></div></div>
+<div class="hud map"><canvas id="minimap" width="138" height="118"></canvas><span id="minimaplabel">ÚDOLIE TICHÉHO VETRA</span></div>
+<div class="hud quest"><span class="eyebrow">AKTÍVNA ÚLOHA</span><h3>Praskliny v pokoji</h3><p>Osloboď údolie od temnoty.</p><div id="q-wolves">◇ Poraz príšery <b>0 / 5</b></div><div id="q-stones">◇ Znič kamene osudu <b>0 / 3</b></div><button id="claim" hidden>Vyzdvihnúť odmenu · 150 zlata</button><small id="questnote">Odmena: 150 zlata + 60 skúseností</small></div>
+<div id="toast" role="status"></div><div id="buffs" class="buffs" aria-live="off"></div><div class="hud location">⌖ &nbsp; <span id="coords">Útočisko pútnikov</span></div>
+<div class="hotbar"><button id="attack"><kbd>SPACE</kbd><span>⚔</span><small>Sek mečom</small></button><button id="skill"><kbd>Q</kbd><span>✺</span><small>Veterný kruh</small><em id="cooldown"></em></button><button id="skill2"><kbd>R</kbd><span>✧</span><small>Schopnosť</small><em id="cooldown2"></em></button><button id="skill3"><kbd>T</kbd><span>☄</span><small>Schopnosť</small><em id="cooldown3"></em></button><button id="skill4"><kbd>Y</kbd><span>◈</span><small>Schopnosť</small><em id="cooldown4"></em></button><button id="skill5"><kbd>U</kbd><span>❖</span><small>Schopnosť</small><em id="cooldown5"></em></button><button id="skill6"><kbd>O</kbd><span>✥</span><small>Schopnosť</small><em id="cooldown6"></em></button><button id="potion"><kbd>E</kbd><span>⚱</span><small>Elixír <b id="pots">5</b></small></button><button id="bravery" title="Plášť statočnosti · B · dosah 650 · priťahovanie 18 s"><kbd>B</kbd><span>⚑</span><small>Plášť <b id="capes">10</b></small><em id="cape-cooldown"></em></button><div class="divider"></div><button id="inventory"><kbd>I</kbd><span>▣</span><small>Výbava</small></button></div>
+<div class="hud wallet"><span>◉</span> <b id="gold">0</b> <small>ZLATO</small></div>
+<div id="intro" class="overlay"><div class="intro-card"><span class="eyebrow">TVOJ PRÍBEH SA ZAČÍNA</span><h2>Temnota padá.<br><em>Ty povstaň.</em></h2><p>Štyri povolania, osem škôl a štyri oblasti. Vyber si cestu, ovládni svoje schopnosti a poraz strážcov kráľovstva.</p><div class="intro-controls"><span><kbd>W A S D</kbd> Pohyb</span><span><kbd>SPACE</kbd> Útok</span><span><kbd>Q R T Y U O</kbd> Kúzla</span><span><kbd>E</kbd> Liečenie</span></div><div class="class-select" id="classes"></div><div class="school-select" id="schools"></div><p id="classhint" class="class-hint"></p><button class="primary" id="start">Vstúpiť do údolia <span>→</span></button><small>Vlastná 2D adaptácia schopností; animácie sa líšia od Metin2.</small></div></div>
+<div id="modal" class="overlay" hidden><div class="modal-card"><button id="close" class="close" aria-label="Zavrieť">×</button><div id="modalcontent"></div></div></div>
+<div class="touch"><button data-key="w">↑</button><div><button data-key="a">←</button><button data-key="s">↓</button><button data-key="d">→</button></div></div>
+</section><footer><span><i></i> Postup sa ukladá automaticky</span><span><kbd>WASD</kbd> pohyb <i>·</i> kliknutie: pohyb / útok <i>·</i> <kbd>M</kbd> mapy <i>·</i> <kbd>K</kbd> kúzla</span><button id="sound">Zvuk: vypnutý</button></footer></main><script>
+// src/js/data/classes.js
+const CLASSES={warrior:{name:'Bojovník',desc:'Meč, sila a odolnosť. Telesná alebo mentálna škola.',health:20,speed:185,crit:.06,color:'#d8b176'},ninja:{name:'Nindža',desc:'Dýky a luk. Prepad, jedy a rýchlosť.',health:0,speed:225,crit:.22,color:'#8bcead'},sura:{name:'Sura',desc:'Prekliata ruka, očarovaná čepeľ a čierna mágia.',health:10,speed:195,crit:.1,color:'#bf8dec'},shaman:{name:'Šaman',desc:'Dračia sila alebo liečenie, blesky a podporné kúzla.',health:0,speed:190,crit:.08,color:'#f2c289'}};
+// Names and school structure follow the six classic skills per school.
+// Mechanics and vector animations are adaptations for this standalone 2D game.
+
+
+// src/js/data/skills.js
+const SCHOOLS={
+body:{name:'Telesná sila',classId:'warrior',skills:[
+['Vírenie meča','spin',7,20,2.5,165,'Úder do všetkých nepriateľov okolo teba.'],
+['Aura meča','aura',16,24,0,0,'Na 12 s zvýši útok o 45 %.'],
+['Zúrivosť','berserk',18,20,0,0,'Na 10 s zrýchli útoky a pohyb, ale prijímaš o 20 % viac škody.'],
+['Prudký výpad','dash',8,18,2,300,'Výpad k cieľu a krátke omráčenie.'],
+['Trojitý sek','triple',6,16,2.8,105,'Tri rýchle zásahy do blízkeho cieľa.'],
+['Životná sila','burst',12,30,3.8,125,'Silný úder; spotrebuje aj 8 % maximálneho zdravia.']
+]},
+mental:{name:'Mentálna sila',classId:'warrior',skills:[
+['Prerážajúci úder','beam',7,20,2.7,310,'Prerazí nepriateľov v priamke.'],
+['Silné telo','guard',18,25,0,0,'Na 12 s zvýši obranu a zníži prijatú škodu.'],
+['Dupnutie','stomp',9,22,2,170,'Plošný úder s omráčením.'],
+['Úder mečom','boltStun',7,18,2.2,390,'Vlna sily omráči vzdialený cieľ.'],
+['Silný úder','cleave',6,17,2.8,130,'Silný čelný úder s odhodením.'],
+['Guľa meča','ground',11,28,3.3,240,'Výbuch sily v mieste cieľa.']
+]},
+blade:{name:'Boj s dýkami',classId:'ninja',skills:[
+['Prepad','ambush',7,18,3,130,'Zblízka zasadí silný úder. Z neviditeľnosti má dvojitú silu.'],
+['Rýchly útok','dash',7,18,2.4,340,'Prudko sa priblížiš k cieľu.'],
+['Jedovatý oblak','poisonCloud',10,24,1.2,170,'Oblak zraní a otrávi nepriateľov na 6 s.'],
+['Víriaca dýka','roll',8,22,2.7,165,'Kotúľ vpred a útok okolo cieľa.'],
+['Maskovanie','stealth',17,20,0,0,'Na 8 s ťa príšery nevidia. Útok maskovanie ukončí.'],
+['Zákerný jed','poisonDash',10,25,2.4,290,'Výpad s otravou na 6 s.']
+]},
+archery:{name:'Lukostreľba',classId:'ninja',skills:[
+['Ohnivý šíp','fireArrow',7,20,2.5,520,'Ohnivý šíp exploduje a spôsobí popálenie.'],
+['Jedovatý šíp','poisonArrow',8,20,2,520,'Vzdialený cieľ otrávi na 6 s.'],
+['Dážď šípov','arrowRain',10,28,1.8,490,'Zasiahne až päť cieľov.'],
+['Opakovaná streľba','multiShot',8,22,3.1,520,'Tri šípy na jeden cieľ.'],
+['Ľahká chôdza','speed',16,20,0,0,'Na 12 s zrýchli pohyb.'],
+['Iskra','spark',11,27,3.4,520,'Svetelný lúč zasiahne cieľ a omráči ho.']
+]},
+weapon:{name:'Zbraňová mágia',classId:'sura',skills:[
+['Úder prstom','finger',7,20,3,150,'Prekliata ruka vytvorí prudkú explóziu pred tebou.'],
+['Dračie vírenie','dragonSpin',9,25,2.7,185,'Temné tornádo zasiahne okolie a odhodí nepriateľov.'],
+['Očarovaná čepeľ','enchanted',17,25,0,0,'Na 12 s zvýši útok a vracia 15 % spôsobenej škody ako zdravie.'],
+['Očarovaná zbroj','armor',18,24,0,0,'Na 12 s zvýši obranu a odráža časť škody.'],
+['Strach','fear',17,22,0,0,'Na 10 s spomalí blízke príšery a zníži ich poškodenie.'],
+['Zrušenie kúzla','dispel',10,25,2.3,420,'Zasiahne cieľ a na 8 s potlačí zúrivosť bossa.']
+]},
+black:{name:'Čierna mágia',classId:'sura',skills:[
+['Temný úder','darkBolt',6,18,2.3,510,'Rýchla strela temnej energie.'],
+['Temná guľa','darkOrb',10,28,3.5,500,'Veľká temná guľa s plošným výbuchom.'],
+['Ohnivý úder','flameBurst',8,23,2.5,180,'Explózia plameňov okolo teba.'],
+['Duch plameňa','spirit',18,30,0,0,'Na 12 s vyvolá ducha, ktorý každých 1,5 s útočí na najbližší cieľ.'],
+['Temná ochrana','darkGuard',18,25,0,0,'Na 12 s znižuje škodu o tretinu; časť zásahu spotrebuje manu.'],
+['Úder ducha','spiritBolt',8,22,2.8,500,'Temný duch zasiahne cieľ a spomalí ho na 4 s.']
+]},
+dragon:{name:'Dračia sila',classId:'shaman',skills:[
+['Dračí rev','dragonRoar',9,25,2.7,190,'Dračí kruh spáli okolie a zanechá popálenie.'],
+['Lietajúci talizman','talisman',6,16,2.1,480,'Vyšle letiaci talizman na cieľ.'],
+['Strieľajúci drak','dragonBreath',8,23,2.9,370,'Ohnivý drak zasiahne nepriateľov pred tebou.'],
+['Požehnanie','bless',17,22,0,0,'Na 12 s zníži prijatú škodu o 30 %.'],
+['Odraz','reflect',17,22,0,0,'Na 12 s odrazí 35 % prijatého zásahu útočníkovi.'],
+['Dračia sila','dragonPower',17,25,0,0,'Na 12 s zvýši šancu na kritický zásah o 25 %.']
+]},
+healing:{name:'Liečenie',classId:'shaman',skills:[
+['Vrh blesku','lightning',6,17,2.3,500,'Blesk zasiahne vzdialený cieľ.'],
+['Privolanie blesku','storm',10,28,3.1,480,'Búrka zasiahne okolie cieľa a krátko omráči.'],
+['Bleskový pazúr','chain',8,23,1.9,450,'Reťaz bleskov preskočí až na štyroch nepriateľov.'],
+['Vyliečenie','heal',8,25,0,0,'Obnoví 45 + 5 za úroveň + 4 za inteligenciu zdravia.'],
+['Rýchlosť','speed',16,20,0,0,'Na 12 s zrýchli pohyb a obnovovanie many.'],
+['Zvýšenie útoku','attackUp',17,22,0,0,'Na 12 s zvýši silu útokov o 35 %.']
+]}};
+
+
+// src/js/data/maps.js
+const MAPS={
+valley:{name:'Údolie tichého vetra',region:'VÝCHODNÉ KRÁĽOVSTVO',desc:'Zelené údolie, vlci a staré prekliatie.',level:1,enemyLevel:1,scale:1,seed:78231,ground:'#536b45',patch:'#7d925a30',path:'#b9ae7c55',accent:'#b0c28b',water:'#517c6c',mob:'Divoký vlk',boss:'Strážca pralesa',skin:'wolf',count:148,packCount:24},
+desert:{name:'Púšť zapadnutých chrámov',region:'JUŽNÉ PUSTATINY',desc:'Duny, škorpióny a strážca pieskov.',level:8,enemyLevel:8,scale:2.3,seed:21812,ground:'#a78a55',patch:'#c8ab7135',path:'#e6c78955',accent:'#dec28a',water:'#487f76',mob:'Púštny škorpión',boss:'Pieskový kolos',skin:'scorpion',count:172,packCount:28},
+snow:{name:'Hory večného mrazu',region:'SEVERNÉ VRCHOLY',desc:'Snehové pláne, ľadové šelmy a mrazivý obor.',level:18,enemyLevel:18,scale:4.8,seed:49125,ground:'#aabfc2',patch:'#e1ebdc50',path:'#778f9a44',accent:'#c5e5f2',water:'#608d9a',mob:'Ľadový yeti',boss:'Mrazivý obor',skin:'yeti',count:172,packCount:28},
+temple:{name:'Chrám červeného plameňa',region:'ZAKÁZANÉ ÚZEMIE',desc:'Lávové praskliny a démoni v ruinách.',level:35,enemyLevel:35,scale:10,seed:99012,ground:'#423b3b',patch:'#8b44332b',path:'#a0644950',accent:'#eda17b',water:'#bd6034',mob:'Chrámový démon',boss:'Pán plameňov',skin:'demon',count:196,packCount:32}
+};
+
+
+// src/js/data/progression.js
+const PROGRESSION = {
+  schema: 2,
+  maxLevel: 99,
+  maxSkillRank: 20,
+  maxTraining: 20,
+  maxEnhancement: 9,
+  maxGemRank: 5,
+  maxSpecialization: 10,
+  maxParagon: 50,
+  maxRiftTier: 100
+};
+
+const MATERIALS = {
+  essence: 'Esencia', ore: 'Ruda', training: 'Tréningové pečate',
+  books: 'Knihy schopností', dust: 'Alchymistický prach',
+  wolf: 'Vlčie tkanivo', venom: 'Vak jedu', frost: 'Ľadové jadro',
+  ember: 'Démonický popol', keys: 'Kľúče trhliny', shards: 'Úlomky relikvie'
+};
+
+const BIOLOGY = [
+  { name: 'Život údolia', map: 'valley', level: 1, item: 'wolf', count: 10, bonus: { hp: 30 }, text: '+30 maximálneho zdravia' },
+  { name: 'Jed púšte', map: 'desert', level: 5, item: 'venom', count: 12, bonus: { attack: 6 }, text: '+6 útok' },
+  { name: 'Odolnosť mrazu', map: 'snow', level: 12, item: 'frost', count: 15, bonus: { defense: 5 }, text: '+5 obrana' },
+  { name: 'Srdce plameňa', map: 'temple', level: 25, item: 'ember', count: 20, bonus: { crit: .04, mp: 30 }, text: '+4 % kritický zásah a +30 mana' }
+];
+
+const GEMS = {
+  ruby: { name: 'Rubín', text: 'Útok +2 za každú úroveň kameňa na druhú.', color: '#dda092' },
+  sapphire: { name: 'Zafír', text: 'Mana +15 a sila kúziel +2 za úroveň.', color: '#9fcde8' },
+  jade: { name: 'Jadeit', text: 'Zdravie +10 a obrana +1 za úroveň.', color: '#a8d4af' }
+};
+
+const RELICS = {
+  valley: { name: 'Zub prastarého strážcu', text: '+3 útok', bonus: { attack: 3 } },
+  desert: { name: 'Oko pieskov', text: '+2 obrana', bonus: { defense: 2 } },
+  snow: { name: 'Večný kryštál', text: '+25 zdravie', bonus: { hp: 25 } },
+  temple: { name: 'Pečať plameňa', text: '+3 % kritický zásah', bonus: { crit: .03 } }
+};
+
+const SPECIALIZATIONS = {
+  ravager: { name: 'Ničiteľ', text: 'Za bod: +1,5 % útok a +0,5 % kritický zásah.' },
+  sentinel: { name: 'Ochranca', text: 'Za bod: +15 zdravie a +2 obrana.' },
+  mystic: { name: 'Mystik', text: 'Za bod: +4 sila kúziel a +8 mana.' }
+};
+
+
+// src/js/data/farming.js
+const SPAWN_RULES = {
+  schema: 1, packSize: 6, sanctuaryRadius: 190, spawnClearance: 290,
+  leash: 700, capeRange: 650, capeDuration: 18,
+  capeCooldown: 2, capeBundle: 10, capePrice: 100,
+  rareChance: .02, eliteChance: .12
+};
+
+const ENEMY_VARIANTS = {
+  normal: { name: '', hp: 1, damage: 1, speed: 1, xp: 1, gold: 1, level: 0, respawn: 5, color: '#b8c59c' },
+  elite: { name: 'Elitný', hp: 1.8, damage: 1.35, speed: 1.1, xp: 1.35, gold: 2, level: 1, respawn: 8, color: '#b59ceb' },
+  rare: { name: 'Vzácny', hp: 2.8, damage: 1.7, speed: 1.15, xp: 1.8, gold: 4, level: 2, respawn: 20, color: '#edd183' }
+};
+
+const FARM_AREAS = [
+  { id: 'southwest', name: 'Južné loviská', offset: 0, x1: 140, x2: 820, y1: 1180, y2: 1860 },
+  { id: 'southeast', name: 'Východné tábory', offset: 2, x1: 1180, x2: 1860, y1: 1180, y2: 1860 },
+  { id: 'northwest', name: 'Severné hliadky', offset: 4, x1: 140, x2: 820, y1: 140, y2: 820 },
+  { id: 'northeast', name: 'Územie strážcu', offset: 6, x1: 1180, x2: 1860, y1: 140, y2: 820 }
+];
+
+
+
+// src/js/core/persistence.js
+const pendingSaveImports = [];
+
+function parsePlayerSave(raw, compatible = false) {
+  try {
+    const profile = JSON.parse(raw);
+    if (!profile || !Number.isInteger(profile.level) || profile.level < 1 || profile.level > 99) return null;
+    if (!compatible) return profile;
+    // Identify the existing save format by its structure, independently of project names.
+    if (!CLASSES[profile.classId] || !MAPS[profile.mapId] || !Array.isArray(profile.bag) || !profile.equipped || !profile.worldStates) return null;
+    if (profile.career?.schema !== PROGRESSION.schema || !profile.career.materials || !profile.career.skills || !profile.career.endgame) return null;
+    if (!Object.keys(GEMS).every(id => Number.isInteger(profile.career.alchemy?.equipped?.[id]))) return null;
+    if (!Object.entries(profile.schools || {}).every(([id, value]) => SCHOOLS[value]?.classId === id)) return null;
+    return profile;
+  } catch { return null; }
+}
+
+function loadPlayerSave() {
+  try {
+    const current = localStorage.getItem(SAVE), primary = parsePlayerSave(current);
+    if (primary) return primary;
+    if (typeof localStorage.key !== 'function' || !Number.isInteger(localStorage.length)) return null;
+    const candidates = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key === SAVE || !/^[a-z0-9-]+-save-v1$/i.test(key || '')) continue;
+      const profile = parsePlayerSave(localStorage.getItem(key), true);
+      if (profile) candidates.push(profile);
+    }
+    if (candidates.length === 1) {
+      if (current) localStorage.setItem(SAVE + '.backup', current);
+      localStorage.setItem(SAVE, JSON.stringify(candidates[0]));
+      return candidates[0];
+    }
+    if (candidates.length > 1) pendingSaveImports.push(...candidates);
+  } catch {}
+  return null;
+}
+
+function chooseSaveImport(index) {
+  if (!Number.isInteger(index) || index < -1 || index >= pendingSaveImports.length) return false;
+  if (index >= 0) {
+    p = { ...p, ...pendingSaveImports[index] };
+    initializeCareer(); initializeFarming(); loadMap(p.mapId, true);
+    renderClasses(); updateClassHUD(); updateHUD();
+  }
+  pendingSaveImports.length = 0;
+  save(); closeModal(); startGame();
+  return true;
+}
+
+function openSaveImport() {
+  modal(`<span class="eyebrow">VITAJ V GRINDORII</span><h2>Pokračovať v príbehu</h2><p>Na tomto zariadení je viac kompatibilných postáv. Vyber si, s ktorou chceš pokračovať.</p>${pendingSaveImports.map((profile, i) => `<button class="primary" data-save-import="${i}">Postava ${i + 1} · ${CLASSES[profile.classId].name} · úroveň ${profile.level}</button>`).join('')}<button class="secondary" data-save-import="-1">Začať novú postavu</button>`);
+  document.querySelectorAll('[data-save-import]').forEach(button => button.onclick = () => chooseSaveImport(Number(button.dataset.saveImport)));
+}
+
+
+// src/js/core/state.js
+'use strict';
+const $=id=>document.getElementById(id),canvas=$('game'),ctx=canvas.getContext('2d'),mini=$('minimap').getContext('2d');
+const SIZE=2000,SAVE='grindoria-save-v1';
+let W=1200,H=700,dpr=1,running=false,paused=false,last=0,clock=0,target=null,face=0,attackCD=0,skillCD=0,slash=0,ring=0,toastTimer=0,saveTimer=0,sound=false,audio=null;
+const keys={},mouse={x:0,y:0},cam={x:1000,y:1050};
+let p={x:1000,y:1050,hp:100,level:1,xp:0,gold:0,potions:5,kills:0,stones:0,claimed:false,weapon:0};
+try{const s=loadPlayerSave();if(s&&Number.isFinite(s.level)&&s.level>=1&&s.level<=99)p={...p,...s,x:1000,y:1050};}catch{}
+const spellKeys=['q','r','t','y','u','o'],buffs={},effects=[],shots=[];
+let spellCD=[0,0,0,0,0,0],castPose=0,castStyle='',spiritTick=0;
+p.classId=CLASSES[p.classId]?p.classId:'warrior';p.strength??=0;p.vitality??=0;p.dexterity??=0;p.points??=Math.max(0,(p.level-1)*3);p.bag??=[];p.equipped??={weapon:null,armor:null};p.bossKills??=0;p.bossClaimed??=false;p.huntClaimed??=0;
+p.intelligence??=0;p.mp??=100+p.level*8;p.worldStates??={};p.mapId=MAPS[p.mapId]?p.mapId:'valley';p.schools??={};for(const [classId,id] of Object.entries({warrior:'body',ninja:'blade',sura:'weapon',shaman:'dragon'})){if(SCHOOLS[p.schools[classId]]?.classId!==classId)p.schools[classId]=id;}
+const role=()=>CLASSES[p.classId],equippedBonus=slot=>(p.equipped[slot]?.bonus||0)+(p.equipped[slot]?.enhance||0)*3;
+const maxHP=()=>100+(p.level-1)*22+p.vitality*10+role().health+careerBonuses().hp,damage=()=>Math.round((18+(p.level-1)*2+p.strength*3+equippedBonus('weapon')+careerBonuses().attack)*attackPower()*(1+careerBonuses().attackPercent)),defense=()=>equippedBonus('armor')+Math.floor(p.vitality/3)+armorBonus()+careerBonuses().defense,needXP=()=>xpForLevel(p.level);
+const mobs=[],particles=[],drops=[],decor=[];let seed=78231;
+
+let castingSkillKey=null, careerTab="overview";
+
+const spawnPoints=[];
+let capeCooldown=0,legacyRiftLayout=false,lastMiniMapPaint=-Infinity;
+
+
+
+// src/js/core/runtime.js
+function rand(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}
+
+function resize(){const r=canvas.getBoundingClientRect();W=r.width;H=r.height;dpr=Math.min(devicePixelRatio||1,2);canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+
+function screen(x,y){return{x:W/2+(x-cam.x),y:H/2+(y-cam.y)*.62};}
+
+function world(x,y){return{x:cam.x+x-W/2,y:cam.y+(y-H/2)/.62};}
+
+function float(t,x,y,color='#f4db9d',big=false){particles.push({t,x,y,age:0,color,big});}
+
+function beep(freq,duration=.08){if(!sound)return;try{audio??=new(window.AudioContext||window.webkitAudioContext)();audio.resume();const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=freq;o.type='triangle';g.gain.setValueAtTime(.035,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+duration);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+duration);}catch{}}
+
+function frame(t){const dt=Math.min((t-last)/1000,.05);last=t;update(dt);draw();requestAnimationFrame(frame);}
+
+function keysClear(){Object.keys(keys).forEach(k=>keys[k]=false);}
+
+function update(dt){clock+=dt;if(!running||paused)return;attackCD=Math.max(0,attackCD-dt);slash=Math.max(0,slash-dt);ring=Math.max(0,ring-dt);updateCombat(dt);let dx=(keys.d||keys.ArrowRight?1:0)-(keys.a||keys.ArrowLeft?1:0),dy=(keys.s||keys.ArrowDown?1:0)-(keys.w||keys.ArrowUp?1:0);if(dx||dy)target=null;else if(target){dx=target.x-p.x;dy=target.y-p.y;if(Math.hypot(dx,dy)<8){target=null;dx=dy=0;}}const dist=Math.hypot(dx,dy);if(dist){face=Math.atan2(dy,dx);p.x=Math.max(45,Math.min(SIZE-45,p.x+dx/dist*speedValue()*dt));p.y=Math.max(45,Math.min(SIZE-45,p.y+dy/dist*speedValue()*dt));}if(keys[' '])attack();const safe=isSanctuary(p);if(safe){p.hp=Math.min(maxHP(),p.hp+12*dt);p.mp=Math.min(maxMP(),p.mp+dt*10);}updateEnemySpawns(dt,safe);for(let i=drops.length-1;i>=0;i--){const d=drops[i],distance=Math.hypot(d.x-p.x,d.y-p.y);if(distance<110){d.x+=(p.x-d.x)*dt*8;d.y+=(p.y-d.y)*dt*8;}if(distance<30){p.gold+=d.value;float('+'+d.value+' zlata',p.x,p.y-50,'#e9ce87');drops.splice(i,1);beep(750,.05);}}updateBoss(dt,safe);if(p.hp<=0)death();cam.x+=(p.x-cam.x)*Math.min(1,dt*7);cam.y+=(p.y-cam.y)*Math.min(1,dt*7);for(let i=particles.length-1;i>=0;i--){particles[i].age+=dt;if(particles[i].age>1.2)particles.splice(i,1);}toastTimer-=dt;if(toastTimer<0)$('toast').style.opacity='0';saveTimer+=dt;if(saveTimer>4){save();saveTimer=0;}updateHUD();}
+
+
+// src/js/systems/combat.js
+function hit(m,amount){if(m.hp<=0)return;if(m.type==='wolf'||m.type==='boss')m.engaged=Math.max(m.engaged||0,8);m.hp-=amount;m.hit=.15;float('-'+amount,m.x,m.y-65);beep(170);if(m.hp<=0){m.hp=0;m.windup=0;m.dead=m.respawnSeconds||(m.type==='boss'?40:m.type==='stone'?18:5);if(m.type==='boss')p.bossKills++;else p[m.type==='stone'?'stones':'kills']++;const gained=enemyXP(m);careerKill(m);farmBonusLoot(m);experience(gained);float(gained?'+'+gained+' EXP':'Slabý cieľ · bez EXP',m.x,m.y-85,gained?'#d6c28c':'#8e9f92');drops.push({x:m.x,y:m.y,value:Math.round((m.type==='boss'?120:m.type==='stone'?35:7+Math.floor(rand()*7))*map().scale*(ENEMY_VARIANTS[m.variant]?.gold||1))});dropFarmEquipment(m);if(rand()<.25){p.potions++;float('+1 elixír',m.x,m.y-100,'#a8d9b0');}if(m.type==='boss')toast('Strážca padol! Korisť čaká vo výbave (I).');else if(!p.claimed&&p.kills>=5&&p.stones>=3)toast('Úloha splnená! Vyzdvihni si odmenu.');}}
+
+function potion(){if(!running||paused)return;if(p.potions<=0){toast('Nemáš elixíry. Navštív obchodníka (F).');return;}if(p.hp>=maxHP()){toast('Zdravie máš plné.');return;}p.potions--;p.hp=Math.min(maxHP(),p.hp+65);float('+65 zdravia',p.x,p.y-65,'#a9e0ac');beep(520,.2);updateHUD();}
+
+function death(){p.mp=maxMP();shots.length=0;Object.keys(buffs).forEach(k=>delete buffs[k]);p.gold=Math.floor(p.gold*.9);p.x=1000;p.y=1160;p.hp=maxHP();target=null;mobs.forEach(m=>m.cd=2);toast('Záchrana v útočisku\nStratil si 10 % zlata.');save();}
+
+function school(){return SCHOOLS[p.schools[p.classId]];}
+
+function active(id){return (buffs[id]||0)>0;}
+
+function maxMP(){return 100+p.level*8+p.intelligence*5+careerBonuses().mp;}
+
+function attackPower(){return (active('aura')||active('enchanted')?1.45:1)*(active('attackUp')?1.35:1);}
+
+function armorBonus(){return active('guard')?12:active('armor')?8:0;}
+
+function speedValue(){return (role().speed+p.dexterity*2)*(active('speed')?1.45:active('berserk')?1.22:1);}
+
+function criticalChance(){return Math.min(.8,role().crit+p.dexterity*.01+careerBonuses().crit+(active('dragonPower')?.25:0));}
+
+function nearest(range=500,from=p){return mobs.filter(m=>m.hp>0&&Math.hypot(m.x-from.x,m.y-from.y)<range).sort((a,b)=>Math.hypot(a.x-from.x,a.y-from.y)-Math.hypot(b.x-from.x,b.y-from.y))[0];}
+
+function hurtMob(m,mult=1,magic=false,key=castingSkillKey){if(!m||m.hp<=0)return;if(key)rememberSkill(m,key);const crit=rand()<criticalChance(),raw=(damage()+(magic?p.intelligence*4+careerBonuses().magic:0))*mult*(key?skillFactor(key):1)*(crit?1.8:1),amount=Math.max(1,Math.round(raw*(.94+rand()*.12))),actual=Math.min(m.hp,amount);hit(m,amount);if(active('enchanted'))p.hp=Math.min(maxHP(),p.hp+actual*.15);if(crit)float('KRITICKÝ!',m.x,m.y-90,'#f2bc70');}
+
+function areaHit(x,y,r,mult,opts={}){for(const m of mobs)if(m.hp>0&&Math.hypot(m.x-x,(m.y-y)*.85)<r){hurtMob(m,mult,true,opts.skillKey||castingSkillKey);if(opts.stun)m.stun=Math.max(m.stun||0,opts.stun*(m.type==='boss'?.4:1));if(opts.dot&&m.hp>0)m.dot={time:6,tick:1,power:Math.max(3,Math.round(damage()*.18)),kind:opts.dot};if(opts.knock&&m.type!=='stone'){let d=Math.hypot(m.x-x,m.y-y)||1;m.x=Math.max(45,Math.min(SIZE-45,m.x+(m.x-x)/d*45));m.y=Math.max(45,Math.min(SIZE-45,m.y+(m.y-y)/d*45));}}}
+
+function shoot(m,mult,style='bolt',opts={}){if(!m)return;opts={...opts,skillKey:opts.skillKey||castingSkillKey};shots.push({x:p.x,y:p.y-25,target:m,mult,style,color:role().color,opts,life:3});fx('cast',p.x,p.y,role().color,.35);}
+
+function takeDamage(amount,source){let factor=active('bless')?.7:1;if(active('guard'))factor*=.8;if(active('darkGuard')&&p.mp>=4){factor*=.67;p.mp=Math.max(0,p.mp-4);}if(active('berserk'))factor*=1.2;if(active('fear')&&source&&Math.hypot(source.x-p.x,source.y-p.y)<300)factor*=.65;const n=Math.max(1,Math.round((amount-defense())*factor));p.hp-=n;float('-'+n,p.x,p.y-70,'#eda28d');if(source&&(active('reflect')||active('armor'))&&source.hp>0)hit(source,Math.max(1,Math.round(n*(active('reflect')?.35:.2))));}
+
+function castSkill(index){if(!running||paused||p.hp<=0||index<0||index>5)return false;const s=school().skills[index],[name,kind,cd,cost,mult,range]=s;if(isSanctuary(p)&&!['heal','aura','berserk','guard','enchanted','armor','fear','stealth','speed','spirit','darkGuard','bless','reflect','dragonPower','attackUp'].includes(kind)){toast('Útočisko je chránené. Zaútoč až mimo neho.');return false;}if(spellCD[index]>0)return false;if(p.mp<cost){toast('Nedostatok many · priebežne sa obnovuje.');return false;}const noTarget=['spin','stomp','poisonCloud','dragonSpin','flameBurst','dragonRoar','dragonBreath','beam','finger','cleave','burst','triple','heal','aura','berserk','guard','enchanted','armor','fear','stealth','speed','spirit','darkGuard','bless','reflect','dragonPower','attackUp'];const m=nearest(range||500);if(!m&&!noTarget.includes(kind)){toast('Priblíž sa k cieľu.');return false;}if(kind==='burst'&&p.hp<=maxHP()*.08){toast('Na Životnú silu potrebuješ viac zdravia.');return false;}p.mp-=cost;castingSkillKey=skillKey(index);if(m)rememberSkill(m,castingSkillKey);spellCD[index]=cd*(1-(skillProgress(castingSkillKey).rank-1)*.01);skillCD=spellCD[0];castPose=.6;castStyle=kind;beep(p.classId==='sura'?160:p.classId==='shaman'?620:320,.17);float(name,p.x,p.y-100,role().color);if(m)face=Math.atan2(m.y-p.y,m.x-p.x);
+if(['aura','berserk','guard','enchanted','armor','fear','stealth','speed','spirit','darkGuard','bless','reflect','dragonPower','attackUp'].includes(kind)){buffs[kind]=(kind==='fear'||kind==='berserk'?10:kind==='stealth'?8:12)*skillFactor(castingSkillKey);if(kind==='spirit')spiritTick=0;fx(kind==='stealth'?'smoke':'aura',p.x,p.y,role().color,1.1);}
+else if(kind==='heal'){const n=Math.min(maxHP()-p.hp,Math.round((45+p.level*5+p.intelligence*4+careerBonuses().magic)*skillFactor(castingSkillKey)));p.hp+=n;fx('heal',p.x,p.y,'#b4f4c1',1);float('+'+Math.round(n)+' zdravia',p.x,p.y-65,'#b4f4c1');}
+else if(['dash','poisonDash','roll'].includes(kind)){if(m){const d=Math.hypot(m.x-p.x,m.y-p.y)||1,old={x:p.x,y:p.y};p.x=Math.max(45,Math.min(SIZE-45,m.x-(m.x-p.x)/d*40));p.y=Math.max(45,Math.min(SIZE-45,m.y-(m.y-p.y)/d*40));target=null;fx('dash',old.x,old.y,role().color,.5);fx(kind==='roll'?'spin':'slash');areaHit(p.x,p.y,kind==='roll'?155:90,mult,{dot:kind==='poisonDash'?'poison':null,stun:kind==='dash'?.8:0});}}
+else if(kind==='ambush'){hurtMob(m,mult*(active('stealth')?2:1),true);fx('cross',m.x,m.y,role().color,.6);}
+else if(['darkBolt','darkOrb','spiritBolt','fireArrow','poisonArrow','talisman','boltStun','dispel'].includes(kind)){shoot(m,mult,kind,{radius:kind==='darkOrb'?100:kind==='fireArrow'?80:0,dot:kind==='poisonArrow'?'poison':kind==='fireArrow'?'fire':null,stun:kind==='boltStun'?1.8:0,slow:kind==='spiritBolt'?4:0,dispel:kind==='dispel'});}
+else if(kind==='multiShot'){for(let j=0;j<3;j++)shoot(m,mult/3,'arrow',{delay:j*.12});}
+else if(kind==='arrowRain'){mobs.filter(n=>n.hp>0&&Math.hypot(n.x-p.x,n.y-p.y)<range).slice(0,5).forEach(n=>shoot(n,mult,'arrow'));}
+else if(['lightning','spark','storm','chain'].includes(kind)){const list=kind==='chain'?mobs.filter(n=>n.hp>0&&Math.hypot(n.x-m.x,n.y-m.y)<220).slice(0,4):[m];for(const n of list){fx('lightning',n.x,n.y,p.classId==='shaman'?'#b9eaff':'#ffe7a4',.7);if(kind==='storm')areaHit(n.x,n.y,140,mult,{stun:.8});else{hurtMob(n,mult,true);if(kind==='spark')n.stun=1;}}}
+else if(kind==='ground'){fx('ground',m.x,m.y,role().color,.9);areaHit(m.x,m.y,140,mult,{knock:true});}
+else if(['beam','dragonBreath','finger','cleave'].includes(kind)){fx(kind==='dragonBreath'?'dragon':kind==='finger'?'finger':'beam',p.x,p.y,role().color,.8);const ux=Math.cos(face),uy=Math.sin(face);for(const n of mobs){let dx=n.x-p.x,dy=n.y-p.y,along=dx*ux+dy*uy,across=Math.abs(dx*uy-dy*ux);if(n.hp>0&&along>-30&&along<range&&across<(kind==='dragonBreath'?100:65)){hurtMob(n,mult,true);if(kind==='dragonBreath')n.dot={time:6,tick:1,power:Math.round(damage()*.18),kind:'fire'};}}}
+else if(kind==='triple'){const n=nearest(range);if(n)for(let j=0;j<3;j++){hurtMob(n,mult/3);fx('slash',n.x,n.y-5,role().color,.35+j*.13,face+j*1.3);}}
+else{if(kind==='burst')p.hp-=maxHP()*.08;fx(kind==='poisonCloud'?'poison':kind==='dragonRoar'?'dragon':kind==='flameBurst'?'fire':kind==='stomp'||kind==='burst'?'ground':'spin',p.x,p.y,role().color,.85);areaHit(p.x,p.y,range,mult,{dot:kind==='poisonCloud'?'poison':kind==='dragonRoar'||kind==='flameBurst'?'fire':null,stun:kind==='stomp'?1.7:0,knock:kind==='dragonSpin'});}
+if(kind!=='stealth')delete buffs.stealth;castingSkillKey=null;updateHUD();return true;}
+
+function attack(skill=false){if(skill)return castSkill(0);if(!running||paused||p.hp<=0||attackCD>0||isSanctuary(p))return;attackCD=(p.classId==='ninja'?.32:.42)*(active('berserk')?.6:1);slash=.22;castStyle='basic';const ranged=p.classId==='ninja'&&p.schools.ninja==='archery';if(ranged){const m=nearest(500);if(m)shoot(m,1,'arrow');}else{fx(p.classId==='ninja'?'cross':p.classId==='shaman'?'fan':'slash',p.x,p.y,role().color,.25);for(const m of mobs)if(m.hp>0&&Math.hypot(m.x-p.x,(m.y-p.y)*.85)<95)hurtMob(m);}delete buffs.stealth;beep(230);}
+
+function updateCombat(dt){castPose=Math.max(0,castPose-dt);for(let i=0;i<6;i++)spellCD[i]=Math.max(0,spellCD[i]-dt);skillCD=spellCD[0];for(const id of Object.keys(buffs)){buffs[id]-=dt;if(buffs[id]<=0)delete buffs[id];}p.mp=Math.min(maxMP(),p.mp+dt*(active('speed')?11:7));for(let i=effects.length-1;i>=0;i--){effects[i].life-=dt;if(effects[i].life<=0)effects.splice(i,1);}for(const m of mobs){m.stun=Math.max(0,(m.stun||0)-dt);m.slow=Math.max(0,(m.slow||0)-dt);m.suppressed=Math.max(0,(m.suppressed||0)-dt);if(m.hp>0&&m.dot){m.dot.time-=dt;m.dot.tick-=dt;if(m.dot.tick<=0){m.dot.tick+=1;hit(m,m.dot.power);fx(m.dot.kind==='poison'?'poison':'fire',m.x,m.y,m.dot.kind==='poison'?'#a9d06e':'#f5ac60',.4);}if(m.dot.time<=0)m.dot=null;}}for(let i=shots.length-1;i>=0;i--){const b=shots[i];b.life-=dt;if(b.opts.delay>0){b.opts.delay-=dt;continue;}if(b.life<=0||b.target.hp<=0){shots.splice(i,1);continue;}const dx=b.target.x-b.x,dy=b.target.y-15-b.y,d=Math.hypot(dx,dy);if(d<650*dt+12){const m=b.target;if(b.opts.radius)areaHit(m.x,m.y,b.opts.radius,b.mult,{dot:b.opts.dot,stun:b.opts.stun,skillKey:b.opts.skillKey});else{hurtMob(m,b.mult,b.style!=='arrow',b.opts.skillKey);if(b.opts.dot&&m.hp>0)m.dot={time:6,tick:1,power:Math.max(3,Math.round(damage()*.18)),kind:b.opts.dot};if(b.opts.stun)m.stun=b.opts.stun;}if(b.opts.dispel)m.suppressed=8;if(b.opts.slow)m.slow=b.opts.slow;fx(b.style==='darkOrb'?'dark':b.style==='fireArrow'?'fire':'impact',m.x,m.y,b.color,.6);shots.splice(i,1);}else{b.x+=dx/d*650*dt;b.y+=dy/d*650*dt;}}if(active('spirit')&&!isSanctuary(p)){spiritTick-=dt;if(spiritTick<=0){spiritTick=1.5;const m=nearest(430);if(m)shoot(m,.85,'fireArrow',{skillKey:'black:3'});}}}
+
+function updateBoss(dt,safe){const b=mobs.find(m=>m.type==='boss');if(!b||b.hp<=0||b.stun>0)return;const d=Math.hypot(b.x-p.x,b.y-p.y);if(safe||(!(b.taunt>0||b.engaged>0)&&d>500)||active('stealth')){b.windup=0;b.taunt=0;b.engaged=0;const home=Math.hypot(b.x-1690,b.y-330);if(home>4)walkEnemy(b,1690,330,90,dt);b.hp=Math.min(b.max,b.hp+10*dt);return;}const enraged=b.hp<b.max*.3&&!(b.suppressed>0);if(b.windup>0){b.windup-=dt;if(b.windup<=0){b.cd=enraged?2:3;if(d<120){takeDamage(Math.round(26*(b.attackScale||map().scale)*(enraged?1.3:1)),b);beep(90,.25);}else float('ÚHYB!',p.x,p.y-75,'#acd9b0');}return;}if(d<100&&b.cd<=0){b.windup=1;beep(100,.2);return;}if(d>65){const speed=(enraged?115:90)*(b.slow>0?.55:1)*(active('fear')?.65:1);walkEnemy(b,p.x,p.y,speed,dt);}}
+
+
+// src/js/systems/progression.js
+function experience(n) {
+  if (!Number.isFinite(n) || n <= 0 || p.level >= PROGRESSION.maxLevel) return;
+  p.xp += Math.floor(n);
+  while (p.level < PROGRESSION.maxLevel && p.xp >= needXP()) {
+    p.xp -= needXP(); p.level++; p.points += 3;
+    p.hp = maxHP(); p.mp = maxMP();
+    float('ÚROVEŇ ' + p.level, p.x, p.y - 100, '#f9df93', true);
+    toast('Nová úroveň ' + p.level + '!\n+3 body vlastností · zdravie a mana obnovené');
+    beep(660, .25);
+  }
+  if (p.level === PROGRESSION.maxLevel) p.xp = 0;
+}
+
+function rarityName(r){return ['Bežná','Vzácna','Epická'][r]||'Bežná';}
+
+function makeItem(epic=false, source=null) {
+  const rarity = epic ? 2 : source?.variant==='rare' ? 1 : rand() < (source?.variant==='elite' ? .45 : .16) ? 1 : 0;
+  const slot = rand() < .5 ? 'weapon' : 'armor';
+  const tier = Math.min(99, source ? enemyLevel(source) : map().enemyLevel);
+  const name = ['Pútnický', 'Mesačný', 'Dračí'][rarity] + (slot === 'weapon' ? ' meč' : ' pancier');
+  return { name, slot, rarity, tier, enhance: 0, bonus: slot === 'weapon' ? 4 + Math.floor(tier * .6) + rarity * 9 : 2 + Math.floor(tier * .25) + rarity * 3, value: 12 + tier * 3 + rarity * 25 };
+}
+
+function awardItem(epic=false,source=null){const item=makeItem(epic,source);if(p.bag.length>=24){p.gold+=item.value;float('Batoh plný · +'+item.value+' zlata',p.x,p.y-110,'#d6cb99');return item;}p.bag.push(item);float(item.name+' → I',p.x,p.y-110,item.rarity===2?'#d3a3eb':item.rarity===1?'#a3ceec':'#d1dab7');return item;}
+
+function equipItem(index){if(!Number.isInteger(index)||index<0||index>=p.bag.length)return;const item=p.bag.splice(index,1)[0],old=p.equipped[item.slot];p.equipped[item.slot]=item;if(old)p.bag.push(old);updateHUD();save();inventory();}
+
+function sellItem(index){if(!Number.isInteger(index)||index<0||index>=p.bag.length)return;p.gold+=p.bag.splice(index,1)[0].value;updateHUD();save();inventory();}
+
+function allocate(stat){if(p.points<=0||!['strength','vitality','dexterity','intelligence'].includes(stat))return;p.points--;p[stat]++;if(stat==='vitality')p.hp=Math.min(maxHP(),p.hp+10);updateHUD();save();inventory();}
+
+function claimBoss(){if(p.bossClaimed||p.bossKills<1)return;p.bossClaimed=true;p.gold+=200;experience(80);awardItem(true);save();updateHUD();journal();}
+
+function claimHunt(){if(p.career.eligibleKills<(p.huntClaimed+1)*10)return;p.huntClaimed++;p.gold+=60;addMaterial('training');save();updateHUD();journal();}
+
+
+// src/js/systems/world.js
+function map(){return MAPS[p.mapId]||MAPS.valley;}
+
+function snapshotMap() {
+  if (!mobs.length) return;
+  p.worldStates[p.mapId] = {
+    progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
+    mobs: mobs.map(m => ({ ...m, dot: m.dot ? { ...m.dot } : null, skillContributors: [...(m.skillContributors || [])] })),
+    drops: drops.map(d => ({ ...d }))
+  };
+}
+
+function save(){if(pendingSaveImports.length)return;snapshotMap();try{localStorage.setItem(SAVE,JSON.stringify(p));}catch{}}
+
+function loadMap(id, initial=false) {
+  if (!MAPS[id]) return false;
+  if (p.career?.endgame.run && !initial) { toast('Najprv dokonči alebo opusti trhlinu (P).'); return false; }
+  if (!initial) {
+    if (!running || !isSanctuary(p)) { toast('Cestovať môžeš z útočiska (M).'); return false; }
+    snapshotMap();
+  }
+  p.mapId=id;
+  const cfg=map(), old=p.worldStates[id];
+  cfg.mobSpeed=75+(cfg.scale-1)*14; seed=cfg.seed; decor.length=0;
+  for(let i=0;i<250;i++) {
+    const x=rand()*SIZE,y=rand()*SIZE;
+    if(Math.hypot(x-1000,y-1050)>190) decor.push({x,y,type:rand()<(id==='valley'?.67:id==='snow'?.45:id==='desert'?.2:.12)?'tree':'rock',s:.6+rand()*.8,t:rand()});
+  }
+  legacyRiftLayout=false; spawnPoints.length=0;
+  spawnPoints.push(...buildSpawnPoints(id));
+  const oldRun=p.career.endgame.run&&id==='temple'&&old?.mobs?.length&&old.spawnSchema!==SPAWN_RULES.schema;
+  const population=oldRun?loadLegacyRift(old):hydrateSpawnPopulation(old);
+  mobs.length=0; mobs.push(...population); drops.length=0;
+  drops.push(...(old?.drops||[]).map(d=>({...d})));
+  p.x=1000; p.y=1160; cam.x=p.x; cam.y=p.y; target=null;
+  shots.length=0; effects.length=0; particles.length=0; lastMiniMapPaint=-Infinity;
+  Object.keys(buffs).forEach(k=>delete buffs[k]);
+  updateMapHUD();
+  if(!initial){closeModal();save();toast(cfg.name+'\nOdporúčaná úroveň '+cfg.level+'+');}
+  return true;
+}
+
+
+// src/js/systems/career.js
+function xpForLevel(level) {
+  return Math.ceil(600 * Math.pow(level, 2.15) * (1 + .025 * (level - 1)));
+}
+
+function initializeCareer() {
+  const old = p.career;
+  if (!old || old.schema !== PROGRESSION.schema) {
+    const progress = Math.max(0, Math.min(.999999, p.xp / (60 + (p.level - 1) * 35)));
+    p.xp = Math.floor(progress * xpForLevel(p.level));
+    // Carry the old account-wide forge bonus into an actual equipped weapon.
+    const legacy = Math.max(0, Number(p.weapon) || 0);
+    if (legacy) {
+      p.equipped.weapon ??= { name: 'Pútnický meč', slot: 'weapon', rarity: 0, bonus: 0, value: 10 };
+      p.equipped.weapon.enhance = Math.min(legacy, PROGRESSION.maxEnhancement);
+      p.equipped.weapon.bonus += legacy * 8 - p.equipped.weapon.enhance * 3;
+    }
+    p.weapon = 0;
+    p.career = {
+      schema: PROGRESSION.schema,
+      materials: Object.fromEntries(Object.keys(MATERIALS).map(id => [id, 0])),
+      eligibleKills: (p.huntClaimed || 0) * 10, training: { strength: 0, vitality: 0, dexterity: 0, intelligence: 0 },
+      skills: {}, skillUpgrades: 0,
+      biology: { stage: 0, delivered: 0, nextKill: 0 },
+      alchemy: { stock: { ruby: 0, sapphire: 0, jade: 0 }, equipped: { ruby: 0, sapphire: 0, jade: 0 } },
+      collection: {}, relicPity: {}, samplePity: {}, keyPity: 0,
+      specialization: { focus: null, rank: 0, points: 0 },
+      endgame: { highest: 0, paragon: 0, run: null }
+    };
+  }
+  p.level = Math.max(1, Math.min(PROGRESSION.maxLevel, p.level));
+  if (p.level === PROGRESSION.maxLevel) p.xp = 0;
+  // World difficulty changed; preserve death timers/positions while scaling HP proportionally.
+  for (const [id, state] of Object.entries(p.worldStates)) {
+    if (MAPS[id] && state && !state.progressionSchema) {
+      for (let i = 0; i < state.mobs.length; i++) rebalanceEnemy(state.mobs[i], MAPS[id], i);
+      state.progressionSchema = PROGRESSION.schema;
+    }
+  }
+}
+
+function careerBonuses() {
+  const b = { hp: 0, mp: 0, attack: 0, defense: 0, magic: 0, crit: 0, attackPercent: 0 };
+  if (!p.career) return b;
+  const add = bonus => { for (const [id, amount] of Object.entries(bonus)) b[id] += amount; };
+  for (let i = 0; i < p.career.biology.stage; i++) add(BIOLOGY[i].bonus);
+  const gems = p.career.alchemy.equipped;
+  add({ attack: 2 * gems.ruby ** 2, mp: 15 * gems.sapphire, magic: 2 * gems.sapphire, hp: 10 * gems.jade, defense: gems.jade });
+  const relics = Object.keys(p.career.collection).filter(id => p.career.collection[id] && RELICS[id]);
+  relics.forEach(id => add(RELICS[id].bonus));
+  if (relics.length >= 2) add({ defense: 2 });
+  if (relics.length === 4) add({ attack: 8, hp: 15 });
+  const spec = p.career.specialization;
+  if (spec.focus === 'ravager') add({ attackPercent: .015 * spec.rank, crit: .005 * spec.rank });
+  if (spec.focus === 'sentinel') add({ hp: 15 * spec.rank, defense: 2 * spec.rank });
+  if (spec.focus === 'mystic') add({ magic: 4 * spec.rank, mp: 8 * spec.rank });
+  add({ attack: p.career.endgame.paragon * 2, hp: p.career.endgame.paragon * 5 });
+  return b;
+}
+
+function enemyLevel(m) {
+  return m.level || map().enemyLevel + (m.type === 'boss' ? 5 : m.type === 'stone' ? 2 : 0);
+}
+
+function rewardEligible(m) { return enemyLevel(m) >= p.level - 5; }
+
+function enemyXP(m) {
+  if (p.level >= PROGRESSION.maxLevel) return 0;
+  const delta = enemyLevel(m) - p.level;
+  const factor = delta >= 0 ? Math.min(1.5, 1 + delta * .05) : delta <= -8 ? 0 : [1, .85, .7, .55, .4, .25, .1, .05][-delta];
+  const type = m.type === 'boss' ? 12 : m.type === 'stone' ? 3 : 1;
+  const cap = m.type === 'boss' ? .35 : m.type === 'stone' ? .12 : .03;
+  return Math.max(0, Math.floor(Math.min(6 * enemyLevel(m) ** 1.15 * type * factor * (ENEMY_VARIANTS[m.variant]?.xp||1), needXP() * cap)));
+}
+
+function addMaterial(id, count = 1) {
+  if (!MATERIALS[id] || !Number.isFinite(count) || count <= 0) return;
+  p.career.materials[id] += Math.floor(count);
+}
+
+function pay(cost) {
+  if (!cost || Object.values(cost).some(n => !Number.isSafeInteger(n) || n < 0)) return false;
+  for (const [id, count] of Object.entries(cost)) {
+    if (id === 'gold' ? p.gold < count : !MATERIALS[id] || p.career.materials[id] < count) return false;
+  }
+  for (const [id, count] of Object.entries(cost)) {
+    if (id === 'gold') p.gold -= count;
+    else p.career.materials[id] -= count;
+  }
+  return true;
+}
+
+function trainingCost(stat) {
+  const rank = p.career.training[stat];
+  return { training: 3 + rank, gold: 100 * (rank + 1) };
+}
+
+function trainAttribute(stat) {
+  if (!Object.hasOwn(p.career.training, stat) || p.career.training[stat] >= PROGRESSION.maxTraining) return false;
+  if (!pay(trainingCost(stat))) return false;
+  p.career.training[stat]++; p[stat]++;
+  if (stat === 'vitality') p.hp = Math.min(maxHP(), p.hp + 10);
+  save(); return true;
+}
+
+function skillKey(index) { return p.schools[p.classId] + ':' + index; }
+
+function skillProgress(key) {
+  const [id, index] = String(key).split(':');
+  if (!SCHOOLS[id] || !Number.isInteger(Number(index)) || Number(index) < 0 || Number(index) > 5) return null;
+  return p.career.skills[key] ??= { rank: 1, practice: 0 };
+}
+
+function skillPracticeNeeded(rank) { return Math.ceil(20 * rank ** 1.4); }
+function skillFactor(key) { return 1 + ((skillProgress(key)?.rank || 1) - 1) * .04; }
+function skillCost(key) { const rank = skillProgress(key).rank; return { books: Math.ceil(rank / 3), gold: 25 * rank * rank }; }
+
+function upgradeSkill(key) {
+  const skill = skillProgress(key);
+  if (!skill || !key.startsWith(p.schools[p.classId] + ':') || skill.rank >= PROGRESSION.maxSkillRank || skill.practice < skillPracticeNeeded(skill.rank)) return false;
+  if (!pay(skillCost(key))) return false;
+  skill.practice -= skillPracticeNeeded(skill.rank); skill.rank++;
+  p.career.skillUpgrades++;
+  if (p.career.skillUpgrades % 3 === 0) p.career.specialization.points++;
+  save(); return true;
+}
+
+function rememberSkill(m, key) {
+  if (!m || m.hp <= 0 || !skillProgress(key)) return;
+  m.skillContributors ??= [];
+  if (!m.skillContributors.includes(key)) m.skillContributors.push(key);
+}
+
+function completeBiology() {
+  const bio = p.career.biology, stage = BIOLOGY[bio.stage];
+  if (!stage || p.level < stage.level || Math.hypot(p.x - 1000, p.y - 1050) > 190 || p.career.eligibleKills < bio.nextKill || p.career.materials[stage.item] < 1) return false;
+  if (!pay({ [stage.item]: 1, gold: 25 * (bio.stage + 1) })) return false;
+  bio.delivered++; bio.nextKill = p.career.eligibleKills + 10;
+  if (bio.delivered >= stage.count) {
+    bio.stage++; bio.delivered = 0;
+    toast('Biologický výskum dokončený!\nTrvalý bonus: ' + stage.text);
+  }
+  save(); return true;
+}
+
+function enhancementCost(item) { const rank = (item?.enhance || 0) + 1; return { ore: 2 * rank * rank, gold: 100 * rank * rank }; }
+
+function enhanceEquipment(slot) {
+  const item = p.equipped[slot];
+  if (!['weapon', 'armor'].includes(slot) || !item || (item.enhance || 0) >= PROGRESSION.maxEnhancement) return false;
+  if (!pay(enhancementCost(item))) return false;
+  item.enhance = (item.enhance || 0) + 1;
+  save(); return true;
+}
+
+function craftGem(id) {
+  if (!GEMS[id] || !pay({ essence: 30, ore: 3, gold: 100 })) return false;
+  p.career.alchemy.stock[id]++; save(); return true;
+}
+
+function upgradeGem(id) {
+  if (!GEMS[id]) return false;
+  const alchemy = p.career.alchemy, rank = alchemy.equipped[id], stones = rank ? 2 ** rank : 1;
+  if (rank >= PROGRESSION.maxGemRank || alchemy.stock[id] < stones) return false;
+  if (!pay(rank ? { dust: 5 * rank, gold: 100 * rank * rank } : {})) return false;
+  alchemy.stock[id] -= stones; alchemy.equipped[id]++;
+  save(); return true;
+}
+
+function specialize(id) {
+  const spec = p.career.specialization;
+  if (!SPECIALIZATIONS[id] || p.level < 10 || spec.focus || spec.points < 3) return false;
+  spec.points -= 3; spec.focus = id; spec.rank = 1;
+  save(); return true;
+}
+
+function trainSpecialization() {
+  const spec = p.career.specialization;
+  if (!spec.focus || spec.rank >= PROGRESSION.maxSpecialization || spec.points < spec.rank + 1) return false;
+  spec.points -= spec.rank + 1; spec.rank++; save(); return true;
+}
+
+function collectRelic(id) {
+  if (!RELICS[id]) return;
+  if (p.career.collection[id]) addMaterial('dust', 10);
+  else {
+    p.career.collection[id] = true;
+    float('RELIKVIA · ' + RELICS[id].name, p.x, p.y - 130, '#dbaff0', true);
+    toast('Vzácna relikvia: ' + RELICS[id].name + '\nTrvalý bonus: ' + RELICS[id].text);
+  }
+}
+
+function careerKill(m) {
+  const eligible = rewardEligible(m), c = p.career;
+  // Biological specimens stay available when revisiting lower-level maps.
+  const bio = BIOLOGY.find(b => b.map === p.mapId);
+  if (bio && m.type === 'wolf') {
+    c.samplePity[p.mapId] = (c.samplePity[p.mapId] || 0) + 1;
+    if (c.samplePity[p.mapId] >= 4) { addMaterial(bio.item); c.samplePity[p.mapId] = 0; }
+  }
+  if (eligible) {
+    c.eligibleKills++; addMaterial('essence', m.type === 'boss' ? 12 : m.type === 'stone' ? 4 : 1);
+    if (c.eligibleKills % 5 === 0) { addMaterial('ore'); addMaterial('training'); }
+    if (m.type === 'stone' || m.type === 'boss') { addMaterial('books'); addMaterial('dust', m.type === 'boss' ? 5 : 1); }
+    const used = new Set(m.skillContributors || []);
+    school().skills.forEach((s, i) => { if (active(s[1])) used.add(skillKey(i)); });
+    for (const key of used) {
+      const skill = skillProgress(key);
+      if (skill && skill.rank < PROGRESSION.maxSkillRank) skill.practice = Math.min(skillPracticeNeeded(skill.rank) * 2, skill.practice + (m.type === 'boss' ? 4 : 1));
+    }
+    if (m.type === 'boss') {
+      c.specialization.points++;
+    }
+  }
+  if (m.type === 'boss') {
+    c.keyPity++;
+    if (c.keyPity >= 3) { addMaterial('keys'); c.keyPity = 0; }
+    c.relicPity[p.mapId] = (c.relicPity[p.mapId] || 0) + 1;
+    if (rand() < .08 || c.relicPity[p.mapId] >= 10) { collectRelic(p.mapId); c.relicPity[p.mapId] = 0; }
+  }
+  const run = c.endgame.run;
+  if (run?.active && p.mapId === 'temple' && m.riftId === run.id) {
+    if (m.type === 'wolf') run.kills++;
+    if (m.type === 'boss') run.bosses++;
+  }
+}
+
+function rebalanceEnemy(m, cfg, index) {
+  const ratio = Math.max(0, Math.min(1, m.hp / m.max));
+  m.level = cfg.enemyLevel + (m.type === 'boss' ? 5 : m.type === 'stone' ? 2 : index % 5);
+  const extra = m.level - cfg.enemyLevel;
+  m.max = Math.round((m.type === 'boss' ? 620 : m.type === 'stone' ? 160 : 55) * cfg.scale * (1 + extra * .08));
+  m.attackScale = cfg.scale * (1 + extra * .06);
+  m.hp = ratio > 0 ? Math.max(1, Math.round(ratio * m.max)) : 0;
+  m.skillContributors = [];
+}
+
+function enterRift() {
+  const end = p.career.endgame;
+  if (p.level < 35 || end.run || !running || !isSanctuary(p)) return false;
+  if (!pay({ keys: 3 })) return false;
+  const tier = Math.min(PROGRESSION.maxRiftTier, end.highest + 1);
+  loadMap('temple');
+  end.run = { id: (p.career.riftSerial = (p.career.riftSerial || 0) + 1), tier, kills: 0, bosses: 0, active: true };
+  // Separate expedition enemies from the ordinary map snapshot.
+  p.career.normalTemple = p.worldStates.temple;
+  mobs.forEach(m => {
+    applyRiftScaling(m, tier, end.run.id);
+    m.dead = 0; m.cd = 2; m.stun = 0; m.dot = null; m.skillContributors = [];
+    m.taunt = 0; m.engaged = 0;
+    m.x = m.homeX ?? (m.type === 'boss' ? 1690 : m.x);
+    m.y = m.homeY ?? (m.type === 'boss' ? 330 : m.y);
+  });
+  save(); return true;
+}
+
+function finishRift(claim = true) {
+  const end = p.career.endgame, run = end.run;
+  if (!run || (claim && (run.kills < 20 || run.bosses < 1))) return false;
+  if (claim) { addMaterial('shards', 10 + run.tier * 3); end.highest = Math.max(end.highest, run.tier); }
+  end.run = null;
+  p.worldStates.temple = p.career.normalTemple;
+  delete p.career.normalTemple;
+  // Do not overwrite the ordinary snapshot with expedition enemies on exit.
+  mobs.length = 0; drops.length = 0; p.x = 1000; p.y = 1160;
+  loadMap('valley'); save(); return true;
+}
+
+function upgradeParagon() {
+  const end = p.career.endgame, rank = end.paragon + 1;
+  if (p.level < 35 || end.paragon >= PROGRESSION.maxParagon || !pay({ shards: 25 * rank * rank })) return false;
+  end.paragon++; save(); return true;
+}
+
+
+// src/js/systems/farming.js
+function isSanctuary(entity) {
+  return Math.hypot(entity.x - 1000, entity.y - 1050) < SPAWN_RULES.sanctuaryRadius;
+}
+
+function initializeFarming() {
+  if (p.braveryCapes === undefined) p.braveryCapes = 10;
+  if (!Number.isSafeInteger(p.braveryCapes) || p.braveryCapes < 0) p.braveryCapes = 0;
+}
+
+function farmAreaAt(entity = p) {
+  return FARM_AREAS[(entity.y < 1000 ? 2 : 0) + (entity.x > 1000 ? 1 : 0)];
+}
+
+function buildSpawnPoints(id) {
+  const cfg = MAPS[id], points = [], perArea = cfg.packCount / 4;
+  for (const area of FARM_AREAS) {
+    const rows = Math.ceil(perArea / 2);
+    for (let i = 0; i < perArea; i++) {
+      const x = area.x1 + 80 + (area.x2 - area.x1 - 160) * ((i % 2 + .5) / 2);
+      const y = area.y1 + 80 + (area.y2 - area.y1 - 160) * ((Math.floor(i / 2) + .5) / rows);
+      points.push({ id: `${id}:${area.id}:pack:${i}`, kind: 'pack', x, y, area: area.id, offset: area.offset, starter: area.offset === 0 && i === 0 });
+    }
+    points.push({ id: `${id}:${area.id}:rare`, kind: 'rare', x: (area.x1 + area.x2) / 2, y: (area.y1 + area.y2) / 2, area: area.id, offset: area.offset });
+    for (let i = 0; i < 2; i++) points.push({ id: `${id}:${area.id}:stone:${i}`, kind: 'stone', x: i ? area.x2 - 100 : area.x1 + 100, y: i ? area.y2 - 100 : area.y1 + 100, area: area.id, offset: area.offset });
+  }
+  points.push({ id: `${id}:boss`, kind: 'boss', x: 1690, y: 330, area: 'northeast', offset: 6 });
+  return points;
+}
+
+function rollEnemyVariant(point, slot) {
+  if (point.kind === 'rare') return 'rare';
+  if (point.kind !== 'pack' || (point.starter && slot === 0)) return 'normal';
+  const roll = rand();
+  return roll < SPAWN_RULES.rareChance ? 'rare' : roll < SPAWN_RULES.rareChance + SPAWN_RULES.eliteChance ? 'elite' : 'normal';
+}
+
+function createSpawnEnemy(point, slot = 0) {
+  const cfg = map(), type = point.kind === 'pack' || point.kind === 'rare' ? 'wolf' : point.kind;
+  const angle = slot * Math.PI / 3 + .15, radius = point.kind === 'pack' ? 45 + rand() * 10 : 0;
+  let x = point.x + Math.cos(angle) * radius, y = point.y + Math.sin(angle) * radius;
+  if (Math.hypot(x - 1000, y - 1050) < SPAWN_RULES.spawnClearance) {
+    const a = Math.atan2(y - 1050, x - 1000);
+    x = 1000 + Math.cos(a) * SPAWN_RULES.spawnClearance;
+    y = 1050 + Math.sin(a) * SPAWN_RULES.spawnClearance;
+  }
+  const variant = rollEnemyVariant(point, slot), v = ENEMY_VARIANTS[variant];
+  const normalLevel = cfg.enemyLevel + point.offset + (type === 'boss' ? 5 : type === 'stone' ? 2 : slot % 3);
+  const level = normalLevel + (type === 'wolf' ? v.level : 0);
+  const hp = Math.round((type === 'boss' ? 620 : type === 'stone' ? 160 : 55) * cfg.scale * (1 + (level - cfg.enemyLevel) * .08) * (type === 'wolf' ? v.hp : 1));
+  const attack = cfg.scale * (1 + (level - cfg.enemyLevel) * .06) * (type === 'wolf' ? v.damage : 1);
+  return {
+    spawnId: point.id + ':' + slot, spawnPointId: point.id, spawnSlot: slot,
+    type, skin: cfg.skin, area: point.area, variant, rareSlot: point.kind === 'rare',
+    x, y, homeX: x, homeY: y, level, baseLevel: level, hp, max: hp, baseMax: hp,
+    attackScale: attack, baseAttack: attack, speedScale: type === 'wolf' ? v.speed : 1,
+    respawnSeconds: type === 'boss' ? 40 : type === 'stone' ? 18 : point.kind === 'rare' ? 75 : v.respawn,
+    dead: 0, cd: 1, hit: 0, windup: 0, taunt: 0, engaged: 0, skillContributors: []
+  };
+}
+
+function applyRiftScaling(m, tier, runId) {
+  m.baseMax ??= m.max; m.baseLevel ??= m.level; m.baseAttack ??= m.attackScale || MAPS.temple.scale;
+  m.riftTier = tier; m.riftId = runId;
+  m.max = Math.round(m.baseMax * (1 + tier * .12)); m.hp = m.max;
+  m.level = Math.min(105, m.baseLevel + tier * 2);
+  m.attackScale = m.baseAttack * (1 + tier * .12);
+}
+
+function hydrateSpawnPopulation(old) {
+  const generated = [];
+  for (const point of spawnPoints) {
+    for (let slot = 0; slot < (point.kind === 'pack' ? SPAWN_RULES.packSize : 1); slot++) {
+      const m = createSpawnEnemy(point, slot), run = p.career.endgame.run;
+      if (run && p.mapId === 'temple') applyRiftScaling(m, run.tier, run.id);
+      generated.push(m);
+    }
+  }
+  if (!old?.mobs?.length) return generated;
+  if (old.spawnSchema === SPAWN_RULES.schema) {
+    const saved = new Map(old.mobs.map(m => [m.spawnId, m]));
+    return generated.map(m => {
+      const prior = saved.get(m.spawnId);
+      return prior ? { ...m, ...prior, dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0 } : m;
+    });
+  }
+  // Upgrade old sparse populations into distinct new slots without reviving their dead.
+  const used = new Set();
+  for (const prior of old.mobs) {
+    let best = -1, distance = Infinity;
+    for (let i = 0; i < generated.length; i++) {
+      if (used.has(i) || generated[i].type !== prior.type) continue;
+      const d = Math.hypot(generated[i].homeX - (prior.homeX ?? prior.x), generated[i].homeY - (prior.homeY ?? prior.y));
+      if (d < distance) { best = i; distance = d; }
+    }
+    if (best < 0) continue;
+    const m = generated[best], ratio = Math.max(0, Math.min(1, prior.hp / prior.max));
+    used.add(best);
+    m.hp = prior.hp <= 0 ? 0 : Math.max(1, Math.round(m.max * ratio));
+    m.dead = Math.max(0, prior.dead || 0); m.cd = Math.max(0, prior.cd || 0);
+    m.skillContributors = [...(prior.skillContributors || [])];
+    if (prior.dot) m.dot = { ...prior.dot };
+  }
+  return generated;
+}
+
+function loadLegacyRift(old) {
+  legacyRiftLayout = true; spawnPoints.length = 0;
+  return old.mobs.map((prior, index) => {
+    const id = 'legacy-rift:' + index, x = prior.homeX ?? prior.x, y = prior.homeY ?? prior.y;
+    spawnPoints.push({ id, kind: prior.type === 'wolf' ? 'pack' : prior.type, x, y, area: farmAreaAt(prior).id, offset: 0 });
+    return { ...prior, spawnId: id + ':0', spawnPointId: id, spawnSlot: 0, variant: 'normal', respawnSeconds: prior.type === 'boss' ? 40 : prior.type === 'stone' ? 18 : 5, taunt: 0, engaged: 0, stun: 0, windup: 0 };
+  });
+}
+
+function respawnEnemy(m) {
+  const point = spawnPoints.find(p => p.id === m.spawnPointId);
+  if (!point || legacyRiftLayout) {
+    m.hp = m.max; m.x = m.homeX ?? m.x; m.y = m.homeY ?? m.y;
+    m.dead = 0; m.cd = 1; m.taunt = 0; m.engaged = 0; m.stun = 0; m.slow = 0; m.dot = null; m.windup = 0; m.skillContributors = [];
+    return;
+  }
+  const fresh = createSpawnEnemy(point, m.spawnSlot);
+  const run = p.career.endgame.run;
+  if (run && p.mapId === 'temple') applyRiftScaling(fresh, run.tier, run.id);
+  // Keep object identity: projectiles and skills may still reference this slot.
+  for (const key of Object.keys(m)) delete m[key];
+  Object.assign(m, fresh);
+  if (Math.hypot(m.x - p.x, m.y - p.y) < 600) fx('aura', m.x, m.y, '#a6cfa1', .45);
+}
+
+function buildMobGrid() {
+  const grid = new Map();
+  for (const m of mobs) if (m.type === 'wolf' && m.hp > 0) {
+    const key = Math.floor(m.x / 70) + ':' + Math.floor(m.y / 70);
+    if (!grid.has(key)) grid.set(key, []);
+    grid.get(key).push(m);
+  }
+  return grid;
+}
+
+function walkEnemy(m, x, y, speed, dt, grid = null) {
+  let dx = x - m.x, dy = y - m.y, distance = Math.hypot(dx, dy);
+  if (distance < 2) return;
+  let vx = dx / distance, vy = dy / distance;
+  if (grid) {
+    const col = Math.floor(m.x / 70), row = Math.floor(m.y / 70);
+    for (let cx = col - 1; cx <= col + 1; cx++) for (let cy = row - 1; cy <= row + 1; cy++) {
+      for (const other of grid.get(cx + ':' + cy) || []) {
+        if (other === m) continue;
+        const ox = m.x - other.x, oy = m.y - other.y, d = Math.hypot(ox, oy);
+        if (d > .01 && d < 25) { vx += ox / d * (25 - d) / 20; vy += oy / d * (25 - d) / 20; }
+      }
+    }
+  }
+  const length = Math.hypot(vx, vy) || 1, step = Math.min(distance, speed * dt);
+  let nx = m.x + vx / length * step, ny = m.y + vy / length * step;
+  const keepOut = SPAWN_RULES.sanctuaryRadius + 18;
+  if (Math.hypot(nx - 1000, ny - 1050) < keepOut) {
+    const angle = Math.atan2(m.y - 1050, m.x - 1000), cross = (m.x - 1000) * (y - 1050) - (m.y - 1050) * (x - 1000);
+    const next = angle + (cross < 0 ? -1 : 1) * step / keepOut;
+    nx = 1000 + Math.cos(next) * keepOut; ny = 1050 + Math.sin(next) * keepOut;
+  }
+  m.x = Math.max(45, Math.min(SIZE - 45, nx)); m.y = Math.max(45, Math.min(SIZE - 45, ny));
+}
+
+function updateEnemySpawns(dt, safe) {
+  capeCooldown = Math.max(0, capeCooldown - dt);
+  const grid = buildMobGrid();
+  for (const m of mobs) {
+    m.hit = Math.max(0, (m.hit || 0) - dt); m.cd = (m.cd || 0) - dt;
+    m.taunt = Math.max(0, (m.taunt || 0) - dt); m.engaged = Math.max(0, (m.engaged || 0) - dt);
+    if (safe || active('stealth')) { m.taunt = 0; m.engaged = 0; }
+    if (m.hp <= 0) { m.dead -= dt; if (m.dead <= 0) respawnEnemy(m); continue; }
+    if (m.type !== 'wolf' || m.stun > 0) continue;
+    const d = Math.hypot(m.x - p.x, m.y - p.y), home = Math.hypot(m.x - m.homeX, m.y - m.homeY);
+    const forced = m.taunt > 0 || m.engaged > 0;
+    const chasing = !safe && !active('stealth') && forced && (m.taunt > 0 || home < SPAWN_RULES.leash);
+    if (chasing) {
+      const slow = (active('fear') && d < 300 ? .5 : 1) * (m.slow > 0 ? .55 : 1);
+      const angle = (m.spawnSlot || 0) * 2.39996, spread = d < 110 ? 28 : 0;
+      if (d > 33) walkEnemy(m, p.x + Math.cos(angle) * spread, p.y + Math.sin(angle) * spread, map().mobSpeed * (m.speedScale || 1) * slow, dt, grid);
+      if (d < 55 && m.cd <= 0) { m.engaged = Math.max(m.engaged || 0, 8); takeDamage(Math.max(4, Math.round(9 * (m.attackScale || map().scale) - p.level * .5)), m); m.cd = 1.3; }
+    } else if (home > 4) {
+      m.taunt = 0; m.engaged = 0;
+      walkEnemy(m, m.homeX, m.homeY, map().mobSpeed * 1.15, dt, grid);
+      if (home < 20) m.hp = Math.min(m.max, m.hp + m.max * dt * .2);
+    }
+  }
+}
+
+function useBraveryCape() {
+  if (!running || paused || p.hp <= 0 || capeCooldown > 0) return false;
+  if (p.braveryCapes < 1) { toast('Nemáš Plášť statočnosti. Kúpiš ho u obchodníka (F).'); return false; }
+  if (isSanctuary(p)) { toast('Plášť použi mimo chráneného útočiska.'); return false; }
+  p.braveryCapes--; capeCooldown = SPAWN_RULES.capeCooldown; delete buffs.stealth;
+  let count = 0;
+  for (const m of mobs) if (m.hp > 0 && (m.type === 'wolf' || m.type === 'boss') && Math.hypot(m.x - p.x, m.y - p.y) <= SPAWN_RULES.capeRange) {
+    m.taunt = SPAWN_RULES.capeDuration; m.engaged = SPAWN_RULES.capeDuration; count++;
+  }
+  fx('bravery', p.x, p.y, '#efbe8a', 1.25); beep(200, .3);
+  toast(count ? 'Plášť statočnosti · pritiahnutí nepriatelia: ' + count : 'Plášť použitý · v dosahu nebol žiadny pohyblivý nepriateľ.');
+  updateHUD(); save(); return true;
+}
+
+function buyBraveryCapes() {
+  if (Math.hypot(p.x - 1110, p.y - 1110) > 160 || !pay({ gold: SPAWN_RULES.capePrice })) return false;
+  p.braveryCapes += SPAWN_RULES.capeBundle;
+  updateHUD(); save(); return true;
+}
+
+function farmBonusLoot(m) {
+  const eligible = rewardEligible(m), rare = m.variant === 'rare', elite = m.variant === 'elite';
+  let capes = m.type === 'boss' ? 3 : rare ? 2 : rand() < (elite ? .25 : .02) ? 1 : 0;
+  if (capes) { p.braveryCapes += capes; float('+' + capes + ' Plášť statočnosti', m.x, m.y - 105, '#dfbc8b'); }
+  if (!eligible || m.type !== 'wolf') return;
+  if (rare) { addMaterial('ore', 3); addMaterial('dust', 3); addMaterial('books'); addMaterial('training'); }
+  else if (elite) { addMaterial('ore'); addMaterial('essence', 2); }
+}
+
+function dropFarmEquipment(m) {
+  const rare = m.variant === 'rare', elite = m.variant === 'elite';
+  if (m.type === 'boss') return awardItem(true, m);
+  if (m.type === 'stone' || rare || rand() < (elite ? .75 : .32)) return awardItem(rare ? rand() < .25 : elite && rand() < .08, m);
+}
+
+
+
+// src/js/ui/panels.js
+function modal(html){paused=true;keysClear();$('modalcontent').innerHTML=html;$('modal').hidden=false;}
+
+function closeModal(){$('modal').hidden=true;paused=false;canvas.focus();}
+
+function inventory(){modal(`<span class="eyebrow">TVÔJ HRDINA · ${role().name}</span><h2>Výbava a vlastnosti</h2><div class="stats"><div>Úroveň<b>${p.level}</b></div><div>Útok / obrana<b>${damage()} / ${defense()}</b></div><div>Zdravie<b>${Math.ceil(p.hp)} / ${maxHP()}</b></div><div>Kritický zásah<b>${Math.round(criticalChance()*100)} %</b></div></div><h3>Vlastnosti <small>Voľné body: ${p.points}</small></h3><div class="attributes">${[['strength','Sila','+3 útok'],['vitality','Vitalita','+10 zdravia'],['dexterity','Obratnosť','+1 % kritický zásah, +2 rýchlosť'],['intelligence','Inteligencia','+5 mana a +4 sila kúziel']].map(([id,label,desc])=>`<div><span>${label} <b>${p[id]}</b><small>${desc}</small></span><button data-stat="${id}" ${p.points?'':'disabled'} aria-label="Pridať bod: ${label}">+</button></div>`).join('')}</div><h3>Nasadená výbava</h3><p>⚔ ${escapeHTML(p.equipped.weapon?.name||'Pútnický meč')} +${p.equipped.weapon?.enhance||0}<br>◈ ${escapeHTML(p.equipped.armor?.name||'Cestovateľská zbroj')} +${p.equipped.armor?.enhance||0}</p><h3>Batoh <small>${p.bag.length} / 24</small></h3><div class="bag">${p.bag.length?p.bag.map((item,i)=>`<div class="item rarity-${item.rarity}"><div><b>${escapeHTML(item.name)} +${item.enhance||0}</b><small>${rarityName(item.rarity)} · +${item.bonus} ${item.slot==='weapon'?'útok':'obrana'} · predaj ${item.value} zlata</small></div><button data-equip="${i}">Nasadiť</button><button data-sell="${i}">Predať</button></div>`).join(''):'<p>Prázdny batoh. Výbavu získavaš z príšer a kameňov.</p>'}</div><p>Plášť statočnosti: ${p.braveryCapes} ks · použitie B (mimo útočiska)<br>Elixíry: ${p.potions} · Zlato: ${p.gold}<br>Tréning, biológ, alchýmia a ďalšie cesty: Progres (P).</p>`);document.querySelectorAll('[data-stat]').forEach(b=>b.onclick=()=>allocate(b.dataset.stat));document.querySelectorAll('[data-equip]').forEach(b=>b.onclick=()=>equipItem(Number(b.dataset.equip)));document.querySelectorAll('[data-sell]').forEach(b=>b.onclick=()=>sellItem(Number(b.dataset.sell)));}
+
+function shop(){if(Math.hypot(p.x-1110,p.y-1110)>160){toast('Obchodník ťa čaká v útočisku.');return;}modal('<span class="eyebrow">ÚTOČISKO PÚTNIKOV</span><h2>Obchodník a kováč</h2><p id="balance">Zlato: '+p.gold+'</p><button class="primary" id="buyPotion">Kúpiť 3 elixíry · 25 zlata</button><button class="primary" id="buyCapes">Kúpiť 10 Plášťov statočnosti · 100 zlata</button><button class="primary" id="upgrade">Kováč · vylepšenie nasadenej výbavy</button><p id="shopmsg" role="status"></p>');$('buyPotion').onclick=()=>{if(!pay({gold:25})){$('shopmsg').textContent='Potrebuješ 25 zlata.';return;}p.potions+=3;$('balance').textContent='Zlato: '+p.gold;$('shopmsg').textContent='Získal si 3 elixíry.';save();updateHUD();};$('buyCapes').onclick=()=>{if(buyBraveryCapes()){$('balance').textContent='Zlato: '+p.gold;$('shopmsg').textContent='Získal si 10 Plášťov statočnosti.';}else $('shopmsg').textContent='Potrebuješ 100 zlata.';};$('upgrade').onclick=()=>careerPanel('forge');}
+
+function journal(){if(!running)return;const huntTarget=(p.huntClaimed+1)*10;modal(`<span class="eyebrow">CESTA OCHRANCU ÚDOLIA</span><h2>Denník úloh</h2><div class="journal-entry"><h3>Praskliny v pokoji</h3><p>Príšery ${Math.min(5,p.kills)} / 5 · Kamene ${Math.min(3,p.stones)} / 3<br>Odmena: 150 zlata + 60 skúseností</p><button class="primary" id="journalMain" ${p.claimed||p.kills<5||p.stones<3?'disabled':''}>${p.claimed?'✓ Dokončené':'Vyzdvihnúť odmenu'}</button></div><div class="journal-entry"><h3>Prvý strážca</h3><p>Poraz bossa na severovýchode ľubovoľnej mapy.<br>Odporúčaná úroveň 10+ v údolí · Porazení: ${p.bossKills}<br>Odmena: epická výbava + 200 zlata + 80 skúseností</p><button class="primary" id="claimBoss" ${p.bossClaimed||!p.bossKills?'disabled':''}>${p.bossClaimed?'✓ Dokončené':'Vyzdvihnúť odmenu'}</button></div><div class="journal-entry"><h3>Lovec údolia · opakovateľná</h3><p>Poraz celkom ${huntTarget} primeraných príšer. Postup: ${Math.min(p.career.eligibleKills,huntTarget)} / ${huntTarget}<br>Odmena za každých 10 príšer: 60 zlata + 1 tréningová pečať (bez EXP)</p><button class="primary" id="claimHunt" ${p.career.eligibleKills<huntTarget?'disabled':''}>Vyzdvihnúť odmenu</button></div>`);$('journalMain').onclick=()=>{if(p.claimed||p.kills<5||p.stones<3)return;$('claim').onclick();journal();};$('claimBoss').onclick=claimBoss;$('claimHunt').onclick=claimHunt;}
+
+function travelMenu(){if(!running)return;if(p.career.endgame.run){careerPanel('endgame');return;}modal(`<span class="eyebrow">CESTY KRÁĽOVSTVA · M</span><h2>Cestovná mapa</h2><p>Cestovať môžeš z útočiska na každej mape. Vyššie oblasti sú prístupné hneď, ale ich príšery sú silnejšie.</p><div class="map-list">${Object.entries(MAPS).map(([id,c])=>`<button data-map="${id}" class="map-card ${p.mapId===id?'selected':''}" style="--map-color:${c.ground}"><b>${c.name}</b><small>Úroveň ${c.level}+ · ${c.mob} · ${c.boss}</small><small>${c.count} pohyblivých príšer · ${c.packCount} skupinových bodov</small><span>${p.mapId===id?'Nachádzaš sa tu':c.desc}</span></button>`).join('')}</div><p id="travelmsg" role="status"></p>`);document.querySelectorAll('[data-map]').forEach(b=>b.onclick=()=>{if(p.mapId===b.dataset.map)return;if(Math.hypot(p.x-1000,p.y-1050)>190){$('travelmsg').textContent='Najprv sa vráť do útočiska uprostred mapy.';return;}loadMap(b.dataset.map);});}
+
+function spellbook(){if(!running)return;modal(`<span class="eyebrow">${role().name} · ${school().name}</span><h2>Kniha schopností</h2><p>Šesť klasických schopností školy podľa Metin2. Popisy uvádzajú základné hodnoty na stupni 1. Vyššie stupne zlepšujú silu kúzla alebo trvanie aury a skracujú obnovu. Vlastné 2D animácie sú prispôsobené tomuto prototypu.</p><div class="spell-list">${school().skills.map((s,i)=>`<div><kbd>${spellKeys[i].toUpperCase()}</kbd><span><b>${s[0]} · stupeň ${skillProgress(skillKey(i)).rank}</b><small>${s[6]}<br>${s[3]} many · obnova ${s[2]} s</small></span></div>`).join('')}</div><p>Manu obnovuješ priebežne, rýchlejšie v útočisku. Inteligencia zvyšuje manu aj poškodenie kúziel. Školu si vyber pred vstupom do hry. Prax a knihy pre zvyšovanie schopností nájdeš v Progrese (P).</p>`);}
+
+function help(){modal('<span class="eyebrow">SPRIEVODCA</span><h2>Cesta bojovníka</h2><p><b>WASD / šípky</b> — pohyb<br><b>Medzerník</b> — základný útok (možno držať)<br><b>Q R T Y U O</b> — šesť schopností školy<br><b>P</b> — dlhodobá progresia<br><b>K</b> — kniha schopností a ich účinky<br><b>E</b> — elixír zdravia<br><b>B</b> — Plášť statočnosti (650 jednotiek, 18 s)<br><b>I</b> — výbava a vlastnosti<br><b>J</b> — denník úloh<br><b>M</b> — cestovanie medzi mapami z útočiska<br><b>F</b> — obchodník<br><b>Esc</b> — zavrieť okno</p><p>Vyber si povolanie a školu pred vstupom do hry. Kúzla spotrebúvajú manu, ktorá sa automaticky obnovuje. Modré, zelené a fialové efekty označujú rôzne schopnosti, jedy a ochranné aury.</p><p>Príšery útočia až po tvojom zásahu alebo privolaní plášťom. Bossovia napádajú automaticky. Fialové označenie znamená elitu, zlaté vzácnu príšeru. Respawn: bežné príšery 5 s, elity 8 s, vzácne varianty 20 s, vzácne hliadky 75 s, kamene 18 s a bossovia 40 s. Plášť spotrebuje 1 kus aj bez cieľov; ďalšie kúpiš u obchodníka alebo získaš z koristi. Útočisko je chránené: plášť ani útočné kúzla v ňom nefungujú. Každá mapa má vlastných protivníkov a silnejšie odmeny. Boss pod 30 % zdravia zúri; Sura ho dokáže potlačiť Zrušením kúzla.</p><p>Vlastná 2D adaptácia šiestich klasických schopností každej školy, nie pôvodné animácie ani presná simulácia hodnôt Metin2. Postup sa ukladá v tomto prehliadači.</p>');}
+
+function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+
+
+
+// src/js/ui/hud.js
+function toast(t){$('toast').textContent=t;$('toast').style.opacity='1';toastTimer=3;}
+
+function baseHUD(){$('level').textContent='ÚR. '+p.level;$('hpbar').style.width=(p.hp/maxHP()*100)+'%';$('hptext').textContent=Math.ceil(p.hp)+' / '+maxHP();$('xpbar').style.width=(p.level===PROGRESSION.maxLevel?100:p.xp/needXP()*100)+'%';$('xptext').textContent=p.level===PROGRESSION.maxLevel?'MAX · ďalšia cesta v Progrese (P)':p.xp.toLocaleString('sk-SK')+' / '+needXP().toLocaleString('sk-SK')+' EXP';$('gold').textContent=p.gold;$('pots').textContent=p.potions;$('q-wolves').innerHTML=`${p.kills>=5?'◆':'◇'} Poraz príšery <b>${Math.min(p.kills,5)} / 5</b>`;$('q-stones').innerHTML=`${p.stones>=3?'◆':'◇'} Znič kamene osudu <b>${Math.min(p.stones,3)} / 3</b>`;$('claim').hidden=p.claimed||p.kills<5||p.stones<3;if(p.claimed)$('questnote').textContent='✓ Úloha dokončená · údolie ti ďakuje';$('cooldown').textContent=skillCD>0?Math.ceil(skillCD):'';$('coords').textContent=Math.hypot(p.x-1000,p.y-1050)<180?'Útočisko pútnikov':'Divoké údolie';}
+
+function updateMapHUD(){$('maptitle').textContent=map().name;$('mapdesc').textContent=map().desc;$('mapregion').textContent='◈ '+map().region;$('maplevel').textContent='Odporúčaná úroveň '+map().level+'+';$('minimaplabel').textContent=map().name.toUpperCase();}
+
+function chooseClass(id){if(running||!CLASSES[id])return;const old=maxHP();p.classId=id;p.hp=Math.min(maxHP(),p.hp+Math.max(0,maxHP()-old));renderClasses();updateClassHUD();updateHUD();}
+
+function chooseSchool(id){if(running||SCHOOLS[id]?.classId!==p.classId)return;p.schools[p.classId]=id;renderClasses();updateClassHUD();updateHUD();}
+
+function renderClasses(){$('classes').innerHTML=Object.entries(CLASSES).map(([id,c])=>`<button class="class-option ${p.classId===id?'selected':''}" data-class="${id}" aria-pressed="${p.classId===id}"><b>${c.name}</b></button>`).join('');$('schools').innerHTML=Object.entries(SCHOOLS).filter(([id,c])=>c.classId===p.classId).map(([id,c])=>`<button class="school-option ${p.schools[p.classId]===id?'selected':''}" data-school="${id}" aria-pressed="${p.schools[p.classId]===id}">${c.name}</button>`).join('');document.querySelectorAll('[data-class]').forEach(b=>b.onclick=()=>chooseClass(b.dataset.class));document.querySelectorAll('[data-school]').forEach(b=>b.onclick=()=>chooseSchool(b.dataset.school));}
+
+function updateClassHUD(){$('playerclass').textContent=role().name;$('classhint').textContent=role().desc;school().skills.forEach((s,i)=>{$(i?'skill'+(i+1):'skill').querySelector('small').textContent=s[0];$(i?'skill'+(i+1):'skill').title=`${s[0]} · stupeň ${skillProgress(skillKey(i)).rank} · ${s[3]} many · ${s[2]} s\n${s[6]}`;});$('attack').querySelector('small').textContent=p.classId==='ninja'&&p.schools.ninja==='archery'?'Streľba':p.classId==='shaman'?'Úder vejárom':'Základný útok';}
+
+function updateHUD(){baseHUD();$('capes').textContent=p.braveryCapes;$('cape-cooldown').textContent=capeCooldown>0?Math.ceil(capeCooldown):'';p.mp=Math.max(0,Math.min(maxMP(),p.mp));$('mpbar').style.width=p.mp/maxMP()*100+'%';$('mptext').textContent=Math.ceil(p.mp)+' / '+maxMP();for(let i=0;i<6;i++)$(i?'cooldown'+(i+1):'cooldown').textContent=spellCD[i]>0?Math.ceil(spellCD[i]):'';$('coords').textContent=Math.hypot(p.x-1000,p.y-1050)<190?'Útočisko · cestovanie M':farmAreaAt().name+' · Lv.'+(map().enemyLevel+farmAreaAt().offset)+'–'+(map().enemyLevel+farmAreaAt().offset+2);$('buffs').textContent=Object.entries(buffs).map(([id,t])=>{const s=Object.values(SCHOOLS).flatMap(c=>c.skills).find(s=>s[1]===id);return(s?s[0]:id)+' '+Math.ceil(t)+'s';}).join(' · ');if(p.claimed)$('questnote').textContent='✓ Dokončené · ďalšie úlohy v denníku J';}
+
+
+// src/js/ui/career.js
+function costLabel(cost) {
+  return Object.entries(cost).map(([id, n]) => n.toLocaleString('sk-SK') + ' ' + (id === 'gold' ? 'zlata' : MATERIALS[id])).join(' · ') || 'bez poplatku';
+}
+
+function careerOverview() {
+  const c = p.career, b = careerBonuses();
+  return `<p>Level je len jedna cesta. Každé zlepšenie nižšie má vlastný zdroj a trvalý prínos.</p>
+    <div class="career-metrics"><div>Úroveň <b>${p.level} / ${PROGRESSION.maxLevel}</b><small>${p.xp.toLocaleString('sk-SK')} / ${needXP().toLocaleString('sk-SK')} EXP</small></div>
+    <div>Výskum <b>${c.biology.stage} / ${BIOLOGY.length}</b><small>Permanentné biologické bonusy</small></div>
+    <div>Relikvie <b>${Object.values(c.collection).filter(Boolean).length} / 4</b><small>Vzácna zbierka a setové bonusy</small></div>
+    <div>Trhliny <b>${c.endgame.highest}</b><small>Najvyšší dokončený stupeň</small></div></div>
+    <h3>Bonusy mimo levelu a výbavy</h3><p>Útok +${b.attack} · obrana +${b.defense} · zdravie +${b.hp} · mana +${b.mp}<br>Sila kúziel +${b.magic} · kritický zásah +${Math.round(b.crit * 100)} % · útok +${Math.round(b.attackPercent * 100)} %</p>
+    <h3>Materiály</h3><div class="material-grid">${Object.entries(MATERIALS).map(([id, name]) => `<div>${name}<b>${c.materials[id].toLocaleString('sk-SK')}</b></div>`).join('')}</div>
+    <p>EXP rastie s úrovňou a typom nepriateľa. Ciele o 8 a viac úrovní slabšie už EXP nedávajú; prax a bežné rozvojové materiály vyžadujú cieľ najviac o 5 úrovní slabší. Biologické vzorky, relikvie a kľúče zostávajú dostupné aj pri návrate do starších máp.</p>`;
+}
+
+function careerTraining() {
+  return `<p>Za level dostávaš 3 voľné body vo výbave (I). Samostatný tréning používa pečate z každého piateho primeraného zabitia a zlato; nespotrebúva levelové body.</p>${Object.entries({ strength: 'Sila', vitality: 'Vitalita', dexterity: 'Obratnosť', intelligence: 'Inteligencia' }).map(([id, name]) => {
+    const rank = p.career.training[id];
+    return `<div class="career-card"><h3>${name} · ${p[id]}</h3><p>Tréning ${rank} / ${PROGRESSION.maxTraining} · ďalší tréning pridá 1 bod atribútu.<br>${costLabel(trainingCost(id))}</p><button class="primary" data-action="train" data-id="${id}" ${rank >= PROGRESSION.maxTraining ? 'disabled' : ''}>Trénovať ${name.toLowerCase()}</button></div>`;
+  }).join('')}`;
+}
+
+function careerSkills() {
+  return `<p>${role().name} · ${school().name}. Prax získaš za primeraných protivníkov, ktorých zasiahne daná schopnosť, alebo pri aktívnej aure. Opakované zásahy či kúzlenie naprázdno nepridávajú ďalšiu prax za toho istého nepriateľa. Knihy padajú z primeraných kameňov a bossov.</p>${school().skills.map((s, i) => {
+    const key = skillKey(i), skill = skillProgress(key), rank = skill.rank;
+    return `<div class="career-card"><h3>${s[0]} · ${rank >= 20 ? 'Veľmajster' : rank >= 10 ? 'Majster' : 'Stupeň'} ${rank}</h3><p>Prax ${skill.practice} / ${skillPracticeNeeded(rank)} · sila kúzla alebo trvanie aury +${Math.round((skillFactor(key) - 1) * 100)} % · obnova kratšia o ${rank - 1} %<br>${s[6]}<br>${costLabel(skillCost(key))}</p><button class="primary" data-action="skill" data-id="${key}" ${rank >= PROGRESSION.maxSkillRank || skill.practice < skillPracticeNeeded(rank) ? 'disabled' : ''}>Študovať schopnosť</button></div>`;
+  }).join('')}`;
+}
+
+function careerBiology() {
+  const bio = p.career.biology, stage = BIOLOGY[bio.stage];
+  const waiting = Math.max(0, bio.nextKill - p.career.eligibleKills);
+  return `<p>Biológ v útočisku skúma jednu vzorku naraz. Medzi odovzdaniami musíš poraziť 10 primeraných protivníkov. Vzorka pochádza z každého štvrtého bežného nepriateľa príslušnej mapy. Bonus za dokončený výskum zostáva natrvalo.</p>${BIOLOGY.map((b, i) => `<div class="career-card ${i < bio.stage ? 'completed' : ''}"><h3>${i < bio.stage ? '✓ ' : ''}${b.name}</h3><p>${MAPS[b.map].name} · úroveň ${b.level}+ · ${b.count} vzoriek<br>Trvalá odmena: ${b.text}</p>${i === bio.stage ? `<p>Odovzdané ${bio.delivered} / ${b.count} · v zásobe ${p.career.materials[b.item]}<br>${waiting ? 'Pred ďalším odovzdaním poraz ešte ' + waiting + ' primeraných protivníkov.' : 'Biológ je pripravený na ďalšiu vzorku.'}<br>Odovzdanie: 1 ${MATERIALS[b.item]} a ${25 * (i + 1)} zlata</p><button class="primary" data-action="bio" ${p.level < b.level || waiting || p.career.materials[b.item] < 1 ? 'disabled' : ''}>Odovzdať vzorku</button>` : i > bio.stage ? '<small>Najprv dokonči predchádzajúci výskum.</small>' : ''}</div>`).join('')}${!stage ? '<p>Všetky biologické výskumy dokončené.</p>' : ''}`;
+}
+
+function careerForge() {
+  return `<p>Vylepšenie patrí konkrétnemu predmetu a zostáva na ňom pri výmene. Maximálne +9. Kováč pracuje spoľahlivo; cena rudy a zlata rastie s druhou mocninou stupňa. Ruda pochádza z každého piateho primeraného zabitia.</p>${['weapon', 'armor'].map(slot => {
+    const item = p.equipped[slot];
+    return `<div class="career-card"><h3>${slot === 'weapon' ? 'Zbraň' : 'Zbroj'}</h3>${item ? `<p>${escapeHTML(item.name)} +${item.enhance || 0}<br>Základný bonus ${item.bonus}; vylepšenie +${(item.enhance || 0) * 3} ${slot === 'weapon' ? 'útok' : 'obrana'}<br>Ďalší stupeň: ${costLabel(enhancementCost(item))}</p><button class="primary" data-action="enhance" data-id="${slot}" ${(item.enhance || 0) >= PROGRESSION.maxEnhancement ? 'disabled' : ''}>Vylepšiť predmet</button>` : '<p>Najprv nasaď predmet vo výbave (I).</p>'}</div>`;
+  }).join('')}`;
+}
+
+function careerAlchemy() {
+  const alchemy = p.career.alchemy;
+  return `<p>Vyrob alchymistické kamene z esencie a rudy. Prvý kameň nasadíš zdarma; ďalšie stupne spotrebujú rastúci počet základných kameňov, prach a zlato. Všetky tri sloty môžu byť aktívne súčasne.</p>${Object.entries(GEMS).map(([id, gem]) => {
+    const rank = alchemy.equipped[id], stones = rank ? 2 ** rank : 1;
+    return `<div class="career-card"><h3 style="color:${gem.color}">${gem.name} · stupeň ${rank} / ${PROGRESSION.maxGemRank}</h3><p>${gem.text}<br>Základné kamene v zásobe: ${alchemy.stock[id]}</p><button class="primary" data-action="craft" data-id="${id}">Vyrobiť · ${costLabel({ essence: 30, ore: 3, gold: 100 })}</button><p>${rank ? 'Fúzia' : 'Nasadenie'}: ${stones} kameňov${rank ? ' · ' + costLabel({ dust: 5 * rank, gold: 100 * rank * rank }) : ''}</p><button class="primary" data-action="gem" data-id="${id}" ${rank >= PROGRESSION.maxGemRank || alchemy.stock[id] < stones ? 'disabled' : ''}>${rank ? 'Zvýšiť stupeň' : 'Nasadiť kameň'}</button></div>`;
+  }).join('')}`;
+}
+
+function careerCollection() {
+  return `<p>Každý boss má 8 % šancu na relikviu svojej mapy. Ak nepadne skôr, desiaty boss od posledného dropu ju zaručí. Prvý exemplár aktivuje trvalý bonus; ďalší sa premení na 10 alchymistického prachu.</p>${Object.entries(RELICS).map(([id, r]) => `<div class="career-card ${p.career.collection[id] ? 'completed' : ''}"><h3>${p.career.collection[id] ? '✓ ' : '◇ '}${r.name}</h3><p>${MAPS[id].boss} · ${MAPS[id].name}<br>Bonus: ${r.text}<br>Postup k zaručenému dropu: ${p.career.relicPity[id] || 0} / 10</p></div>`).join('')}<p>Set 2 relikvií: +2 obrana. Set všetkých 4: navyše +8 útok a +15 zdravie.</p>`;
+}
+
+function careerSpecialization() {
+  const spec = p.career.specialization;
+  return `<p>Od úrovne 10 môžeš zvoliť trvalú špecializáciu. Body získaš za primeraných bossov a za každé tri vylepšenia schopností. Voľba stojí 3 body a dáva prvý stupeň; ďalšie stupne stoja 2, 3, … bodov.</p><p>Voľné body: <b>${spec.points}</b></p>${Object.entries(SPECIALIZATIONS).map(([id, focus]) => `<div class="career-card ${spec.focus === id ? 'completed' : ''}"><h3>${focus.name} ${spec.focus === id ? '· ' + spec.rank + ' / ' + PROGRESSION.maxSpecialization : ''}</h3><p>${focus.text}</p>${!spec.focus ? `<button class="primary" data-action="spec" data-id="${id}" ${p.level < 10 || spec.points < 3 ? 'disabled' : ''}>Zvoliť natrvalo · 3 body</button>` : spec.focus === id ? `<button class="primary" data-action="spectrain" ${spec.rank >= PROGRESSION.maxSpecialization || spec.points < spec.rank + 1 ? 'disabled' : ''}>Rozvinúť · ${spec.rank + 1} bodov</button>` : ''}</div>`).join('')}`;
+}
+
+function careerEndgame() {
+  const end = p.career.endgame, run = end.run;
+  return `<p>Trhliny sa otvárajú od úrovne 35. Každá expedícia stojí 3 kľúče a vyžaduje 20 bežných protivníkov a jedného bossa. Každý tretí boss zanechá kľúč, aj pri návrate do staršej mapy. Vyšší stupeň trhliny má silnejších nepriateľov a viac úlomkov.</p>
+    ${run ? `<div class="career-card"><h3>Aktívna trhlina · stupeň ${run.tier}</h3><p>Príšery ${Math.min(20, run.kills)} / 20 · boss ${Math.min(1, run.bosses)} / 1<br>Odmena: ${10 + run.tier * 3} úlomkov</p><button class="primary" data-action="claimRift" ${run.kills < 20 || run.bosses < 1 ? 'disabled' : ''}>Dokončiť a vyzdvihnúť odmenu</button><button class="secondary" data-action="abandon">Opustiť bez odmeny · kľúče sa nevrátia</button></div>` : `<div class="career-card"><h3>Ďalší stupeň ${Math.min(PROGRESSION.maxRiftTier, end.highest + 1)}</h3><p>Najvyšší dokončený: ${end.highest} · kľúče: ${p.career.materials.keys}<br>Vstup iba z útočiska.</p><button class="primary" data-action="enter" ${p.level < 35 || p.career.materials.keys < 3 ? 'disabled' : ''}>Vstúpiť · 3 kľúče</button></div>`}
+    <div class="career-card"><h3>Relikviár · ${end.paragon} / ${PROGRESSION.maxParagon}</h3><p>Trvalý bonus: +${end.paragon * 2} útok a +${end.paragon * 5} zdravie.<br>Ďalší stupeň: ${25 * (end.paragon + 1) ** 2} úlomkov. Zásoba: ${p.career.materials.shards}</p><button class="primary" data-action="paragon" ${p.level < 35 || end.paragon >= PROGRESSION.maxParagon ? 'disabled' : ''}>Posilniť relikviár</button></div>`;
+}
+
+function careerPanel(tab = careerTab) {
+  if (!running) return;
+  const tabs = {
+    overview: ['Prehľad', careerOverview], training: ['Atribúty', careerTraining],
+    skills: ['Schopnosti', careerSkills], biology: ['Biológ', careerBiology],
+    forge: ['Vybavenie', careerForge], alchemy: ['Alchýmia', careerAlchemy],
+    collection: ['Relikvie', careerCollection], specialization: ['Špecializácia', careerSpecialization],
+    endgame: ['Endgame', careerEndgame]
+  };
+  careerTab = tabs[tab] ? tab : 'overview';
+  modal(`<span class="eyebrow">DLHODOBÁ CESTA POSTAVY · P</span><h2>Progresia</h2><nav class="career-tabs" aria-label="Systémy progresie">${Object.entries(tabs).map(([id, [name]]) => `<button data-career-tab="${id}" aria-pressed="${careerTab === id}">${name}</button>`).join('')}</nav><div class="career-body">${tabs[careerTab][1]()}</div><p id="career-message" role="status"></p>`);
+  document.querySelectorAll('[data-career-tab]').forEach(button => button.onclick = () => careerPanel(button.dataset.careerTab));
+  const actions = {
+    train: id => trainAttribute(id), skill: id => upgradeSkill(id), bio: completeBiology,
+    enhance: id => enhanceEquipment(id), craft: id => craftGem(id), gem: id => upgradeGem(id),
+    spec: id => specialize(id), spectrain: trainSpecialization, enter: enterRift,
+    claimRift: () => finishRift(true), abandon: () => finishRift(false), paragon: upgradeParagon
+  };
+  document.querySelectorAll('[data-action]').forEach(button => button.onclick = () => {
+    if (actions[button.dataset.action]?.(button.dataset.id)) {
+      updateClassHUD(); updateHUD(); careerPanel(careerTab);
+      $('career-message').textContent = 'Hotovo. Postup bol uložený.';
+    } else $('career-message').textContent = 'Chýbajú materiály, zlato, požadovaná úroveň alebo podmienka postupu. Vstup do trhliny vyžaduje útočisko.';
+  });
+}
+
+
+// src/js/render/primitives.js
+function polygon(points,fill,stroke){ctx.beginPath();points.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();}}
+
+function ellipse(x,y,rx,ry,color){ctx.fillStyle=color;ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.fill();}
+
+function line(x,y,x2,y2,color,width=1){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();}
+
+function text(t,x,y,color='#d4dec2',size=10){ctx.font=`${size}px Segoe UI,sans-serif`;ctx.textAlign='center';ctx.fillStyle='#0c1c16bb';ctx.fillText(t,x+1,y+1);ctx.fillStyle=color;ctx.fillText(t,x,y);}
+
+function shadow(x,y,s=1){ellipse(x+4,y+3,20*s,8*s,'#0a201c40');}
+
+
+// src/js/render/world.js
+function baseTree(d){const pos=screen(d.x,d.y),s=d.s,x=pos.x,y=pos.y;if(x<-150||x>W+150||y<-50||y>H+220)return;shadow(x,y,s*1.8);polygon([[x-5*s,y],[x-3*s,y-65*s],[x+5*s,y-65*s],[x+7*s,y]],'#494e36');line(x,y-25*s,x-20*s,y-55*s,'#4c5137',4*s);const hues=['#254b3b','#305b40','#3d6544'];for(let j=0;j<3;j++){ellipse(x+(j-1)*17*s,y-(62+j%2*16)*s,31*s,24*s,hues[j]);ellipse(x+(j-1)*17*s-5*s,y-(70+j%2*16)*s,23*s,15*s,['#3d6244','#52764b','#5d7c4e'][j]);}ellipse(x+8*s,y-88*s,19*s,15*s,'#6c8752');}
+
+function baseRock(d){const {x,y}=screen(d.x,d.y),s=d.s;shadow(x,y,s);polygon([[x-14*s,y],[x-18*s,y-12*s],[x-6*s,y-24*s],[x+11*s,y-21*s],[x+18*s,y-5*s],[x+8*s,y+4*s]],'#667064');polygon([[x-18*s,y-12*s],[x-6*s,y-24*s],[x+11*s,y-21*s],[x+2*s,y-9*s]],'#84907a');line(x+2*s,y-9*s,x+8*s,y+4*s,'#4c5f50',1);}
+
+function shrine(){const{x,y}=screen(1000,1050);ellipse(x,y,105,53,'#8d96754a');for(let i=0;i<7;i++){const a=i*Math.PI/3.5;ellipse(x+Math.cos(a)*94,y+Math.sin(a)*44,16,7,'#73816a');}polygon([[x-55,y+15],[x-55,y-65],[x+54,y-65],[x+54,y+15]],'#555b43');polygon([[x-61,y-65],[x,y-101],[x+63,y-65],[x+72,y-58],[x-71,y-58]],'#304e44');polygon([[x-67,y-61],[x,y-93],[x+67,y-61],[x+35,y-70],[x,y-80],[x-35,y-70]],'#6b8061');ctx.fillStyle='#243e32';ctx.fillRect(x-39,y-53,78,65);ctx.fillStyle='#a29b65';ctx.fillRect(x-49,y-56,7,70);ctx.fillRect(x+42,y-56,7,70);polygon([[x-64,y+15],[x+65,y+15],[x+75,y+25],[x-74,y+25]],'#8b9171');text('ÚTOČISKO',x,y-112,'#c6d0a9',9);}
+
+function merchant(){const{x,y}=screen(1110,1110);shadow(x,y);polygon([[x-10,y],[x-8,y-28],[x+8,y-28],[x+12,y]],'#ae8c55');ellipse(x,y-34,7,8,'#c7b28a');polygon([[x-15,y-39],[x,y-52],[x+15,y-39]],'#a99e70');text('Obchodník · F',x,y-63,'#d4c88f',10);ellipse(x,y+10,13,4,'#cbb77c55');}
+
+function drawMobBase(m){if(m.hp<=0)return;if(m.type==='wolf'&&m.skin&&m.skin!=='wolf'){drawCreature(m);return;}if(m.type==='boss'){drawBoss(m);return;}const {x,y}=screen(m.x,m.y);if(x<-60||x>W+60||y<-90||y>H+90)return;shadow(x,y,m.type==='stone'?1.4:1);if(m.type==='wolf'){const flip=m.x<p.x?-1:1;ctx.save();ctx.translate(x,y);ctx.scale(flip,1);line(-12,-7,-15,3,'#6e7465',4);line(10,-8,13,3,'#6e7465',4);ellipse(0,-15,19,11,m.hit>0?'#bdb296':'#8b9682');polygon([[-15,-18],[-30,-28],[-22,-10]],'#73806d');ellipse(17,-22,10,9,m.hit>0?'#e1c6a1':'#a4ad93');polygon([[12,-27],[13,-38],[20,-28]],'#697a67');polygon([[20,-25],[33,-20],[21,-15]],'#a9b09b');ellipse(24,-25,2,1.5,'#ebbd79');ctx.restore();}else{const pulse=.6+Math.sin(clock*2)*.25;ellipse(x,y,43,19,'#8177b925');polygon([[x-23,y],[x-30,y-35],[x-11,y-73],[x+9,y-85],[x+27,y-44],[x+22,y+1],[x,y+10]],m.hit>0?'#c0a2b7':'#5e596c','#91909c');polygon([[x-11,y-73],[x+9,y-85],[x+4,y-34],[x-23,y]],'#817b8b');line(x+4,y-68,x-5,y-45,`rgba(222,149,231,${pulse})`,3);line(x-5,y-45,x+9,y-30,'#d195d4',2);line(x+9,y-30,x+2,y-9,'#bc9ecf',3);text('Kameň osudu · Lv.'+enemyLevel(m),x,y-99,'#d6b8de',10);}if(m.hp<m.max||Math.hypot(m.x-p.x,m.y-p.y)<160){if(m.type==='wolf')text(map().mob+' · Lv.'+enemyLevel(m),x,y-57,'#d4dec2',9);const yy=y-(m.type==='stone'?92:47);ctx.fillStyle='#14251c';ctx.fillRect(x-22,yy,44,4);ctx.fillStyle=m.type==='stone'?'#b08cbb':'#ba7565';ctx.fillRect(x-22,yy,44*m.hp/m.max,4);}}
+
+function baseGround(){ctx.fillStyle='#536b45';ctx.fillRect(0,0,W,H);const gx=Math.floor((cam.x-W/2)/90)*90,gy=Math.floor((cam.y-H/.62/2)/90)*90;for(let x=gx;x<cam.x+W/2+90;x+=90)for(let y=gy;y<cam.y+H/.62/2+90;y+=90){const v=Math.sin(x*34.3+y*41.2)*43758.54,n=v-Math.floor(v),pos=screen(x,y);ellipse(pos.x,pos.y,70+n*35,27+n*14,`rgba(${n>.5?'115,135,76':'45,86,55'},.16)`);for(let k=0;k<4;k++){const a=pos.x+Math.sin(x+y+k*70)*40,b=pos.y+Math.cos(x-y+k*30)*25;line(a,b,a+2,b-4,'#a4b27a28');}}ctx.lineCap='round';for(const points of [[[100,1200],[520,1070],[1000,1090],[1450,900],[1900,670]],[[1000,1090],[900,750],[610,630]],[[1000,1090],[1270,1330],[1440,1430]]]){ctx.beginPath();points.forEach(([x,y],i)=>{const a=screen(x,y);i?ctx.lineTo(a.x,a.y):ctx.moveTo(a.x,a.y);});ctx.lineWidth=57;ctx.strokeStyle='#a29c7250';ctx.stroke();ctx.lineWidth=35;ctx.strokeStyle='#bab08426';ctx.stroke();}const water=screen(270,480);ctx.save();ctx.translate(water.x,water.y);ctx.rotate(-.3);ellipse(0,0,165,85,'#3b665e');ellipse(0,0,150,74,'#517c6c');for(let i=0;i<8;i++)line(-100+i*18,Math.sin(i+clock*.3)*30,-70+i*18,Math.sin(i+clock*.3)*30,'#95b8a43a');ctx.restore();}
+
+function drawBoss(b){const{x,y}=screen(b.x,b.y);if(x<-150||x>W+150||y<-80||y>H+150)return;shadow(x,y,2.1);if(b.windup>0){ellipse(x,y,120,74,'#db554633');ctx.strokeStyle='#f2a179';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(x,y,120,74,0,0,Math.PI*2);ctx.stroke();text('ÚDER · USTÚP!',x,y+92,'#f6ad8c',11);}line(x-15,y-14,x-22,y+4,'#4c3f38',9);line(x+15,y-14,x+22,y+4,'#4c3f38',9);polygon([[x-24,y-64],[x-33,y-37],[x-25,y-8],[x+25,y-8],[x+33,y-37],[x+24,y-64]],b.hit>0?'#e8c8a6':p.mapId==='snow'?'#c3d5cf':p.mapId==='temple'?'#ac6750':p.mapId==='desert'?'#ac8b53':'#76684c','#b09b6b');polygon([[x-18,y-56],[x,y-77],[x+18,y-56],[x+12,y-33],[x-12,y-33]],'#9a9a73');ellipse(x,y-70,15,16,'#9c9672');polygon([[x-14,y-76],[x-32,y-102],[x-24,y-74],[x-12,y-65]],'#c0b187');polygon([[x+14,y-76],[x+32,y-102],[x+24,y-74],[x+12,y-65]],'#c0b187');line(x-9,y-72,x-3,y-70,'#f1b17f',3);line(x+3,y-70,x+9,y-72,'#f1b17f',3);line(x+36,y-20,x+49,y-77,'#786344',6);polygon([[x+47,y-80],[x+65,y-78],[x+62,y-54],[x+44,y-57]],'#b4b18b');text('♛ '+map().boss.toUpperCase()+' · Lv.'+enemyLevel(b),x,y-126,'#f0c490',12);ctx.fillStyle='#1b2921';ctx.fillRect(x-55,y-114,110,6);ctx.fillStyle='#c88165';ctx.fillRect(x-55,y-114,110*b.hp/b.max,6);text(Math.ceil(b.hp)+' / '+b.max,x,y-97,'#e0d2a8',8);}
+
+function drawCreature(m){const{x,y}=screen(m.x,m.y);if(x<-100||x>W+100||y<-90||y>H+90)return;shadow(x,y,1.2);const c=m.hit>0?'#ead1a4':m.skin==='scorpion'?'#9a6037':m.skin==='yeti'?'#e3e9dc':'#a16455';if(m.skin==='scorpion'){for(let i=0;i<3;i++){line(x-9,y-4-i*6,x-25-i*2,y+6-i*7,c,3);line(x+9,y-4-i*6,x+25+i*2,y+6-i*7,c,3);}ellipse(x,y-11,14,17,c);line(x,y-26,x+13,y-43,c,6);line(x+13,y-43,x+7,y-57,c,5);polygon([[x+7,y-58],[x-2,y-46],[x+10,y-48]],'#c5ab76');ellipse(x-23,y-9,7,9,c);ellipse(x+23,y-9,7,9,c);ellipse(x-4,y-8,2,2,'#f1d17e');ellipse(x+4,y-8,2,2,'#f1d17e');}else if(m.skin==='yeti'){line(x-10,y-12,x-13,y+2,c,9);line(x+10,y-12,x+13,y+2,c,9);ellipse(x,y-29,21,26,c);line(x-19,y-37,x-27,y-14,c,9);line(x+19,y-37,x+27,y-14,c,9);ellipse(x,y-53,13,13,c);ellipse(x,y-51,9,6,'#5e7b80');ellipse(x-4,y-53,2,2,'#b4e6ee');ellipse(x+4,y-53,2,2,'#b4e6ee');}else{polygon([[x-15,y-39],[x-39,y-61],[x-33,y-20],[x-12,y-16]],'#6e4a4c');polygon([[x+15,y-39],[x+39,y-61],[x+33,y-20],[x+12,y-16]],'#6e4a4c');line(x-8,y-10,x-13,y+1,c,6);line(x+8,y-10,x+13,y+1,c,6);polygon([[x-15,y-42],[x-11,y-9],[x+11,y-9],[x+15,y-42]],c);ellipse(x,y-47,11,12,c);polygon([[x-9,y-51],[x-18,y-67],[x-4,y-56]],'#c3a78c');polygon([[x+9,y-51],[x+18,y-67],[x+4,y-56]],'#c3a78c');line(x-6,y-48,x-1,y-46,'#f8ca72',2);line(x+1,y-46,x+6,y-48,'#f8ca72',2);}if(m.hp<m.max||Math.hypot(m.x-p.x,m.y-p.y)<150){ctx.fillStyle='#20342c';ctx.fillRect(x-24,y-77,48,4);ctx.fillStyle='#c78d79';ctx.fillRect(x-24,y-77,48*m.hp/m.max,4);text(map().mob+' · Lv.'+enemyLevel(m),x,y-87,'#e1d4b7',9);}if(m.dot)text(m.dot.kind==='poison'?'☠':'♨',x+28,y-35,m.dot.kind==='poison'?'#c6e58e':'#f8bc76',14);}
+
+function ground(){if(p.mapId==='valley'){baseGround();}else{const cfg=map();ctx.fillStyle=cfg.ground;ctx.fillRect(0,0,W,H);const gx=Math.floor((cam.x-W/2)/100)*100,gy=Math.floor((cam.y-H/.62/2)/100)*100;for(let x=gx;x<cam.x+W/2+100;x+=100)for(let y=gy;y<cam.y+H/.62/2+100;y+=100){const a=screen(x,y),n=Math.abs(Math.sin(x*12+y*23));if(p.mapId==='temple'){polygon([[a.x,a.y],[a.x+91,a.y],[a.x+91,a.y+53],[a.x,a.y+53]],n>.5?'#51423f':'#493d3b','#272d2c');if(n>.74){line(a.x,a.y,a.x+30,a.y+23,'#bf673d77',2);line(a.x+30,a.y+23,a.x+65,a.y+12,'#d27d4277',2);}}else{ellipse(a.x,a.y,70+n*40,15+n*15,cfg.patch);if(p.mapId==='desert'){for(let j=0;j<3;j++)line(a.x-30,a.y+j*6,a.x+35,a.y+j*6-3,'#e8cb8a22');}else for(let j=0;j<3;j++)line(a.x+j*15,a.y,a.x+j*15+8,a.y+7,'#e9f7ec44');}}const water=screen(270,480);ellipse(water.x,water.y,150,75,cfg.water);ellipse(water.x,water.y,127,61,p.mapId==='temple'?'#e4933e':p.mapId==='snow'?'#b5d5d3':'#71a194');if(p.mapId==='temple')for(let j=0;j<8;j++){const a=screen(270+Math.sin(j)*120,480+Math.cos(j)*90);ellipse(a.x,a.y-5-Math.sin(clock*2+j)*8,4,4,'#f7bc6b88');}ctx.beginPath();[[100,1200],[520,1070],[1000,1090],[1450,900],[1900,670]].forEach(([x,y],i)=>{const a=screen(x,y);i?ctx.lineTo(a.x,a.y):ctx.moveTo(a.x,a.y);});ctx.strokeStyle=cfg.path;ctx.lineWidth=55;ctx.stroke();}const a=screen(870,1160);ellipse(a.x,a.y,23,11,map().accent+'33');ctx.strokeStyle=map().accent;ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(a.x,a.y,21+Math.sin(clock*2)*2,10,0,0,Math.PI*2);ctx.stroke();text('CESTOVANIE · M',a.x,a.y-23,map().accent,8);}
+
+function tree(d){if(p.mapId==='desert'){const{x,y}=screen(d.x,d.y),s=d.s;shadow(x,y,s);line(x,y,x,y-60*s,'#58785a',9*s);line(x,y-22*s,x-17*s,y-22*s,'#58785a',7*s);line(x-17*s,y-22*s,x-17*s,y-44*s,'#58785a',7*s);line(x,y-35*s,x+16*s,y-35*s,'#58785a',7*s);line(x+16*s,y-35*s,x+16*s,y-50*s,'#58785a',7*s);line(x-2*s,y-4*s,x-2*s,y-55*s,'#94a773',2*s);return;}if(p.mapId==='temple'){const{x,y}=screen(d.x,d.y),s=d.s;shadow(x,y,s);polygon([[x-12*s,y],[x-12*s,y-74*s],[x+12*s,y-74*s],[x+12*s,y]],'#645955','#a89373');ellipse(x,y-77*s,16*s,6*s,'#746860');polygon([[x-7*s,y-79*s],[x-3*s,y-113*s],[x+9*s,y-80*s]],'#e19b52');return;}baseTree(d);if(p.mapId==='snow'){const{x,y}=screen(d.x,d.y),s=d.s;ellipse(x,y-87*s,25*s,10*s,'#d4e0ce');ellipse(x-20*s,y-67*s,20*s,7*s,'#d4e0ce');ellipse(x+24*s,y-68*s,20*s,7*s,'#d4e0ce');}}
+
+function rock(d){baseRock(d);const{x,y}=screen(d.x,d.y),s=d.s;if(p.mapId==='snow')polygon([[x-18*s,y-12*s],[x-6*s,y-24*s],[x+11*s,y-21*s],[x+3*s,y-12*s]],'#dae5d8');else if(p.mapId==='desert')polygon([[x-18*s,y-12*s],[x-6*s,y-24*s],[x+11*s,y-21*s],[x+3*s,y-12*s]],'#c4a06a');else if(p.mapId==='temple')line(x-4*s,y-20*s,x+4*s,y-3*s,'#cf804d',2*s);}
+
+function drawMini(){if(clock-lastMiniMapPaint<.1)return;lastMiniMapPaint=clock;mini.fillStyle=map().ground;mini.fillRect(0,0,138,118);mini.globalAlpha=.4;mini.fillStyle=map().water;mini.beginPath();mini.ellipse(18,28,13,9,0,0,7);mini.fill();for(const d of decor){mini.fillStyle=map().accent;mini.fillRect(d.x/SIZE*138,d.y/SIZE*118,2,2);}mini.globalAlpha=1;drawFarmMinimap();for(const m of mobs)if(m.hp>0){mini.fillStyle=m.type==='boss'?'#ff695c':m.type==='stone'?'#dfb3f0':m.variant==='rare'?ENEMY_VARIANTS.rare.color:m.variant==='elite'?ENEMY_VARIANTS.elite.color:'#f4cb84';const size=m.type==='wolf'?2:4;mini.fillRect(m.x/SIZE*138-1,m.y/SIZE*118-1,size,size);}mini.fillStyle='#f7edbc';mini.fillRect(60,67,3,3);mini.beginPath();mini.arc(p.x/SIZE*138,p.y/SIZE*118,3,0,7);mini.fill();}
+
+
+
+// src/js/render/character.js
+function hero(){const{x,y}=screen(p.x,p.y),moving=target||keys.w||keys.a||keys.s||keys.d||keys.ArrowUp||keys.ArrowDown||keys.ArrowLeft||keys.ArrowRight,step=moving?Math.sin(clock*12)*4:0,cls=p.classId,color=role().color;ctx.save();if(active('stealth'))ctx.globalAlpha=.35;shadow(x,y);if(active('aura')||active('enchanted')||active('guard')||active('armor')||active('darkGuard')||active('bless')||active('reflect')){ellipse(x,y+2,30+Math.sin(clock*4)*3,13,color+'35');ctx.strokeStyle=color+'99';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(x,y-23,25,38,0,0,Math.PI*2);ctx.stroke();}if(active('spirit')){const a=clock*3;ellipse(x+Math.cos(a)*35,y-30+Math.sin(a)*18,6,9,'#f3b565');ellipse(x+Math.cos(a)*35,y-30+Math.sin(a)*18,3,5,'#ffe0a8');}line(x-5,y-12,x-7,y+step,'#293634',cls==='ninja'?4:6);line(x+5,y-12,x+7,y-step,'#293634',cls==='ninja'?4:6);const cast=castPose>0?Math.sin(castPose/.6*Math.PI):0;
+if(cls==='warrior'){polygon([[x-12,y-33],[x-18,y+2],[x+3,y-8],[x+6,y-29]],'#9b5241');polygon([[x-12,y-32],[x-10,y-11],[x+11,y-11],[x+13,y-32],[x,y-37]],'#a2ad9b','#d3d3ad');line(x-10,y-23,x+10,y-23,'#c8b889',3);ellipse(x-14,y-30,7,6,'#889581');ellipse(x+14,y-30,7,6,'#889581');}
+else if(cls==='ninja'){polygon([[x-10,y-32],[x-8,y-10],[x+8,y-10],[x+10,y-32],[x,y-37]],'#38594b','#7c9a71');polygon([[x-9,y-30],[x-16,y-7],[x-3,y-14],[x+4,y-29]],'#233d35');line(x-8,y-15,x+8,y-15,'#a09367',3);line(x-14,y-28,x-19,y-16,'#668f73',4);}
+else if(cls==='sura'){polygon([[x-11,y-34],[x-12,y-9],[x+12,y-9],[x+10,y-34]],'#513e69','#a48ba9');polygon([[x-10,y-28],[x-8,y-14],[x+8,y-14],[x+8,y-28]],'#947998');line(x-13,y-29,x-19,y-14-cast*14,'#8a4eb0',7);ellipse(x-19,y-15-cast*14,10+Math.sin(clock*5)*2,9,'#bd7fe34a');for(let i=0;i<3;i++)line(x-21+i*3,y-15-cast*14,x-24+i*3,y-7-cast*14,'#c89ce9',1.5);}
+else{polygon([[x-11,y-33],[x-17,y+2],[x+17,y+2],[x+10,y-33],[x,y-39]],'#d1bd96','#eeddb3');polygon([[x-3,y-33],[x+1,y+1],[x+7,y],[x+3,y-32]],'#ab6e60');line(x-13,y-28,x-20,y-15-cast*15,'#edd7ac',6);}
+ellipse(x,y-42,7,9,'#d5bd97');if(cls==='ninja'){polygon([[x-8,y-45],[x-6,y-52],[x+7,y-51],[x+9,y-40],[x-8,y-39]],'#223e36');line(x-5,y-43,x+5,y-43,'#e3d2a2',2);polygon([[x+6,y-45],[x+24,y-47],[x+10,y-40]],'#456d53');}else{polygon([[x-8,y-45],[x-6,y-51],[x+7,y-51],[x+9,y-39],[x+2,y-44]],cls==='sura'?'#31263c':'#2f3630');if(cls==='shaman')line(x-7,y-48,x+7,y-48,'#d3a65d',2);}
+ctx.save();ctx.translate(x+16,y-24-cast*12);const swing=slash>0?(1-slash/.22)*Math.PI*1.2-1.3:Math.sin(clock*2)*.06;ctx.rotate(swing+(moving?.1:0));if(cls==='ninja'&&p.schools.ninja==='archery'){ctx.strokeStyle='#b7a577';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,-4,20,-1.4,1.4);ctx.stroke();line(3,-23,3,16,'#d1c6a6',1);}else if(cls==='shaman'){polygon([[0,0],[-8,-22],[0,-29],[10,-25],[20,-13]],'#d7c68c','#f4e3b4');for(let i=0;i<4;i++)line(0,0,-5+i*7,-23+i,'#ad7d64',1);}else{line(0,8,0,-30,'#e4e8d0',cls==='ninja'?3:4);line(-6,0,6,0,'#c7aa73',3);if(cls==='sura'||active('aura'))line(0,-5,0,-30,color,2);}
+ctx.restore();if(cls==='ninja'&&p.schools.ninja==='blade'){line(x-19,y-14,x-25,y-35,'#cad9bd',3);line(x-24,y-16,x-16,y-19,'#ac9766',2);}text(role().name+' · '+school().name,x,y-68,color,9);ctx.restore();}
+
+
+// src/js/render/effects.js
+function fx(style,x=p.x,y=p.y,color=role().color,life=.65,angle=face){effects.push({style,x,y,color,life,total:life,angle});}
+
+function drawEffects(){for(const e of effects){const a=screen(e.x,e.y),t=1-e.life/e.total,color=e.color;ctx.save();ctx.globalAlpha=Math.min(1,e.life/e.total*1.7);ctx.translate(a.x,a.y);ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=3;
+if(['spin','ground','aura','heal','poison','fire','dark','impact','cast','smoke'].includes(e.style)){const r=15+t*(e.style==='spin'?165:e.style==='ground'?140:e.style==='poison'?155:80);ellipse(0,-5,r,r*.55,color+'25');ctx.beginPath();ctx.ellipse(0,-5,r,r*.55,t*2,0,Math.PI*2);ctx.stroke();for(let j=0;j<8;j++){const b=j*Math.PI/4+t*4,x=Math.cos(b)*r,y=Math.sin(b)*r*.5;if(e.style==='heal'){line(x,y-15,x,y-25,color,2);line(x-4,y-20,x+4,y-20,color,2);}else if(e.style==='fire'){polygon([[x-5,y],[x+Math.sin(j+t*10)*5,y-25-t*20],[x+6,y]],'#f7bb6c');}else ellipse(x,y-10,3+t*3,3+t*4,color);}}
+else if(e.style==='lightning'){ctx.lineWidth=4;ctx.shadowColor=color;ctx.shadowBlur=15;const pts=[[0,-180],[-18,-130],[12,-134],[-8,-80],[16,-86],[0,-10]];ctx.beginPath();pts.forEach(([x,y],i)=>i?ctx.lineTo(x+Math.sin(t*15+i)*8,y):ctx.moveTo(x,y));ctx.stroke();ellipse(0,0,28+t*40,12+t*20,color+'44');}
+else if(['slash','cross'].includes(e.style)){ctx.rotate(e.angle*.35);ctx.lineWidth=5;ctx.beginPath();ctx.ellipse(0,-15,35+t*45,20+t*20,0,Math.PI*1.05,Math.PI*1.95);ctx.stroke();if(e.style==='cross'){line(-30,-45,30,5,color,3);line(-30,5,30,-45,color,3);}}
+else if(['beam','finger','dragon','dash'].includes(e.style)){const length=e.style==='dragon'?260:e.style==='beam'?280:e.style==='dash'?180:120,ux=Math.cos(e.angle),uy=Math.sin(e.angle)*.62;line(0,-20,ux*length*t,uy*length*t-20,color,e.style==='finger'?20:8);for(let j=0;j<8;j++){const d=(j/8+t*.15)*length,off=Math.sin(j+t*13)*18;ellipse(ux*d+off,uy*d-20+Math.cos(j+t*8)*14,15+(e.style==='dragon'?10:0),9,color+'88');}if(e.style==='dragon'){const x=ux*length*t,y=uy*length*t-20;polygon([[x-18,y],[x+ux*30,y+uy*30-8],[x+10,y+12],[x,y+20]],'#e8bc81');line(x-5,y-10,x-16,y-35,color,4);line(x+6,y-10,x+18,y-30,color,4);}}
+ctx.restore();}for(const b of shots){if(b.opts.delay>0)continue;const a=screen(b.x,b.y),target=screen(b.target.x,b.target.y-15),angle=Math.atan2(target.y-a.y,target.x-a.x);ctx.save();ctx.translate(a.x,a.y);ctx.rotate(angle);if(b.style==='arrow'||b.style.includes('Arrow')){line(-20,0,6,0,b.style==='fireArrow'?'#f6b06a':b.style==='poisonArrow'?'#a6d77b':'#e7d7aa',2);polygon([[10,0],[1,-4],[1,4]],'#e8dfc0');}else if(b.style==='talisman'){polygon([[-8,-11],[7,-11],[8,10],[-7,10]],'#f1d6a1');line(-3,-6,3,5,'#a25043',2);}else{ellipse(0,0,b.style==='darkOrb'?16:8,b.style==='darkOrb'?13:6,b.color+'66');ellipse(0,0,b.style==='darkOrb'?9:5,b.style==='darkOrb'?8:4,b.color);line(-30,0,-5,0,b.color+'66',4);}ctx.restore();}}
+
+
+// src/js/render/scene.js
+function draw(){ctx.setTransform(dpr,0,0,dpr,0,0);ground();drawFarmRegions();for(const d of drops){const a=screen(d.x,d.y);ellipse(a.x,a.y,8,4,'#d6ba5650');ellipse(a.x,a.y-5+Math.sin(clock*4)*2,4,4,'#e5cd77');}const objects=[...decor.map(d=>({y:d.y,draw:()=>d.type==='tree'?tree(d):rock(d)})),{y:1050,draw:shrine},{y:1110,draw:merchant},...mobs.filter(m=>m.hp>0).map(m=>({y:m.y,draw:()=>mobDraw(m)})),{y:p.y,draw:hero}];objects.sort((a,b)=>a.y-b.y).forEach(o=>o.draw());if(target){const a=screen(target.x,target.y);ctx.strokeStyle='#d9cd9260';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(a.x,a.y,11,6,0,0,Math.PI*2);ctx.stroke();}for(const f of particles){const a=screen(f.x,f.y);text(f.t,a.x,a.y-f.age*36,f.color, f.big?22:14);}const glow=ctx.createRadialGradient(W*.3,H*.1,0,W*.3,H*.1,W*.7);glow.addColorStop(0,'#e4e5ad0e');glow.addColorStop(1,'#091b1a25');ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);drawEffects();drawFarmingEffects();drawMini();}
+
+
+// src/js/render/farming.js
+function drawFarmRegions() {
+  for (const area of FARM_AREAS) {
+    const a = screen((area.x1 + area.x2) / 2, area.y1 - 35);
+    if (a.x < -160 || a.x > W + 160 || a.y < -40 || a.y > H + 40) continue;
+    text(area.name, a.x, a.y, map().accent, 12);
+    text('Lv.' + (map().enemyLevel + area.offset) + '–' + (map().enemyLevel + area.offset + 2), a.x, a.y + 15, '#ccd1b8', 9);
+  }
+  for (const point of spawnPoints) {
+    if (point.kind !== 'pack' && point.kind !== 'rare') continue;
+    const a = screen(point.x, point.y);
+    if (a.x < -40 || a.x > W + 40 || a.y < -30 || a.y > H + 30) continue;
+    ellipse(a.x, a.y, point.kind === 'rare' ? 18 : 10, point.kind === 'rare' ? 9 : 5, point.kind === 'rare' ? '#ecd08825' : '#d4dcad12');
+  }
+}
+
+function mobDraw(m) {
+  if (m.hp <= 0) return;
+  const a = screen(m.x, m.y);
+  if (a.x < -120 || a.x > W + 120 || a.y < -140 || a.y > H + 120) return;
+  const special = m.type === 'wolf' && m.variant && m.variant !== 'normal';
+  if (special) {
+    const v = ENEMY_VARIANTS[m.variant], size = m.variant === 'rare' ? 1.14 : 1.06;
+    ellipse(a.x, a.y + 3, m.variant === 'rare' ? 26 : 21, 10, v.color + '22');
+    ctx.save(); ctx.translate(a.x, a.y); ctx.scale(size, size); ctx.translate(-a.x, -a.y);
+    drawMobBase(m); ctx.restore();
+    if (Math.hypot(m.x - p.x, m.y - p.y) < 530 || m.hp < m.max) {
+      const yy = a.y - (m.skin === 'wolf' ? 76 : 105);
+      text((m.variant === 'rare' ? '✦ ' : '◆ ') + v.name + (m.rareSlot ? ' · hliadka' : ''), a.x, yy, v.color, 10);
+      const barY = a.y - (m.skin === 'wolf' ? 47 : 77), width = m.skin === 'wolf' ? 44 : 48;
+      ctx.fillStyle = '#182b25'; ctx.fillRect(a.x - width / 2, barY, width, 4);
+      ctx.fillStyle = v.color; ctx.fillRect(a.x - width / 2, barY, width * m.hp / m.max, 4);
+    }
+  } else drawMobBase(m);
+  if (m.taunt > 0) text('!', a.x + 25, a.y - (m.type === 'boss' ? 90 : 48), '#ffb987', 17);
+}
+
+function drawFarmingEffects() {
+  for (const e of effects) {
+    if (e.style !== 'bravery') continue;
+    const a = screen(e.x, e.y), t = 1 - e.life / e.total, radius = SPAWN_RULES.capeRange * t;
+    ctx.save(); ctx.globalAlpha = Math.max(0, 1 - t);
+    ctx.strokeStyle = e.color; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.ellipse(a.x, a.y, radius, radius * .62, 0, 0, Math.PI * 2); ctx.stroke();
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.ellipse(a.x, a.y, radius * .58, radius * .36, 0, 0, Math.PI * 2); ctx.stroke();
+    for (let i = 0; i < 12; i++) {
+      const angle = i * Math.PI / 6;
+      const x = a.x + Math.cos(angle) * radius, y = a.y + Math.sin(angle) * radius * .62;
+      line(x, y - 6, x + Math.cos(angle) * 13, y + Math.sin(angle) * 8, '#f5d7a6', 2);
+    }
+    const wave = Math.sin(t * Math.PI * 6) * 9;
+    polygon([[a.x - 11, a.y - 37], [a.x + 13, a.y - 32], [a.x + 29 + wave, a.y - 3], [a.x - 21 + wave, a.y + 8]], '#ba6b52', '#eed298');
+    ctx.restore();
+  }
+}
+
+function drawFarmMinimap() {
+  mini.strokeStyle = '#ece2b22b'; mini.lineWidth = 1;
+  mini.beginPath(); mini.moveTo(69, 0); mini.lineTo(69, 118); mini.moveTo(0, 59); mini.lineTo(138, 59); mini.stroke();
+  mini.font = '7px Segoe UI'; mini.textAlign = 'left'; mini.fillStyle = '#fff1c6';
+  for (const area of FARM_AREAS) {
+    const x = area.x1 / SIZE * 138, y = area.y1 / SIZE * 118;
+    mini.fillText('L' + (map().enemyLevel + area.offset), x, y + 8);
+  }
+  for (const point of spawnPoints) if (point.kind === 'pack' || point.kind === 'rare') {
+    mini.strokeStyle = point.kind === 'rare' ? '#edd183aa' : '#f2deb54a'; mini.beginPath();
+    mini.arc(point.x / SIZE * 138, point.y / SIZE * 118, point.kind === 'rare' ? 3 : 2, 0, Math.PI * 2); mini.stroke();
+  }
+}
+
+
+// src/js/main.js
+initializeCareer();
+initializeFarming();
+loadMap(p.mapId,true);
+window.addEventListener('resize',resize);resize();
+
+requestAnimationFrame(frame);
+window.addEventListener('blur',keysClear);document.addEventListener('visibilitychange',()=>{keysClear();save();});
+window.addEventListener('keydown',e=>{if([' ','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))e.preventDefault();let key=e.key.length===1?e.key.toLowerCase():e.key;if(key==='Escape'){closeModal();return;}if(!running||paused)return;if(e.target&&['BUTTON','INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)&&key===' ')return;keys[key]=true;if(e.repeat)return;if(spellKeys.includes(key))castSkill(spellKeys.indexOf(key));if(key==='b')useBraveryCape();if(key==='p')careerPanel();if(key==='k')spellbook();if(key==='m')travelMenu();if(key==='e')potion();if(key==='i')inventory();if(key==='f')shop();if(key==='j')journal();if(key==='?')help();});window.addEventListener('keyup',e=>keys[e.key.length===1?e.key.toLowerCase():e.key]=false);
+canvas.addEventListener('pointerdown',e=>{if(!running||paused)return;const r=canvas.getBoundingClientRect(),a=world(e.clientX-r.left,e.clientY-r.top);const m=mobs.find(m=>m.hp>0&&Math.hypot(m.x-a.x,(m.y-a.y)*.7)<45);if(m){if(Math.hypot(m.x-p.x,m.y-p.y)<100){attack();target=null;}else target={x:m.x,y:m.y};}else if(Math.hypot(a.x-870,a.y-1160)<50)travelMenu();else if(Math.hypot(a.x-1110,a.y-1110)<45)shop();else target=a;canvas.focus();});
+$('start').onclick=startGame;$('attack').onclick=()=>attack();$('skill').onclick=()=>attack(true);$('potion').onclick=potion;$('inventory').onclick=()=>{if(running)inventory();};$('close').onclick=closeModal;$('claim').onclick=()=>{if(p.claimed||p.kills<5||p.stones<3)return;p.claimed=true;p.gold+=150;experience(60);toast('Údolie je zachránené!\n+150 zlata · +60 skúseností');updateHUD();save();};
+$('sound').onclick=()=>{sound=!sound;$('sound').textContent='Zvuk: '+(sound?'zapnutý':'vypnutý');beep(440);};document.querySelectorAll('[data-key]').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();keys[b.dataset.key]=true;b.setPointerCapture(e.pointerId);});for(const type of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(type,()=>keys[b.dataset.key]=false);});window.addEventListener('pagehide',save);updateHUD();
+
+$('journal').onclick=journal;renderClasses();updateClassHUD();
+
+for(let i=1;i<6;i++)$('skill'+(i+1)).onclick=()=>castSkill(i);$('travel').onclick=travelMenu;$('spellbook').onclick=spellbook;updateHUD();
+
+$('help').onclick=help;
+
+$('career').onclick=()=>careerPanel();
+
+$('bravery').onclick=useBraveryCape;
+
+function startGame() {
+  if (pendingSaveImports.length) { openSaveImport(); return; }
+  running=true; document.body.classList.add('started'); canvas.focus();
+  p.hp=Math.min(p.hp,maxHP()); save();
+  toast('Vitaj v Grindorii, '+role().name.toLowerCase()+'.');
+}
+
+</script>
+</body></html>
+

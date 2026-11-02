@@ -12,7 +12,7 @@ run('experience(needXP());');assert.ok(run('p.level>1'));assert.equal(run('p.hp'
 run('p.kills=5;p.stones=3;updateHUD();');assert.equal(element('claim').hidden,false);run("$('claim').onclick();");assert.equal(run('p.claimed'),true);const gold=run('p.gold');run("$('claim').onclick();");assert.equal(run('p.gold'),gold);
 run('p.x=1110;p.y=1110;p.gold=200;shop();');run("$('buyPotion').onclick();");assert.equal(run('p.gold'),175);run("$('upgrade').onclick();");assert.match(element('modalcontent').innerHTML,/Vybavenie/);run('p.equipped.weapon={name:"Test",slot:"weapon",bonus:0};p.career.materials.ore=2;enhanceEquipment("weapon");');assert.equal(run('p.equipped.weapon.enhance'),1);assert.equal(run('p.gold'),75);
 run('closeModal();p.hp=1;p.gold=100;death();');assert.equal(run('p.hp'),run('maxHP()'));assert.equal(run('p.gold'),90);assert.equal(run('p.x'),1000);
-run('save();');assert.ok(saved.has('jade-realm-save-v1'));console.log('PASS: combat, cooldown, skill, loot, healing, levels, quest reward, shop, upgrade, respawn, save');
+run('save();');assert.ok(saved.has('grindoria-save-v1'));console.log('PASS: combat, cooldown, skill, loot, healing, levels, quest reward, shop, upgrade, respawn, save');
 assert.equal(run('p.points'),run('(p.level-1)*3'));
 const oldDamage=run('damage()');run('allocate("strength");');assert.equal(run('damage()'),oldDamage+3);assert.equal(run('p.points'),run('(p.level-1)*3-1'));
 run('p.points=0;allocate("vitality");');assert.equal(run('p.vitality'),0);run('closeModal();p.bag=[];p.equipped={weapon:null,armor:null};p.bag.push({name:"Test meč",slot:"weapon",rarity:1,bonus:20,value:30});');
@@ -26,5 +26,5 @@ run('closeModal();p.x=1690;p.y=330;p.hp=maxHP();let boss=mobs.find(m=>m.type==="
 run('boss.cd=0;updateBoss(.05,false);p.x=1850;');const beforeDodge=run('p.hp');run('updateBoss(1.1,false);');assert.equal(run('p.hp'),beforeDodge);
 run('boss.windup=1;updateBoss(.05,true);');assert.equal(run('boss.windup'),0);
 run('paused=false;p.classId="shaman";p.schools.shaman="healing";p.hp=10;p.mp=maxMP();spellCD.fill(0);mobs.forEach(m=>m.hp=0);castSkill(3);');assert.ok(run('p.hp')>10);assert.equal(run('spellCD[3]'),8);
-run('save();');const stored=JSON.parse(saved.get('jade-realm-save-v1'));assert.equal(stored.classId,'shaman');assert.equal(stored.equipped.weapon.bonus,35);assert.equal(stored.bossClaimed,true);
+run('save();');const stored=JSON.parse(saved.get('grindoria-save-v1'));assert.equal(stored.classId,'shaman');assert.equal(stored.equipped.weapon.bonus,35);assert.equal(stored.bossClaimed,true);
 console.log('PASS: stat points, gear bonuses and swapping, selling, full bag, epic loot, repeatable rewards, boss reward guard, boss telegraph/dodge/safety, shaman healing, progression persistence');

@@ -1,11 +1,13 @@
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync, readdirSync, unlinkSync } from 'node:fs';
 import { Script } from 'node:vm';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import assert from 'node:assert/strict';
 import { root, read, metadata, runtimeSource } from './lib/project.mjs';
 
-export function build() {
+export const outputFiles = ['index.html', 'Grindoria.html'];
+
+export function renderBuild() {
   const { version } = metadata();
   const runtime = runtimeSource();
   new Script(runtime);
@@ -22,10 +24,21 @@ export function build() {
     return `<script>\n${runtime.replace(/<\/script/gi, '<\\/script')}\n</script>\n`;
   });
   assert(inserted && !/<script[^>]+src=|<link[^>]+stylesheet|@import/.test(html));
-  const directory = path.join(root, 'dist');
+  return { html, version };
+}
+
+export function build(directory = path.join(root, 'dist')) {
+  const { html, version } = renderBuild();
   mkdirSync(directory, { recursive: true });
-  for (const file of ['index.html', 'Jade-Realm.html']) writeFileSync(path.join(directory, file), html);
-  console.log(`Built JadeRealm ${version}: dist/Jade-Realm.html (${Buffer.byteLength(html)} bytes)`);
+  const absoluteDirectory = path.resolve(directory);
+  for (const entry of readdirSync(absoluteDirectory, { withFileTypes: true })) {
+    if (!entry.isFile() || !entry.name.endsWith('.html') || outputFiles.includes(entry.name)) continue;
+    const stale = path.resolve(absoluteDirectory, entry.name);
+    assert.equal(path.dirname(stale), absoluteDirectory, 'Stale output must stay inside dist.');
+    unlinkSync(stale);
+  }
+  for (const file of outputFiles) writeFileSync(path.join(directory, file), html);
+  console.log(`Built Grindoria ${version}: dist/Grindoria.html (${Buffer.byteLength(html)} bytes)`);
   return html;
 }
 

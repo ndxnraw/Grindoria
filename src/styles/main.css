@@ -23,3 +23,5 @@ nav{gap:18px}.player{min-height:92px}.mana{height:7px;margin-top:4px;background:
 .hotbar #bravery{background:linear-gradient(135deg,#574533,#2e3026);border-color:#bf9b6677}
 .hotbar #bravery>span,.hotbar #capes{color:#f0c98b}
 @media(min-width:651px){.hotbar{gap:4px}.hotbar button{width:54px}}
+
+.brand small{font-size:9px;letter-spacing:.7px}@media(max-width:450px){.brand small{font-size:8px;letter-spacing:.3px}}

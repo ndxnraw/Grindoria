@@ -79,6 +79,6 @@ Stupeň zvyšuje životy, poškodenie aj úroveň nepriateľov. Aktívna expedí
 
 ## Migrácia a limity overenia
 
-Zostáva kľúč `jade-realm-save-v1`. Pri prvom načítaní nového systému sa zachová level a percentuálny postup k ďalšiemu. Staré globálne kováčske bonusy sa prevedú na aktuálne nasadenú zbraň bez straty ich hodnoty. Uložené mapy dostanú nové úrovne a silu nepriateľov pri zachovaní pomeru životov a časovačov.
+Postup používa kľúč `grindoria-save-v1`. Pri prvom načítaní nového systému sa zachová level a percentuálny postup k ďalšiemu. Staré globálne kováčske bonusy sa prevedú na aktuálne nasadenú zbraň bez straty ich hodnoty. Uložené mapy dostanú nové úrovne a silu nepriateľov pri zachovaní pomeru životov a časovačov.
 
 Automatické testy overujú krivku, ochranu pred opakovanými odmenami, zdroje a ceny jednotlivých ciest, skutočný účinok bonusov, migráciu a expedície. Čísla sú východiskové nastavenie pre dlhodobé farmenie; tempo celej ekonomiky ešte vyžaduje dlhšie hranie a spätnú väzbu. Hra je lokálna a uložený súbor si hráč môže upraviť; nejde o serverovú ochranu proti podvádzaniu.

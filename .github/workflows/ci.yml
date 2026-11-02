@@ -1,4 +1,4 @@
-name: Validate JadeRealm
+name: Validate Grindoria
 
 on:
   push:
@@ -25,7 +25,11 @@ jobs:
           package-manager-cache: false
       - name: Check sources and changelog
         run: npm run check
+      - name: Check published dist before rebuilding
+        run: npm run check:dist
       - name: Test game and release tools
         run: npm test
       - name: Build offline game
         run: npm run build
+      - name: Verify reproducible committed output
+        run: git diff --exit-code -- dist

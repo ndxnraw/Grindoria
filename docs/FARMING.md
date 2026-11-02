@@ -40,6 +40,10 @@ Elita má vyššiu šancu na výbavu a vzácnosť; vzácny variant výbavu zaru�
 
 Všetky EXP odmeny stále používajú rozdiel úrovní a percentuálne limity z [PROGRESSION.md](PROGRESSION.md). Ani vzácny slabý cieľ nemôže obísť nulovú EXP odmenu alebo neobmedzene vytvárať rozvojové materiály.
 
+## Správanie nepriateľov
+
+Bežné, elitné aj vzácne pohyblivé príšery sú neutrálne. Samotná blízkosť hráča ich neaktivuje. Po zásahu hráča sa bránia a prenasledujú ho; každý ich útok predĺži bojové vyprovokovanie na 8 sekúnd. Pri úteku čas vyprší a vrátia sa domov, bežné prenasledovanie má hranicu 700 jednotiek od domova. Bossovia sú výnimka: hráča automaticky napádajú v dosahu 500 jednotiek.
+
 ## Plášť statočnosti
 
 Základný princíp priťahovania príšer vychádza z [Metin2 Wiki – Bravery Cape](https://en-wiki.metin2.gameforge.com/index.php/Bravery_Cape). Číselné hodnoty nižšie sú vlastným nastavením tejto 2D adaptácie, nie tvrdením o presnom dosahu alebo časovaní originálu.
@@ -47,12 +51,12 @@ Základný princíp priťahovania príšer vychádza z [Metin2 Wiki – Bravery 
 - **B** alebo tlačidlo s vlajkou použije jeden kus z inventára.
 - Dosah je **650 herných jednotiek** v kruhu okolo hráča; vizuálna vlna kopíruje tento kruh v perspektíve mapy.
 - Všetky živé pohyblivé príšery v dosahu, vrátane elít, vzácnych a bossa, získajú **18 sekúnd vynúteného prenasledovania**.
-- Príšery skutočne kráčajú k aktuálnej polohe hráča aj spoza bežného aggro dosahu. Plášť nie je teleport ani okamžitý zásah.
+- Príšery skutočne kráčajú k aktuálnej polohe hráča počas účinku aj za hranicou bežného prenasledovania. Plášť nie je teleport ani okamžitý zásah.
 - Nehybné kamene ani mŕtvi nepriatelia sa nepriťahujú. Nepriatelia mimo dosahu zostanú nezmenení.
 - Ďalšie použitie je možné po **2 sekundách**. Počet kusov je viditeľný na lište aj vo výbave (I).
 - Platné použitie mimo útočiska spotrebuje kus aj vtedy, keď nie je žiadny vhodný cieľ. Hra oznámi počet pritiahnutých nepriateľov.
 - Plášť nefunguje pred začatím hry, pri otvorenom paneli, po smrti ani v chránenom útočisku. Pri odmietnutom použití sa kus nespotrebuje.
-- Použitie zruší maskovanie. Návrat do útočiska alebo nové maskovanie preruší vyprovokovanie; po vypršaní ostáva bežné aggro, pokiaľ je hráč stále nablízku.
+- Použitie zruší maskovanie. Návrat do útočiska alebo nové maskovanie preruší vyprovokovanie; po vypršaní účinku pokračuje iba rozbehnutý boj, kým trvá vyprovokovanie. Samotná blízkosť nové aggro nevyvolá.
 
 Nové aj migrované postavy dostanú jednorazovo zásobu 10 kusov. Už uložená nula sa pri načítaní nedopĺňa. Obchodník predáva 10 kusov za 100 zlata. Boss pridá 3 kusy, vzácny nepriateľ 2; bežní a elitní protivníci ich môžu tiež zanechať.
 
