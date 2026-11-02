@@ -1,0 +1,25 @@
+const vm=require('node:vm'),fs=require('node:fs'),assert=require('node:assert/strict');
+const source=require('./helpers/source.cjs').runtimeSource();
+function setup(oldSave){const elements=new Map(),saved=new Map();if(oldSave)saved.set('jade-realm-save-v1',JSON.stringify(oldSave));const paint=new Proxy({createRadialGradient:()=>({addColorStop(){}})},{get:(o,k)=>k in o?o[k]:()=>{}});const element=id=>{if(!elements.has(id))elements.set(id,{style:{},textContent:'',innerHTML:'',hidden:true,querySelector:s=>element(id+s),getContext:()=>paint,getBoundingClientRect:()=>({width:1200,height:700}),addEventListener(){},focus(){}});return elements.get(id);};const c=vm.createContext({document:{getElementById:element,querySelectorAll:()=>[],addEventListener(){},body:{classList:{add(){}}}},window:{addEventListener(){}},devicePixelRatio:1,localStorage:{getItem:k=>saved.get(k),setItem:(k,v)=>saved.set(k,v)},requestAnimationFrame(){},console});vm.runInContext(source,c);return{run:code=>vm.runInContext(code,c),saved,elements};}
+const {run,saved}=setup({level:5,hp:150,xp:20,gold:333,potions:7,weapon:2,kills:25,stones:3,claimed:true});
+assert.equal(run('p.gold'),333);assert.equal(run('p.points'),12);assert.equal(run('p.classId'),'warrior');assert.equal(run('p.mapId'),'valley');assert.equal(run('p.mp'),140);assert.equal(run('p.schools.sura'),'weapon');assert.equal(run('Object.keys(SCHOOLS).length'),8);assert.equal(run('Object.values(SCHOOLS).reduce((n,s)=>n+s.skills.length,0)'),48);
+run('running=true;paused=false;p.hp=maxHP();');
+// Every skill can execute, consume mana once and obey its own cooldown.
+for(const id of run('Object.keys(SCHOOLS)'))for(let i=0;i<6;i++){
+ run(`p.classId=SCHOOLS['${id}'].classId;p.schools[p.classId]='${id}';p.hp=maxHP();p.mp=maxMP();spellCD.fill(0);Object.keys(buffs).forEach(k=>delete buffs[k]);shots.length=0;effects.length=0;p.x=500;p.y=500;mobs.forEach(m=>m.hp=0);mobs[0].hp=100000;mobs[0].max=100000;mobs[0].x=550;mobs[0].y=500;`);
+ const before=run('p.mp');assert.equal(run(`castSkill(${i})`),true,`${id}/${i}`);assert.equal(run('p.mp'),before-run(`school().skills[${i}][3]`));assert.ok(run(`spellCD[${i}]>0`));assert.equal(run(`castSkill(${i})`),false);run('updateCombat(.05);draw();');
+}
+run('p.classId="sura";p.schools.sura="weapon";p.hp=20;p.mp=maxMP();spellCD.fill(0);Object.keys(buffs).forEach(k=>delete buffs[k]);castSkill(2);');assert.equal(run('active("enchanted")'),true);const beforeHP=run('p.hp');run('hurtMob(mobs[0],1);');assert.ok(run('p.hp')>beforeHP);
+run('p.mp=0;spellCD.fill(0);');assert.equal(run('castSkill(0)'),false);assert.equal(run('spellCD[0]'),0);
+run('p.mp=maxMP();p.x=50;p.y=50;mobs.forEach(m=>m.hp=0);p.schools.sura="black";');const noTargetMP=run('p.mp');assert.equal(run('castSkill(0)'),false);assert.equal(run('p.mp'),noTargetMP);
+run('p.x=1000;p.y=1160;');for(const id of ['valley','desert','snow','temple']){assert.equal(run(`loadMap('${id}')`),true);assert.equal(run('p.mapId'),id);assert.equal(run('mobs.filter(m=>m.type==="wolf").length'),run('map().count'));assert.equal(run('mobs[0].skin'),run('map().skin'));run('draw();');}
+run('p.x=500;p.y=500;');assert.equal(run('loadMap("valley")'),false);assert.equal(run('p.mapId'),'temple');
+// Preserve dead mobs and their remaining timer when traveling away and back.
+run('p.x=1000;p.y=1160;loadMap("desert");mobs[0].hp=1;hit(mobs[0],10);');assert.equal(run('mobs[0].dead'),5);run('loadMap("snow");loadMap("desert");');assert.equal(run('mobs[0].hp'),0);assert.equal(run('mobs[0].dead'),5);run('update(2);');assert.equal(run('mobs[0].hp'),0);run('update(3.1);');assert.equal(run('mobs[0].hp'),run('mobs[0].max'));
+run('let stone=mobs.find(m=>m.type==="stone"),boss=mobs.find(m=>m.type==="boss");hit(stone,99999);hit(boss,99999);');assert.equal(run('stone.dead'),18);assert.equal(run('boss.dead'),40);
+// Stun prevents attacks, poison ticks and projectiles resolve damage.
+run('p.x=400;p.y=400;p.hp=maxHP();Object.keys(buffs).forEach(k=>delete buffs[k]);mobs.forEach(m=>m.hp=0);let enemy=mobs[0];enemy.hp=1000;enemy.max=1000;enemy.x=410;enemy.y=400;enemy.cd=0;enemy.stun=2;');const safeHP=run('p.hp');run('update(.1);');assert.equal(run('p.hp'),safeHP);
+run('enemy.dot={time:6,tick:.1,power:9,kind:"poison"};updateCombat(.2);');assert.equal(run('enemy.hp'),991);
+run('enemy.dot=null;shoot(enemy,1,"darkBolt");');const shotHP=run('enemy.hp');for(let i=0;i<10;i++)run('updateCombat(.1);');assert.ok(run('enemy.hp')<shotHP);assert.equal(run('shots.length'),0);
+run('save();');const stored=JSON.parse(saved.get('jade-realm-save-v1'));assert.equal(stored.mapId,'desert');assert.ok(stored.worldStates.temple);const reload=setup(stored);assert.equal(reload.run('p.mapId'),'desert');assert.equal(reload.run('p.classId'),'sura');assert.equal(reload.run('p.schools.sura'),'black');assert.equal(reload.run('mobs.find(m=>m.type==="boss").dead'),run('boss.dead'));
+console.log('PASS: old-save migration, 48 skill casts and cooldowns, mana guards, Sura life steal, 4 maps/rendering, travel safety, map-state preservation, 5/18/40-second respawn, stun, poison, projectiles, save reload');

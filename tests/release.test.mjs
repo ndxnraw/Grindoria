@@ -1,0 +1,63 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtempSync, cpSync, mkdirSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { planRelease, validateChangelog } from '../scripts/lib/changelog.mjs';
+import { root, read, metadata } from '../scripts/lib/project.mjs';
+
+const pkg = metadata(), html = read('src/index.html'), changelog = read('CHANGELOG.md');
+const pending = changelog.replace('### Fixed\n\n## [', '### Fixed\n\n- Oprava testovacieho problému.\n\n## [');
+
+test('release moves entries, updates all version markers and preserves history', () => {
+  const result = planRelease(pkg, html, pending, '0.3.2', '2026-11-02');
+  assert.equal(result.pkg.version, '0.3.2');
+  assert(result.html.includes('ALPHA 0.3.2'));
+  assert(result.changelog.includes('## [0.3.2] - 2026-11-02'));
+  assert(result.changelog.includes('compare/v0.3.1...v0.3.2'));
+  assert(result.changelog.includes('## [0.1.0] - 2026-11-02'));
+  assert(!/^- \S/m.test(result.changelog.split('## [0.3.2]')[0]));
+  assert.equal(validateChangelog(result.changelog, '0.3.2')[0], '0.3.2');
+});
+
+test('empty notes, invalid versions, downgrades and mismatched markers are rejected', () => {
+  assert.throws(() => planRelease(pkg, html, changelog, '0.3.2', '2026-11-02'), /real bullet/);
+  for (const version of ['0.3.1', '0.2.9', '0.0.0', 'wat', '00.4.0', '0.4.0-beta']) {
+    assert.throws(() => planRelease(pkg, html, pending, version, '2026-11-02'));
+  }
+  assert.throws(() => planRelease(pkg, html.replace('ALPHA 0.3.1', ''), pending, '0.3.2', '2026-11-02'), /marker/);
+  assert.throws(() => validateChangelog(changelog.replace('2026-11-02', '2026-02-30'), pkg.version), /date/);
+  assert.equal(planRelease(pkg, html, pending, '1.0.0', '2026-11-02').pkg.version, '1.0.0');
+});
+
+test('Windows line endings are accepted', () => {
+  const result = planRelease(pkg, html, pending.replace(/\n/g, '\r\n'), '0.3.2', '2026-11-02');
+  assert.equal(result.pkg.version, '0.3.2');
+});
+
+test('release CLI dry run leaves files untouched; real run builds the new offline version', () => {
+  const fixture = mkdtempSync(path.join(os.tmpdir(), 'jaderealm-release-'));
+  try {
+    for (const dir of ['src', 'scripts']) cpSync(path.join(root, dir), path.join(fixture, dir), { recursive: true });
+    writeFileSync(path.join(fixture, 'package.json'), JSON.stringify(pkg));
+    writeFileSync(path.join(fixture, 'CHANGELOG.md'), pending);
+    mkdirSync(path.join(fixture, 'tests'));
+    writeFileSync(path.join(fixture, 'tests/smoke.test.cjs'), "require('node:test')('fixture checks',()=>{});\n");
+    const run = args => spawnSync(process.execPath, ['scripts/release.mjs', ...args], { cwd: fixture, encoding: 'utf8', timeout: 30000 });
+    const original = readFileSync(path.join(fixture, 'CHANGELOG.md'), 'utf8');
+    const dryRun = run(['0.3.2', '--dry-run']);
+    assert.equal(dryRun.status, 0, dryRun.stdout + dryRun.stderr);
+    assert.equal(readFileSync(path.join(fixture, 'CHANGELOG.md'), 'utf8'), original);
+    assert.equal(JSON.parse(readFileSync(path.join(fixture, 'package.json'))).version, '0.3.1');
+    const released = run(['0.3.2']);
+    assert.equal(released.status, 0, released.stdout + released.stderr);
+    assert.equal(JSON.parse(readFileSync(path.join(fixture, 'package.json'))).version, '0.3.2');
+    assert(readFileSync(path.join(fixture, 'dist/Jade-Realm.html'), 'utf8').includes('ALPHA 0.3.2'));
+    assert.equal(validateChangelog(readFileSync(path.join(fixture, 'CHANGELOG.md'), 'utf8'), '0.3.2')[0], '0.3.2');
+  } finally {
+    const absolute = path.resolve(fixture), base = path.resolve(os.tmpdir());
+    assert(absolute.startsWith(base + path.sep) && path.basename(absolute).startsWith('jaderealm-release-'));
+    rmSync(absolute, { recursive: true, force: true });
+  }
+});
