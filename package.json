@@ -1,11 +1,19 @@
 {
   "name": "jaderealm",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "private": true,
   "description": "Offline browser action RPG with four classes, eight skill schools and four maps.",
-  "author": { "name": "ndxnraw", "url": "https://github.com/ndxnraw" },
-  "repository": { "type": "git", "url": "https://github.com/ndxnraw/JadeRealm.git" },
-  "engines": { "node": ">=22" },
+  "author": {
+    "name": "ndxnraw",
+    "url": "https://github.com/ndxnraw"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ndxnraw/JadeRealm.git"
+  },
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "start": "node scripts/serve.mjs",
     "build": "node scripts/build.mjs",

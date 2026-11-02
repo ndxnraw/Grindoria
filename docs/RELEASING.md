@@ -21,8 +21,8 @@ Každú zmenu zapisuj ako odrážku pod `[Unreleased]` do `Added`, `Changed` ale
 ## Príprava vydania
 
 ```sh
-npm run release -- 0.3.2 --dry-run
-npm run release -- 0.3.2
+npm run release -- 0.4.1 --dry-run
+npm run release -- 0.4.1
 ```
 
 Použi vyššiu stabilnú verziu v tvare `major.minor.patch`. Skript odmietne rovnakú alebo nižšiu verziu aj prázdnu sekciu `Unreleased`. Pred zápisom spustí kontroly a testy. Potom:
@@ -42,12 +42,13 @@ Skontroluj diff a otvor offline HTML. Potom vytvor commit a tag, napríklad:
 
 ```sh
 git add package.json src/index.html CHANGELOG.md
-git commit -m "chore(release): 0.3.2"
-git tag -a v0.3.2 -m "JadeRealm 0.3.2"
+git commit -m "chore(release): 0.4.1"
+git tag -a v0.4.1 -m "JadeRealm 0.4.1"
 git push origin main
-git push origin v0.3.2
+git push origin v0.4.1
 ```
 
-Porovnávacie odkazy potrebujú vzdialenú referenciu pre každú vydanú verziu. Prvá štruktúrovaná verzia má nemennú referenčnú vetvu `v0.3.1`; ďalšie vydania označuj tagmi podľa postupu vyššie. Do vetvy `v0.3.1` ďalšie zmeny necommituj. Záznamy 0.1.0–0.3.0 sú iba história skoršieho prototypu, preto odkazujú priamo na sekcie changelogu.
+Porovnávacie odkazy potrebujú vzdialenú referenciu pre každú vydanú verziu. Verzie `v0.3.1` a `v0.4.0` majú referenčné vetvy vytvorené cez prepojenie GitHub; ďalšie vydania označuj tagmi podľa postupu vyššie. Do referenčných vetiev ďalšie zmeny necommituj. Záznamy 0.1.0–0.3.0 sú iba história skoršieho prototypu, preto odkazujú priamo na sekcie changelogu.
 
 GitHub Release možno následne vytvoriť pre daný tag a priložiť `dist/Jade-Realm.html`. Samotné vytvorenie zdrojovej verzie nepublikuje hru na webový hosting.
+

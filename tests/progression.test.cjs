@@ -8,9 +8,9 @@ run('running=true; mobs.forEach(m=>m.hp=0);p.x=400;p.y=400;mobs[0].hp=55;mobs[0]
 run('attack();');assert.ok(run('mobs[0].hp<55'));const hp=run('mobs[0].hp');run('attack();');assert.equal(run('mobs[0].hp'),hp);
 run('attackCD=0;attack(true);');assert.ok(run('skillCD>0'));assert.ok(run('p.kills===1'));run('update(.05);');assert.ok(run('p.gold>0'));
 run('p.hp=10;p.potions=2;potion();');assert.equal(run('p.hp'),75);assert.equal(run('p.potions'),1);
-run('experience(200);');assert.ok(run('p.level>1'));assert.equal(run('p.hp'),run('maxHP()'));
+run('experience(needXP());');assert.ok(run('p.level>1'));assert.equal(run('p.hp'),run('maxHP()'));
 run('p.kills=5;p.stones=3;updateHUD();');assert.equal(element('claim').hidden,false);run("$('claim').onclick();");assert.equal(run('p.claimed'),true);const gold=run('p.gold');run("$('claim').onclick();");assert.equal(run('p.gold'),gold);
-run('p.x=1110;p.y=1110;p.gold=200;shop();');run("$('buyPotion').onclick();");assert.equal(run('p.gold'),175);run("$('upgrade').onclick();");assert.equal(run('p.weapon'),1);assert.equal(run('p.gold'),125);
+run('p.x=1110;p.y=1110;p.gold=200;shop();');run("$('buyPotion').onclick();");assert.equal(run('p.gold'),175);run("$('upgrade').onclick();");assert.match(element('modalcontent').innerHTML,/Vybavenie/);run('p.equipped.weapon={name:"Test",slot:"weapon",bonus:0};p.career.materials.ore=2;enhanceEquipment("weapon");');assert.equal(run('p.equipped.weapon.enhance'),1);assert.equal(run('p.gold'),75);
 run('closeModal();p.hp=1;p.gold=100;death();');assert.equal(run('p.hp'),run('maxHP()'));assert.equal(run('p.gold'),90);assert.equal(run('p.x'),1000);
 run('save();');assert.ok(saved.has('jade-realm-save-v1'));console.log('PASS: combat, cooldown, skill, loot, healing, levels, quest reward, shop, upgrade, respawn, save');
 assert.equal(run('p.points'),run('(p.level-1)*3'));
@@ -20,7 +20,7 @@ const baseDamage=run('damage()');run('equipItem(0);');assert.equal(run('damage()
 run('p.bag.push({name:"Nový meč",slot:"weapon",rarity:2,bonus:35,value:50});equipItem(0);');assert.equal(run('p.bag[0].name'),'Test meč');assert.equal(run('damage()'),baseDamage+35);const sellGold=run('p.gold');run('sellItem(0);');assert.equal(run('p.gold'),sellGold+30);
 run('p.bag=Array.from({length:24},()=>makeItem());');const fullGold=run('p.gold');run('awardItem(true);');assert.equal(run('p.bag.length'),24);assert.ok(run('p.gold')>fullGold);
 run('p.bag=[];awardItem(true);');assert.equal(run('p.bag[0].rarity'),2);
-run('p.kills=9;p.huntClaimed=0;');const noReward=run('p.gold');run('claimHunt();');assert.equal(run('p.gold'),noReward);run('p.kills=20;claimHunt();claimHunt();');assert.equal(run('p.huntClaimed'),2);const reward=run('p.gold');run('claimHunt();');assert.equal(run('p.gold'),reward);
+run('p.kills=9;p.huntClaimed=0;');const noReward=run('p.gold');run('claimHunt();');assert.equal(run('p.gold'),noReward);run('p.kills=20;p.career.eligibleKills=20;claimHunt();claimHunt();');assert.equal(run('p.huntClaimed'),2);const reward=run('p.gold');run('claimHunt();');assert.equal(run('p.gold'),reward);
 run('p.bossKills=1;p.bossClaimed=false;claimBoss();');assert.equal(run('p.bossClaimed'),true);const bossGold=run('p.gold');run('claimBoss();');assert.equal(run('p.gold'),bossGold);
 run('closeModal();p.x=1690;p.y=330;p.hp=maxHP();let boss=mobs.find(m=>m.type==="boss");boss.x=1690;boss.y=330;boss.hp=620;boss.cd=0;boss.windup=0;updateBoss(.05,false);');assert.equal(run('boss.windup'),1);const before=run('p.hp');run('updateBoss(1.1,false);');assert.ok(run('p.hp')<before);
 run('boss.cd=0;updateBoss(.05,false);p.x=1850;');const beforeDodge=run('p.hp');run('updateBoss(1.1,false);');assert.equal(run('p.hp'),beforeDodge);

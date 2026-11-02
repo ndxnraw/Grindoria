@@ -10,6 +10,28 @@ Zmeny projektu JadeRealm. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.4.0] - 2026-11-02
+
+### Added
+
+- Panel Progres (P) s tréningom atribútov, stupňami schopností, biologickým výskumom, alchýmiou, relikviami, špecializáciou a endgame expedíciami.
+- Prax schopností za skutočné zabitia, knihy, materiály a náklady jednotlivých ciest rozvoja.
+- Vylepšovanie konkrétnych predmetov do +9, tri alchymistické sloty a vzácne relikvie s garantovaným dropom po sérii neúspechov.
+- Trhliny od úrovne 35 s vlastným postupom, menou a permanentným relikviárom.
+- Migrácia starších postáv vrátane percentuálneho EXP postupu a starých kováčskych bonusov.
+- Testy paralelných systémov, ochrany odmien, migrácie a stavu expedícií; dokumentácia ekonomiky a EXP tabuľka.
+
+### Changed
+
+- Výrazne pomalšia EXP krivka, odmeny podľa úrovne nepriateľa a penalizácia príliš slabých cieľov.
+- Znížený vplyv samotného levelu na útok a vyšší význam ostatných ciest rozvoja.
+- Úrovne a sila nepriateľov v jednotlivých mapách; odporúčané úrovne oblastí 1, 8, 18 a 35.
+- Opakovateľný lov odmeňuje primerané zabitia tréningom a zlatom, nie EXP.
+
+### Fixed
+
+- Testy nástrojov vydávania už nie sú viazané na konkrétne číslo verzie.
+
 ## [0.3.1] - 2026-11-02
 
 ### Added
@@ -63,8 +85,9 @@ Zmeny projektu JadeRealm. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/JadeRealm/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/ndxnraw/JadeRealm/compare/v0.4.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/JadeRealm/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/JadeRealm/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/JadeRealm/blob/main/CHANGELOG.md#020---2026-11-02
 [0.1.0]: https://github.com/ndxnraw/JadeRealm/blob/main/CHANGELOG.md#010---2026-11-02
+[0.4.0]: https://github.com/ndxnraw/JadeRealm/compare/v0.3.1...v0.4.0

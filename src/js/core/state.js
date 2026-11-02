@@ -9,6 +9,8 @@ const spellKeys=['q','r','t','y','u','o'],buffs={},effects=[],shots=[];
 let spellCD=[0,0,0,0,0,0],castPose=0,castStyle='',spiritTick=0;
 p.classId=CLASSES[p.classId]?p.classId:'warrior';p.strength??=0;p.vitality??=0;p.dexterity??=0;p.points??=Math.max(0,(p.level-1)*3);p.bag??=[];p.equipped??={weapon:null,armor:null};p.bossKills??=0;p.bossClaimed??=false;p.huntClaimed??=0;
 p.intelligence??=0;p.mp??=100+p.level*8;p.worldStates??={};p.mapId=MAPS[p.mapId]?p.mapId:'valley';p.schools??={};for(const [classId,id] of Object.entries({warrior:'body',ninja:'blade',sura:'weapon',shaman:'dragon'})){if(SCHOOLS[p.schools[classId]]?.classId!==classId)p.schools[classId]=id;}
-const role=()=>CLASSES[p.classId],equippedBonus=slot=>p.equipped[slot]?.bonus||0;
-const maxHP=()=>100+(p.level-1)*22+p.vitality*10+role().health,damage=()=>Math.round((18+(p.level-1)*5+p.weapon*8+p.strength*3+equippedBonus('weapon'))*attackPower()),defense=()=>equippedBonus('armor')+Math.floor(p.vitality/3)+armorBonus(),needXP=()=>60+(p.level-1)*35;
+const role=()=>CLASSES[p.classId],equippedBonus=slot=>(p.equipped[slot]?.bonus||0)+(p.equipped[slot]?.enhance||0)*3;
+const maxHP=()=>100+(p.level-1)*22+p.vitality*10+role().health+careerBonuses().hp,damage=()=>Math.round((18+(p.level-1)*2+p.strength*3+equippedBonus('weapon')+careerBonuses().attack)*attackPower()*(1+careerBonuses().attackPercent)),defense=()=>equippedBonus('armor')+Math.floor(p.vitality/3)+armorBonus()+careerBonuses().defense,needXP=()=>xpForLevel(p.level);
 const mobs=[],particles=[],drops=[],decor=[];let seed=78231;
+
+let castingSkillKey=null, careerTab="overview";

@@ -24,6 +24,7 @@ Funkcie môžu medzi súbormi volať zdieľané pomenované funkcie. Načítanie
 | `systems/combat.js` | Útoky, kúzla, mana, stavy, strely a AI bossa |
 | `systems/progression.js` | Skúsenosti, výbava, vlastnosti a odmeny |
 | `systems/world.js` | Generovanie, cestovanie, snímky máp a uloženie |
+| `systems/career.js` | EXP ekonomika, migrácia, tréning, schopnosti, biológia, alchýmia, relikvie, špecializácia a expedície |
 | `ui/` | Rozhranie, obchod, výbava, úlohy a kniha schopností |
 | `render/` | Vektorové kreslenie prostredia, postáv, príšer a efektov |
 
@@ -34,6 +35,10 @@ Funkcie môžu medzi súbormi volať zdieľané pomenované funkcie. Načítanie
 `localStorage['jade-realm-save-v1']` obsahuje hráča, výbavu, splnené úlohy, školy a snímky navštívených máp. Chýbajúce polia starších verzií dostávajú predvolené hodnoty v `state.js`. `snapshotMap()` uchováva aj životy, zostávajúci čas respawnu a korisť; `loadMap()` snímku obnoví.
 
 Pri načítaní sa postava presunie do útočiska aktuálnej mapy. Aktívne aury a rozletené strely sa cez cestovanie neprenášajú. Lokálny postup nie je zabezpečený proti úprave hráčom a hra zatiaľ nemá server, multiplayer ani cloudové účty.
+
+`initializeCareer()` vykoná jednorazovú migráciu pred prvým načítaním mapy. Paralelné cesty sú uložené v `p.career`; ich bonusy agreguje `careerBonuses()`, ktorú používajú skutočné výpočty útoku, obrany, zdravia, many a kritických zásahov. Rozhranie sa nachádza v `ui/career.js`. Podrobnosti balansu a zdrojov sú v [PROGRESSION.md](PROGRESSION.md).
+
+Endgame expedícia má vlastný identifikátor, ktorý bráni započítaniu obyčajného protivníka do cieľov výpravy. Pred vstupom sa zachová bežný chrám v `p.career.normalTemple`; aktívny stav sa ukladá štandardným snímkovaním a po ukončení sa pôvodný chrám obnoví.
 
 ## Overovanie
 
