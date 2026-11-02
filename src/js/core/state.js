@@ -14,3 +14,6 @@ const maxHP=()=>100+(p.level-1)*22+p.vitality*10+role().health+careerBonuses().h
 const mobs=[],particles=[],drops=[],decor=[];let seed=78231;
 
 let castingSkillKey=null, careerTab="overview";
+
+const spawnPoints=[];
+let capeCooldown=0,legacyRiftLayout=false,lastMiniMapPaint=-Infinity;

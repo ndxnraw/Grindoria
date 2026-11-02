@@ -20,3 +20,6 @@ nav{gap:18px}.player{min-height:92px}.mana{height:7px;margin-top:4px;background:
 .material-grid>div{display:flex;justify-content:space-between;gap:8px;background:#ffffff04;padding:9px;font-size:9px;color:#9eb196}
 .material-grid b{color:#e0c592}#career-message{padding:9px 0;color:#dfc18f;min-height:14px;font-size:10px}
 @media(max-width:450px){.career-tabs{gap:5px}.career-tabs button{font-size:9px;padding:8px 3px}.career-card{padding:11px}.career-metrics b{font-size:20px}.material-grid{grid-template-columns:1fr}.career-card .primary{font-size:9px}}
+.hotbar #bravery{background:linear-gradient(135deg,#574533,#2e3026);border-color:#bf9b6677}
+.hotbar #bravery>span,.hotbar #capes{color:#f0c98b}
+@media(min-width:651px){.hotbar{gap:4px}.hotbar button{width:54px}}

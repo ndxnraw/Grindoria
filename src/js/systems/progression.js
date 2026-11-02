@@ -14,7 +14,7 @@ function experience(n) {
 function rarityName(r){return ['Bežná','Vzácna','Epická'][r]||'Bežná';}
 
 function makeItem(epic=false, source=null) {
-  const rarity = epic ? 2 : rand() < .16 ? 1 : 0;
+  const rarity = epic ? 2 : source?.variant==='rare' ? 1 : rand() < (source?.variant==='elite' ? .45 : .16) ? 1 : 0;
   const slot = rand() < .5 ? 'weapon' : 'armor';
   const tier = Math.min(99, source ? enemyLevel(source) : map().enemyLevel);
   const name = ['Pútnický', 'Mesačný', 'Dračí'][rarity] + (slot === 'weapon' ? ' meč' : ' pancier');

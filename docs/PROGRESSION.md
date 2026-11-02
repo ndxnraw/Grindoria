@@ -22,7 +22,7 @@ Základná odmena bežného nepriateľa je `floor(6 × enemyLevel^1.15)`, uprave
 | 60 | 9 879 880 | 665 | 14 857 |
 | 98 | 39 259 783 | 1 169 | 33 585 |
 
-Tabuľka je matematický porovnávací príklad, nie odhad hodín hrania. Skutočné tempo ovplyvňuje zloženie nepriateľov, bossovia, výbava a plošné schopnosti. Údolie napríklad obsahuje nepriateľov úrovní 1–5.
+Tabuľka je matematický porovnávací príklad, nie odhad hodín hrania. Skutočné tempo ovplyvňuje zloženie nepriateľov, bossovia, výbava a plošné schopnosti. Od verzie 0.5 má údolie štyri oblasti bežných príšer úrovní 1–9; elitné a vzácne varianty môžu byť ešte silnejšie. Ich EXP násobky nemenia uvedené percentuálne limity ani odmenu za príliš slabé ciele. Podrobnosti sú v [FARMING.md](FARMING.md).
 
 Slabší protivníci majú postupne nižšiu odmenu; pri rozdiele 8 levelov neposkytujú EXP. Silnejší cieľ môže dať najviac 50 % relatívny bonus pred uplatnením uvedeného limitu. Životy a poškodenie protivníkov rastú podľa mapy aj ich úrovne.
 

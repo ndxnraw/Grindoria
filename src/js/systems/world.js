@@ -1,7 +1,40 @@
 function map(){return MAPS[p.mapId]||MAPS.valley;}
 
-function snapshotMap(){if(!mobs.length)return;p.worldStates[p.mapId]={progressionSchema:PROGRESSION.schema,mobs:mobs.map(m=>({...m,dot:m.dot?{...m.dot}:null})),drops:drops.map(d=>({...d}))};}
+function snapshotMap() {
+  if (!mobs.length) return;
+  p.worldStates[p.mapId] = {
+    progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
+    mobs: mobs.map(m => ({ ...m, dot: m.dot ? { ...m.dot } : null, skillContributors: [...(m.skillContributors || [])] })),
+    drops: drops.map(d => ({ ...d }))
+  };
+}
 
 function save(){snapshotMap();try{localStorage.setItem(SAVE,JSON.stringify(p));}catch{}}
 
-function loadMap(id,initial=false){if(!MAPS[id])return false;if(p.career?.endgame.run&&!initial){toast('Najprv dokonči alebo opusti trhlinu (P).');return false;}if(!initial){if(!running||Math.hypot(p.x-1000,p.y-1050)>190){toast('Cestovať môžeš z útočiska (M).');return false;}snapshotMap();}p.mapId=id;const cfg=map();cfg.mobSpeed=75+(cfg.scale-1)*14;seed=cfg.seed;decor.length=0;for(let i=0;i<250;i++){const x=rand()*SIZE,y=rand()*SIZE;if(Math.hypot(x-1000,y-1050)>190)decor.push({x,y,type:rand()<(id==='valley'?.67:id==='snow'?.45:id==='desert'?.2:.12)?'tree':'rock',s:.6+rand()*.8,t:rand()});}mobs.length=0;drops.length=0;const old=p.worldStates[id];if(old?.mobs?.length){mobs.push(...old.mobs.map(m=>({...m,dot:m.dot?{...m.dot}:null,stun:0,windup:0})));drops.push(...(old.drops||[]).map(d=>({...d})));}else{for(let i=0;i<cfg.count;i++){let x,y;do{x=180+rand()*1640;y=150+rand()*1650;}while(Math.hypot(x-1000,y-1050)<240);const hp=Math.round(55*cfg.scale);mobs.push({level:cfg.enemyLevel+i%5,type:'wolf',skin:cfg.skin,x,y,homeX:x,homeY:y,hp,max:hp,cd:1,dead:0,hit:0});}[[610,630],[1390,560],[1440,1430]].forEach(([x,y])=>{const hp=Math.round(160*cfg.scale);mobs.push({level:cfg.enemyLevel+2,type:'stone',x,y,hp,max:hp,cd:0,dead:0,hit:0});});const hp=Math.round(620*cfg.scale);mobs.push({level:cfg.enemyLevel+5,type:'boss',x:1690,y:330,hp,max:hp,cd:2,dead:0,hit:0,windup:0});}if(!old?.mobs?.length)mobs.forEach((m,i)=>rebalanceEnemy(m,cfg,i));p.x=1000;p.y=1160;cam.x=p.x;cam.y=p.y;target=null;shots.length=0;effects.length=0;particles.length=0;Object.keys(buffs).forEach(k=>delete buffs[k]);updateMapHUD();if(!initial){closeModal();save();toast(cfg.name+'\nOdporúčaná úroveň '+cfg.level+'+');}return true;}
+function loadMap(id, initial=false) {
+  if (!MAPS[id]) return false;
+  if (p.career?.endgame.run && !initial) { toast('Najprv dokonči alebo opusti trhlinu (P).'); return false; }
+  if (!initial) {
+    if (!running || !isSanctuary(p)) { toast('Cestovať môžeš z útočiska (M).'); return false; }
+    snapshotMap();
+  }
+  p.mapId=id;
+  const cfg=map(), old=p.worldStates[id];
+  cfg.mobSpeed=75+(cfg.scale-1)*14; seed=cfg.seed; decor.length=0;
+  for(let i=0;i<250;i++) {
+    const x=rand()*SIZE,y=rand()*SIZE;
+    if(Math.hypot(x-1000,y-1050)>190) decor.push({x,y,type:rand()<(id==='valley'?.67:id==='snow'?.45:id==='desert'?.2:.12)?'tree':'rock',s:.6+rand()*.8,t:rand()});
+  }
+  legacyRiftLayout=false; spawnPoints.length=0;
+  spawnPoints.push(...buildSpawnPoints(id));
+  const oldRun=p.career.endgame.run&&id==='temple'&&old?.mobs?.length&&old.spawnSchema!==SPAWN_RULES.schema;
+  const population=oldRun?loadLegacyRift(old):hydrateSpawnPopulation(old);
+  mobs.length=0; mobs.push(...population); drops.length=0;
+  drops.push(...(old?.drops||[]).map(d=>({...d})));
+  p.x=1000; p.y=1160; cam.x=p.x; cam.y=p.y; target=null;
+  shots.length=0; effects.length=0; particles.length=0; lastMiniMapPaint=-Infinity;
+  Object.keys(buffs).forEach(k=>delete buffs[k]);
+  updateMapHUD();
+  if(!initial){closeModal();save();toast(cfg.name+'\nOdporúčaná úroveň '+cfg.level+'+');}
+  return true;
+}

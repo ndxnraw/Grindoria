@@ -1,0 +1,224 @@
+function isSanctuary(entity) {
+  return Math.hypot(entity.x - 1000, entity.y - 1050) < SPAWN_RULES.sanctuaryRadius;
+}
+
+function initializeFarming() {
+  if (p.braveryCapes === undefined) p.braveryCapes = 10;
+  if (!Number.isSafeInteger(p.braveryCapes) || p.braveryCapes < 0) p.braveryCapes = 0;
+}
+
+function farmAreaAt(entity = p) {
+  return FARM_AREAS[(entity.y < 1000 ? 2 : 0) + (entity.x > 1000 ? 1 : 0)];
+}
+
+function buildSpawnPoints(id) {
+  const cfg = MAPS[id], points = [], perArea = cfg.packCount / 4;
+  for (const area of FARM_AREAS) {
+    const rows = Math.ceil(perArea / 2);
+    for (let i = 0; i < perArea; i++) {
+      const x = area.x1 + 80 + (area.x2 - area.x1 - 160) * ((i % 2 + .5) / 2);
+      const y = area.y1 + 80 + (area.y2 - area.y1 - 160) * ((Math.floor(i / 2) + .5) / rows);
+      points.push({ id: `${id}:${area.id}:pack:${i}`, kind: 'pack', x, y, area: area.id, offset: area.offset, starter: area.offset === 0 && i === 0 });
+    }
+    points.push({ id: `${id}:${area.id}:rare`, kind: 'rare', x: (area.x1 + area.x2) / 2, y: (area.y1 + area.y2) / 2, area: area.id, offset: area.offset });
+    for (let i = 0; i < 2; i++) points.push({ id: `${id}:${area.id}:stone:${i}`, kind: 'stone', x: i ? area.x2 - 100 : area.x1 + 100, y: i ? area.y2 - 100 : area.y1 + 100, area: area.id, offset: area.offset });
+  }
+  points.push({ id: `${id}:boss`, kind: 'boss', x: 1690, y: 330, area: 'northeast', offset: 6 });
+  return points;
+}
+
+function rollEnemyVariant(point, slot) {
+  if (point.kind === 'rare') return 'rare';
+  if (point.kind !== 'pack' || (point.starter && slot === 0)) return 'normal';
+  const roll = rand();
+  return roll < SPAWN_RULES.rareChance ? 'rare' : roll < SPAWN_RULES.rareChance + SPAWN_RULES.eliteChance ? 'elite' : 'normal';
+}
+
+function createSpawnEnemy(point, slot = 0) {
+  const cfg = map(), type = point.kind === 'pack' || point.kind === 'rare' ? 'wolf' : point.kind;
+  const angle = slot * Math.PI / 3 + .15, radius = point.kind === 'pack' ? 45 + rand() * 10 : 0;
+  let x = point.x + Math.cos(angle) * radius, y = point.y + Math.sin(angle) * radius;
+  if (Math.hypot(x - 1000, y - 1050) < SPAWN_RULES.spawnClearance) {
+    const a = Math.atan2(y - 1050, x - 1000);
+    x = 1000 + Math.cos(a) * SPAWN_RULES.spawnClearance;
+    y = 1050 + Math.sin(a) * SPAWN_RULES.spawnClearance;
+  }
+  const variant = rollEnemyVariant(point, slot), v = ENEMY_VARIANTS[variant];
+  const normalLevel = cfg.enemyLevel + point.offset + (type === 'boss' ? 5 : type === 'stone' ? 2 : slot % 3);
+  const level = normalLevel + (type === 'wolf' ? v.level : 0);
+  const hp = Math.round((type === 'boss' ? 620 : type === 'stone' ? 160 : 55) * cfg.scale * (1 + (level - cfg.enemyLevel) * .08) * (type === 'wolf' ? v.hp : 1));
+  const attack = cfg.scale * (1 + (level - cfg.enemyLevel) * .06) * (type === 'wolf' ? v.damage : 1);
+  return {
+    spawnId: point.id + ':' + slot, spawnPointId: point.id, spawnSlot: slot,
+    type, skin: cfg.skin, area: point.area, variant, rareSlot: point.kind === 'rare',
+    x, y, homeX: x, homeY: y, level, baseLevel: level, hp, max: hp, baseMax: hp,
+    attackScale: attack, baseAttack: attack, speedScale: type === 'wolf' ? v.speed : 1,
+    respawnSeconds: type === 'boss' ? 40 : type === 'stone' ? 18 : point.kind === 'rare' ? 75 : v.respawn,
+    dead: 0, cd: 1, hit: 0, windup: 0, taunt: 0, engaged: 0, skillContributors: []
+  };
+}
+
+function applyRiftScaling(m, tier, runId) {
+  m.baseMax ??= m.max; m.baseLevel ??= m.level; m.baseAttack ??= m.attackScale || MAPS.temple.scale;
+  m.riftTier = tier; m.riftId = runId;
+  m.max = Math.round(m.baseMax * (1 + tier * .12)); m.hp = m.max;
+  m.level = Math.min(105, m.baseLevel + tier * 2);
+  m.attackScale = m.baseAttack * (1 + tier * .12);
+}
+
+function hydrateSpawnPopulation(old) {
+  const generated = [];
+  for (const point of spawnPoints) {
+    for (let slot = 0; slot < (point.kind === 'pack' ? SPAWN_RULES.packSize : 1); slot++) {
+      const m = createSpawnEnemy(point, slot), run = p.career.endgame.run;
+      if (run && p.mapId === 'temple') applyRiftScaling(m, run.tier, run.id);
+      generated.push(m);
+    }
+  }
+  if (!old?.mobs?.length) return generated;
+  if (old.spawnSchema === SPAWN_RULES.schema) {
+    const saved = new Map(old.mobs.map(m => [m.spawnId, m]));
+    return generated.map(m => {
+      const prior = saved.get(m.spawnId);
+      return prior ? { ...m, ...prior, dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0 } : m;
+    });
+  }
+  // Upgrade old sparse populations into distinct new slots without reviving their dead.
+  const used = new Set();
+  for (const prior of old.mobs) {
+    let best = -1, distance = Infinity;
+    for (let i = 0; i < generated.length; i++) {
+      if (used.has(i) || generated[i].type !== prior.type) continue;
+      const d = Math.hypot(generated[i].homeX - (prior.homeX ?? prior.x), generated[i].homeY - (prior.homeY ?? prior.y));
+      if (d < distance) { best = i; distance = d; }
+    }
+    if (best < 0) continue;
+    const m = generated[best], ratio = Math.max(0, Math.min(1, prior.hp / prior.max));
+    used.add(best);
+    m.hp = prior.hp <= 0 ? 0 : Math.max(1, Math.round(m.max * ratio));
+    m.dead = Math.max(0, prior.dead || 0); m.cd = Math.max(0, prior.cd || 0);
+    m.skillContributors = [...(prior.skillContributors || [])];
+    if (prior.dot) m.dot = { ...prior.dot };
+  }
+  return generated;
+}
+
+function loadLegacyRift(old) {
+  legacyRiftLayout = true; spawnPoints.length = 0;
+  return old.mobs.map((prior, index) => {
+    const id = 'legacy-rift:' + index, x = prior.homeX ?? prior.x, y = prior.homeY ?? prior.y;
+    spawnPoints.push({ id, kind: prior.type === 'wolf' ? 'pack' : prior.type, x, y, area: farmAreaAt(prior).id, offset: 0 });
+    return { ...prior, spawnId: id + ':0', spawnPointId: id, spawnSlot: 0, variant: 'normal', respawnSeconds: prior.type === 'boss' ? 40 : prior.type === 'stone' ? 18 : 5, taunt: 0, engaged: 0, stun: 0, windup: 0 };
+  });
+}
+
+function respawnEnemy(m) {
+  const point = spawnPoints.find(p => p.id === m.spawnPointId);
+  if (!point || legacyRiftLayout) {
+    m.hp = m.max; m.x = m.homeX ?? m.x; m.y = m.homeY ?? m.y;
+    m.dead = 0; m.cd = 1; m.taunt = 0; m.engaged = 0; m.stun = 0; m.slow = 0; m.dot = null; m.windup = 0; m.skillContributors = [];
+    return;
+  }
+  const fresh = createSpawnEnemy(point, m.spawnSlot);
+  const run = p.career.endgame.run;
+  if (run && p.mapId === 'temple') applyRiftScaling(fresh, run.tier, run.id);
+  // Keep object identity: projectiles and skills may still reference this slot.
+  for (const key of Object.keys(m)) delete m[key];
+  Object.assign(m, fresh);
+  if (Math.hypot(m.x - p.x, m.y - p.y) < 600) fx('aura', m.x, m.y, '#a6cfa1', .45);
+}
+
+function buildMobGrid() {
+  const grid = new Map();
+  for (const m of mobs) if (m.type === 'wolf' && m.hp > 0) {
+    const key = Math.floor(m.x / 70) + ':' + Math.floor(m.y / 70);
+    if (!grid.has(key)) grid.set(key, []);
+    grid.get(key).push(m);
+  }
+  return grid;
+}
+
+function walkEnemy(m, x, y, speed, dt, grid = null) {
+  let dx = x - m.x, dy = y - m.y, distance = Math.hypot(dx, dy);
+  if (distance < 2) return;
+  let vx = dx / distance, vy = dy / distance;
+  if (grid) {
+    const col = Math.floor(m.x / 70), row = Math.floor(m.y / 70);
+    for (let cx = col - 1; cx <= col + 1; cx++) for (let cy = row - 1; cy <= row + 1; cy++) {
+      for (const other of grid.get(cx + ':' + cy) || []) {
+        if (other === m) continue;
+        const ox = m.x - other.x, oy = m.y - other.y, d = Math.hypot(ox, oy);
+        if (d > .01 && d < 25) { vx += ox / d * (25 - d) / 20; vy += oy / d * (25 - d) / 20; }
+      }
+    }
+  }
+  const length = Math.hypot(vx, vy) || 1, step = Math.min(distance, speed * dt);
+  let nx = m.x + vx / length * step, ny = m.y + vy / length * step;
+  const keepOut = SPAWN_RULES.sanctuaryRadius + 18;
+  if (Math.hypot(nx - 1000, ny - 1050) < keepOut) {
+    const angle = Math.atan2(m.y - 1050, m.x - 1000), cross = (m.x - 1000) * (y - 1050) - (m.y - 1050) * (x - 1000);
+    const next = angle + (cross < 0 ? -1 : 1) * step / keepOut;
+    nx = 1000 + Math.cos(next) * keepOut; ny = 1050 + Math.sin(next) * keepOut;
+  }
+  m.x = Math.max(45, Math.min(SIZE - 45, nx)); m.y = Math.max(45, Math.min(SIZE - 45, ny));
+}
+
+function updateEnemySpawns(dt, safe) {
+  capeCooldown = Math.max(0, capeCooldown - dt);
+  const grid = buildMobGrid();
+  for (const m of mobs) {
+    m.hit = Math.max(0, (m.hit || 0) - dt); m.cd = (m.cd || 0) - dt;
+    m.taunt = Math.max(0, (m.taunt || 0) - dt); m.engaged = Math.max(0, (m.engaged || 0) - dt);
+    if (safe || active('stealth')) { m.taunt = 0; m.engaged = 0; }
+    if (m.hp <= 0) { m.dead -= dt; if (m.dead <= 0) respawnEnemy(m); continue; }
+    if (m.type !== 'wolf' || m.stun > 0) continue;
+    const d = Math.hypot(m.x - p.x, m.y - p.y), home = Math.hypot(m.x - m.homeX, m.y - m.homeY);
+    const forced = m.taunt > 0 || m.engaged > 0;
+    const chasing = !safe && !active('stealth') && (forced || (d < SPAWN_RULES.aggroRadius && home < SPAWN_RULES.leash));
+    if (chasing) {
+      const slow = (active('fear') && d < 300 ? .5 : 1) * (m.slow > 0 ? .55 : 1);
+      const angle = (m.spawnSlot || 0) * 2.39996, spread = d < 110 ? 28 : 0;
+      if (d > 33) walkEnemy(m, p.x + Math.cos(angle) * spread, p.y + Math.sin(angle) * spread, map().mobSpeed * (m.speedScale || 1) * slow, dt, grid);
+      if (d < 55 && m.cd <= 0) { takeDamage(Math.max(4, Math.round(9 * (m.attackScale || map().scale) - p.level * .5)), m); m.cd = 1.3; }
+    } else if (home > 4) {
+      m.taunt = 0; m.engaged = 0;
+      walkEnemy(m, m.homeX, m.homeY, map().mobSpeed * 1.15, dt, grid);
+      if (home < 20) m.hp = Math.min(m.max, m.hp + m.max * dt * .2);
+    }
+  }
+}
+
+function useBraveryCape() {
+  if (!running || paused || p.hp <= 0 || capeCooldown > 0) return false;
+  if (p.braveryCapes < 1) { toast('Nemáš Plášť statočnosti. Kúpiš ho u obchodníka (F).'); return false; }
+  if (isSanctuary(p)) { toast('Plášť použi mimo chráneného útočiska.'); return false; }
+  p.braveryCapes--; capeCooldown = SPAWN_RULES.capeCooldown; delete buffs.stealth;
+  let count = 0;
+  for (const m of mobs) if (m.hp > 0 && (m.type === 'wolf' || m.type === 'boss') && Math.hypot(m.x - p.x, m.y - p.y) <= SPAWN_RULES.capeRange) {
+    m.taunt = SPAWN_RULES.capeDuration; m.engaged = SPAWN_RULES.capeDuration; count++;
+  }
+  fx('bravery', p.x, p.y, '#efbe8a', 1.25); beep(200, .3);
+  toast(count ? 'Plášť statočnosti · pritiahnutí nepriatelia: ' + count : 'Plášť použitý · v dosahu nebol žiadny pohyblivý nepriateľ.');
+  updateHUD(); save(); return true;
+}
+
+function buyBraveryCapes() {
+  if (Math.hypot(p.x - 1110, p.y - 1110) > 160 || !pay({ gold: SPAWN_RULES.capePrice })) return false;
+  p.braveryCapes += SPAWN_RULES.capeBundle;
+  updateHUD(); save(); return true;
+}
+
+function farmBonusLoot(m) {
+  const eligible = rewardEligible(m), rare = m.variant === 'rare', elite = m.variant === 'elite';
+  let capes = m.type === 'boss' ? 3 : rare ? 2 : rand() < (elite ? .25 : .02) ? 1 : 0;
+  if (capes) { p.braveryCapes += capes; float('+' + capes + ' Plášť statočnosti', m.x, m.y - 105, '#dfbc8b'); }
+  if (!eligible || m.type !== 'wolf') return;
+  if (rare) { addMaterial('ore', 3); addMaterial('dust', 3); addMaterial('books'); addMaterial('training'); }
+  else if (elite) { addMaterial('ore'); addMaterial('essence', 2); }
+}
+
+function dropFarmEquipment(m) {
+  const rare = m.variant === 'rare', elite = m.variant === 'elite';
+  if (m.type === 'boss') return awardItem(true, m);
+  if (m.type === 'stone' || rare || rand() < (elite ? .75 : .32)) return awardItem(rare ? rand() < .25 : elite && rand() < .08, m);
+}

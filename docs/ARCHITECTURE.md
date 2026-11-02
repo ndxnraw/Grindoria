@@ -25,6 +25,7 @@ Funkcie môžu medzi súbormi volať zdieľané pomenované funkcie. Načítanie
 | `systems/progression.js` | Skúsenosti, výbava, vlastnosti a odmeny |
 | `systems/world.js` | Generovanie, cestovanie, snímky máp a uloženie |
 | `systems/career.js` | EXP ekonomika, migrácia, tréning, schopnosti, biológia, alchýmia, relikvie, špecializácia a expedície |
+| `systems/farming.js` | Skupinové body, varianty, pevné spawn sloty, respawn, aggro, priestorová mriežka a Plášť statočnosti |
 | `ui/` | Rozhranie, obchod, výbava, úlohy a kniha schopností |
 | `render/` | Vektorové kreslenie prostredia, postáv, príšer a efektov |
 
@@ -39,6 +40,10 @@ Pri načítaní sa postava presunie do útočiska aktuálnej mapy. Aktívne aury
 `initializeCareer()` vykoná jednorazovú migráciu pred prvým načítaním mapy. Paralelné cesty sú uložené v `p.career`; ich bonusy agreguje `careerBonuses()`, ktorú používajú skutočné výpočty útoku, obrany, zdravia, many a kritických zásahov. Rozhranie sa nachádza v `ui/career.js`. Podrobnosti balansu a zdrojov sú v [PROGRESSION.md](PROGRESSION.md).
 
 Endgame expedícia má vlastný identifikátor, ktorý bráni započítaniu obyčajného protivníka do cieľov výpravy. Pred vstupom sa zachová bežný chrám v `p.career.normalTemple`; aktívny stav sa ukladá štandardným snímkovaním a po ukončení sa pôvodný chrám obnoví.
+
+Populácia má vlastné `spawnSchema` a trvalé identifikátory slotov. `hydrateSpawnPopulation()` obnovuje známe sloty alebo migruje riedku mapu bez oživenia mŕtvych protivníkov. `respawnEnemy()` zachová identitu objektu pre existujúce referencie, ale vyčistí staré stavy a znovu vyberie variant. Pre susedov používa pohyb jednoduchú priestorovú mriežku namiesto porovnávania každého protivníka so všetkými ostatnými. Minimapka sa prekresľuje najviac desaťkrát za sekundu.
+
+Plášť je uložený ako stoh `p.braveryCapes`, podobne ako elixíry. Výzva nastaví časovač `taunt` iba živým pohyblivým cieľom v dosahu; bežná AI aj AI bossa ho rešpektujú. Kreslenie vlny, označenie variantov a oblastí patrí do `render/farming.js`. Pozri [FARMING.md](FARMING.md).
 
 ## Overovanie
 

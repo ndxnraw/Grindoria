@@ -69,7 +69,7 @@ function enemyXP(m) {
   const factor = delta >= 0 ? Math.min(1.5, 1 + delta * .05) : delta <= -8 ? 0 : [1, .85, .7, .55, .4, .25, .1, .05][-delta];
   const type = m.type === 'boss' ? 12 : m.type === 'stone' ? 3 : 1;
   const cap = m.type === 'boss' ? .35 : m.type === 'stone' ? .12 : .03;
-  return Math.max(0, Math.floor(Math.min(6 * enemyLevel(m) ** 1.15 * type * factor, needXP() * cap)));
+  return Math.max(0, Math.floor(Math.min(6 * enemyLevel(m) ** 1.15 * type * factor * (ENEMY_VARIANTS[m.variant]?.xp||1), needXP() * cap)));
 }
 
 function addMaterial(id, count = 1) {
@@ -236,24 +236,19 @@ function rebalanceEnemy(m, cfg, index) {
 
 function enterRift() {
   const end = p.career.endgame;
-  if (p.level < 35 || end.run || !running || Math.hypot(p.x - 1000, p.y - 1050) > 190) return false;
+  if (p.level < 35 || end.run || !running || !isSanctuary(p)) return false;
   if (!pay({ keys: 3 })) return false;
   const tier = Math.min(PROGRESSION.maxRiftTier, end.highest + 1);
   loadMap('temple');
   end.run = { id: (p.career.riftSerial = (p.career.riftSerial || 0) + 1), tier, kills: 0, bosses: 0, active: true };
   // Separate expedition enemies from the ordinary map snapshot.
   p.career.normalTemple = p.worldStates.temple;
-  mobs.forEach((m, i) => {
-    const cfg = MAPS.temple;
-    const extra = m.type === 'boss' ? 5 : m.type === 'stone' ? 2 : i % 5;
-    const baseHP = (m.type === 'boss' ? 620 : m.type === 'stone' ? 160 : 55) * cfg.scale * (1 + extra * .08);
-    m.max = Math.round(baseHP * (1 + tier * .12));
-    m.hp = m.max; m.dead = 0; m.cd = 2; m.stun = 0; m.dot = null; m.skillContributors = [];
+  mobs.forEach(m => {
+    applyRiftScaling(m, tier, end.run.id);
+    m.dead = 0; m.cd = 2; m.stun = 0; m.dot = null; m.skillContributors = [];
+    m.taunt = 0; m.engaged = 0;
     m.x = m.homeX ?? (m.type === 'boss' ? 1690 : m.x);
     m.y = m.homeY ?? (m.type === 'boss' ? 330 : m.y);
-    m.level = Math.min(105, cfg.enemyLevel + tier * 2 + extra);
-    m.attackScale = cfg.scale * (1 + extra * .06) * (1 + tier * .12);
-    m.riftId = end.run.id;
   });
   save(); return true;
 }

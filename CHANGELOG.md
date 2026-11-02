@@ -10,6 +10,26 @@ Zmeny projektu JadeRealm. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.5.0] - 2026-11-02
+
+### Added
+
+- Husté skupinové spawny v štyroch úrovňových oblastiach každej mapy: 148–196 pohyblivých príšer, osem kameňov a boss.
+- Elitné a vzácne varianty, samostatné vzácne hliadky a lepšie odmeny pri zachovaní limitov EXP.
+- Spotrebný Plášť statočnosti (B), uložená zásoba, predaj a dopĺňanie z koristi, vlna použitia a aktívne hromadné prenasledovanie.
+- Trvalé spawn sloty, migrácia starých populácií a kompatibilita už rozbehnutých trhlín.
+- Testy hustoty, variantov, pohybu, presného dosahu, spotreby, respawnu, migrácie a trhlín.
+
+### Changed
+
+- AI skupín používa priestorovú mriežku, rozostupy a obchádzanie útočiska; minimapka sa prekresľuje desaťkrát za sekundu.
+- Respawn podľa typu: 5 s bežné príšery, 8 s elity, 20 s náhodné vzácne varianty a 75 s vzácne hliadky.
+
+### Fixed
+
+- Útočné schopnosti a základný útok nemožno používať na bezpečné farmenie zvnútra útočiska; liečenie a aury ostávajú dostupné.
+- Škálovanie novej trhliny zachováva silu elitných a vzácnych variantov.
+
 ## [0.4.0] - 2026-11-02
 
 ### Added
@@ -85,9 +105,10 @@ Zmeny projektu JadeRealm. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/JadeRealm/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/JadeRealm/compare/v0.5.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/JadeRealm/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/JadeRealm/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/JadeRealm/blob/main/CHANGELOG.md#020---2026-11-02
 [0.1.0]: https://github.com/ndxnraw/JadeRealm/blob/main/CHANGELOG.md#010---2026-11-02
 [0.4.0]: https://github.com/ndxnraw/JadeRealm/compare/v0.3.1...v0.4.0
+[0.5.0]: https://github.com/ndxnraw/JadeRealm/compare/v0.4.0...v0.5.0
