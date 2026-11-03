@@ -17,9 +17,12 @@ window.addEventListener('keyup',e=>keys[e.key.length===1?e.key.toLowerCase():e.k
 
 function handleGameKeyDown(e) {
   const key=e.key.length===1?e.key.toLowerCase():e.key;
+  if(key==='Tab'&&!$('modal').hidden){const nodes=Array.from(document.querySelectorAll('#modal button:not(:disabled), #modal input:not(:disabled), #modal select:not(:disabled), #modal summary')).filter(el=>el.getClientRects?.().length);if(nodes.length){const first=nodes[0],last=nodes[nodes.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}return;}
   if(key==='F10'){e.preventDefault();if(!e.repeat)toggleGameFullscreen();return;}
   if(key==='Escape'){
     keysClear();
+    if(inventoryDropPending){e.preventDefault();inventoryDropPending=null;inventory();return;}
+    if(inventoryDeletePending){e.preventDefault();inventoryDeletePending=null;renderInventoryDetail();return;}
     if(fullscreenState.native&&fullscreenState.active){clearCombatTarget();stopCombatAssist();e.preventDefault();setGameFullscreen(false);return;}
     if(!$('modal').hidden)closeModal();else{clearCombatTarget();stopCombatAssist();}
     return;

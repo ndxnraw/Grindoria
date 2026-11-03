@@ -57,6 +57,7 @@ function validateCharacterWorld(state) {
     }else if(drop.kind==='relic'){if(!Object.hasOwn(RELICS,drop.relicId))characterDataError('neznáma relikvia.');}
     else if(drop.kind==='gold'||drop.kind===undefined)assertCharacterNumber(drop.count??drop.value,'zlato na zemi',1,1e12,true);
     else characterDataError('typ koristi.');
+    if(drop.manualPickup!==undefined&&typeof drop.manualPickup!=='boolean')characterDataError('ručné zbieranie koristi.');
     if(drop.expiresAt!==undefined)assertCharacterNumber(drop.expiresAt,'expirácia',0,Number.MAX_SAFE_INTEGER);
   }
 }

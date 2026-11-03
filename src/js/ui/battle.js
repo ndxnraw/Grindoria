@@ -28,9 +28,10 @@ function spellbook() {
   const combo=SCHOOL_COMBOS[schoolId()];
   modal(`<span class="eyebrow">${role().name} · ${school().name}</span><h2>Kniha schopností</h2><div class="spell-list">${school().skills.map((s,i)=>{
     const meta=ACTIVE_SKILLS[skillKey(i)];
-    return `<div><kbd>${spellKeys[i].toUpperCase()}</kbd><span><b>${s[0]} · stupeň ${skillProgress(skillKey(i)).rank}</b><small>${meta.type?DAMAGE_TYPES[meta.type].name+' poškodenie':'Podporná schopnosť'} · ${s[3]} many · cooldown ${Number((s[2]*(1-(skillProgress(skillKey(i)).rank-1)*.01)).toFixed(2))} s<br>${s[6]}${combo.sequence.includes(i)?'<br>Kombo: '+combo.name:''}</small></span></div>`;
-  }).join('')}</div>${passiveCard()}<section class="career-card"><h3>Kombo · ${combo.name}</h3><p>${combo.sequence.map(i=>'<kbd>'+spellKeys[i].toUpperCase()+'</kbd> '+school().skills[i][0]).join(' → ')}<br>Do ${BATTLE.comboWindow} s · druhá schopnosť +${Math.round(combo.bonus*100)} % poškodenia/liečenia. Neúspešné zoslanie kombo nespotrebuje.</p></section><button class="primary" id="combat-guide">Bojový manuál</button><p>Zlepšovanie schopností: Progresia (P).</p>`);
+    return `<div><kbd>${spellKeys[i].toUpperCase()}</kbd><span><b>${s[0]} · stupeň ${skillProgress(skillKey(i)).rank}</b><small>${meta.type?DAMAGE_TYPES[meta.type].name+' poškodenie':'Podporná schopnosť'} · ${s[3]} many · cooldown ${Number((s[2]*(1-(skillProgress(skillKey(i)).rank-1)*.01)).toFixed(2))} s<br>${s[6]}${combo.sequence.includes(i)?'<br>Kombo: '+combo.name:''}</small>${requirementRow('Mana',p.mp,s[3])}</span></div>`;
+  }).join('')}</div>${passiveCard()}<section class="career-card"><h3>Kombo · ${combo.name}</h3><p>${combo.sequence.map(i=>'<kbd>'+spellKeys[i].toUpperCase()+'</kbd> '+school().skills[i][0]).join(' → ')}<br>Do ${BATTLE.comboWindow} s · druhá schopnosť +${Math.round(combo.bonus*100)} % poškodenia/liečenia. Neúspešné zoslanie kombo nespotrebuje.</p></section><div class="ui-actions"><button class="primary" id="spell-upgrade">Zlepšiť schopnosti</button><button id="combat-guide">Bojový manuál</button></div><p>Zlepšovanie schopností: Progresia (P).</p>`,{key:'spellbook'});
   $('combat-guide').onclick=combatManual;
+  $('spell-upgrade').onclick=()=>careerPanel('skills');
 }
 
 function combatManual() {

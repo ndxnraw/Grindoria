@@ -10,6 +10,22 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.21.0] - 2026-11-03
+
+### Added
+- Potvrdené vyhodenie výbavy a časti zásob potiahnutím mimo inventára alebo tlačidlom; ručné zdvihnutie zo zeme a zachovanie pri uložení.
+- Spoločné prehľady Máš / Potrebuješ, textové označenie chýbajúcich zdrojov a aktuálny stav hotbaru.
+- Integračné regresie panelov, vyhodenia, ručnej koristi, klávesnice a hotbaru; dokumentácia UI.md.
+
+### Changed
+- Jednotný vzhľad obchodov, kúziel, úloh, progresie a inventára: písmo, povrchy, tlačidlá, záložky, fokus a mobilné rozloženie.
+- Úlohy oddeľujú ciele od odmien, kniha schopností odkazuje priamo na zlepšovanie.
+
+### Fixed
+- Nákup, predaj a opakované akcie zachovávajú pozíciu panela a fokus; hlavné okná nemenia výšku podľa obsahu.
+- Zásoby vyhodené hráčom sa nevracajú automaticky do inventára. Zrušenie alebo opakované potvrdenie nevytvára duplikáty.
+- Použitie alchymistického produktu v inventári má správny názov akcie; Tab ostáva v dialógu a Esc najprv zruší rozpracované potvrdenie.
+
 ## [0.20.0] - 2026-11-03
 
 ### Added
@@ -404,7 +420,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.20.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.21.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -428,3 +444,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.18.0]: https://github.com/ndxnraw/Grindoria/compare/v0.17.0...v0.18.0
 [0.19.0]: https://github.com/ndxnraw/Grindoria/compare/v0.18.0...v0.19.0
 [0.20.0]: https://github.com/ndxnraw/Grindoria/compare/v0.19.0...v0.20.0
+[0.21.0]: https://github.com/ndxnraw/Grindoria/compare/v0.20.0...v0.21.0

@@ -72,3 +72,7 @@ V Progrese (P) otvor Výrobu pri kováčovi alebo Alchýmiu pri alchymistovi v M
 ## NPC trh
 
 Obchodník, Zbrojár a alchymista v Meste majú konečné zásoby, meniace sa ceny a výkup. Ponuka sa obnovuje každých 10 minút aktívnej hry. [Ekonomika a obchod](docs/ECONOMY.md).
+
+## Ovládanie rozhrania
+
+Panely zachovávajú pozíciu pri nákupe a predaji. Náklady ukazujú Máš / Potrebuješ. Predmet môžeš vyhodiť vytiahnutím mimo inventára alebo tlačidlom Vyhodiť… a potvrdením; na zemi ho znova zdvihneš kliknutím alebo Y. [Rozhranie](docs/UI.md).
