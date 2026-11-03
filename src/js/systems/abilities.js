@@ -70,10 +70,15 @@ function attack(skill=false) {
   if(skill)return castSkill(0);
   if(!running||paused||p.hp<=0||attackCD>0||isSanctuary(p))return false;
   updateFacing(true);combatAssist.aimTime=.22;const fighting=selectedEnemy();if(fighting&&Math.hypot(fighting.x-p.x,fighting.y-p.y)<=basicAttackRange())registerPlayerCombat(fighting);attackCD=Math.max(.16,(p.classId==='ninja'?.32:.42)*(active('berserk')?.6:1)/(1+itemAttackSpeed()));slash=.22;castStyle='basic';
-  if(rangedBasic())shoot(selectedEnemy()&&Math.hypot(target.x-p.x,target.y-p.y)<=BATTLE.rangedRange?target:null,1,'arrow',{basic:true,type:'piercing',range:BATTLE.rangedRange,skillKey:null,multiplier:1});
+  if(rangedBasic())shoot(selectedEnemy()&&Math.hypot(target.x-p.x,target.y-p.y)<=BATTLE.rangedRange?target:null,1,'arrow',{basic:true,type:'piercing',range:BATTLE.rangedRange,skillKey:null,multiplier:1,markTarget:Boolean(keys[' '])});
   else{
     fx(p.classId==='ninja'?'cross':p.classId==='shaman'?'fan':'slash',p.x,p.y,role().color,.25,face);
-    for(const m of mobs)if(enemyInArc(m,BATTLE.meleeRange))hurtMob(m,1,false,null,{basic:true,type:'physical',multiplier:1});
+    let marked=null;
+    for(const m of mobs)if(enemyInArc(m,BATTLE.meleeRange)){
+      const actual=hurtMob(m,1,false,null,{basic:true,type:'physical',multiplier:1});
+      if(keys[' ']&&actual>0&&m.hp>0&&(!marked||Math.hypot(m.x-p.x,m.y-p.y)<Math.hypot(marked.x-p.x,marked.y-p.y)))marked=m;
+    }
+    if(marked)markManualCombatHit(marked);
   }
   delete buffs.stealth;beep(230);return true;
 }

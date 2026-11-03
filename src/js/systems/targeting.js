@@ -1,11 +1,12 @@
 const combatAim = { inside: false, clientX: 0, clientY: 0 };
 let playerMoving = false;
+const combatSelection = { following: false, clickTarget: null, doubleReady: false };
 
 function selectedEnemy() {
   return target && mobs.includes(target) && target.hp > 0 ? target : null;
 }
 
-function clearCombatTarget() { target = null; combatAssist.fightTarget = null; combatAssist.fightTime = 0; $('target-panel').hidden = true; }
+function clearCombatTarget() { target = null; combatSelection.following = false; combatSelection.clickTarget = null; combatSelection.doubleReady = false; combatAssist.fightTarget = null; combatAssist.fightTime = 0; $('target-panel').hidden = true; }
 
 function setCombatPointer(event) {
   combatAim.inside = true; combatAim.clientX = event.clientX; combatAim.clientY = event.clientY;
@@ -60,10 +61,10 @@ function enemyAtPointer(x,y) {
 function rangedBasic() { return p.classId==='ninja' && p.schools.ninja==='archery'; }
 function basicAttackRange() { return rangedBasic()?BATTLE.rangedRange:BATTLE.meleeRange; }
 
-function selectCombatTarget(enemy) {
+function selectCombatTarget(enemy, follow = false) {
   if(!enemy||enemy.hp<=0||!mobs.includes(enemy))return false;
-  target=enemy; updateFacing(); updateCombatHUD();
-  if(Math.hypot(enemy.x-p.x,enemy.y-p.y)<=basicAttackRange())attack();
+  target=enemy; combatSelection.following=follow; updateFacing(); updateCombatHUD();
+  if(follow&&Math.hypot(enemy.x-p.x,enemy.y-p.y)<=basicAttackRange())attack();
   return true;
 }
 
@@ -71,11 +72,24 @@ function handleCombatClick(event) {
   if(event.button!==undefined&&event.button!==0||!running||paused)return;
   setCombatPointer(event);
   const loot=groundDropAt(lootPointer.x,lootPointer.y);
-  if(loot){pickUpGroundDrop(loot.id);canvas.focus();return;}
+  if(loot){combatSelection.clickTarget=null;combatSelection.doubleReady=false;pickUpGroundDrop(loot.id);canvas.focus();return;}
   const enemy=enemyAtPointer(lootPointer.x,lootPointer.y);
-  if(enemy)selectCombatTarget(enemy);
+  if(enemy){combatSelection.doubleReady=combatSelection.clickTarget===enemy;combatSelection.clickTarget=enemy;selectCombatTarget(enemy);}
   else{clearCombatTarget();combatAssist.aimTime=0;updateFacing();}
   canvas.focus();
+}
+
+function handleCombatDoubleClick(event) {
+  if(event.button!==undefined&&event.button!==0||!running||paused)return;
+  setCombatPointer(event);
+  if(groundDropAt(lootPointer.x,lootPointer.y))return;
+  const enemy=enemyAtPointer(lootPointer.x,lootPointer.y);
+  if(enemy&&combatSelection.doubleReady&&combatSelection.clickTarget===enemy){selectCombatTarget(enemy,true);combatSelection.doubleReady=false;}
+  canvas.focus();
+}
+
+function markManualCombatHit(enemy) {
+  if(!selectedEnemy()&&enemy?.hp>0&&mobs.includes(enemy)){selectCombatTarget(enemy,false);registerPlayerCombat(enemy);}
 }
 
 function movePlayer(dx,dy,distance) {
@@ -92,7 +106,7 @@ function updatePlayerControl(dt) {
   if(dx||dy){clearCombatTarget();movePlayer(dx,dy,speedValue()*dt);if(!combatAim.inside)face=Math.atan2(dy,dx);}
   else{
     const enemy=selectedEnemy();
-    if(enemy){
+    if(enemy&&combatSelection.following){
       if(isSanctuary(enemy)){clearCombatTarget();return;}
       const d=Math.hypot(enemy.x-p.x,enemy.y-p.y),stop=isSanctuary(p)?0:rangedBasic()?BATTLE.rangedStop:BATTLE.meleeStop;
       if(d>stop)movePlayer(enemy.x-p.x,enemy.y-p.y,Math.min(d-stop,speedValue()*dt));

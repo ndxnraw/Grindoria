@@ -54,12 +54,12 @@ function drawMetin(stone) {
   const scale=metinModelScale(stone);
   shadow(x,y,1.5*scale);ellipse(x,y,44*scale,17*scale,spec.glow+(stone.metinCombat>0?'44':'20'));
   ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);drawMetinModel(spec.model,spec.color,spec.glow,stone.hit>0);ctx.restore();
-  text(spec.name+' · Lv.'+stone.level,x,y-135*scale,spec.glow,10);
-  text(spec.difficulty,x,y-122*scale,'#e1cfaa',8);
+  text(spec.name,x,y-135*scale,spec.glow,10);
+
   if(stone.hp<stone.max||Math.hypot(stone.x-p.x,stone.y-p.y)<230){
     ctx.fillStyle='#161c1d';ctx.fillRect(x-33,y-112*scale,66,5);ctx.fillStyle=spec.glow;ctx.fillRect(x-33,y-112*scale,66*stone.hp/stone.max,5);
-    text(Math.ceil(stone.hp)+' / '+stone.max+' · odolnosť '+Math.round(stone.metinResistance*100)+' %',x,y+22,'#ded9bd',8);
-    if(stone.metinCombat>0)text('Obrancovia · ďalšia vlna '+Math.ceil(stone.metinWaveTimer)+' s',x,y+35,'#f1b58e',8);
+
+
   }
 }
 

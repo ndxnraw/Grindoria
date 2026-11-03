@@ -102,3 +102,7 @@ Register data/equipment-models.js a resolver systems/appearance.js zdieľajú ge
 ## Generátor predmetov
 
 Data/rarities.js definuje stabilné ID a poradie šiestich rarít, váhy zdrojov a bonusy. Systems/item-generation.js generuje a overuje hody aj stats a počíta hodnotu. Všetky prirodzené dropy používajú rovnaké tabuľky. Nové bojové bonusy používa hurtMob a attack; existujúce profiles zostávajú jediným úložiskom. Pozri [RARITIES.md](RARITIES.md).
+
+## Výber a nasledovanie od 0.17.0
+
+Target zostáva referencia na vybraného nepriateľa. Dočasný combatSelection.following povoľuje pohyb a automatické útoky až po dvojkliku. Prvý klik iba zobrazí údaje, SPACE označí skutočne zasiahnutý živý cieľ. Pri zmene mapy, postavy, smrti, pohybe alebo strate fokusu sa stav zruší. Žiadne nové dáta sa neukladajú do profilu.

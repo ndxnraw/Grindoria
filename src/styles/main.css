@@ -156,3 +156,5 @@ body.character-select .game-shell:fullscreen,body.native-fullscreen.character-se
 .rarity-odds{overflow-x:auto}.rarity-odds table{border-collapse:collapse;font-size:10px;white-space:nowrap}.rarity-odds td,.rarity-odds th{padding:8px 5px;border-bottom:1px solid #88744944;text-align:right}.rarity-odds th:first-child{text-align:left}
 
 .overlay:has(.rarity-guide-grid){position:fixed;inset:0;z-index:50;padding:20px;background:#080b0bd9;backdrop-filter:blur(4px)}
+
+#playerclass[hidden]{display:none}

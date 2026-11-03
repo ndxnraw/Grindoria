@@ -66,6 +66,7 @@ function hurtMob(m,mult=1,magic=false,key=castingSkillKey,opts={}) {
   const raw=(damage()+magicBonus)*mult*(key?skillFactor(key):1)*multiplier*(1+(passiveBonuses().outgoing[type]||0))*(critical?1.8:1)*(1+enemyGearBonus(m));
   const actual=hit(m,Math.max(1,Math.round(raw*(.94+rand()*.12))),type,pierced);
   if(actual>0&&opts.basic)registerBasicHit(m);
+  if(actual>0&&opts.basic&&opts.markTarget)markManualCombatHit(m);
   if(active('enchanted'))p.hp=Math.min(maxHP(),p.hp+actual*.15);
   if(pierced&&actual>0)float('PRENIKAVÝ!',m.x,m.y-103,'#a9e5e0');
   if(critical&&actual>0)float('KRITICKÝ!',m.x,m.y-90,'#f2bc70');return actual;

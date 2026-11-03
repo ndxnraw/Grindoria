@@ -68,7 +68,7 @@ test('waves stop after death or combat timeout and respect pause, sanctuary and 
 test('clicking the visible stone body attacks it and activates its waves', () => {
   const { run, listeners } = createGame();
   run('running=true;let stone=mobs.find(m=>m.type==="stone");p.x=stone.x-60;p.y=stone.y;cam.x=p.x;cam.y=p.y;let at=screen(stone.x,stone.y),before=stone.hp;');
-  listeners.get('game:pointerdown')({clientX:run('at.x'),clientY:run('at.y-70'),button:0});
+  listeners.get('game:pointerdown')({clientX:run('at.x'),clientY:run('at.y-70'),button:0});assert.equal(run('stone.hp'),run('before'));listeners.get('game:pointerdown')({clientX:run('at.x'),clientY:run('at.y-70'),button:0});listeners.get('game:dblclick')({clientX:run('at.x'),clientY:run('at.y-70'),button:0});
   assert(run('stone.hp<before')); assert(run('stone.metinCombat>0'));
 });
 
@@ -88,8 +88,8 @@ test('every Metin pool covers Yang, materials, books, alchemy, upgrade stones, g
   assert.equal(run('new Set(Object.values(METIN_TYPES).map(t=>JSON.stringify(t.loot))).size'), 8);
   for (const id of Object.keys(run('METIN_TYPES'))) {
     run(`drops.length=0;rand=()=>0;var s={type:'stone',metinType:'${id}',level:METIN_TYPES['${id}'].levels[0],x:400,y:400};p.level=s.level;dropMetinLoot(s);`);
-    assert(run('drops.some(d=>d.kind==="gold"&&d.currencyName==="Yang"&&d.count>0)'));
-    for (const material of ['ore','books','essence','dust','upgradeStones']) assert(run(`drops.some(d=>d.supplyId==='material:${material}'&&d.count>0)`), id+': '+material);
+    assert(run('p.gold>0'));assert(!run('drops.some(d=>d.kind==="gold")'));
+    for (const material of ['ore','books','essence','dust','upgradeStones']) assert(run(`p.career.materials['${material}']>0`), id+': '+material);
     assert(run('drops.some(d=>d.kind==="gear"&&METIN_TYPES[s.metinType].loot.slots.includes(d.item.slot)&&d.item.requiredLevel===s.level)'));
     assert(run('drops.some(d=>d.kind==="relic"&&d.relicId===METIN_TYPES[s.metinType].loot.relic)'));
     assert(run('drops.every(d=>d.fallAge===0)')); assert.equal(run('p.bag.length'),0);
@@ -99,10 +99,10 @@ test('every Metin pool covers Yang, materials, books, alchemy, upgrade stones, g
 test('drop chances differ by type, weak stones cannot farm advancement loot and deaths do not duplicate rewards', () => {
   const { run } = createGame();
   run('rand=()=>.1;p.level=1;let low={type:"stone",metinType:"fracture",level:1,x:400,y:400};dropMetinLoot(low);');
-  assert(!run('drops.some(d=>d.supplyId==="material:upgradeStones")'));
+  assert.equal(run('p.career.materials.upgradeStones'),0);
   run('drops.length=0;p.level=99;dropMetinLoot({...low,metinType:"doom",level:99});');
-  assert(run('drops.some(d=>d.supplyId==="material:upgradeStones")'));
-  run('drops.length=0;dropMetinLoot(low);'); assert.equal(run('drops.length'),1); assert.equal(run('drops[0].kind'),'gold');
+  assert(run('p.career.materials.upgradeStones>0'));
+  run('drops.length=0;dropMetinLoot(low);'); assert.equal(run('drops.length'),0);assert(run('p.gold>0'));
   run('p.level=1;drops.length=0;rand=()=>.999;let stone=mobs.find(m=>m.type==="stone");stone.level=3;stone.metinType="fracture";hit(stone,999999);let count=drops.length;hit(stone,999999);');
   assert.equal(run('drops.length'),run('count')); assert(!run('drops.some(d=>d.supplyId==="material:books"||d.supplyId==="material:dust")'));
 });
@@ -119,7 +119,7 @@ test('new upgrade stones have a real forge cost from +4 and old material balance
 
 test('active Metins, guards and ground loot persist without multiplying their identities', () => {
   const { run, saved } = createGame();
-  run('running=true;loadMap("suterland",true);let stone=mobs.find(m=>m.level===35);p.x=stone.x-70;p.y=stone.y;hit(stone,100);updateMetins(.21,false);let id=stone.spawnId,health=stone.hp,cooldown=stone.metinWaveTimer;spawnGroundDrop({kind:"gold",count:50},stone);save();');
+  run('running=true;loadMap("suterland",true);let stone=mobs.find(m=>m.level===35);p.x=stone.x-70;p.y=stone.y;hit(stone,100);updateMetins(.21,false);let id=stone.spawnId,health=stone.hp,cooldown=stone.metinWaveTimer;spawnGroundDrop({kind:"gear",item:{slot:"weapon",name:"Meč",bonus:1}},stone);save();');
   const reload=createGame(readSavedProfile(saved));
   assert.equal(reload.run('p.mapId'),'suterland'); assert.equal(reload.run('mobs.filter(m=>m.type==="stone").length'),99);
   assert.equal(reload.run(`mobs.find(m=>m.spawnId==='${run('id')}').hp`),run('health'));
@@ -144,8 +144,8 @@ test('old stones retain HP percentage, death timers and loot while gaining new t
 
 test('the Atlas and travel menu expose Šuterland and every type-specific loot chance', () => {
   const { run, elements } = createGame(); run('running=true;travelMenu();');
-  assert.match(elements.get('modalcontent').innerHTML,/Šuterland/); assert.match(elements.get('modalcontent').innerHTML,/99 Metinov/);
+  assert.match(elements.get('modalcontent').innerHTML,/Šuterland/); assert.match(elements.get('modalcontent').innerHTML,/Metiny Lv.1–99/);
   elements.get('metinAtlas').onclick(); const html=elements.get('modalcontent').innerHTML;
   assert.equal(run('metinPercent(.025)'), '2,5 %');
-  for(const name of ['Metin praskliny','Metin skazy','Kamene vylepšenia','Yang','Vzácna relikvia'])assert(html.includes(name));
+  for(const name of ['Metin praskliny','Metin skazy','Kamene vylepšenia','Yang','Relikvia'])assert(html.includes(name));
 });

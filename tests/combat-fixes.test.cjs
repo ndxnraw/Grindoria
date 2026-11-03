@@ -9,7 +9,7 @@ test('idle Autospell never heals or buffs; distant selection waits for combat an
  run('foe.hp=0;spellCD.fill(0);castPose=0;combatAssist.timer=0;updateAutoSpell(1);');assert(!run('spellCD.some(x=>x>0)'));
 });
 test('combat authorization expires and cannot transfer to another selected enemy',()=>{
- const {run}=createGame();arena(run);run('selectCombatTarget(foe);');assert(run('selectedCombatEnemy()===foe'));
+ const {run}=createGame();arena(run);run('selectCombatTarget(foe,true);');assert(run('selectedCombatEnemy()===foe'));
  run('updateCombatAssistTimers(8.1);');assert.equal(run('selectedCombatEnemy()'),null);
  run('registerPlayerCombat(foe);var other=mobs.find(m=>m!==foe);Object.assign(other,{hp:1000,x:800,y:1400});selectCombatTarget(other);');assert.equal(run('selectedCombatEnemy()'),null);
 });

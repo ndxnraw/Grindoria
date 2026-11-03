@@ -41,12 +41,12 @@ test('manual targets override assistance and dead or distant enemies are never r
 test('autospell waits for a marked engaged target even with auto aim enabled',()=>{
   const {run,elements}=createGame();arena(run);run('foe.x=350;p.classId="sura";p.schools.sura="black";p.mp=maxMP();');
   elements.get('auto-spell').onclick();run('updateAutoSpell(.05);');assert.equal(run('shots.length'),0);assert.equal(run('p.combatAssist.autoAim'),false);
-  elements.get('auto-aim').onclick();run('updateAutoSpell(.05);');assert.equal(run('shots.length'),0);run('selectCombatTarget(foe);updateAutoSpell(.05);');assert.equal(run('shots.length'),1);assert.equal(run('shots[0].target===foe'),true);
+  elements.get('auto-aim').onclick();run('updateAutoSpell(.05);');assert.equal(run('shots.length'),0);run('selectCombatTarget(foe,true);updateAutoSpell(.05);');assert.equal(run('shots.length'),1);assert.equal(run('shots[0].target===foe'),true);
   assert.equal(run('p.mp'),run('maxMP()-school().skills[0][3]'));assert(run('spellCD[0]>0'));run('for(let i=0;i<10;i++)updateShots(.05);');assert(run('foe.hp<10000'));
 });
 
 test('automatic casts respect pacing, mana, active buffs and healing thresholds',()=>{
-  const {run}=createGame();arena(run);run('p.combatAssist.autoSpell=true;selectCombatTarget(foe);castPose=0;updateAutoSpell(.05);var mana=p.mp;');
+  const {run}=createGame();arena(run);run('p.combatAssist.autoSpell=true;selectCombatTarget(foe,true);castPose=0;updateAutoSpell(.05);var mana=p.mp;');
   assert.equal(run('spellCD.filter(x=>x>0).length'),1);run('for(let i=0;i<15;i++){updateCombat(.05);updateAutoSpell(.05);}');assert.equal(run('spellCD.filter(x=>x>0).length'),1);
   run('p.mp=0;castPose=0;combatAssist.timer=0;var message=$("toast").textContent;updateAutoSpell(1);');assert.equal(run('p.mp'),0);assert.equal(run('$("toast").textContent'),run('message'));
   run('spellCD.fill(10);spellCD[1]=0;p.mp=maxMP();buffs.aura=100;updateAutoSpell(1);');assert.equal(run('p.mp'),run('maxMP()'));
@@ -58,7 +58,7 @@ test('assistance pauses before start, in sanctuary, during dialogs, death, blur 
     const {run}=createGame();arena(run);run('p.combatAssist={autoAim:true,autoSpell:true};'+condition+';updateAutoSpell(1);');assert.equal(run('spellCD.some(x=>x>0)'),false,condition);assert.equal(run('assistedAimEnemy()'),null,condition);
   }
   const {run,listeners}=createGame();arena(run);run('p.combatAssist={autoAim:true,autoSpell:true};');listeners.get('blur')();run('updateAutoSpell(1);');assert.equal(run('spellCD[0]'),0);
-  listeners.get('focus')();run('updateAutoSpell(.05);');assert.equal(run('spellCD[0]'),0);run('selectCombatTarget(foe);updateAutoSpell(.05);');assert(run('spellCD[0]>0'));
+  listeners.get('focus')();run('updateAutoSpell(.05);');assert.equal(run('spellCD[0]'),0);run('selectCombatTarget(foe,true);updateAutoSpell(.05);');assert(run('spellCD[0]>0'));
 });
 
 test('toggle preferences persist independently, and Escape stops automatic combat immediately',()=>{

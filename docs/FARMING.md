@@ -68,7 +68,7 @@ Základný princíp priťahovania príšer vychádza z [Metin2 Wiki – Bravery 
 - Plášť nefunguje pred začatím hry, pri otvorenom paneli, po smrti ani v chránenom útočisku. Pri odmietnutom použití sa kus nespotrebuje.
 - Použitie zruší maskovanie. Návrat do útočiska alebo nové maskovanie preruší vyprovokovanie; po vypršaní účinku pokračuje iba rozbehnutý boj, kým trvá vyprovokovanie. Samotná blízkosť nové aggro nevyvolá.
 
-Korisť najprv dopadne na zem. Zlato a zásoby vrátane plášťov a materiálov sa od verzie 0.8.1 zbierajú automaticky v dosahu 180. Y pozbiera predmety v okolí bez kurzora; konkrétnu výbavu možno zdvihnúť aj kliknutím. Pozri [LOOT.md](LOOT.md).
+Zlato a zásoby vrátane plášťov a materiálov sa pripisujú priamo. Výbava a relikvie dopadnú na zem. Y pozbiera predmety v okolí bez kurzora; konkrétnu výbavu možno zdvihnúť aj kliknutím. Pozri [LOOT.md](LOOT.md).
 
 Nové aj migrované postavy dostanú jednorazovo zásobu 10 kusov. Už uložená nula sa pri načítaní nedopĺňa. Obchodník predáva 10 kusov za 100 zlata. Boss pridá 3 kusy, vzácny nepriateľ 2; bežní a elitní protivníci ich môžu tiež zanechať.
 

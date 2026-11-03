@@ -75,7 +75,7 @@ test('legacy Rare and Epic retain all attributes and prices and rarity sorting u
 });
 test('six visual identities, full tooltips and guide reflect actual probability and pricing functions',()=>{
  const {run,elements}=createGame();const icons=new Set();
- for(const id of [0,3,1,2,4,5]){run('var item=generateEquipmentItem("weapon",'+id+',90,"sword",()=>.5);');icons.add(run('itemIcon(item)'));assert(!run('itemIcon(item).includes("undefined")'));run('var drop={kind:"gear",item,x:p.x,y:p.y,fallAge:1,expiresAt:Date.now()+10000};var tip=groundDropTooltip(drop);');assert(run('tip.includes(rarityName(item.rarity))'));assert.match(run('tip'),/Odhad trhovej hodnoty/);}
+ for(const id of [0,3,1,2,4,5]){run('var item=generateEquipmentItem("weapon",'+id+',90,"sword",()=>.5);');icons.add(run('itemIcon(item)'));assert(!run('itemIcon(item).includes("undefined")'));run('var drop={kind:"gear",item,x:p.x,y:p.y,fallAge:1,expiresAt:Date.now()+10000};var tip=groundDropTooltip(drop);');assert(run('tip.includes(rarityName(item.rarity))'));assert.match(run('tip'),/Trhový odhad/);}
  assert.equal(icons.size,6);run('running=true;inventory();');elements.get('rarity-guide').onclick();for(const label of ['Common','Uncommon','Rare','Epic','Legendary','Mythic','0,001','25 %'])assert(elements.get('modalcontent').innerHTML.includes(label),label);
  run('var mythic=generateEquipmentItem("helmet",5,90);');assert.equal(run('groundDropLifetime({kind:"gear",item:mythic})'),run('LOOT_RULES.rareLifetime'));
 });

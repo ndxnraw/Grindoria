@@ -6,7 +6,7 @@ Všetka korisť z nepriateľov a kameňov osudu najprv fyzicky vyletí z porazen
 
 Od verzie 0.8.1 platia tieto pravidlá:
 
-- **Zlato a zásoby** sa po dopade zbierajú **automaticky v dosahu 180 herných jednotiek**. Zahŕňa to elixíry, plášte, materiály, biologické vzorky, kľúče a vyrobené alchymistické kamene. Plná mriežka výbavy ich neblokuje.
+- **Zlato a zásoby** sa pri vytvorení odmeny pripíšu priamo do počítadiel postavy, bez pádu, dosahu a predmetu na zemi. Zahŕňa to elixíry, plášte, materiály, biologické vzorky, kľúče a vyrobené alchymistické kamene. Plná mriežka výbavy ich neblokuje.
 - **Y** jedným stlačením pozbiera **všetky dostupné dopadnuté predmety v rovnakom okolí**, vrátane výbavy a relikvií. Kurzor môže byť kdekoľvek alebo mimo hernej plochy; hover sa nevyžaduje.
 - **Ľavé kliknutie** na konkrétny predmet ho naďalej zdvihne samostatne. Dotyk funguje rovnako.
 
@@ -46,4 +46,8 @@ Logiku spravuje `systems/loot.js`, vykreslenie `render/loot.js` a tooltipy `ui/l
 
 ## Boj od 0.10.0
 
-Ľavé kliknutie dáva prednosť predmetu na zemi pred označením nepriateľa alebo zrušením cieľa. Automatické zbieranie zlata a zásob aj hromadné Y do 180 jednotiek ostáva zachované. Pozri [COMBAT.md](COMBAT.md).
+Ľavé kliknutie dáva prednosť predmetu na zemi pred označením nepriateľa alebo zrušením cieľa. Zlato a zásoby sa pripisujú priamo; Y do 180 jednotiek zbiera výbavu a relikvie. Pozri [COMBAT.md](COMBAT.md).
+
+## Priame zásoby od 0.17.0
+
+Nové gold/supply odmeny spotrebujú pôvodné náhodné hody na pozíciu, aby sa nezmenila sekvencia RNG a ďalšie dropy. Do drops sa však nevložia: grantAutomaticDrop hneď zmení existujúce počítadlá. flushAutomaticLoot na konci kroku spojí hlásenia, ukáže malý text a uloží kompletný výsledok boja. Staré uložené gold/supply dropy sa pri aktívnom kroku prevedú raz. Výbava a relikvie si zachovávajú pád, dosah, ručné zdvihnutie a expiráciu.

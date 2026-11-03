@@ -10,6 +10,22 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.17.0] - 2026-11-03
+
+### Added
+- Trvalé pravidlá stručných herných textov v AGENTS.md a integračné testy panelov, ovládania a priamej koristi.
+
+### Changed
+- Korektúra menu, návodu, manuálu, schopností, progresie, atlasu a tooltipov; približne 31 % menej slov v kontrolovaných paneloch.
+- Praktický výber a tvorba postáv, stručné README, zachované názvy, hodnoty, chybové a bezpečnostné hlásenia.
+- Úroveň a údaje nepriateľa sú v paneli cieľa; nad modelom ostáva meno. Povolanie sa nezobrazuje pri mene hráča v hernom svete.
+
+### Fixed
+- Prvý klik označí cieľ; dvojklik spustí nasledovanie a automatický útok. SPACE označí úspešne zasiahnutého živého nepriateľa.
+- Zlato a zásoby sa okamžite pripíšu bez pádu na zem; prijaté predmety oznamuje malý súhrnný text.
+- Dvojklik na korisť nespustí útok cez práve zdvihnutý predmet.
+- Bojové hodnoty, náklady, pravdepodobnosti, progresia a formát uloženia zostali zachované.
+
 ## [0.16.0] - 2026-11-03
 
 ### Added
@@ -65,7 +81,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Sieň hrdinov s výberom samostatných postáv, tvorbou mena a povolania, animovaným 2D náhľadom výbavy a informáciami o progrese.
 - Register podľa stabilných ID, globálne nastavenia a izolované relácie s vlastným inventárom, mapami, úlohami, schopnosťami, biológiou, bestiárom a úspechmi.
 - Kompletný export všetkých postáv a validovaný transakčný import s pridaním alebo nahradením, riešením mien, premapovaním ID a bezpečnostnou zálohou.
-- Vymazanie vyžadujúce celé meno, validácia mien a lokálna predpona [GM] pri zadaní *.
+- Vymazanie vyžadujúce celé meno a validácia mien.
 - Export neuloženého progresu aj pri plnom úložisku a ochrana pred zastaranými zápismi.
 - Testy tvorby, izolácie, mazania, importov, chýb úložiska, migrácií a obnovy postáv.
 
@@ -338,7 +354,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.16.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.17.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -358,3 +374,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.14.0]: https://github.com/ndxnraw/Grindoria/compare/v0.13.0...v0.14.0
 [0.15.0]: https://github.com/ndxnraw/Grindoria/compare/v0.14.0...v0.15.0
 [0.16.0]: https://github.com/ndxnraw/Grindoria/compare/v0.15.0...v0.16.0
+[0.17.0]: https://github.com/ndxnraw/Grindoria/compare/v0.16.0...v0.17.0

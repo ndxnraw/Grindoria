@@ -2,9 +2,9 @@
 
 ## Pohyb a zameranie
 
-WASD a šípky ovládajú pohyb. Klik do voľného priestoru zruší označenie; neútočí ani nevytvára bod presunu. Bez cieľa sa orientácia a čelný výsek útoku priebežne riadia kurzorom. Medzerník opakuje základný útok.
+WASD a šípky ovládajú pohyb. Klik do voľného priestoru zruší označenie; neútočí ani nevytvára bod presunu. Bez cieľa sa orientácia a čelný výsek útoku priebežne riadia kurzorom. Medzerník opakuje základný útok; úspešný zásah označí živý cieľ bez zapnutia nasledovania.
 
-Klik na živého nepriateľa alebo Metin uloží jeho referenciu. Postava sleduje aktuálnu polohu, zastaví vo vzdialenosti 76 jednotiek (luk 420) a útočí v dosahu 95 (luk 500). Prsteň aj panel so zdravím označujú cieľ. WASD, šípky, Esc, smrť cieľa, jeho odstránenie, zmena mapy alebo strata zamerania okna zastavia nasledovanie. Respawn rovnakého objektu ho znovu neoznačí. V otvorenom paneli je simulácia pozastavená.
+Klik na živého nepriateľa alebo Metin uloží jeho referenciu a otvorí údaje. Dvojklik zapne nasledovanie a automatický útok. Postava sleduje aktuálnu polohu, zastaví vo vzdialenosti 76 jednotiek (luk 420) a útočí v dosahu 95 (luk 500). Prsteň aj panel so zdravím označujú cieľ. WASD, šípky, Esc, smrť cieľa, jeho odstránenie, zmena mapy alebo strata zamerania okna zastavia nasledovanie. Respawn rovnakého objektu ho znovu neoznačí. V otvorenom paneli je simulácia pozastavená.
 
 Klik na korisť má prednosť pred bojom. Zlato a zásoby sa automaticky zbierajú, Y berie dostupnú korisť do 180 jednotiek bez kurzora. F otvorí obchod, M cestovanie; pohyb kliknutím na obchodníka sa nepoužíva.
 

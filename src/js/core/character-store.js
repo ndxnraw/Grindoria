@@ -122,7 +122,7 @@ function playCharacter(id = characterStore.account.selectedId) {
   characterStore.activeId=id;
   if(!saveActiveCharacter()){characterStore.activeId=null;renderCharacterScreen();return false;}
   running=true;setCharacterScreenMode(false);document.body.classList.add('started');document.body.classList.remove('character-select');$('modal').hidden=true;
-  resize();requestAnimationFrame(resize);updateClassHUD();updateHUD();canvas.focus({preventScroll:true});toast('Vitaj späť, '+characterDisplayName(p)+'.');return true;
+  resize();requestAnimationFrame(resize);updateClassHUD();updateHUD();canvas.focus({preventScroll:true});toast('Načítané: '+characterDisplayName(p));return true;
 }
 function returnToCharacters() {
   if(characterStore.activeId&&!saveActiveCharacter()){showCharacterSaveFailure();return false;}

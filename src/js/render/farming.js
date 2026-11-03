@@ -3,7 +3,7 @@ function drawFarmRegions() {
     const a = screen((area.x1 + area.x2) / 2, area.y1 - 35);
     if (a.x < -160 || a.x > W + 160 || a.y < -40 || a.y > H + 40) continue;
     text(area.name, a.x, a.y, map().accent, 12);
-    text((map().metinsOnly ? 'Metiny Lv.' : 'Lv.') + farmAreaLevelRange(area).join('–'), a.x, a.y + 15, '#ccd1b8', 9);
+
   }
   for (const point of spawnPoints) {
     if (point.kind !== 'pack' && point.kind !== 'rare') continue;
@@ -25,7 +25,7 @@ function mobDraw(m) {
     drawMobBase(m); ctx.restore();
     if (Math.hypot(m.x - p.x, m.y - p.y) < 530 || m.hp < m.max) {
       const yy = a.y - (m.skin === 'wolf' ? 76 : 105);
-      text((m.variant === 'rare' ? '✦ ' : '◆ ') + v.name + (m.rareSlot ? ' · hliadka' : ''), a.x, yy, v.color, 10);
+
       const barY = a.y - (m.skin === 'wolf' ? 47 : 77), width = m.skin === 'wolf' ? 44 : 48;
       ctx.fillStyle = '#182b25'; ctx.fillRect(a.x - width / 2, barY, width, 4);
       ctx.fillStyle = v.color; ctx.fillRect(a.x - width / 2, barY, width * m.hp / m.max, 4);

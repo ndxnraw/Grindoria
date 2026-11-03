@@ -12,7 +12,7 @@ test('empty terrain clicks cancel selection without attacking or moving',()=>{
 
 test('a selected moving enemy is followed at its live position and attacked repeatedly in range',()=>{
   const {run,listeners}=createGame();arena(run);
-  listeners.get('game:pointerdown')({clientX:900,clientY:333,button:0});assert.equal(run('target===foe'),true);
+  listeners.get('game:pointerdown')({clientX:900,clientY:333,button:0});assert.equal(run('target===foe'),true);listeners.get('game:pointerdown')({clientX:900,clientY:333,button:0});listeners.get('game:dblclick')({clientX:900,clientY:333,button:0});
   run('foe.x=850;foe.y=1500;let before=Math.hypot(foe.x-p.x,foe.y-p.y);updatePlayerControl(.3);');
   assert(run('p.x>400&&p.y>1400'));assert(run('Math.hypot(foe.x-p.x,foe.y-p.y)<before'));
   run('for(let i=0;i<180;i++)update(.05);');
@@ -125,5 +125,5 @@ test('combat UI explains actual passives, damage types, combo sequences and the 
   const {run,elements}=createGame();arena(run);run('selectCombatTarget(foe);updateCombatHUD();');
   assert.equal(elements.get('target-panel').hidden,false);assert.match(elements.get('target-panel').innerHTML,/OZNAČENÝ CIEĽ/);
   run('spellbook();');assert.match(elements.get('modalcontent').innerHTML,/Bojový rytmus/);assert.match(elements.get('modalcontent').innerHTML,/Búrka čepelí/);
-  elements.get('combat-guide').onclick();assert.match(elements.get('modalcontent').innerHTML,/Bojový manuál/);assert.match(elements.get('modalcontent').innerHTML,/Preruš|prerušenie/);
+  elements.get('combat-guide').onclick();assert.match(elements.get('modalcontent').innerHTML,/Bojový manuál/);assert.match(elements.get('modalcontent').innerHTML,/Kritický zásah/);
 });

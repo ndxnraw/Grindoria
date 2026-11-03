@@ -75,7 +75,7 @@ Relikvie využívajú existujúcu trvalú zbierku; opakovaný exemplár sa po zd
 
 **Kamene vylepšenia** sú nová stackovateľná zásoba s vlastnou ikonou. Kováč ich od stupňa +4 vyžaduje spolu s rudou a zlatom. Počet pri cieľovom stupni R je strop((R − 3) / 2): +4 a +5 stoja jeden kameň, +6 a +7 dva, +8 a +9 tri.
 
-Všetky odmeny najprv dopadnú na zem. Yang a zásoby sa potom zbierajú automaticky v dosahu; výbava a relikvie pomocou Y alebo kliknutia podľa [LOOT.md](LOOT.md). Zničenie jednej identity kameňa poskytne odmeny iba raz.
+Yang a zásoby sa pripíšu priamo. Výbava a relikvie dopadnú na zem a zbierajú sa pomocou Y alebo kliknutia podľa [LOOT.md](LOOT.md). Zničenie jednej identity kameňa poskytne odmeny iba raz.
 
 ## Uloženie a migrácia
 

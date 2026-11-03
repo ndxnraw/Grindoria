@@ -2,13 +2,12 @@
 
 ## Výber a tvorba
 
-Po otvorení hry sa zobrazí Sieň hrdinov: zoznam postáv, animovaný model, meno, povolanie, škola, level, výbava a progres. Bez postáv sa zobrazí prázdny stav s vytvorením alebo importom. Náhľad používa vlastnú 2D SVG grafiku; existujúci engine Canvas 2D nemá 3D modely. Zmena výberu mení model aj údaje. Brnenie, prilba, štít a obuv sa prejavujú v modeli; zbraň zodpovedá povolaniu a všetkých desať skutočných slotov je v prehľade výbavy.
+Po otvorení hry sa zobrazí Výber postavy: zoznam postáv, animovaný model, meno, povolanie, škola, level, výbava a progres. Bez postáv sa zobrazí prázdny stav s vytvorením alebo importom. Náhľad používa vlastnú 2D SVG grafiku; existujúci engine Canvas 2D nemá 3D modely. Zmena výberu mení model aj údaje. Brnenie, prilba, štít a obuv sa prejavujú v modeli; zbraň zodpovedá povolaniu a všetkých desať skutočných slotov je v prehľade výbavy.
 
 Pri tvorbe sa vyberá povolanie a jedna z jeho dvoch škôl. Štyri pôvodné povolania a 48 schopností zostávajú. Interný identifikátor ninja sa nemení; zobrazovaný názov je všade **Ninja**. Povolanie po vytvorení nemá mutačné UI a uloženie overuje zhodu s identitou profilu. Náhrada zálohou nemôže zmeniť povolanie existujúceho ID. Pridanie s konfliktom ID vytvorí samostatnú postavu.
 
 Meno má 3–16 Unicode znakov, začína písmenom a ďalej povoľuje písmená, diakritické značky, čísla, podčiarkovník a pomlčku. Okrajové medzery sa odstránia, vnútorné medzery nie sú povolené. NFKC normalizácia a porovnanie bez veľkosti písmen zabránia duplicitám vrátane normalizovaných variantov diakritiky. Viac postáv rovnakého povolania je povolených.
 
-Predpona * označí postavu ako GM: *Noctis sa zobrazí ako [GM] Noctis. Hviezdička sa nepočíta do dĺžky mena. Meno bez prefixu je unikátne naprieč GM aj bežnými postavami. Ide o lokálny menný štítok; offline hra nemá serverové účty ani overovanie administrátorských práv.
 
 ## Jeden register, samostatné profily
 
@@ -24,7 +23,7 @@ order: usporiadané stabilné ID
 profiles: záznamy postáv podľa ID
 ~~~
 
-Každý záznam obsahuje id, name, isGM, classId, createdAt, lastPlayedAt a data. Dáta zachovávajú pôvodný model hráča: level, EXP, atribúty, HP/MP, schopnosti a prax, bag, equipped, gold (Yang), úlohy, career s biológiou, alchýmiou, zbierkou a endgame, worldStates, mapu a pozíciu, bestiary, achievements a nastavenia bojovej asistencie.
+Každý záznam obsahuje id, name, classId, createdAt, lastPlayedAt a data. Dáta zachovávajú pôvodný model hráča: level, EXP, atribúty, HP/MP, schopnosti a prax, bag, equipped, gold (Yang), úlohy, career s biológiou, alchýmiou, zbierkou a endgame, worldStates, mapu a pozíciu, bestiary, achievements a nastavenia bojovej asistencie.
 
 Aktívne ID je iba v pamäti relácie. Existujúce mechaniky používajú p, ktorý sa vytvorí hlbokou kópiou jediného profilu. Zápis je možný len ak aktívne ID, p.characterId a povolanie zodpovedajú rovnakému záznamu. Celý register sa zverejní jedným setItem; index a profily sa nezapisujú po častiach.
 
@@ -46,7 +45,7 @@ Každá postava má počty zabití podľa rodiny príšery, typu Metinu a mapy b
 
 ## Vymazanie
 
-Vymazať postavu otvorí nezvratné potvrdenie. Tlačidlo sa sprístupní až po napísaní celého zobrazovaného mena; backend ho opäť overí. Okrajové medzery, normalizácia a veľkosť písmen používajú pravidlá mien; pri GM je potrebné celé [GM] meno. Nesprávny vstup nič nezmení.
+Vymazať postavu otvorí nezvratné potvrdenie. Tlačidlo sa sprístupní až po napísaní celého zobrazovaného mena; backend ho opäť overí. Okrajové medzery, normalizácia a veľkosť písmen používajú pravidlá mien. Nesprávny vstup nič nezmení.
 
 Odstráni sa iba zvolené ID a celý jeho profil. Aktívna relácia sa najprv uloží a ukončí. Výber prejde na zostávajúci profil alebo null. Prázdny register zabráni opätovnému automatickému importu starého postupu. Vymazanie neodstraňuje hráčove externé zálohy ani historický migračný zdroj.
 
@@ -79,4 +78,4 @@ Register sa uloží až po príprave všetkých profilov; zdroje ostávajú zál
 
 Jediný zdroj limitov je CHARACTER_RULES v data/characters.js: maxCharacters (8), nameMin, nameMax, backupVersion, maxBackupBytes (16 MiB), maxBackupCharacters (ochranný limit parsera 128) a storageKey. Zníženie kapacity nemaže postavy; tvorba a import rešpektujú nový limit. Reálna kapacita úložiska závisí od prehliadača; pri zaplnení sa údaje neprepisujú čiastočne a zostáva export.
 
-Testy characters.test.cjs pokrývajú tvorbu, mená a GM, rovnaké povolania, ich nemennosť, izoláciu progresu a svetov, návrat do pozície, dočasné stavy, mazanie, obnovu stránky, obidva importy, konflikty, referencie, neplatné dáta, nedostatok miesta, migrácie, export neuloženého progresu a zastarané zápisy. Existujúce regresie používajú rovnaké profily podľa ID. V prehliadači sa overujú formuláre, zmena modelu a výbavy, export, import, konflikty aj fullscreen.
+Testy characters.test.cjs pokrývajú tvorbu, validáciu mien, rovnaké povolania, ich nemennosť, izoláciu progresu a svetov, návrat do pozície, dočasné stavy, mazanie, obnovu stránky, obidva importy, konflikty, referencie, neplatné dáta, nedostatok miesta, migrácie, export neuloženého progresu a zastarané zápisy. Existujúce regresie používajú rovnaké profily podľa ID. V prehliadači sa overujú formuláre, zmena modelu a výbavy, export, import, konflikty aj fullscreen.

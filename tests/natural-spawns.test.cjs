@@ -19,7 +19,7 @@ test('Metin respawns relocate inside their level region with separation, preserv
 });
 
 test('layout migration preserves damage, dead timers, loot and guards; migrated locations then persist',()=>{
-  const {run,saved}=createGame();run('running=true;let stone=mobs.find(m=>m.type==="stone");stone.hp=Math.floor(stone.max/2);spawnMetinGuards(stone);let guard=mobs.find(m=>m.metinParentId);guard.hp=20;let dead=mobs[0];dead.hp=0;dead.dead=3;spawnGroundDrop({kind:"gold",count:20},{x:400,y:400});save();');
+  const {run,saved}=createGame();run('running=true;let stone=mobs.find(m=>m.type==="stone");stone.hp=Math.floor(stone.max/2);spawnMetinGuards(stone);let guard=mobs.find(m=>m.metinParentId);guard.hp=20;let dead=mobs[0];dead.hp=0;dead.dead=3;spawnGroundDrop({kind:"gear",item:{slot:"weapon",name:"Meč",bonus:1}},{x:400,y:400});save();');
   const profile=readSavedProfile(saved),state=profile.worldStates.valley;delete state.layoutSchema;
   const old=state.mobs.find(m=>m.type==='stone');old.x=old.homeX=200;old.y=old.homeY=1300;
   const migrated=createGame(profile);assert.equal(migrated.run('mobs[0].hp'),0);assert.equal(migrated.run('mobs[0].dead'),3);

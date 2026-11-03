@@ -4,7 +4,7 @@ const {run,saved,elements}=createGame();
 const element=id=>elements.get(id);
 run('running=true; mobs.forEach(m=>m.hp=0);p.x=400;p.y=400;mobs[0].hp=55;mobs[0].x=420;mobs[0].y=400;');
 run('attack();');assert.ok(run('mobs[0].hp<55'));const hp=run('mobs[0].hp');run('attack();');assert.equal(run('mobs[0].hp'),hp);
-run('attackCD=0;attack(true);');assert.ok(run('skillCD>0'));assert.ok(run('p.kills===1'));run('update(.05);');assert.equal(run('p.gold'),0);run('let coin=drops.find(d=>d.kind==="gold");coin.fallAge=LOOT_RULES.fallDuration;p.x=coin.x;p.y=coin.y;pickUpGroundDrop(coin.id);');assert.ok(run('p.gold>0'));
+run('attackCD=0;attack(true);');assert.ok(run('skillCD>0'));assert.ok(run('p.kills===1'));run('update(.05);');assert.ok(run('p.gold>0'));assert.equal(run('drops.some(d=>d.kind==="gold")'),false);
 run('p.hp=10;p.potions=2;potion();');assert.equal(run('p.hp'),75);assert.equal(run('p.potions'),1);
 run('experience(needXP());');assert.ok(run('p.level>1'));assert.equal(run('p.hp'),run('maxHP()'));
 run('p.kills=5;p.stones=3;updateHUD();');assert.equal(element('claim').hidden,false);run("$('claim').onclick();");assert.equal(run('p.claimed'),true);const gold=run('p.gold');run("$('claim').onclick();");assert.equal(run('p.gold'),gold);

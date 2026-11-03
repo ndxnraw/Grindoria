@@ -1,15 +1,11 @@
 const test = require('node:test'), assert = require('node:assert/strict');
 const { createGame, readSavedProfile } = require('./helpers/game.cjs');
 
-test('enemy and stone kills put all item rewards on the ground and never in the backpack', () => {
-  const { run } = createGame();
-  run('running=true;p.level=10;p.x=400;p.y=400;rand=()=>0;let initial=JSON.stringify({gold:p.gold,potions:p.potions,capes:p.braveryCapes,bag:p.bag,materials:p.career.materials,collection:p.career.collection});let foe={...mobs[0],hp:1,level:10,x:400,y:400,variant:"rare"};hit(foe,2);');
-  assert.equal(run('JSON.stringify({gold:p.gold,potions:p.potions,capes:p.braveryCapes,bag:p.bag,materials:p.career.materials,collection:p.career.collection})'), run('initial'));
-  assert(run('drops.some(d=>d.kind==="gear")&&drops.some(d=>d.kind==="gold")&&drops.some(d=>d.supplyId==="potions")&&drops.some(d=>d.supplyId==="braveryCapes")&&drops.some(d=>d.supplyId==="material:books")'));
-  run('let count=drops.length;hit(foe,99);'); assert.equal(run('drops.length'), run('count'));
-  run('let stone={...mobs.find(m=>m.type==="stone"),x:500,y:500,hp:1,level:10};hit(stone,2);');
-  assert(run('drops.some(d=>d.kind==="gear"&&d.launchX===500)'));
-  assert(run('drops.every(d=>d.id>0&&d.fallAge===0&&Number.isFinite(d.x)&&Number.isFinite(d.y))'));
+test('kills grant gold and supplies immediately while equipment and relics stay on the ground',()=>{
+ const {run}=createGame();run('running=true;p.level=10;p.x=400;p.y=400;rand=()=>0;var initial=p.gold,pots=p.potions,capes=p.braveryCapes;var foe={...mobs[0],hp:1,level:10,x:400,y:400,variant:"rare"};hit(foe,2);');
+ assert(run('p.gold>initial'));assert(run('p.potions>pots'));assert(run('p.braveryCapes>capes'));assert(run('p.career.materials.books>0'));assert.equal(run('p.bag.length'),0);assert(run('drops.some(d=>d.kind==="gear")'));assert(run('drops.every(d=>d.kind==="gear"||d.kind==="relic")'));
+ run('var after=JSON.stringify({gold:p.gold,potions:p.potions,materials:p.career.materials,drops});hit(foe,99);');assert.equal(run('JSON.stringify({gold:p.gold,potions:p.potions,materials:p.career.materials,drops})'),run('after'));
+ run('var stone={...mobs.find(m=>m.type==="stone"),x:500,y:500,hp:1,level:10};hit(stone,2);');assert(run('drops.some(d=>d.kind==="gear"&&d.launchX===500)'));assert(run('drops.every(d=>d.id>0&&d.fallAge===0&&Number.isFinite(d.x)&&Number.isFinite(d.y))'));
 });
 
 test('equipment falls once and stays on the ground until explicitly picked up', () => {
@@ -46,27 +42,18 @@ test('full inventory, distance, pause and death leave the item on the ground wit
   run('p.hp=100;'); assert.equal(run('pickUpGroundDrop(drop.id)'), true); assert.equal(run('p.bag.length'), 1);
 });
 
-test('gold and every supply type auto-collect only after landing and inside the exact range, even with a full bag', () => {
-  const { run, saved } = createGame();
-  run('running=true;p.x=400;p.y=400;for(let i=0;i<90;i++)addGearItem({slot:"bracelet",name:"Plný batoh",bonus:1});let payloads=[{kind:"gold",count:50},{kind:"supply",supplyId:"potions",count:3},{kind:"supply",supplyId:"braveryCapes",count:2},{kind:"supply",supplyId:"material:ore",count:7},{kind:"supply",supplyId:"gem:ruby",count:1}];for(const payload of payloads)spawnGroundDrop(payload,p);let edge=spawnGroundDrop({kind:"gold",count:10},p),outside=spawnGroundDrop({kind:"gold",count:100},p);Object.assign(edge,{x:580,y:400});Object.assign(outside,{x:580.01,y:400});let relic=spawnGroundDrop({kind:"relic",relicId:"valley",count:1},p),gear=spawnGroundDrop({kind:"gear",item:{name:"Meč",slot:"weapon",bonus:1}},p);');
-  run('updateGroundLoot(.64);'); assert.equal(run('p.gold'), 0); assert.equal(run('p.potions'), 5);
-  run('updateGroundLoot(.02);');
-  assert.equal(run('p.gold'), 60); assert.equal(run('p.potions'), 8); assert.equal(run('p.braveryCapes'), 12);
-  assert.equal(run('p.career.materials.ore'), 7); assert.equal(run('p.career.alchemy.stock.ruby'), 1);
-  assert.equal(run('p.bag.length'), 90); assert.equal(run('p.career.collection.valley'), undefined);
-  assert.equal(run('drops.length'), 3); assert(run('drops.includes(outside)&&drops.includes(gear)&&drops.includes(relic)'));
-  run('updateGroundLoot(1);'); assert.equal(run('p.gold'), 60);
-  const reloaded = createGame(readSavedProfile(saved));
-  assert.equal(reloaded.run('p.gold'), 60); assert.equal(reloaded.run('p.potions'), 8); assert.equal(reloaded.run('drops.length'), 3);
+test('gold and every supply go directly to counters without range, falling or bag space requirements',()=>{
+ const {run}=createGame();run('running=true;p.x=400;p.y=400;for(var i=0;i<90;i++)addGearItem({slot:"bracelet",name:"Náramok",bonus:1});var gold=p.gold;var coin=spawnGroundDrop({kind:"gold",count:37},{x:1900,y:1900});');
+ assert.equal(run('p.gold-gold'),37);assert.equal(run('drops.length'),0);assert.equal(run('pickUpGroundDrop(coin.id)'),false);
+ for(const entry of run('supplyDefinitions()')){run('var beforeCount=supplyDefinitions().find(s=>s.id==='+JSON.stringify(entry.id)+').count;spawnGroundDrop({kind:"supply",supplyId:'+JSON.stringify(entry.id)+',count:3},{x:1900,y:1900});');assert.equal(run('supplyDefinitions().find(s=>s.id==='+JSON.stringify(entry.id)+').count-beforeCount'),3);}
+ assert.equal(run('p.bag.length'),90);assert.equal(run('drops.length'),0);run('updateGroundLoot(.01);');assert(run('particles.some(p=>p.small)'));assert.equal(run('automaticLoot.items.size'),0);
 });
 
-test('automatic collection and nearby Y are disabled before start, during pause and while dead', () => {
-  const { run } = createGame();
-  run('p.x=400;p.y=400;let drop=spawnGroundDrop({kind:"gold",count:50},p);drop.fallAge=.65;');
-  run('updateGroundLoot(1);'); assert.equal(run('p.gold'), 0); assert.equal(run('pickNearbyGroundDrops()'), 0);
-  run('running=true;paused=true;updateGroundLoot(1);'); assert.equal(run('p.gold'), 0); assert.equal(run('pickNearbyGroundDrops()'), 0);
-  run('paused=false;p.hp=0;updateGroundLoot(1);'); assert.equal(run('p.gold'), 0); assert.equal(run('pickNearbyGroundDrops()'), 0);
-  run('p.hp=100;updateGroundLoot(.05);'); assert.equal(run('p.gold'), 50);
+test('legacy ground supplies wait while inactive and transfer once when simulation resumes',()=>{
+ for(const state of ['running=false','paused=true','p.hp=0']){
+  const {run}=createGame();run('running=true;p.x=400;p.y=400;var gold=p.gold;drops.push({id:++p.lootSerial,kind:"gold",count:12,x:1900,y:1900,fallAge:0,expiresAt:Date.now()+100000});'+state+';updateGroundLoot(.1);');assert.equal(run('p.gold'),run('gold'));assert.equal(run('drops.length'),1);
+  run('running=true;paused=false;p.hp=maxHP();updateGroundLoot(.01);updateGroundLoot(.01);');assert.equal(run('p.gold-gold'),12);assert.equal(run('drops.length'),0);
+ }
 });
 
 test('nearby Y skips gear that cannot fit and continues picking smaller items and relics', () => {
@@ -77,11 +64,11 @@ test('nearby Y skips gear that cannot fit and continues picking smaller items an
   assert.equal(run('drops[0]===large'), true); assert.equal(run('pickNearbyGroundDrops()'), 0);
 });
 
-test('supplies are automatically collected after landing while relics wait for Y', () => {
+test('supplies transfer immediately while relics wait for Y', () => {
   const { run } = createGame();
   run('running=true;p.level=10;p.x=400;p.y=400;rand=()=>0;for(let i=0;i<4;i++)careerKill({type:"wolf",level:10,x:400,y:400});for(let i=0;i<3;i++)careerKill({type:"boss",level:12,x:400,y:400});');
-  assert.equal(run('p.career.materials.wolf'), 0); assert.equal(run('p.career.materials.keys'), 0); assert.equal(run('p.career.collection.valley'), undefined);
-  assert(run('drops.some(d=>d.supplyId==="material:wolf")')); assert(run('drops.some(d=>d.supplyId==="material:keys")')); assert(run('drops.some(d=>d.kind==="relic")'));
+  assert.equal(run('p.career.materials.wolf'), 1); assert.equal(run('p.career.materials.keys'), 1); assert.equal(run('p.career.collection.valley'), undefined);
+  assert(run('drops.every(d=>d.kind==="relic")')); assert(run('drops.some(d=>d.kind==="relic")'));
   run('updateGroundLoot(.65);');
   assert.equal(run('p.career.collection.valley'), undefined);
   assert(run('drops.every(d=>d.kind==="relic")'));
@@ -105,9 +92,9 @@ test('ground items and old gold saves survive reload and map travel without dupl
 
 test('unpicked expedition loot is returned to the ordinary temple alongside its existing loot exactly once', () => {
   const { run } = createGame();
-  run('running=true;p.level=35;p.career.materials.keys=3;loadMap("temple");spawnGroundDrop({kind:"gold",count:10},p);save();enterRift();let initial=drops.length;spawnGroundDrop({kind:"gold",count:20},p);finishRift(false);loadMap("temple");');
+  run('running=true;p.level=35;p.career.materials.keys=3;loadMap("temple");spawnGroundDrop({kind:"gear",item:{slot:"weapon",name:"Prvý meč",bonus:1}},p);save();enterRift();let initial=drops.length;spawnGroundDrop({kind:"gear",item:{slot:"weapon",name:"Druhý meč",bonus:1}},p);finishRift(false);loadMap("temple");');
   assert.equal(run('initial'), 0); assert.equal(run('drops.length'), 2);
-  assert.equal(run('drops.reduce((n,d)=>n+d.count,0)'), 30); assert.equal(run('new Set(drops.map(d=>d.id)).size'), 2);
+  assert.equal(run('new Set(drops.map(d=>d.item.name)).size'),2); assert.equal(run('new Set(drops.map(d=>d.id)).size'), 2);
 });
 
 test('gear tooltips show requirements, rarity, icon, base stats, bonuses, special properties and signed comparison', () => {

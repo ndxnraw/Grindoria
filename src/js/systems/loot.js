@@ -1,4 +1,5 @@
 const LOOT_RULES = { fallDuration: .65, pickupRange: 180, hoverDelay: .55, lifetime: 180, rareLifetime: 600 };
+const automaticLoot = { items: new Map() };
 const lootPointer = { inside: false, x: 0, y: 0, clientX: 0, clientY: 0 };
 let hoveredLootId = null, lootTooltipSignature = '';
 const lootHover = { id: null, elapsed: 0 };
@@ -20,6 +21,7 @@ function expireGroundDrops(now = Date.now()) {
 const lootSupplyCatalog = new Map();
 
 function initializeLoot() {
+  automaticLoot.items.clear();
   pruneStoredGroundDrops();
   lootSupplyCatalog.clear(); supplyDefinitions().forEach(item => lootSupplyCatalog.set(item.id, item));
   if (!Number.isSafeInteger(p.lootSerial) || p.lootSerial < 0) p.lootSerial = 0;
@@ -59,9 +61,31 @@ function spawnGroundDrop(payload, source) {
   };
   drop.expiresAt = Date.now() + groundDropLifetime(drop) * 1000;
   if (drop.kind === 'gold') drop.value = drop.count;
+  if(drop.kind==='gold'||drop.kind==='supply'){grantAutomaticDrop(drop);return drop;}
   drops.push(drop); return drop;
 }
 
+function grantAutomaticDrop(drop) {
+  const view=groundDropView(drop);
+  if(!view)return false;
+  if(drop.kind==='gold'){
+    if(!Number.isSafeInteger(drop.count)||drop.count<1||!Number.isSafeInteger(p.gold+drop.count))return false;
+    p.gold+=drop.count;
+  }else if(drop.kind==='supply'){if(!grantGroundSupply(drop.supplyId,drop.count))return false;}
+  else return false;
+  const key=drop.kind==='gold'?'gold':drop.supplyId,prior=automaticLoot.items.get(key);
+  automaticLoot.items.set(key,{name:view.name,count:(prior?.count||0)+view.count});
+  return true;
+}
+function flushAutomaticLoot() {
+  if(!automaticLoot.items.size)return;
+  const items=[...automaticLoot.items.values()];automaticLoot.items.clear();
+  for(let i=0;i<items.length;i+=2){
+    float(items.slice(i,i+2).map(item=>'+'+item.count+' '+item.name).join(' · '),p.x,p.y-75-i*8,'#dec799');
+    if(particles.length)particles[particles.length-1].small=true;
+  }
+  updateHUD();save();
+}
 function dropMaterial(id, count, source) {
   if (MATERIALS[id] && Number.isSafeInteger(count) && count > 0) return spawnGroundDrop({ kind: 'supply', supplyId: 'material:' + id, count }, source);
 }
@@ -176,6 +200,7 @@ function updateGroundLoot(dt) {
   expireGroundDrops();
   if (!running || paused || p.hp <= 0) { updateLootHover(); return; }
   for (const drop of drops) drop.fallAge = Math.min(LOOT_RULES.fallDuration, (drop.fallAge || 0) + dt);
-  collectNearbyGroundDrops(true);
+  for(let i=drops.length-1;i>=0;i--)if((drops[i].kind==='gold'||drops[i].kind==='supply')&&grantAutomaticDrop(drops[i]))drops.splice(i,1);
+  flushAutomaticLoot();
   updateLootHover(dt);
 }

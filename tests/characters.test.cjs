@@ -5,7 +5,7 @@ const reload=saved=>createEmptyGame({[STORE]:saved.get(STORE)});
 function populated(){const game=createEmptyGame();game.run('var a=createCharacter("Aradan","warrior"),b=createCharacter("Nymera","ninja","archery"),c=createCharacter("Elira","ninja","blade");');return game;}
 
 test('empty hall, first creation, same-vocation characters and configurable capacity work',()=>{
-  const {run,elements}=createEmptyGame();assert.equal(run('characterStore.account.order.length'),0);assert.equal(run('running'),false);assert.match(elements.get('intro').innerHTML,/Sieň čaká/);
+  const {run,elements}=createEmptyGame();assert.equal(run('characterStore.account.order.length'),0);assert.equal(run('running'),false);assert.match(elements.get('intro').innerHTML,/Žiadne postavy/);
   run('let a=createCharacter("Aradan","warrior");');assert.equal(run('characterStore.account.profiles[a].data.level'),1);assert.equal(run('characterStore.account.profiles[a].data.hp'),120);
   run('createCharacter("Nymera","ninja");createCharacter("Elira","ninja","archery");');assert.equal(run('characterStore.account.order.length'),3);assert.equal(run('new Set(characterStore.account.order).size'),3);
   run('CHARACTER_RULES.maxCharacters=3;');assert.throws(()=>run('createCharacter("TooMany","sura")'),/limit/);assert.equal(run('characterStore.account.order.length'),3);
@@ -27,10 +27,10 @@ test('one character has one fixed vocation and wrong-session writes cannot overw
 });
 
 test('level, inventory, equipment, Yang, quests, abilities, biology, bestiary, achievements and worlds remain isolated',()=>{
-  const {run}=populated();run('playCharacter(a);p.level=35;p.xp=123;p.gold=900;p.strength=9;p.claimed=true;p.career.biology.stage=1;p.career.materials.books=8;skillProgress("body:0").rank=3;addGearItem({name:"Mesačný meč",slot:"weapon",bonus:18,rarity:1});equipItem(0);let foe=mobs[0];foe.hp=1;hit(foe,999);p.x=600;p.y=1400;returnToCharacters();playCharacter(b);');
+  const {run}=populated();run('playCharacter(a);p.level=35;p.xp=123;p.gold=900;p.strength=9;p.claimed=true;p.career.biology.stage=1;p.career.materials.books=8;skillProgress("body:0").rank=3;addGearItem({name:"Mesačný meč",slot:"weapon",bonus:18,rarity:1});equipItem(0);let foe=mobs[0];foe.hp=1;hit(foe,999);var aGold=p.gold;p.x=600;p.y=1400;returnToCharacters();playCharacter(b);');
   assert.equal(run('p.level'),1);assert.equal(run('p.gold'),0);assert.equal(run('p.strength'),0);assert.equal(run('p.bag.length'),0);assert.equal(run('p.equipped.weapon'),null);assert.equal(run('p.claimed'),false);assert.equal(run('p.career.biology.stage'),0);assert.equal(run('p.career.materials.books'),0);assert.equal(run('Object.keys(p.bestiary).length'),0);assert.equal(run('Object.keys(p.achievements).length'),0);assert(run('mobs[0].hp>0'));
   run('p.level=12;p.gold=40;addGearItem({name:"Kožené čižmy",slot:"boots",bonus:5});returnToCharacters();playCharacter(a);');
-  assert.equal(run('p.level'),35);assert.equal(run('p.gold'),900);assert.equal(run('p.equipped.weapon.name'),'Mesačný meč');assert.equal(run('p.bag.length'),0);assert.equal(run('p.claimed'),true);assert.equal(run('p.career.skills["body:0"].rank'),3);assert.equal(run('p.career.biology.stage'),1);assert.equal(run('p.achievements.firstKill'),true);assert.equal(run('mobs[0].hp'),0);assert.equal(run('p.x'),600);
+  assert.equal(run('p.level'),35);assert.equal(run('p.gold'),run('aGold'));assert.equal(run('p.equipped.weapon.name'),'Mesačný meč');assert.equal(run('p.bag.length'),0);assert.equal(run('p.claimed'),true);assert.equal(run('p.career.skills["body:0"].rank'),3);assert.equal(run('p.career.biology.stage'),1);assert.equal(run('p.achievements.firstKill'),true);assert.equal(run('mobs[0].hp'),0);assert.equal(run('p.x'),600);
   run('returnToCharacters();playCharacter(c);');assert.equal(run('p.classId'),'ninja');assert.equal(run('p.level'),1);assert.equal(run('p.bag.length'),0);
 });
 
