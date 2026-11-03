@@ -1,5 +1,5 @@
 function isSanctuary(entity) {
-  return Math.hypot(entity.x - 1000, entity.y - 1050) < SPAWN_RULES.sanctuaryRadius;
+  const zone=safeZone();return map().town||Math.hypot(entity.x-zone.x,entity.y-zone.y)<zone.radius;
 }
 
 function initializeFarming() {
@@ -8,10 +8,11 @@ function initializeFarming() {
 }
 
 function farmAreaAt(entity = p) {
-  return FARM_AREAS[(entity.y < 1000 ? 2 : 0) + (entity.x > 1000 ? 1 : 0)];
+  return FARM_AREAS[(entity.y < SIZE/2 ? 2 : 0) + (entity.x > SIZE/2 ? 1 : 0)];
 }
 
 function buildSpawnPoints(id) {
+  if(MAPS[id].town)return [];
   if (MAPS[id].metinsOnly) return buildSuterlandPoints();
   const points = [], random = layoutRandom(id + ':' + MAPS[id].seed + ':layout2'), perArea = MAPS[id].packCount / 4;
   for (const area of FARM_AREAS) {
@@ -25,12 +26,12 @@ function buildSpawnPoints(id) {
     add('rare', 'rare');
     for (let i = 0; i < 2; i++) add('stone', 'stone:' + i);
   }
-  points.push({ id: id + ':boss', kind: 'boss', x: 1690, y: 330, area: 'northeast', offset: 6 });
+  points.push({ id: id + ':boss', kind: 'boss', ...MAPS[id].bossPosition, area: 'northeast', offset: 6 });
   return points;
 }
 
 function rollEnemyVariant(point, slot) {
-  if (point.kind === 'rare') return 'rare';
+  if (point.kind === 'rare'){const roll=rand();return roll<.15?'rare':roll<.5?'elite':'normal';}
   if (point.kind !== 'pack' || (point.starter && slot === 0)) return 'normal';
   const roll = rand();
   return roll < SPAWN_RULES.rareChance ? 'rare' : roll < SPAWN_RULES.rareChance + SPAWN_RULES.eliteChance ? 'elite' : 'normal';
@@ -40,11 +41,7 @@ function createSpawnEnemy(point, slot = 0) {
   const cfg = map(), type = point.kind === 'pack' || point.kind === 'rare' ? 'wolf' : point.kind;
   const angle = rand() * Math.PI * 2, radius = point.kind === 'pack' ? Math.sqrt(rand()) * 90 : 0;
   let x = point.x + Math.cos(angle) * radius, y = point.y + Math.sin(angle) * radius;
-  if (Math.hypot(x - 1000, y - 1050) < SPAWN_RULES.spawnClearance) {
-    const a = Math.atan2(y - 1050, x - 1000);
-    x = 1000 + Math.cos(a) * SPAWN_RULES.spawnClearance;
-    y = 1050 + Math.sin(a) * SPAWN_RULES.spawnClearance;
-  }
+  ({x,y}=safePosition({x,y},SPAWN_RULES.spawnClearance-safeZone().radius));
   const variant = rollEnemyVariant(point, slot), v = ENEMY_VARIANTS[variant];
   const normalLevel = cfg.enemyLevel + point.offset + (type === 'boss' ? 5 : type === 'stone' ? 2 : slot % 3);
   const level = normalLevel + (type === 'wolf' ? v.level : 0);
@@ -55,7 +52,7 @@ function createSpawnEnemy(point, slot = 0) {
     type, skin: cfg.skin, area: point.area, variant, rareSlot: point.kind === 'rare',
     x, y, homeX: x, homeY: y, level, baseLevel: level, hp, max: hp, baseMax: hp,
     attackScale: attack, baseAttack: attack, speedScale: type === 'wolf' ? v.speed : 1,
-    respawnSeconds: type === 'boss' ? 40 : type === 'stone' ? 18 : point.kind === 'rare' ? 75 : v.respawn,
+    respawnSeconds: type === 'boss' ? 40 : type === 'stone' ? 18 : point.kind === 'rare' ? 180 : v.respawn,
     dead: 0, cd: 1, hit: 0, windup: 0, taunt: 0, engaged: 0,
     roamTarget: null, roamWait: rand() * 4, returning: false, skillContributors: []
   };
@@ -71,6 +68,7 @@ function applyRiftScaling(m, tier, runId) {
   if (m.type === 'stone') { const stats = metinStats(m.level, m.metinType); m.metinArmor = stats.armor; m.metinResistance = stats.resistance; }
 }
 
+function configuredRespawn(enemy){return enemy.type==='boss'?40:enemy.type==='stone'?18:enemy.rareSlot?180:(ENEMY_VARIANTS[enemy.variant]?.respawn||8);}
 function hydrateSpawnPopulation(old) {
   const generated = [];
   for (const point of spawnPoints) {
@@ -86,7 +84,7 @@ function hydrateSpawnPopulation(old) {
     return restoreMetinGuards(generated.map(m => {
       const prior = saved.get(m.spawnId);
       if (m.type === 'stone') return restoreSpawnLocation(restoreMetin(m, prior), m, old);
-      return prior ? restoreSpawnLocation({ ...m, ...cloneEnemyState(prior), dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0, roamTarget: null, roamWait: rand() * 4, returning: false }, m, old) : m;
+      return prior ? restoreSpawnLocation({ ...m, ...cloneEnemyState(prior), dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])], respawnSeconds:configuredRespawn(prior),stun: 0, windup: 0, taunt: 0, engaged: 0, roamTarget: null, roamWait: rand() * 4, returning: false }, m, old) : m;
     }), old.mobs);
   }
   // Upgrade old sparse populations into distinct new slots without reviving their dead.
@@ -115,7 +113,7 @@ function loadLegacyRift(old) {
   return old.mobs.map((prior, index) => {
     const id = 'legacy-rift:' + index, x = prior.homeX ?? prior.x, y = prior.homeY ?? prior.y;
     spawnPoints.push({ id, kind: prior.type === 'wolf' ? 'pack' : prior.type, x, y, area: farmAreaAt(prior).id, offset: 0 });
-    return upgradeLegacyMetin({ ...cloneEnemyState(prior), spawnId: id + ':0', spawnPointId: id, spawnSlot: 0, variant: 'normal', respawnSeconds: prior.type === 'boss' ? 40 : prior.type === 'stone' ? 18 : 5, taunt: 0, engaged: 0, stun: 0, windup: 0 }, spawnPoints.at(-1));
+    return upgradeLegacyMetin({ ...cloneEnemyState(prior), spawnId: id + ':0', spawnPointId: id, spawnSlot: 0, variant: 'normal', respawnSeconds: prior.type === 'boss' ? 40 : prior.type === 'stone' ? 18 : 8, taunt: 0, engaged: 0, stun: 0, windup: 0 }, spawnPoints.at(-1));
   });
 }
 
@@ -170,11 +168,11 @@ function walkEnemy(m, x, y, speed, dt, grid = null) {
   }
   const length = Math.hypot(vx, vy) || 1, step = Math.min(distance, speed * dt);
   let nx = m.x + vx / length * step, ny = m.y + vy / length * step;
-  const keepOut = SPAWN_RULES.sanctuaryRadius + 18;
-  if (Math.hypot(nx - 1000, ny - 1050) < keepOut) {
-    const angle = Math.atan2(m.y - 1050, m.x - 1000), cross = (m.x - 1000) * (y - 1050) - (m.y - 1050) * (x - 1000);
+  const zone=safeZone(),keepOut=zone.radius+18;
+  if (Math.hypot(nx-zone.x,ny-zone.y) < keepOut) {
+    const angle = Math.atan2(m.y-zone.y,m.x-zone.x),cross=(m.x-zone.x)*(y-zone.y)-(m.y-zone.y)*(x-zone.x);
     const next = angle + (cross < 0 ? -1 : 1) * step / keepOut;
-    nx = 1000 + Math.cos(next) * keepOut; ny = 1050 + Math.sin(next) * keepOut;
+    nx=zone.x+Math.cos(next)*keepOut;ny=zone.y+Math.sin(next)*keepOut;
   }
   m.x = Math.max(45, Math.min(SIZE - 45, nx)); m.y = Math.max(45, Math.min(SIZE - 45, ny));
 }
@@ -203,7 +201,7 @@ function wanderEnemy(m, dt, grid) {
     for (let attempt = 0; attempt < 8; attempt++) {
       const angle = rand() * Math.PI * 2, radius = SPAWN_RULES.roamRadius * Math.sqrt(rand());
       const x = m.homeX + Math.cos(angle) * radius, y = m.homeY + Math.sin(angle) * radius;
-      if (x < 45 || x > SIZE - 45 || y < 45 || y > SIZE - 45 || Math.hypot(x - 1000, y - 1050) < SPAWN_RULES.sanctuaryRadius + 18) continue;
+      if (x < 45 || x > SIZE - 45 || y < 45 || y > SIZE - 45 || Math.hypot(x-safeZone().x,y-safeZone().y)<safeZone().radius+18) continue;
       m.roamTarget = { x, y }; break;
     }
     if (!m.roamTarget) { m.roamWait = 2; return; }
@@ -254,7 +252,7 @@ function updateEnemySpawns(dt, safe) {
 function useBraveryCape() {
   if (!running || paused || p.hp <= 0 || capeCooldown > 0) return false;
   if (p.braveryCapes < 1) { toast('Nemáš Plášť statočnosti. Kúpiš ho u obchodníka (F).'); return false; }
-  if (isSanctuary(p)) { toast('Plášť použi mimo chráneného útočiska.'); return false; }
+  if (isSanctuary(p)) { toast('Plášť použi mimo bezpečnej zóny.'); return false; }
   p.braveryCapes--; capeCooldown = SPAWN_RULES.capeCooldown; delete buffs.stealth;
   let count = 0;
   for (const m of mobs) if (m.hp > 0 && (m.type === 'wolf' || m.type === 'boss') && Math.hypot(m.x - p.x, m.y - p.y) <= SPAWN_RULES.capeRange) {
@@ -266,7 +264,7 @@ function useBraveryCape() {
 }
 
 function buyBraveryCapes() {
-  if (Math.hypot(p.x - 1110, p.y - 1110) > 160 || !pay({ gold: SPAWN_RULES.capePrice })) return false;
+  if (!nearNPC('merchant') || !pay({ gold: SPAWN_RULES.capePrice })) return false;
   p.braveryCapes += SPAWN_RULES.capeBundle;
   updateHUD(); save(); return true;
 }

@@ -2,31 +2,31 @@
 
 ## Typy a úrovne
 
-Grindoria má osem pôvodných vektorových modelov Metinov: prasknutý obelisk, dvojicu klov, stupňovitú pyramídu s okom, ľadové kryštály, sopečný kameň, rozštiepené búrkové piliere, levitujúci kryštál a korunu skazy. Každý model má vlastnú siluetu, farby a efekty. Názov, úroveň a obtiažnosť sú viditeľné nad kameňom; pri boji sa zobrazí zdravie, odolnosť a čas ďalšej vlny.
+Grindoria má osem pôvodných vektorových modelov Metinov: prasknutý obelisk, dvojicu klov, stupňovitú pyramídu s okom, ľadové kryštály, sopečný kameň, rozštiepené búrkové piliere, levitujúci kryštál a korunu skazy. Každý model má vlastnú siluetu, farby a efekty. Nad kameňom je meno; úroveň, obtiažnosť, zdravie, odolnosť a ďalšia vlna sú v paneli označeného cieľa.
 
 | Typ | Úrovne v Šuterlande | Obtiažnosť | Obrancovia vo vlne | Interval |
 | --- | --- | --- | ---: | ---: |
-| Metin praskliny | 1–9 | Ľahký | 2 | 4,8 s |
-| Metin šeliem | 10–19 | Ľahký | 2 | 4,4 s |
-| Metin púšte | 20–34 | Stredný | 3 | 4 s |
-| Metin mrazu | 35–49 | Stredný | 3 | 3,6 s |
-| Metin plameňa | 50–64 | Ťažký | 4 | 3,2 s |
-| Metin búrky | 65–79 | Ťažký | 4 | 2,9 s |
-| Metin prázdnoty | 80–94 | Veľmi ťažký | 5 | 2,6 s |
-| Metin skazy | 95–99 | Legendárny | 5 | 2,3 s |
+| Metin praskliny | 1–9 | Ľahký | 2 | 2,64 s |
+| Metin šeliem | 10–19 | Ľahký | 2 | 2,42 s |
+| Metin púšte | 20–34 | Stredný | 3 | 2,2 s |
+| Metin mrazu | 35–49 | Stredný | 3 | 1,98 s |
+| Metin plameňa | 50–64 | Ťažký | 4 | 1,76 s |
+| Metin búrky | 65–79 | Ťažký | 4 | 1,6 s |
+| Metin prázdnoty | 80–94 | Veľmi ťažký | 5 | 1,43 s |
+| Metin skazy | 95–99 | Legendárny | 5 | 1,27 s |
 
 Štyri pôvodné bojové mapy si ponechávajú osem kameňov na mapu. Údolie používa prasklinu a šelmy, púšť pieskový typ a šelmy, hory mráz a búrku, chrám plameň a prázdnotu. Ich úrovne naďalej vychádzajú z miestnej oblasti. Rozsahy v tabuľke určujú rozdelenie typov v Šuterlande, neobmedzujú miestne varianty na ostatných mapách.
 
 ## Šuterland
 
-Mapa je dostupná cez **M → Šuterland** z útočiska. Má **99 Metinov, presne jeden pre každú úroveň 1 až 99**. Nemá bežné voľne spawnované príšery ani bossa. Obrancovia sa objavia počas útoku na Metin. Stred zostáva chráneným útočiskom s cestovaním a obchodníkom.
+Mapa je dostupná cez **M → Šuterland** mimo boja. Má **99 Metinov, presne jeden pre každú úroveň 1 až 99**. Nemá bežné voľne spawnované príšery ani bossa. Obrancovia sa objavia počas útoku na Metin. Malá bezpečná zóna je na západe; NPC sú v Meste.
 
 - Južné loviská: úrovne 1–25.
 - Východné tábory: 26–50.
 - Severné hliadky: 51–75.
 - Územie strážcu: 76–99.
 
-Všetky kamene sú mimo útočiska. Obnovujú sa po 18 sekundách aktívnej simulácie mapy a zachovávajú svoj typ aj úroveň. Neaktívna mapa ich časovače pozastaví.
+Všetky kamene sú mimo bezpečnej zóny. Obnovujú sa po 18 sekundách aktívnej simulácie mapy a zachovávajú svoj typ aj úroveň. Neaktívna mapa ich časovače pozastaví.
 
 ## Životy a odolnosť
 
@@ -41,7 +41,7 @@ Typový násobok zdravia rastie od 1 pri praskline po 1,8 pri skaze. Zvyšujúca
 
 ## Obrancovia
 
-Úspešný zásah aktivuje Metin na šesť sekúnd; každý ďalší zásah tento čas obnoví. Prvá vlna príde po 0,2 sekundy, ďalšie podľa tabuľky. Vlny sa prerušia pri zničení kameňa, uplynutí boja, pobyte hráča v útočisku, maskovaní alebo vzdialení nad 850 jednotiek. Pauza zastaví simuláciu.
+Úspešný zásah aktivuje Metin na šesť sekúnd; každý ďalší zásah tento čas obnoví. Prvá vlna príde po 0,1 sekundy, ďalšie podľa tabuľky. Vlny sa prerušia pri zničení kameňa, uplynutí boja, pobyte hráča v bezpečnej zóne, maskovaní alebo vzdialení nad 850 jednotiek. Pauza zastaví simuláciu.
 
 | Úroveň Metinu | Typ obrancov |
 | --- | --- |
@@ -52,7 +52,7 @@ Typový násobok zdravia rastie od 1 pri praskline po 1,8 pri skaze. Zvyšujúca
 
 Úroveň každého obrancu je najviac o jednu nižšia alebo vyššia než Metin. Jeho sila vychádza z tejto úrovne aj v Šuterlande. Obrancovia sa hneď zamerajú na hráča a pri aktívnom boji ho prenasledujú. Bežné pasívne skupiny príšer si zachovávajú pôvodné pravidlá aggra.
 
-Limity sú **8 živých obrancov na jednu generáciu kameňa a 60 na mape**. Zabité posily sa samostatne neobnovujú; ďalšie vytvorí iba nová vlna. Neporažené posily po 45 sekundách aktívneho času zmiznú bez odmeny. Už privolaní obrancovia môžu dokončiť boj aj po rozbití kameňa. Poskytujú 35 % bežných EXP pri rovnakej úrovni a upravené zlato, aby neobchádzali pomalú progresiu.
+Limity sú **8 živých obrancov na jednu generáciu kameňa a 60 na mape**. Zabité posily sa samostatne neobnovujú; ďalšie vytvorí iba nová vlna. Neporažené posily po 45 sekundách aktívneho času zmiznú bez odmeny. Rozbitie kameňa zabije jeho zostávajúcich obrancov a vyplatí ich obvyklé EXP, zlato a dropy raz. Obrancovia iného kameňa zostanú živí. Poskytujú 35 % bežných EXP pri rovnakej úrovni a upravené zlato, aby neobchádzali pomalú progresiu.
 
 ## Vlastné loot pooly
 

@@ -19,24 +19,27 @@ Postavy sa ukladajú automaticky. Tlačidlo Postavy uloží reláciu a otvorí v
 | WASD / šípky | Pohyb, zrušenie nasledovania |
 | SPACE | Útok; zásah označí nepriateľa |
 | Klik na nepriateľa / Metin | Označiť a zobraziť údaje |
-| Dvojklik na nepriateľa / Metin | Nasledovať a automaticky útočiť |
+| Druhý klik na rovnaký cieľ | Nasledovať a automaticky útočiť |
 | Klik do prázdna | Zrušiť cieľ |
 | Q R T V U O | Schopnosti školy |
 | Y / klik na korisť | Zdvihnúť výbavu a relikvie |
 | E / B | Elixír / Plášť statočnosti |
 | I / K / P | Inventár / schopnosti / progresia |
-| J / M / F | Úlohy / mapy / obchod |
+| J / M / F | Úlohy / mapy / NPC v Meste |
 | C / ? | Bojový manuál / ovládanie |
 | F10 / ⛶ | Celá obrazovka |
 | Esc | Zavrieť panel; v hre zrušiť cieľ a automatiku |
+
+Cestovanie (M) je dostupné kdekoľvek mimo boja. F otvorí blízke NPC v Meste; na bojových mapách sú malé bezpečné zóny.
 
 Zlato a zásoby sa pripíšu priamo, bez predmetu na zemi. Výbava a relikvie zostávajú na zemi do zdvihnutia alebo expirácie. Okná možno zatvoriť kliknutím mimo nich.
 
 ## Herné systémy
 
 - Štyri povolania, osem škôl, 48 schopností, pasívne bonusy a kombá. [Boj](docs/COMBAT.md).
-- Päť máp vrátane Šuterlandu s Metinmi 1–99. [Metiny](docs/METINS.md), [príšery a farmenie](docs/FARMING.md).
+- Mesto s NPC a päť rozšírených bojových máp vrátane Šuterlandu s Metinmi 1–99. [Lokality](docs/LOCATIONS.md). [Metiny](docs/METINS.md), [príšery a farmenie](docs/FARMING.md).
 - Desať slotov výbavy, mriežkový inventár a 39 vektorových modelov. [Inventár](docs/INVENTORY.md), [modely](docs/APPEARANCE.md).
+- Kováč v Meste: +0 až +9, materiály, šance, riziko a ochrana. Žiara zbraní od +5. [Vylepšovanie](docs/FORGE.md).
 - Šesť rarít, 20 náhodných bonusov a hodnotenie predmetov. [Rarity](docs/RARITIES.md).
 - Tréning, schopnosti, biológia, alchýmia, relikvie, špecializácia a trhliny. [Progresia](docs/PROGRESSION.md).
 - Automierenie pri útoku, Autospell v boji s označeným cieľom a Autoelixíry pod 45 % HP. Podrobnosti v bojovom manuáli.

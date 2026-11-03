@@ -7,7 +7,7 @@ test('all maps use irregular separated spawn points instead of repeated rows and
     run('loadMap("'+id+'",true);var points=spawnPoints.filter(p=>p.kind!=="boss");');
     assert.equal(run('new Set(points.map(p=>p.x.toFixed(3))).size'),run('points.length'));
     assert.equal(run('new Set(points.map(p=>p.y.toFixed(3))).size'),run('points.length'));
-    assert(run('points.every(p=>{const a=FARM_AREAS.find(a=>a.id===p.area);return p.x>=a.x1+50&&p.x<=a.x2-50&&p.y>=a.y1+50&&p.y<=a.y2-50&&Math.hypot(p.x-1000,p.y-1050)>=305;})'));
+    assert(run('points.every(p=>{const a=FARM_AREAS.find(a=>a.id===p.area);return p.x>=a.x1+50&&p.x<=a.x2-50&&p.y>=a.y1+50&&p.y<=a.y2-50&&Math.hypot(p.x-safeZone().x,p.y-safeZone().y)>=SPAWN_RULES.spawnClearance+15;})'));
     assert(run('points.every((p,i)=>points.every((q,j)=>i===j||p.area!==q.area||Math.hypot(p.x-q.x,p.y-q.y)>=89.99))'));
   }
 });
@@ -27,5 +27,5 @@ test('layout migration preserves damage, dead timers, loot and guards; migrated 
   assert.equal(migrated.run('mobs.find(m=>m.metinParentId).hp'),20);assert.equal(migrated.run('drops.length'),1);
   migrated.run('save();');const again=createGame(readSavedProfile(migrated.saved));
   assert.equal(again.run('mobs.find(m=>m.type==="stone").x'),migrated.run('mobs.find(m=>m.type==="stone").x'));
-  assert.equal(again.run('p.worldStates.valley.layoutSchema'),2);
+  assert.equal(again.run('p.worldStates.valley.layoutSchema'),3);
 });

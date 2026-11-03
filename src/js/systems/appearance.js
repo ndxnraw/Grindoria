@@ -34,7 +34,7 @@ function equipmentAppearance(item) {
 }
 function equipmentModelSVG(item) {
  const model=equipmentAppearance(item);if(!model)return '';
- return '<g data-equipment-model="'+model.model+'">'+model.parts.map(part=>'<path d="'+part.d+'" fill="'+part.fill+'" stroke="'+part.stroke+'" stroke-width="'+part.width+'" stroke-linejoin="round" fill-rule="evenodd"/>').join('')+'</g>';
+ return '<g data-equipment-model="'+model.model+'">'+weaponUpgradeSVG(item)+model.parts.map(part=>'<path d="'+part.d+'" fill="'+part.fill+'" stroke="'+part.stroke+'" stroke-width="'+part.width+'" stroke-linejoin="round" fill-rule="evenodd"/>').join('')+'</g>';
 }
 const WORN_EQUIPMENT = {
  boots:{x:-13,y:-17,w:26,h:19},armor:{x:-19,y:-39,w:38,h:34},
@@ -59,7 +59,7 @@ function wornEquipmentSVG(gear,anchors=WORN_EQUIPMENT) {
 }
 function canvasEquipment(item,x,y,w,h) {
  const model=equipmentAppearance(item);if(!model || typeof Path2D==='undefined')return false;
- ctx.save();ctx.translate(x,y);ctx.scale(w/64,h/model.height);
+ ctx.save();ctx.translate(x,y);ctx.scale(w/64,h/model.height);drawWeaponUpgrade(item,model);
  for(let i=0;i<model.parts.length;i++){
   const part=model.parts[i],key=model.key+':'+i;
   if(!appearancePaths.has(key)){

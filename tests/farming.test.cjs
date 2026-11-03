@@ -3,7 +3,7 @@ const { createGame, readSavedProfile } = require('./helpers/game.cjs');
 
 test('each map has dense packs, four level regions and unique protected spawn slots', () => {
   const { run } = createGame(); run('running=true;');
-  const expected = { valley: 148, desert: 172, snow: 172, temple: 196 };
+  const expected = { valley: 292, desert: 364, snow: 364, temple: 412 };
   for (const [id, count] of Object.entries(expected)) {
     assert.equal(run(`loadMap('${id}')`), true);
     assert.equal(run('mobs.filter(m=>m.type==="wolf").length'), count);
@@ -11,7 +11,7 @@ test('each map has dense packs, four level regions and unique protected spawn sl
     assert.equal(run('mobs.filter(m=>m.type==="boss").length'), 1);
     assert.equal(run('spawnPoints.filter(point=>point.kind==="pack").length'), run('map().packCount'));
     assert.equal(run('new Set(mobs.map(m=>m.spawnId)).size'), count + 9);
-    assert(run('mobs.every(m=>Math.hypot(m.homeX-1000,m.homeY-1050)>=SPAWN_RULES.spawnClearance-1e-8)'));
+    assert(run('mobs.every(m=>Math.hypot(m.homeX-safeZone().x,m.homeY-safeZone().y)>=SPAWN_RULES.spawnClearance-1e-8)'));
     for (const area of ['southwest', 'southeast', 'northwest', 'northeast']) assert(run(`mobs.some(m=>m.type==='wolf'&&m.area==='${area}')`));
     assert(run('Math.min(...mobs.filter(m=>m.area==="northeast").map(m=>m.level)) > Math.min(...mobs.filter(m=>m.area==="southwest").map(m=>m.level))'));
     run('draw();');
@@ -20,12 +20,12 @@ test('each map has dense packs, four level regions and unique protected spawn sl
 
 test('elite and rare rolls produce stronger enemies and appropriate respawn intervals', () => {
   const { run } = createGame();
-  run('let point=spawnPoints.find(p=>p.kind==="pack"&&!p.starter);rand=()=>.5;let normal=createSpawnEnemy(point,2);rand=()=>.1;let elite=createSpawnEnemy(point,2);rand=()=>.005;let rare=createSpawnEnemy(point,2);');
+  run('let point=spawnPoints.find(p=>p.kind==="pack"&&!p.starter);rand=()=>.5;let normal=createSpawnEnemy(point,2);rand=()=>.04;let elite=createSpawnEnemy(point,2);rand=()=>.001;let rare=createSpawnEnemy(point,2);');
   assert.equal(run('normal.variant'), 'normal'); assert.equal(run('elite.variant'), 'elite'); assert.equal(run('rare.variant'), 'rare');
   assert(run('normal.max<elite.max&&elite.max<rare.max'));
   assert(run('normal.attackScale<elite.attackScale&&elite.attackScale<rare.attackScale'));
-  assert.equal(run('normal.respawnSeconds'), 5); assert.equal(run('elite.respawnSeconds'), 8); assert.equal(run('rare.respawnSeconds'), 20);
-  assert.equal(run('createSpawnEnemy(spawnPoints.find(p=>p.kind==="rare")).respawnSeconds'), 75);
+  assert.equal(run('normal.respawnSeconds'), 8); assert.equal(run('elite.respawnSeconds'), 12); assert.equal(run('rare.respawnSeconds'), 60);
+  assert.equal(run('createSpawnEnemy(spawnPoints.find(p=>p.kind==="rare")).respawnSeconds'), 180);
 });
 
 test('rare kills have better gold, EXP, equipment and materials without bypassing weak-target penalties', () => {
@@ -85,7 +85,7 @@ test('B and the action button use the same cape logic and the shop restocks fini
   listeners.get('keydown')({ key: 'b', repeat: false, target: { tagName: 'CANVAS' }, preventDefault() {} });
   assert.equal(run('p.braveryCapes'), 9);
   run('capeCooldown=0;'); elements.get('bravery').onclick(); assert.equal(run('p.braveryCapes'), 8);
-  run('p.x=1110;p.y=1110;p.gold=99;'); assert.equal(run('buyBraveryCapes()'), false); assert.equal(run('p.gold'), 99);
+  run('loadMap("town",true);p.x=NPCS.merchant.x;p.y=NPCS.merchant.y;p.gold=99;'); assert.equal(run('buyBraveryCapes()'), false); assert.equal(run('p.gold'), 99);
   run('p.gold=100;'); assert.equal(run('buyBraveryCapes()'), true); assert.equal(run('p.braveryCapes'), 18); assert.equal(run('p.gold'), 0);
   run('inventory();'); assert.match(elements.get('modalcontent').innerHTML, /Plášť statočnosti: 18 ks/);
 });
@@ -94,10 +94,10 @@ test('spawn slots repeatedly replenish in place, reroll variants and clear old c
   const { run } = createGame();
   run('running=true;rand=()=>.5;let farmTarget=mobs.find(m=>m.type==="wolf"&&!m.rareSlot&&m.spawnSlot===2);farmTarget.hp=1;farmTarget.variant="normal";farmTarget.respawnSeconds=5;let identity=farmTarget,spawn=farmTarget.spawnId;hit(farmTarget,2);farmTarget.dot={time:20,tick:1,power:100};farmTarget.taunt=10;');
   run('updateEnemySpawns(4.9,true);'); assert.equal(run('farmTarget.hp'), 0);
-  run('rand=()=>.1;updateEnemySpawns(.2,true);'); assert.equal(run('farmTarget.variant'), 'elite'); assert.equal(run('farmTarget.hp'), run('farmTarget.max'));
+  run('rand=()=>.04;updateEnemySpawns(.2,true);'); assert.equal(run('farmTarget.variant'), 'elite'); assert.equal(run('farmTarget.hp'), run('farmTarget.max'));
   assert.equal(run('farmTarget===identity'), true); assert.equal(run('farmTarget.spawnId'), run('spawn')); assert.equal(run('farmTarget.dot'), undefined); assert.equal(run('farmTarget.taunt'), 0);
-  run('hit(farmTarget,999999);'); assert.equal(run('farmTarget.dead'), 8);
-  run('rand=()=>.5;updateEnemySpawns(8.1,true);'); assert.equal(run('farmTarget.variant'), 'normal'); assert.equal(run('farmTarget.hp'), run('farmTarget.max'));
+  run('hit(farmTarget,999999);'); assert.equal(run('farmTarget.dead'), 12);
+  run('rand=()=>.5;updateEnemySpawns(12.1,true);'); assert.equal(run('farmTarget.variant'), 'normal'); assert.equal(run('farmTarget.hp'), run('farmTarget.max'));
 });
 
 test('migration fills new slots without duplicating old dead enemies, loot or timers', () => {
@@ -106,27 +106,27 @@ test('migration fills new slots without duplicating old dead enemies, loot or ti
     { type: 'stone', hp: 0, max: 160, dead: 12, x: 610, y: 630, cd: 0, hit: 0 }
   ], drops: [{ x: 500, y: 500, value: 91 }] } } };
   const { run, saved } = createGame(old);
-  assert.equal(run('mobs.length'), 157); assert.equal(run('mobs.filter(m=>m.hp<=0).length'), 2);
+  assert.equal(run('mobs.length'), 301); assert.equal(run('mobs.filter(m=>m.hp<=0).length'), 2);
   assert.equal(run('mobs.find(m=>m.hp<=0&&m.type==="wolf").dead'), 3);
   assert.equal(run('mobs.find(m=>m.hp<=0&&m.type==="stone").dead'), 12);
   assert.equal(run('drops.length'), 1); assert.equal(run('drops[0].value'), 91); assert.equal(run('p.gold'), 777);
   run('save();'); const reload = createGame(readSavedProfile(saved));
-  assert.equal(reload.run('mobs.length'), 157); assert.equal(reload.run('mobs.filter(m=>m.hp<=0).length'), 2); assert.equal(reload.run('drops.length'), 1);
+  assert.equal(reload.run('mobs.length'), 301); assert.equal(reload.run('mobs.filter(m=>m.hp<=0).length'), 2); assert.equal(reload.run('drops.length'), 1);
 });
 
 test('new spawn layouts and variant identities persist while transient taunts reset on reload', () => {
   const { run, saved } = createGame();
-  run('let rare=mobs.find(m=>m.rareSlot);rare.hp=rare.max/2;rare.taunt=15;rare.engaged=15;let id=rare.spawnId,health=rare.hp;save();');
+  run('let rare=mobs.find(m=>m.rareSlot);rare.hp=rare.max/2;rare.taunt=15;rare.engaged=15;let id=rare.spawnId,health=rare.hp,variant=rare.variant;save();');
   const reload = createGame(readSavedProfile(saved));
   assert.equal(reload.run(`mobs.find(m=>m.spawnId==='${run('id')}').hp`), run('health'));
-  assert.equal(reload.run(`mobs.find(m=>m.spawnId==='${run('id')}').variant`), 'rare');
+  assert.equal(reload.run(`mobs.find(m=>m.spawnId==='${run('id')}').variant`), run('variant'));
   assert.equal(reload.run(`mobs.find(m=>m.spawnId==='${run('id')}').taunt`), 0);
 });
 
 test('enemies route around sanctuary and protected attacks cannot farm from inside it', () => {
   const { run } = createGame();
-  run('let walker={x:800,y:1050};let closest=10000;for(let i=0;i<150;i++){walkEnemy(walker,1200,1050,120,.05);closest=Math.min(closest,Math.hypot(walker.x-1000,walker.y-1050));}');
-  assert(run('closest>=SPAWN_RULES.sanctuaryRadius')); assert(run('walker.x>1000'));
+  run('let walker={x:safeZone().x-200,y:safeZone().y};let closest=10000;for(let i=0;i<150;i++){walkEnemy(walker,safeZone().x+200,safeZone().y,120,.05);closest=Math.min(closest,Math.hypot(walker.x-safeZone().x,walker.y-safeZone().y));}');
+  assert(run('closest>=SPAWN_RULES.sanctuaryRadius')); assert(run('walker.x>safeZone().x'));
   run('running=true;p.classId="sura";p.schools.sura="black";let mp=p.mp;'); assert.equal(run('castSkill(0)'), false); assert.equal(run('p.mp'), run('mp'));
   run('p.classId="shaman";p.schools.shaman="healing";p.hp=10;'); assert.equal(run('castSkill(3)'), true); assert(run('p.hp>10'));
 });
@@ -134,7 +134,7 @@ test('enemies route around sanctuary and protected attacks cannot farm from insi
 test('large packs can be simulated without unbounded spawning or breaking the rift snapshot', () => {
   const { run, saved } = createGame();
   run('running=true;p.level=35;p.career.materials.keys=3;loadMap("temple");let normal=mobs[0].max;enterRift();let count=mobs.length;for(const m of mobs){m.hp=0;m.dead=0;}for(let i=0;i<100;i++)update(.05);save();');
-  assert.equal(run('mobs.length'), run('count')); assert.equal(run('mobs.length'), 205);
+  assert.equal(run('mobs.length'), run('count')); assert.equal(run('mobs.length'), 421);
   assert(run('mobs.every(m=>m.riftId===p.career.endgame.run.id)'));
   const reload = createGame(readSavedProfile(saved));
   reload.run('running=true;finishRift(false);loadMap("temple");'); assert.equal(reload.run('mobs[0].max'), run('normal'));
@@ -157,7 +157,7 @@ test('an already active sparse 0.4 expedition remains intact until its normal ma
   assert.equal(reload.run('p.career.endgame.run.kills'), 7); assert.equal(reload.run('mobs[0].hp'), 0);
   reload.run('running=true;updateEnemySpawns(3.1,true);'); assert.equal(reload.run('mobs[0].hp'), reload.run('mobs[0].max'));
   reload.run('finishRift(false);loadMap("temple");');
-  assert.equal(reload.run('legacyRiftLayout'), false); assert.equal(reload.run('mobs.length'), 205);
+  assert.equal(reload.run('legacyRiftLayout'), false); assert.equal(reload.run('mobs.length'), 421);
   assert.equal(reload.run('drops[0].value'), 123);
 });
 

@@ -17,7 +17,7 @@ exports.createGame = function (oldSave, storageKey = 'grindoria-save-v1', additi
     requestAnimationFrame() {}, TextEncoder, console
   });
   vm.runInContext(runtimeSource(), context);
-  if (!options.emptyRoster && !vm.runInContext("characterStore.error",context)) vm.runInContext('if(!characterStore.account.order.length)createCharacter("Testovnik","warrior");playCharacter();running=false;document.body.classList.remove("started");',context);
+  if (!options.emptyRoster && !vm.runInContext("characterStore.error",context)) vm.runInContext('if(!characterStore.account.order.length)createCharacter("Testovnik","warrior");playCharacter();if(p.mapId==="town"){loadMap("valley",true);p.x=map().entry.x;p.y=map().entry.y;cam.x=p.x;cam.y=p.y;}running=false;document.body.classList.remove("started");',context);
   return { run: code => vm.runInContext(code, context), elements, saved, listeners };
 };
 

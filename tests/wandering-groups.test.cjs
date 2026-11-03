@@ -5,7 +5,7 @@ test('neutral creatures wander independently, pause, and remain inside their hom
   const { run } = createGame();
   for (const id of ['valley', 'desert', 'snow', 'temple']) {
     run(`running=true;loadMap('${id}',true);p.hp=100000;`);
-    run('var peaceful=mobs.filter(m=>m.type==="wolf");var starts=peaceful.map(m=>[m.x,m.y]);var moved=new Set(),pausedCount=0,health=p.hp;for(let i=0;i<1200;i++){updateEnemySpawns(.05,true);for(let j=0;j<peaceful.length;j++){let m=peaceful[j];if(Math.hypot(m.x-starts[j][0],m.y-starts[j][1])>8)moved.add(j);if(m.roamWait>0)pausedCount++;if(Math.hypot(m.x-m.homeX,m.y-m.homeY)>SPAWN_RULES.roamRadius+1e-7||isSanctuary(m)||m.x<45||m.x>1955||m.y<45||m.y>1955)throw Error("Wander escaped safe home bounds");}}');
+    run('var peaceful=mobs.filter(m=>m.type==="wolf");var starts=peaceful.map(m=>[m.x,m.y]);var moved=new Set(),pausedCount=0,health=p.hp;for(let i=0;i<1200;i++){updateEnemySpawns(.05,true);for(let j=0;j<peaceful.length;j++){let m=peaceful[j];if(Math.hypot(m.x-starts[j][0],m.y-starts[j][1])>8)moved.add(j);if(m.roamWait>0)pausedCount++;if(Math.hypot(m.x-m.homeX,m.y-m.homeY)>SPAWN_RULES.roamRadius+1e-7||isSanctuary(m)||m.x<45||m.x>SIZE-45||m.y<45||m.y>SIZE-45)throw Error("Wander escaped safe home bounds");}}');
     assert.equal(run('moved.size'), run('peaceful.length'));
     assert(run('pausedCount>0')); assert.equal(run('p.hp'), run('health'));
     assert(run('peaceful.every(m=>!m.engaged&&!m.taunt)'));

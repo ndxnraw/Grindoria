@@ -27,8 +27,8 @@ test('one character has one fixed vocation and wrong-session writes cannot overw
 });
 
 test('level, inventory, equipment, Yang, quests, abilities, biology, bestiary, achievements and worlds remain isolated',()=>{
-  const {run}=populated();run('playCharacter(a);p.level=35;p.xp=123;p.gold=900;p.strength=9;p.claimed=true;p.career.biology.stage=1;p.career.materials.books=8;skillProgress("body:0").rank=3;addGearItem({name:"Mesačný meč",slot:"weapon",bonus:18,rarity:1});equipItem(0);let foe=mobs[0];foe.hp=1;hit(foe,999);var aGold=p.gold;p.x=600;p.y=1400;returnToCharacters();playCharacter(b);');
-  assert.equal(run('p.level'),1);assert.equal(run('p.gold'),0);assert.equal(run('p.strength'),0);assert.equal(run('p.bag.length'),0);assert.equal(run('p.equipped.weapon'),null);assert.equal(run('p.claimed'),false);assert.equal(run('p.career.biology.stage'),0);assert.equal(run('p.career.materials.books'),0);assert.equal(run('Object.keys(p.bestiary).length'),0);assert.equal(run('Object.keys(p.achievements).length'),0);assert(run('mobs[0].hp>0'));
+  const {run}=populated();run('playCharacter(a);loadMap("valley");p.level=35;p.xp=123;p.gold=900;p.strength=9;p.claimed=true;p.career.biology.stage=1;p.career.materials.books=8;skillProgress("body:0").rank=3;addGearItem({name:"Mesačný meč",slot:"weapon",bonus:18,rarity:1});equipItem(0);let foe=mobs[0];foe.hp=1;hit(foe,999);var aGold=p.gold;p.x=600;p.y=1400;returnToCharacters();playCharacter(b);');
+  assert.equal(run('p.level'),1);assert.equal(run('p.gold'),0);assert.equal(run('p.strength'),0);assert.equal(run('p.bag.length'),0);assert.equal(run('p.equipped.weapon'),null);assert.equal(run('p.claimed'),false);assert.equal(run('p.career.biology.stage'),0);assert.equal(run('p.career.materials.books'),0);assert.equal(run('Object.keys(p.bestiary).length'),0);assert.equal(run('Object.keys(p.achievements).length'),0);assert.equal(run('p.mapId'),'town');assert.equal(run('mobs.length'),0);
   run('p.level=12;p.gold=40;addGearItem({name:"Kožené čižmy",slot:"boots",bonus:5});returnToCharacters();playCharacter(a);');
   assert.equal(run('p.level'),35);assert.equal(run('p.gold'),run('aGold'));assert.equal(run('p.equipped.weapon.name'),'Mesačný meč');assert.equal(run('p.bag.length'),0);assert.equal(run('p.claimed'),true);assert.equal(run('p.career.skills["body:0"].rank'),3);assert.equal(run('p.career.biology.stage'),1);assert.equal(run('p.achievements.firstKill'),true);assert.equal(run('mobs[0].hp'),0);assert.equal(run('p.x'),600);
   run('returnToCharacters();playCharacter(c);');assert.equal(run('p.classId'),'ninja');assert.equal(run('p.level'),1);assert.equal(run('p.bag.length'),0);
@@ -40,9 +40,9 @@ test('switching clears transient combat and inventory references and uses the la
 });
 
 test('every profile and its saved position survive page reload, preserving dates and selected ID',()=>{
-  const {run,saved}=populated();run('playCharacter(b);p.level=12;p.gold=222;p.x=670;p.y=1460;returnToCharacters();');const original=readSavedAccount(saved).profiles[run('b')];
+  const {run,saved}=populated();run('playCharacter(b);loadMap("valley");p.level=12;p.gold=222;p.x=2670;p.y=2460;returnToCharacters();');const original=readSavedAccount(saved).profiles[run('b')];
   const again=reload(saved);assert.equal(again.run('running'),false);assert.equal(again.run('characterStore.account.selectedId'),run('b'));assert.equal(again.run('characterStore.activeId'),null);
-  assert.equal(again.run('playCharacter()'),true);assert.equal(again.run('p.gold'),222);assert.equal(again.run('p.level'),12);assert.equal(again.run('p.x'),670);assert.equal(again.run('p.y'),1460);assert.equal(again.run('p.createdAt'),original.createdAt);assert(again.run('p.lastPlayedAt')>=original.lastPlayedAt);
+  assert.equal(again.run('playCharacter()'),true);assert.equal(again.run('p.gold'),222);assert.equal(again.run('p.level'),12);assert.equal(again.run('p.x'),2670);assert.equal(again.run('p.y'),2460);assert.equal(again.run('p.createdAt'),original.createdAt);assert(again.run('p.lastPlayedAt')>=original.lastPlayedAt);
 });
 
 test('deletion requires the full normalized name, affects only its ID, and never resurrects after reload',()=>{

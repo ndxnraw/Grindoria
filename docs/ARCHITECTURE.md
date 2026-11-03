@@ -26,6 +26,8 @@ Funkcie môžu medzi súbormi volať zdieľané pomenované funkcie. Načítanie
 | `systems/battle.js` | Typové odolnosti, pasívne bonusy, kombá, súbežné stavy a pohyb striel |
 | `systems/abilities.js` | Aktivácia 48 schopností, mana, cooldowny a smerový základný útok |
 | `systems/progression.js` | Skúsenosti, výbava, vlastnosti a odmeny |
+| `systems/forge.js` | Rizikové vylepšovanie, ochrana, talizmany, recepty a zdroje pomôcok |
+| `systems/locations.js` | NPC služby, bezpečné zóny, cestovanie mimo boja a migrácia rozmerov máp |
 | `systems/world.js` | Generovanie, cestovanie, snímky máp a uloženie |
 | `systems/career.js` | EXP ekonomika, migrácia, tréning, schopnosti, biológia, alchýmia, relikvie, špecializácia a expedície |
 | `systems/farming.js` | Skupinové body, varianty, trvalé spawn sloty, respawn, potulovanie, pomoc skupiny, aggro, priestorová mriežka a Plášť statočnosti |
@@ -57,7 +59,7 @@ Plášť je uložený ako stoh `p.braveryCapes`, podobne ako elixíry. Výzva na
 
 `initializeInventory()` beží po migrácii kariéry a pred prvým načítaním mapy. Sloty definuje `data/items.js`; model pracuje s pôvodným batohom a číta množstvá zásob priamo z existujúcich počítadiel. `gearLayout()` najprv overí navrhnuté rozmiestnenie, až potom sa vykoná presun či výmena. `equipmentBonuses()` agreguje všetkých desať slotov do živých výpočtov štatistík. Vlastné SVG ikony sú v `ui/item-icons.js`, rozhranie v `ui/inventory.js`. Podrobnosti: [INVENTORY.md](INVENTORY.md).
 
-Korisť z nepriateľov vytvára `spawnGroundDrop()`. Materiály, predmety a relikvie sa nepridávajú pri smrti nepriateľa do inventára; pridá ich až úspešný `pickUpGroundDrop()`. Aktualizácia sveta posúva animáciu dopadu, automaticky zbiera dopadnuté zlato a zásoby v dosahu a aktualizuje náhľad. `render/loot.js` zdieľa SVG ikony inventára cez obrazovú cache. `ui/loot.js` vypočíta rozdiely voči rovnakému slotu a bezpečnú polohu tooltipu. `main.js` smeruje primárny klik na aktuálny hit test, ale Y na hromadné zbieranie v okolí postavy bez kurzora; schopnosti používajú Q R T V U O. Pozri [LOOT.md](LOOT.md).
+Korisť z nepriateľov vytvára `spawnGroundDrop()`. Zlato a zásoby sa pripíšu okamžite cez existujúce počítadlá a malé súhrnné hlásenie. Výbavu a relikvie pridá až úspešný pickUpGroundDrop(); svet posúva ich dopad a aktualizuje náhľad. `render/loot.js` zdieľa SVG ikony inventára cez obrazovú cache. `ui/loot.js` vypočíta rozdiely voči rovnakému slotu a bezpečnú polohu tooltipu. `main.js` smeruje primárny klik na aktuálny hit test, ale Y na hromadné zbieranie v okolí postavy bez kurzora; schopnosti používajú Q R T V U O. Pozri [LOOT.md](LOOT.md).
 
 `configureMetin()` nahradí generické kamene typovanými Metinmi. `restoreMetin()` migruje staré zdravie pomerne a ponechá časovače smrti. `updateMetins()` spravuje časy boja, vlny aj konečnú životnosť posíl; `restoreMetinGuards()` obnoví uložené posily bez nových identít. Posily neprechádzajú bežným respawnom. `metinDamage()` sa uplatní v skutočnom zásahu pred odpočtom zdravia a liečením Sury. `dropMetinLoot()` je jediný predmetový loot pool pri smrti kameňa; všeobecný materiálový drop z kariéry sa preň nepoužíva.
 

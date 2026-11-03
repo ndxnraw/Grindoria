@@ -6,12 +6,12 @@
 
 | Mapa | Skupinové body | Pohyblivé príšery vrátane hliadok | Kamene | Boss | Všetky body | Všetci nepriatelia |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Údolie | 24 | 148 | 8 | 1 | 37 | 157 |
-| Púšť | 28 | 172 | 8 | 1 | 41 | 181 |
-| Hory | 28 | 172 | 8 | 1 | 41 | 181 |
-| Chrám | 32 | 196 | 8 | 1 | 45 | 205 |
+| Údolie | 48 | 292 | 8 | 1 | 61 | 301 |
+| Púšť | 60 | 364 | 8 | 1 | 73 | 373 |
+| Hory | 60 | 364 | 8 | 1 | 73 | 373 |
+| Chrám | 68 | 412 | 8 | 1 | 81 | 421 |
 
-Predtým bolo na mape len 18–24 pohyblivých príšer. Trvalé identifikátory slotov sa opakovane obnovujú; ich celkový počet nekontrolovane nerastie. Skupinové centrá, hliadky aj Metiny sa vyberajú náhodným vzorkovaním v úrovňových oblastiach, bez radov alebo stĺpcov. Kandidáti rešpektujú ochranu útočiska a rozostupy; seed mapy stabilizuje základné rozloženie. Počiatočná aj respawn pozícia príšery sa náhodne vyberá v kruhu 90 jednotiek okolo skupinového centra. Domovské pozície sú mimo chráneného útočiska. Rozostupy skupiny a lokálne vyhýbanie sa obmedzujú skladanie všetkých tiel do jedného bodu.
+Predtým bolo na mape len 18–24 pohyblivých príšer. Trvalé identifikátory slotov sa opakovane obnovujú; ich celkový počet nekontrolovane nerastie. Skupinové centrá, hliadky aj Metiny sa vyberajú náhodným vzorkovaním v úrovňových oblastiach, bez radov alebo stĺpcov. Kandidáti rešpektujú ochranu bezpečnej zóny a rozostupy; seed mapy stabilizuje základné rozloženie. Počiatočná aj respawn pozícia príšery sa náhodne vyberá v kruhu 90 jednotiek okolo skupinového centra. Domovské pozície sú mimo chráneného bezpečnej zóny. Rozostupy skupiny a lokálne vyhýbanie sa obmedzujú skladanie všetkých tiel do jedného bodu.
 
 ## Oblasti a úrovne
 
@@ -30,11 +30,11 @@ Bežný skupinový slot pri prvom vytvorení a po každom skutočnom respawne m�
 
 | Variant | Šanca v skupinovom slote | Životy pri danej úrovni | Poškodenie | EXP násobok | Zlato | Respawn |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Bežný | 86 % | 1× | 1× | 1× | 1× | 5 s |
-| Elitný | 12 % | 1,8× | 1,35× | 1,35× | 2× | 8 s |
-| Vzácny | 2 % | 2,8× | 1,7× | 1,8× | 4× | 20 s |
+| Bežný | 92,7 % | 1× | 1× | 1× | 1× | 8 s |
+| Elitný | 7 % | 1,8× | 1,35× | 1,35× | 2× | 12 s |
+| Vzácny | 0,3 % | 2,8× | 1,7× | 1,8× | 4× | 60 s |
 
-Každá oblasť má aj jeden samostatný bod vzácnej hliadky. Tá je vždy vzácna a obnovuje sa po 75 sekundách. Kamene sa obnovujú po 18 sekundách, boss po 40 sekundách. Časovače bežia v aktívnom čase mapy, rovnako ako v predchádzajúcej verzii.
+Každá oblasť má aj jeden samostatný bod vzácnej hliadky. Hliadka sa obnovuje po 180 sekundách a vyberá vzácny variant s 15 %, elitný s 35 %, inak bežný. Kamene sa obnovujú po 18 sekundách, boss po 40 sekundách. Časovače bežia v aktívnom čase mapy, rovnako ako v predchádzajúcej verzii.
 
 Bežná príšera má **3 %** šancu na výbavu (predtým 32 %), elita **20 %** (predtým 75 %). Vzácny variant a boss výbavu zaručia; od 0.16.0 sa rarita samostatne vyberá podľa zdroja. Tabuľky a úrovňové hranice sú v [RARITIES.md](RARITIES.md). Primeraná elita pridá rudu a esenciu, primeraný vzácny nepriateľ aj prach, knihu a tréningovú pečať. Bossovia a vzácne príšery dopĺňajú aj plášte.
 
@@ -42,7 +42,7 @@ Všetky EXP odmeny stále používajú rozdiel úrovní a percentuálne limity z
 
 ## Správanie nepriateľov
 
-Bežné, elitné aj vzácne pohyblivé príšery sú neutrálne. Samotná blízkosť hráča ich neaktivuje. V pokoji sa pohybujú 40 % bojovej rýchlosti v okruhu **85 jednotiek od domova**, vyberajú si nezávislé smery a medzi cestami odpočívajú 1,5–5 sekúnd. Neopúšťajú hranice mapy ani nevstupujú do útočiska. Kamene zostávajú počas života nehybné; pri respawne si vyberú nové miesto vo vlastnej úrovňovej oblasti s odstupom od živých Metinov.
+Bežné, elitné aj vzácne pohyblivé príšery sú neutrálne. Samotná blízkosť hráča ich neaktivuje. V pokoji sa pohybujú 40 % bojovej rýchlosti v okruhu **85 jednotiek od domova**, vyberajú si nezávislé smery a medzi cestami odpočívajú 1,5–5 sekúnd. Neopúšťajú hranice mapy ani nevstupujú do bezpečnej zóny. Kamene zostávajú počas života nehybné; pri respawne si vyberú nové miesto vo vlastnej úrovňovej oblasti s odstupom od živých Metinov.
 
 Zásah vyprovokuje obeť a najbližších živých členov tej istej skupiny do vzdialenosti **300 jednotiek**, spolu najviac **päť príšer vrátane obete**. Pomoc sa ďalej nereťazí na susedné skupiny, mŕtvi ani vzdialení členovia sa nepridajú. Opakované zásahy do rovnakej obete nedopĺňajú šiesteho člena k už aktívnej pätici. Aj smrteľný zásah zalarmuje spojencov. Priame plošné zasiahnutie ďalších cieľov a plášť môžu úmyselne vyprovokovať viac než päť nepriateľov; limit sa vzťahuje na automatickú pomoc skupiny.
 
@@ -64,15 +64,15 @@ Základný princíp priťahovania príšer vychádza z [Metin2 Wiki – Bravery 
 - Príšery skutočne kráčajú k aktuálnej polohe hráča počas účinku aj za hranicou bežného prenasledovania. Plášť nie je teleport ani okamžitý zásah.
 - Nehybné kamene ani mŕtvi nepriatelia sa nepriťahujú. Nepriatelia mimo dosahu zostanú nezmenení.
 - Ďalšie použitie je možné po **2 sekundách**. Počet kusov je viditeľný na lište aj vo výbave (I).
-- Platné použitie mimo útočiska spotrebuje kus aj vtedy, keď nie je žiadny vhodný cieľ. Hra oznámi počet pritiahnutých nepriateľov.
-- Plášť nefunguje pred začatím hry, pri otvorenom paneli, po smrti ani v chránenom útočisku. Pri odmietnutom použití sa kus nespotrebuje.
-- Použitie zruší maskovanie. Návrat do útočiska alebo nové maskovanie preruší vyprovokovanie; po vypršaní účinku pokračuje iba rozbehnutý boj, kým trvá vyprovokovanie. Samotná blízkosť nové aggro nevyvolá.
+- Platné použitie mimo bezpečnej zóny spotrebuje kus aj vtedy, keď nie je žiadny vhodný cieľ. Hra oznámi počet pritiahnutých nepriateľov.
+- Plášť nefunguje pred začatím hry, pri otvorenom paneli, po smrti ani v chránenom bezpečnej zóne. Pri odmietnutom použití sa kus nespotrebuje.
+- Použitie zruší maskovanie. Návrat do bezpečnej zóny alebo nové maskovanie preruší vyprovokovanie; po vypršaní účinku pokračuje iba rozbehnutý boj, kým trvá vyprovokovanie. Samotná blízkosť nové aggro nevyvolá.
 
 Zlato a zásoby vrátane plášťov a materiálov sa pripisujú priamo. Výbava a relikvie dopadnú na zem. Y pozbiera predmety v okolí bez kurzora; konkrétnu výbavu možno zdvihnúť aj kliknutím. Pozri [LOOT.md](LOOT.md).
 
 Nové aj migrované postavy dostanú jednorazovo zásobu 10 kusov. Už uložená nula sa pri načítaní nedopĺňa. Obchodník predáva 10 kusov za 100 zlata. Boss pridá 3 kusy, vzácny nepriateľ 2; bežní a elitní protivníci ich môžu tiež zanechať.
 
-Útočisko je skutočne chránené: z jeho vnútra nemožno používať základné ani útočné kúzla na bezpečné farmenie. Liečenie a podporné aury zostávajú dostupné. Nepriatelia pri pohybe obchádzajú jeho kruhový okraj.
+Bezpečná zóna je chránená: z jeho vnútra nemožno používať základné ani útočné kúzla na bezpečné farmenie. Liečenie a podporné aury zostávajú dostupné. Nepriatelia pri pohybe obchádzajú jeho kruhový okraj.
 
 ## Ukladanie a kompatibilita
 

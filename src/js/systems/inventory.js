@@ -51,7 +51,7 @@ function itemBonuses(item) {
   const b = Object.fromEntries(Object.keys(ITEM_STATS).map(id => [id, 0]));
   if (!item || !EQUIPMENT[item.slot]) return b;
   const stat = EQUIPMENT[item.slot].stat;
-  b[stat] += ((Number(item.bonus) || 0) + (Number(item.enhance) || 0) * 3) * (stat === 'crit' ? .01 : 1);
+  b[stat] += ((Number(item.bonus) || 0) + enhancementBonus(item)) * (stat === 'crit' ? .01 : 1);
   for (const [id, value] of Object.entries(item.stats || {})) if (Object.hasOwn(b, id) && Number.isFinite(value)) b[id] += value;
   return b;
 }
@@ -119,7 +119,7 @@ function supplyDefinitions() {
   return [
     { id: 'potions', name: 'Liečivý elixír', count: p.potions, icon: 'potion', description: 'Obnoví 65 zdravia. Kláves E. Spoločný cooldown 4 s aj pre Autoelixíry.', action: 'drink' },
     { id: 'braveryCapes', name: 'Plášť statočnosti', count: p.braveryCapes, icon: 'cape', description: 'Privolá pohyblivých nepriateľov v dosahu 650 na 18 sekúnd. Kláves B.', action: 'cape' },
-    ...Object.entries(MATERIALS).map(([id, name]) => ({ id: 'material:' + id, name, count: p.career.materials[id], icon: id, description: 'Rozvojový materiál. Použitie otvorí príslušnú cestu progresie.', action: 'material', material: id })),
+    ...Object.entries(MATERIALS).map(([id, name]) => ({ id: 'material:' + id, name, count: p.career.materials[id], icon: id, description: ['ore','upgradeStones','forgeCore','smithCharm','protectionScroll'].includes(id)?'Použitie: kováč.':'Materiál na progresiu.', action: 'material', material: id })),
     ...Object.entries(GEMS).map(([id, gem]) => ({ id: 'gem:' + id, name: gem.name, count: p.career.alchemy.stock[id], icon: id, description: gem.text + ' Použitie otvorí alchýmiu.', action: 'alchemy' }))
   ];
 }
@@ -186,7 +186,7 @@ function useInventorySupply(id) {
     if (isSanctuary(p) || capeCooldown > 0) return false;
     closeModal(); return useBraveryCape();
   }
-  const tab = item.action === 'alchemy' || ['dust', 'essence'].includes(item.material) ? 'alchemy' : item.material === 'ore' ? 'forge' : item.material === 'books' ? 'skills' : item.material === 'training' ? 'training' : ['keys', 'shards'].includes(item.material) ? 'endgame' : 'biology';
+  const tab = item.action === 'alchemy' || ['dust', 'essence'].includes(item.material) ? 'alchemy' : ['ore','upgradeStones','forgeCore','smithCharm','protectionScroll'].includes(item.material) ? 'forge' : item.material === 'books' ? 'skills' : item.material === 'training' ? 'training' : ['keys', 'shards'].includes(item.material) ? 'endgame' : 'biology';
   careerPanel(tab); return true;
 }
 

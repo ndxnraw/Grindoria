@@ -71,10 +71,11 @@ function selectCombatTarget(enemy, follow = false) {
 function handleCombatClick(event) {
   if(event.button!==undefined&&event.button!==0||!running||paused)return;
   setCombatPointer(event);
+  const npc=npcAtPointer(lootPointer.x,lootPointer.y);if(npc){interactNPC(npc);return;}
   const loot=groundDropAt(lootPointer.x,lootPointer.y);
   if(loot){combatSelection.clickTarget=null;combatSelection.doubleReady=false;pickUpGroundDrop(loot.id);canvas.focus();return;}
   const enemy=enemyAtPointer(lootPointer.x,lootPointer.y);
-  if(enemy){combatSelection.doubleReady=combatSelection.clickTarget===enemy;combatSelection.clickTarget=enemy;selectCombatTarget(enemy);}
+  if(enemy){combatSelection.doubleReady=combatSelection.clickTarget===enemy;combatSelection.clickTarget=enemy;selectCombatTarget(enemy,combatSelection.doubleReady);}
   else{clearCombatTarget();combatAssist.aimTime=0;updateFacing();}
   canvas.focus();
 }

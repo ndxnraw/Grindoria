@@ -5,6 +5,10 @@ function itemIcon(item, empty = false) {
   const gold = empty ? '#766c58' : '#d8ad5c', dark = empty ? '#403d34' : '#444c52';
   const gem = empty ? '#4b463a' : ['#a24f3f', '#59b4c0', '#bc7bdb'][rarity];
   const shapes = {
+ forgeCore:'<path d="m32 3 23 14 2 31-25 14L7 48l2-31Z" fill="#585d62" stroke="#dfae6a" stroke-width="3"/><path d="M17 20h30v9H17zM24 29h16v19H24zM17 48h30v6H17z" fill="#edb35b"/><path d="m29 8 6 0 3 10-6 8-6-8Z" fill="#ffe4a3"/>',
+ smithCharm:'<path d="m32 3 8 16 18 3-13 14 3 23-16-11-16 11 3-23L6 22l18-3Z" fill="#7c7440" stroke="#e1d18d" stroke-width="2"/><path d="m32 19 9 13-9 13-9-13Z" fill="#9ce3a2"/>',
+ protectionScroll:'<path d="M16 6h33l-5 50-17 7-15-8Z" fill="#d7c695" stroke="#f7e7b5" stroke-width="2"/><path d="m31 17 13 5-3 20-10 10-10-10-3-20Z" fill="#6488b1"/><path d="M31 22v23m-7-13h14" stroke="#e5f0ea" stroke-width="3"/>',
+
     ruby:'<path d="m18 7 28 0 15 19-29 35L3 26Z" fill="#b7364a" stroke="#f4b0a6" stroke-width="2"/><path d="M3 26h58M18 7l-4 19 18 35L25 7m21 0 4 19-18 35 7-54" fill="none" stroke="#ed7984" stroke-width="2"/>',
     sapphire:'<path d="m22 3 20 0 15 18v25L42 62H22L7 46V21Z" fill="#3f6fb5" stroke="#b1d4f3" stroke-width="2"/><path d="m22 3 3 14-8 8v16l8 8-3 13m20-59-3 14 8 8v16l-8 8 3 13M25 17h14m-14 32h14" fill="none" stroke="#7eb9eb" stroke-width="2"/>',
     jade:'<path d="M32 3a29 29 0 1 1-.1 0ZM32 21a11 11 0 1 0 .1 0Z" fill="#45996c" fill-rule="evenodd" stroke="#b3dfb5" stroke-width="2"/><path d="M15 15q-8 16-1 26m34-25q8 16 0 31M19 51q14 9 24-1" stroke="#93cfa1" fill="none" stroke-width="3"/>',

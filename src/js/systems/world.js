@@ -1,9 +1,9 @@
 function map(){return MAPS[p.mapId]||MAPS.valley;}
 
 function snapshotMap() {
-  if (!mobs.length) return;
+  if (!mobs.length&&!map().town) return;
   p.worldStates[p.mapId] = {
-    layoutSchema: SPAWN_LAYOUT_VERSION, progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
+    worldSize:SIZE,layoutSchema: SPAWN_LAYOUT_VERSION, progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
     mobs: mobs.map(cloneEnemyState),
     drops: drops.map(cloneGroundDrop)
   };
@@ -15,17 +15,18 @@ function loadMap(id, initial=false) {
   if (!MAPS[id]) return false;
   if (p.career?.endgame.run && !initial) { toast('Najprv dokonči alebo opusti trhlinu (P).'); return false; }
   if (!initial) {
-    if (!running || !isSanctuary(p)) { toast('Cestovať môžeš z útočiska (M).'); return false; }
+    if (!canTravel()) { toast('Cestovanie nie je dostupné počas boja.'); return false; }
     snapshotMap();
   }
   const resumePosition={x:p.x,y:p.y};
   resetCombatFlow();
   p.mapId=id;
-  const cfg=map(), old=p.worldStates[id];
+  const cfg=map(), prior=p.worldStates[id],old=migrateMapSize(prior,id);SIZE=cfg.size;
+  if(initial&&prior&&(prior.worldSize||2000)!==cfg.size){const factor=cfg.size/(prior.worldSize||2000);resumePosition.x*=factor;resumePosition.y*=factor;if(Math.hypot(resumePosition.x-1000*factor,resumePosition.y-1050*factor)<190*factor)Object.assign(resumePosition,cfg.entry);}
   cfg.mobSpeed=75+(cfg.scale-1)*14; seed=cfg.seed; decor.length=0;
   for(let i=0;i<250;i++) {
     const x=rand()*SIZE,y=rand()*SIZE;
-    if(Math.hypot(x-1000,y-1050)>190) decor.push({x,y,type:rand()<(cfg.metinsOnly?0:id==='valley'?.67:id==='snow'?.45:id==='desert'?.2:.12)?'tree':'rock',s:.6+rand()*.8,t:rand()});
+    if(!isSanctuary({x,y})) decor.push({x,y,type:rand()<(cfg.metinsOnly?0:id==='valley'?.67:id==='snow'?.45:id==='desert'?.2:.12)?'tree':'rock',s:.6+rand()*.8,t:rand()});
   }
   legacyRiftLayout=false; spawnPoints.length=0;
   spawnPoints.push(...buildSpawnPoints(id));
@@ -34,8 +35,8 @@ function loadMap(id, initial=false) {
   mobs.length=0; mobs.push(...population); drops.length=0;
   drops.push(...hydrateGroundDrops(old?.drops||[]));
   clearLootPointer();
-  p.x=initial&&Number.isFinite(resumePosition.x)&&resumePosition.x>=45&&resumePosition.x<=SIZE-45?resumePosition.x:1000;
-  p.y=initial&&Number.isFinite(resumePosition.y)&&resumePosition.y>=45&&resumePosition.y<=SIZE-45?resumePosition.y:1160;
+  p.x=initial&&Number.isFinite(resumePosition.x)&&resumePosition.x>=45&&resumePosition.x<=SIZE-45?resumePosition.x:cfg.entry.x;
+  p.y=initial&&Number.isFinite(resumePosition.y)&&resumePosition.y>=45&&resumePosition.y<=SIZE-45?resumePosition.y:cfg.entry.y;
   cam.x=p.x;cam.y=p.y;target=null;
   shots.length=0; effects.length=0; particles.length=0; lastMiniMapPaint=-Infinity;
   Object.keys(buffs).forEach(k=>delete buffs[k]);

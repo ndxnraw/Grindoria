@@ -1,4 +1,4 @@
-const SPAWN_LAYOUT_VERSION = 2;
+const SPAWN_LAYOUT_VERSION = 3;
 
 function layoutRandom(key) {
   let value = 2166136261;
@@ -11,7 +11,7 @@ function naturalSpawnLocation(area, existing, random, gap = 115) {
   let best = null, bestDistance = -1;
   for (let attempt = 0; attempt < 160; attempt++) {
     const at = { x: area.x1 + 50 + random() * (area.x2 - area.x1 - 100), y: area.y1 + 50 + random() * (area.y2 - area.y1 - 100) };
-    if (Math.hypot(at.x - 1000, at.y - 1050) < SPAWN_RULES.spawnClearance + 15) continue;
+    if (Math.hypot(at.x-safeZone().x,at.y-safeZone().y) < SPAWN_RULES.spawnClearance + 15) continue;
     const distance = Math.min(Infinity, ...existing.map(other => Math.hypot(at.x - other.x, at.y - other.y)));
     if (distance >= gap) return at;
     if (distance > bestDistance) { best = at; bestDistance = distance; }

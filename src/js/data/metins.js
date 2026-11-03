@@ -1,4 +1,4 @@
-const METIN_RULES = { schema: 1, combatWindow: 6, firstWave: .2, maxGuards: 8, globalGuards: 60, guardLifetime: 45 };
+const METIN_RULES = { schema: 1, combatWindow: 6, firstWave: .1, maxGuards: 8, globalGuards: 60, guardLifetime: 45 };
 // Loot material entries are [chance, minimum amount, maximum amount].
 const METIN_TYPES = {
   fracture: { name: 'Metin praskliny', levels: [1, 9], model: 'obelisk', difficulty: 'Ľahký', color: '#80728e', glow: '#d6a3e2', hp: 1, armor: 0, interval: 4.8, wave: 2, loot: { yang: [18, 32], ore: [1, 1, 2], books: [.35, 1, 1], essence: [.55, 1, 3], dust: [.2, 1, 2], upgradeStones: [.05, 1, 1], gear: .45, epic: .025, rare: .015, relic: 'valley', slots: ['weapon', 'bracelet'], extra: ['wolf', .22, 1, 2] } },
@@ -17,3 +17,5 @@ const METIN_GUARDS = [
   { max: 59, skin: 'yeti', name: 'Ľadový obranca' },
   { max: 105, skin: 'demon', name: 'Démonický obranca' }
 ];
+
+for(const type of Object.values(METIN_TYPES))type.interval=Math.round(type.interval*.55*100)/100;

@@ -15,7 +15,7 @@ function frame(t){const dt=Math.min((t-last)/1000,.05);last=t;update(dt);draw();
 function keysClear(){Object.keys(keys).forEach(k=>keys[k]=false);}
 
 function update(dt) {
-  clock+=dt;if(!running||paused)return;
+  clock+=dt;if(!running||paused)return;travelCombat.time=Math.max(0,travelCombat.time-dt);
   attackCD=Math.max(0,attackCD-dt);slash=Math.max(0,slash-dt);ring=Math.max(0,ring-dt);updateCombatAssistTimers(dt);updateCombat(dt);
   updatePlayerControl(dt);if(keys[' '])attack();updateAutoSpell(dt);
   const safe=isSanctuary(p);if(safe){p.hp=Math.min(maxHP(),p.hp+12*dt);p.mp=Math.min(maxMP(),p.mp+dt*10);}

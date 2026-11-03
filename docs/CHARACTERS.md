@@ -31,7 +31,7 @@ Item UID, spawnId, riftId a existujúce lokálne referencie sa zachovajú vnútr
 
 ## Hranie a prepínanie
 
-Hrať uloží prípadnú aktívnu reláciu, načíta profil a inicializuje existujúce systémy kariéry, inventára, farmenia, koristi a sveta. Obnoví mapu aj uloženú pozíciu. Bežné cestovanie medzi mapami naďalej vedie do útočiska. Uložená mŕtva postava začne so zdravím v útočisku.
+Hrať uloží prípadnú aktívnu reláciu, načíta profil a inicializuje existujúce systémy kariéry, inventára, farmenia, koristi a sveta. Obnoví mapu aj uloženú pozíciu. Nové postavy začínajú v Meste. Cestovanie aj oživenie na bojovej mape vedú do jej bezpečnej zóny. Staré pozície sa pri zväčšení mapy migrujú bez straty progresu.
 
 Postavy alebo ♙ v minimape najprv uložia aktívnu reláciu. Pri chybe sa neodpojí a ponúkne export aktuálneho progresu. Minimapa sprístupňuje návrat aj vo fullscreene. Po zmene rozloženia sa prepočíta Canvas a súradnice mierenia.
 

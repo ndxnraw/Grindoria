@@ -2,14 +2,14 @@ function dashDestination(point) {
   const desired={x:Math.max(45,Math.min(SIZE-45,point.x)),y:Math.max(45,Math.min(SIZE-45,point.y))};
   if(!isSanctuary(desired))return desired;
   let low=0,high=1;
-  for(let i=0;i<20;i++){const t=(low+high)/2,at={x:p.x+(desired.x-p.x)*t,y:p.y+(desired.y-p.y)*t};if(Math.hypot(at.x-1000,at.y-1050)<SPAWN_RULES.sanctuaryRadius+8)high=t;else low=t;}
+  for(let i=0;i<20;i++){const t=(low+high)/2,at={x:p.x+(desired.x-p.x)*t,y:p.y+(desired.y-p.y)*t};if(isSanctuary(at))high=t;else low=t;}
   return{x:p.x+(desired.x-p.x)*low,y:p.y+(desired.y-p.y)*low};
 }
 
 function castSkill(index) {
   if(!running||paused||p.hp<=0||!Number.isInteger(index)||index<0||index>5)return false;
   const s=school().skills[index],[name,kind,cd,cost,mult,range]=s,support=SUPPORT_SKILLS.has(kind),key=skillKey(index),type=skillDamageType(key);
-  if(isSanctuary(p)&&!support){toast('Útočisko je chránené. Zaútoč až mimo neho.');return false;}
+  if(isSanctuary(p)&&!support){toast('V bezpečnej zóne nemožno útočiť.');return false;}
   if(spellCD[index]>0)return false;
   if(p.mp<cost){toast('Nedostatok many · priebežne sa obnovuje.');return false;}
   updateFacing(!support);const m=support?selectedEnemy():aimEnemy(range||500,true);
@@ -20,7 +20,7 @@ function castSkill(index) {
   p.mp-=cost;castingSkillKey=key;castingMultiplier=beginSkillFlow(index);
   if(m)rememberSkill(m,key);
   spellCD[index]=cd*(1-(skillProgress(key).rank-1)*.01);skillCD=spellCD[0];castPose=.6;castStyle=kind;
-  if(!support)combatAssist.aimTime=.6;
+  if(!support){combatAssist.aimTime=.6;travelCombat.time=WORLD_RULES.travelCooldown;}
   animateAbility(index);beep(p.classId==='sura'?160:p.classId==='shaman'?620:320,.17);float(name,p.x,p.y-100,role().color);
   const opts={skillKey:key,type,multiplier:castingMultiplier};
   if(support&&kind!=='heal'){
@@ -69,7 +69,7 @@ function castSkill(index) {
 function attack(skill=false) {
   if(skill)return castSkill(0);
   if(!running||paused||p.hp<=0||attackCD>0||isSanctuary(p))return false;
-  updateFacing(true);combatAssist.aimTime=.22;const fighting=selectedEnemy();if(fighting&&Math.hypot(fighting.x-p.x,fighting.y-p.y)<=basicAttackRange())registerPlayerCombat(fighting);attackCD=Math.max(.16,(p.classId==='ninja'?.32:.42)*(active('berserk')?.6:1)/(1+itemAttackSpeed()));slash=.22;castStyle='basic';
+  travelCombat.time=WORLD_RULES.travelCooldown;updateFacing(true);combatAssist.aimTime=.22;const fighting=selectedEnemy();if(fighting&&Math.hypot(fighting.x-p.x,fighting.y-p.y)<=basicAttackRange())registerPlayerCombat(fighting);attackCD=Math.max(.16,(p.classId==='ninja'?.32:.42)*(active('berserk')?.6:1)/(1+itemAttackSpeed()));slash=.22;castStyle='basic';
   if(rangedBasic())shoot(selectedEnemy()&&Math.hypot(target.x-p.x,target.y-p.y)<=BATTLE.rangedRange?target:null,1,'arrow',{basic:true,type:'piercing',range:BATTLE.rangedRange,skillKey:null,multiplier:1,markTarget:Boolean(keys[' '])});
   else{
     fx(p.classId==='ninja'?'cross':p.classId==='shaman'?'fan':'slash',p.x,p.y,role().color,.25,face);

@@ -12,7 +12,7 @@ function buildSuterlandPoints() {
   for (const [index, area] of FARM_AREAS.entries()) {
     const locations = [], random = layoutRandom('suterland:' + area.id + ':layout2');
     for (let i = 0; i < (index === 3 ? 24 : 25); i++) locations.push(naturalSpawnLocation(area, locations, random, 90));
-    locations.sort((a, b) => Math.hypot(a.x - 1000, a.y - 1050) - Math.hypot(b.x - 1000, b.y - 1050));
+    locations.sort((a, b) => Math.hypot(a.x-safeZone().x,a.y-safeZone().y)-Math.hypot(b.x-safeZone().x,b.y-safeZone().y));
     for (const location of locations.slice(0, index === 3 ? 24 : 25)) {
       points.push({ id: 'suterland:metin:' + level, kind: 'stone', ...location, area: area.id, offset: level - 1, metinLevel: level, metinType: metinTypeForLevel(level) });
       level++;
@@ -63,13 +63,11 @@ function restoreMetinGuards(population, prior) {
   for (const m of prior || []) if (m.metinParentId && m.hp > 0 && m.metinLife > 0 && parents.has(m.metinParentId)) {
     const parent = population.find(stone => stone.spawnId === m.metinParentId), priorParent = prior.find(stone => stone.spawnId === m.metinParentId);
     const dx = priorParent ? parent.x - priorParent.x : 0, dy = priorParent ? parent.y - priorParent.y : 0;
-    const safePosition = (x, y) => {
+    const restorePosition = (x, y) => {
       x = Math.max(45, Math.min(SIZE-45, x+dx)); y = Math.max(45, Math.min(SIZE-45, y+dy));
-      const radius = SPAWN_RULES.sanctuaryRadius+24, distance = Math.hypot(x-1000,y-1050);
-      if (distance < radius) { const angle = Math.atan2(y-1050,x-1000); x=1000+Math.cos(angle)*radius; y=1050+Math.sin(angle)*radius; }
-      return {x,y};
+      return safePosition({x,y},24);
     };
-    const position = safePosition(m.x,m.y), home = safePosition(m.homeX??m.x,m.homeY??m.y);
+    const position = restorePosition(m.x,m.y), home = restorePosition(m.homeX??m.x,m.homeY??m.y);
     population.push({ ...cloneEnemyState(m), ...position, homeX: home.x, homeY: home.y, dot: m.dot ? { ...m.dot } : null, skillContributors: [...(m.skillContributors || [])], taunt: 0, engaged: 0, stun: 0, returning: true });
   }
   return population;
@@ -95,8 +93,7 @@ function spawnMetinGuards(stone) {
   for (let i = 0; i < count; i++) {
     const angle = rand() * Math.PI * 2, radius = 70 + rand() * 40;
     let x = Math.max(45, Math.min(SIZE - 45, stone.x + Math.cos(angle) * radius)), y = Math.max(45, Math.min(SIZE - 45, stone.y + Math.sin(angle) * radius));
-    const sanctuaryDistance = Math.hypot(x - 1000, y - 1050);
-    if (sanctuaryDistance < SPAWN_RULES.sanctuaryRadius + 22) { x = 1000 + (x - 1000) / sanctuaryDistance * (SPAWN_RULES.sanctuaryRadius + 23); y = 1050 + (y - 1050) / sanctuaryDistance * (SPAWN_RULES.sanctuaryRadius + 23); }
+    ({x,y}=safePosition({x,y},23));
     const level = Math.max(1, Math.min(105, stone.level - 1 + Math.floor(rand() * 3))), hp = Math.round(40 + level * 9 + level * level * .05);
     const attack = 1 + level * .14 + level * level * .0015, serial = ++stone.metinGuardSerial;
     mobs.push({ type: 'wolf', skin: tier.skin, name: tier.name, variant: 'normal', area: stone.area, level, baseLevel: level, x, y, homeX: x, homeY: y, hp, max: hp, baseMax: hp, attackScale: attack, baseAttack: attack, speedScale: 1 + Math.min(.3, level / 400), spawnId: stone.spawnId + ':guard:' + stone.metinGeneration + ':' + serial, spawnPointId: stone.spawnId + ':guards:' + stone.metinGeneration, spawnSlot: i, metinParentId: stone.spawnId, metinGeneration: stone.metinGeneration, metinLife: METIN_RULES.guardLifetime, dead: 0, cd: .6, hit: 0, taunt: 0, engaged: 8, skillContributors: [], ...(stone.riftId ? { riftId: stone.riftId, riftTier: stone.riftTier } : {}) });
@@ -109,6 +106,7 @@ function updateMetins(dt, safe) {
   if (!running || paused) return;
   for (let i = mobs.length - 1; i >= 0; i--) {
     const guard = mobs[i]; if (!guard.metinParentId) continue;
+    const parent=mobs.find(m=>m.spawnId===guard.metinParentId);if(guard.hp>0&&parent&&parent.hp<=0&&guard.metinGeneration===parent.metinGeneration)hit(guard,guard.hp,'arcane',true);
     guard.metinLife -= dt;
     if (guard.hp <= 0) guard.dead -= dt;
     if (guard.metinLife <= 0 || guard.hp <= 0 && guard.dead <= 0) { mobs.splice(i, 1); continue; }

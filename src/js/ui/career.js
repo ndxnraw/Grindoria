@@ -1,3 +1,4 @@
+const forgeOptions={};
 function costLabel(cost) {
   return Object.entries(cost).map(([id, n]) => n.toLocaleString('sk-SK') + ' ' + (id === 'gold' ? 'zlata' : MATERIALS[id])).join(' · ') || 'bez poplatku';
 }
@@ -31,14 +32,16 @@ function careerSkills() {
 function careerBiology() {
   const bio = p.career.biology, stage = BIOLOGY[bio.stage];
   const waiting = Math.max(0, bio.nextKill - p.career.eligibleKills);
-  return `<p>Vzorka: každý 4. bežný nepriateľ danej mapy. Medzi odovzdaniami: 10 primeraných zabití. Odmena je trvalá.</p>${BIOLOGY.map((b, i) => `<div class="career-card ${i < bio.stage ? 'completed' : ''}"><h3>${i < bio.stage ? '✓ ' : ''}${b.name}</h3><p>${MAPS[b.map].name} · úroveň ${b.level}+ · ${b.count} vzoriek<br>Trvalá odmena: ${b.text}</p>${i === bio.stage ? `<p>Odovzdané ${bio.delivered} / ${b.count} · v zásobe ${p.career.materials[b.item]}<br>${waiting ? 'Ďalšie odovzdanie: ešte ' + waiting + ' primeraných zabití' : 'Možno odovzdať.'}<br>Odovzdanie: 1 ${MATERIALS[b.item]} a ${25 * (i + 1)} zlata</p><button class="primary" data-action="bio" ${p.level < b.level || waiting || p.career.materials[b.item] < 1 ? 'disabled' : ''}>Odovzdať vzorku</button>` : i > bio.stage ? '<small>Vyžaduje predchádzajúci výskum.</small>' : ''}</div>`).join('')}${!stage ? '<p>Výskum dokončený.</p>' : ''}`;
+  return `<p>Biológ · Mesto. Vzorka: každý 4. bežný nepriateľ danej mapy. Medzi odovzdaniami: 10 primeraných zabití. Odmena je trvalá.</p>${BIOLOGY.map((b, i) => `<div class="career-card ${i < bio.stage ? 'completed' : ''}"><h3>${i < bio.stage ? '✓ ' : ''}${b.name}</h3><p>${MAPS[b.map].name} · úroveň ${b.level}+ · ${b.count} vzoriek<br>Trvalá odmena: ${b.text}</p>${i === bio.stage ? `<p>Odovzdané ${bio.delivered} / ${b.count} · v zásobe ${p.career.materials[b.item]}<br>${waiting ? 'Ďalšie odovzdanie: ešte ' + waiting + ' primeraných zabití' : 'Možno odovzdať.'}<br>Odovzdanie: 1 ${MATERIALS[b.item]} a ${25 * (i + 1)} zlata</p><button class="primary" data-action="bio" ${p.level < b.level || waiting || p.career.materials[b.item] < 1 ? 'disabled' : ''}>Odovzdať vzorku</button>` : i > bio.stage ? '<small>Vyžaduje predchádzajúci výskum.</small>' : ''}</div>`).join('')}${!stage ? '<p>Výskum dokončený.</p>' : ''}`;
 }
 
 function careerForge() {
-  return `<p>Maximum +9, bez rizika zlyhania. Ruda: každý 5. primeraný nepriateľ.</p>${Object.keys(EQUIPMENT).map(slot => {
-    const item = p.equipped[slot];
-    return `<div class="career-card"><h3>${EQUIPMENT[slot].name}</h3>${item ? `<p>${escapeHTML(item.name)} +${item.enhance || 0}<br>Základný bonus ${item.bonus}; vylepšenie +${(item.enhance || 0) * 3} ${ITEM_STATS[EQUIPMENT[slot].stat]}<br>Ďalší stupeň: ${costLabel(enhancementCost(item))}</p><button class="primary" data-action="enhance" data-id="${slot}" ${(item.enhance || 0) >= PROGRESSION.maxEnhancement ? 'disabled' : ''}>Vylepšiť predmet</button>` : '<p>Bez nasadeného predmetu.</p>'}</div>`;
-  }).join('')}`;
+ const available=nearNPC('smith');
+ return '<p>Kováč · Mesto. Materiály a Yang sa spotrebujú pri každom pokuse.</p>'+Object.keys(EQUIPMENT).map(slot=>{
+  const item=p.equipped[slot];if(!item)return '<div class="career-card"><h3>'+EQUIPMENT[slot].name+'</h3><p>Bez nasadeného predmetu.</p></div>';
+  const rank=item.enhance||0,options=forgeOptions[slot]||{},cost=enhancementCost(item,options);
+  return '<div class="career-card"><h3>'+escapeHTML(item.name)+' +'+rank+'</h3><p>'+ITEM_STATS[EQUIPMENT[slot].stat]+' z vylepšenia: '+signedItemStat(EQUIPMENT[slot].stat,enhancementBonus(item)*(EQUIPMENT[slot].stat==='crit'?.01:1))+(rank<9?' → '+signedItemStat(EQUIPMENT[slot].stat,FORGE_RULES.bonus[rank+1]*(EQUIPMENT[slot].stat==='crit'?.01:1)):' · maximum')+'</p>'+(cost?'<p>Úspech '+Math.round(forgeChance(item,options)*100)+' % · '+costLabel(cost)+'<br>'+forgeFailureText(item,options)+'</p><label><input type="checkbox" data-forge-option="charm" data-slot="'+slot+'" '+(options.charm?'checked ':'')+(!p.career.materials.smithCharm||FORGE_RULES.success[rank+1]>=.95?'disabled':'')+'> Talizman kováča: +10 percentuálnych bodov · '+p.career.materials.smithCharm+' ks</label><br><label><input type="checkbox" data-forge-option="protect" data-slot="'+slot+'" '+(options.protect?'checked ':'')+(!p.career.materials.protectionScroll||rank<3?'disabled':'')+'> Ochranný zvitok: zachová predmet aj stupeň · '+p.career.materials.protectionScroll+' ks</label><br><button class="primary" data-action="enhance" data-id="'+slot+'" '+(!available?'disabled':'')+'>Vylepšiť na +'+(rank+1)+'</button>':'')+'</div>';
+ }).join('')+'<h3>Pomôcky</h3>'+Object.entries(FORGE_RULES.recipes).map(([id,cost])=>'<div class="career-card"><h3>'+MATERIALS[id]+'</h3><p>'+costLabel(cost)+'</p><button class="primary" data-action="forgeSupport" data-id="'+id+'" '+(!available?'disabled':'')+'>Vyrobiť</button></div>').join('')+'<p>Kováčske jadro / talizman / zvitok: boss Lv.35+ 50 % / 15 % / 6 %, Metin Lv.35+ 8 % / 4 % / 1,5 %, vzácny nepriateľ Lv.35+ 15 % / 5 % / 1 %. Vyžaduje primeraný cieľ.</p>';
 }
 
 function careerAlchemy() {
@@ -61,7 +64,7 @@ function careerSpecialization() {
 function careerEndgame() {
   const end = p.career.endgame, run = end.run;
   return `<p>Vyžaduje úroveň 35 a 3 kľúče. Cieľ: 20 príšer a 1 boss. Kľúč: každý 3. boss. Vyšší stupeň zvyšuje silu nepriateľov aj odmenu.</p>
-    ${run ? `<div class="career-card"><h3>Aktívna trhlina · stupeň ${run.tier}</h3><p>Príšery ${Math.min(20, run.kills)} / 20 · boss ${Math.min(1, run.bosses)} / 1<br>Odmena: ${10 + run.tier * 3} úlomkov</p><button class="primary" data-action="claimRift" ${run.kills < 20 || run.bosses < 1 ? 'disabled' : ''}>Dokončiť a vyzdvihnúť odmenu</button><button class="secondary" data-action="abandon">Opustiť bez odmeny · kľúče sa nevrátia</button></div>` : `<div class="career-card"><h3>Ďalší stupeň ${Math.min(PROGRESSION.maxRiftTier, end.highest + 1)}</h3><p>Najvyšší dokončený: ${end.highest} · kľúče: ${p.career.materials.keys}<br>Vstup iba z útočiska.</p><button class="primary" data-action="enter" ${p.level < 35 || p.career.materials.keys < 3 ? 'disabled' : ''}>Vstúpiť · 3 kľúče</button></div>`}
+    ${run ? `<div class="career-card"><h3>Aktívna trhlina · stupeň ${run.tier}</h3><p>Príšery ${Math.min(20, run.kills)} / 20 · boss ${Math.min(1, run.bosses)} / 1<br>Odmena: ${10 + run.tier * 3} úlomkov</p><button class="primary" data-action="claimRift" ${run.kills < 20 || run.bosses < 1 ? 'disabled' : ''}>Dokončiť a vyzdvihnúť odmenu</button><button class="secondary" data-action="abandon">Opustiť bez odmeny · kľúče sa nevrátia</button></div>` : `<div class="career-card"><h3>Ďalší stupeň ${Math.min(PROGRESSION.maxRiftTier, end.highest + 1)}</h3><p>Najvyšší dokončený: ${end.highest} · kľúče: ${p.career.materials.keys}<br>Vstup mimo boja.</p><button class="primary" data-action="enter" ${p.level < 35 || p.career.materials.keys < 3 ? 'disabled' : ''}>Vstúpiť · 3 kľúče</button></div>`}
     <div class="career-card"><h3>Relikviár · ${end.paragon} / ${PROGRESSION.maxParagon}</h3><p>Trvalý bonus: +${end.paragon * 2} útok a +${end.paragon * 5} zdravie.<br>Ďalší stupeň: ${25 * (end.paragon + 1) ** 2} úlomkov. Zásoba: ${p.career.materials.shards}</p><button class="primary" data-action="paragon" ${p.level < 35 || end.paragon >= PROGRESSION.maxParagon ? 'disabled' : ''}>Posilniť relikviár</button></div>`;
 }
 
@@ -79,14 +82,15 @@ function careerPanel(tab = careerTab) {
   document.querySelectorAll('[data-career-tab]').forEach(button => button.onclick = () => careerPanel(button.dataset.careerTab));
   const actions = {
     train: id => trainAttribute(id), skill: id => upgradeSkill(id), bio: completeBiology,
-    enhance: id => enhanceEquipment(id), craft: id => craftGem(id), gem: id => upgradeGem(id),
+    enhance: id => enhanceEquipment(id,forgeOptions[id]||{}), forgeSupport: craftForgeSupport, craft: id => craftGem(id), gem: id => upgradeGem(id),
     spec: id => specialize(id), spectrain: trainSpecialization, enter: enterRift,
     claimRift: () => finishRift(true), abandon: () => finishRift(false), paragon: upgradeParagon
   };
+  document.querySelectorAll('[data-forge-option]').forEach(input=>input.onchange=()=>{(forgeOptions[input.dataset.slot]??={})[input.dataset.forgeOption]=input.checked;careerPanel('forge');});
   document.querySelectorAll('[data-action]').forEach(button => button.onclick = () => {
     if (actions[button.dataset.action]?.(button.dataset.id)) {
       updateClassHUD(); updateHUD(); careerPanel(careerTab);
-      $('career-message').textContent = 'Uložené.';
-    } else $('career-message').textContent = 'Nesplnené podmienky: skontroluj cenu, úroveň a prax. Do trhliny sa vstupuje z útočiska.';
+      $('career-message').textContent = button.dataset.action==='enhance'?forgeResult.message:'Uložené.';
+    } else $('career-message').textContent = 'Nesplnené podmienky: skontroluj cenu, úroveň a prax. Vstup do trhliny vyžaduje ukončený boj.';
   });
 }

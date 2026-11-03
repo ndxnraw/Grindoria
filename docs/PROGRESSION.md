@@ -52,7 +52,7 @@ Každé kúzlo má vlastnú uloženú prax a stupeň. Jedna príšera poskytne p
 
 ### Biologický výskum
 
-Vzorka padá z každého štvrtého bežného nepriateľa danej mapy. Biológ v útočisku prijme jednu vzorku a poplatok naraz; ďalšie odovzdanie vyžaduje 10 nových primeraných zabití. Výskumy sa dokončujú postupne:
+Vzorka padá z každého štvrtého bežného nepriateľa danej mapy. Biológ v Meste prijme jednu vzorku a poplatok naraz; ďalšie odovzdanie vyžaduje 10 nových primeraných zabití. Výskumy sa dokončujú postupne:
 
 - Údolie, úroveň 1+: 10 vzoriek, +30 zdravie.
 - Púšť, úroveň 5+: 12 vzoriek, +6 útok.
@@ -61,7 +61,7 @@ Vzorka padá z každého štvrtého bežného nepriateľa danej mapy. Biológ v 
 
 ### Výbava a alchýmia
 
-Vylepšenie predmetu je spoľahlivé a stojí `2 × nextRank²` rudy a `100 × nextRank²` zlata. Pridáva +3 útok alebo obranu za stupeň. Bonus zostáva s predmetom pri jeho výmene.
+Kováč v Meste vylepšuje nasadenú výbavu +0 až +9. Náklady rastú, neúspech môže znížiť stupeň alebo zničiť predmet; pomôcky menia šancu a ochranu. Tabuľky a ceny: [FORGE.md](FORGE.md). Bonus aj stupeň zostávajú s predmetom pri výmene.
 
 Základný alchymistický kameň stojí 30 esencie, 3 rudy a 100 zlata. Prvý sa nasadí zo zásoby; ďalšia fúzia potrebuje `2^rank` základných kameňov, `5 × rank` prachu a `100 × rank²` zlata. Rubín pridáva útok, zafír manu a silu kúziel, jadeit zdravie a obranu.
 
@@ -73,7 +73,7 @@ Od úrovne 10 a za 3 špecializačné body si hráč vedome zvolí trvalú cestu
 
 ### Trhliny
 
-Vstup od úrovne 35 v útočisku stojí 3 kľúče; každý tretí boss zanechá kľúč. Expedícia používa oddelený stav chrámu. Treba poraziť 20 príšer a jedného bossa; odmena je `10 + tier × 3` úlomkov a odomknutie ďalšieho stupňa. Počas expedície sa nedá normálne cestovať; opustenie ju ukončí bez odmeny a bez vrátenia kľúčov.
+Vstup od úrovne 35 mimo boja stojí 3 kľúče; každý tretí boss zanechá kľúč. Expedícia používa oddelený stav chrámu. Treba poraziť 20 príšer a jedného bossa; odmena je `10 + tier × 3` úlomkov a odomknutie ďalšieho stupňa. Počas expedície sa nedá normálne cestovať; opustenie ju ukončí bez odmeny a bez vrátenia kľúčov.
 
 Stupeň zvyšuje životy, poškodenie aj úroveň nepriateľov. Aktívna expedícia prežije uloženie a načítanie; po ukončení sa obnoví pôvodný stav bežného chrámu. Relikviár stojí `25 × nextRank²` úlomkov a pridáva trvalo +2 útok a +5 zdravie za stupeň.
 

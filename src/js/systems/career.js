@@ -12,7 +12,7 @@ function initializeCareer() {
     if (legacy) {
       p.equipped.weapon ??= { name: 'Pútnický meč', slot: 'weapon', rarity: 0, bonus: 0, value: 10 };
       p.equipped.weapon.enhance = Math.min(legacy, PROGRESSION.maxEnhancement);
-      p.equipped.weapon.bonus += legacy * 8 - p.equipped.weapon.enhance * 3;
+      p.equipped.weapon.bonus = Math.max(0,p.equipped.weapon.bonus+legacy*8-enhancementBonus(p.equipped.weapon));
     }
     p.weapon = 0;
     p.career = {
@@ -133,23 +133,13 @@ function rememberSkill(m, key) {
 
 function completeBiology() {
   const bio = p.career.biology, stage = BIOLOGY[bio.stage];
-  if (!stage || p.level < stage.level || Math.hypot(p.x - 1000, p.y - 1050) > 190 || p.career.eligibleKills < bio.nextKill || p.career.materials[stage.item] < 1) return false;
+  if (!stage || p.level < stage.level || !nearNPC('biologist') || p.career.eligibleKills < bio.nextKill || p.career.materials[stage.item] < 1) return false;
   if (!pay({ [stage.item]: 1, gold: 25 * (bio.stage + 1) })) return false;
   bio.delivered++; bio.nextKill = p.career.eligibleKills + 10;
   if (bio.delivered >= stage.count) {
     bio.stage++; bio.delivered = 0;
     toast('Biologický výskum dokončený!\nTrvalý bonus: ' + stage.text);
   }
-  save(); return true;
-}
-
-function enhancementCost(item) { const rank = (item?.enhance || 0) + 1; return { ore: 2 * rank * rank, gold: 100 * rank * rank, ...(rank >= 4 ? { upgradeStones: Math.ceil((rank - 3) / 2) } : {}) }; }
-
-function enhanceEquipment(slot) {
-  const item = p.equipped[slot];
-  if (!EQUIPMENT[slot] || !item || (item.enhance || 0) >= PROGRESSION.maxEnhancement) return false;
-  if (!pay(enhancementCost(item))) return false;
-  item.enhance = (item.enhance || 0) + 1;
   save(); return true;
 }
 
@@ -238,7 +228,7 @@ function rebalanceEnemy(m, cfg, index) {
 
 function enterRift() {
   const end = p.career.endgame;
-  if (p.level < 35 || end.run || !running || !isSanctuary(p)) return false;
+  if (p.level < 35 || end.run || !canTravel()) return false;
   if (!pay({ keys: 3 })) return false;
   const tier = Math.min(PROGRESSION.maxRiftTier, end.highest + 1);
   loadMap('temple');
@@ -266,8 +256,8 @@ function finishRift(claim = true) {
   p.worldStates.temple = { ...ordinary, drops: [...(ordinary.drops || []), ...drops.map(cloneGroundDrop)] };
   delete p.career.normalTemple;
   // Do not overwrite the ordinary snapshot with expedition enemies on exit.
-  mobs.length = 0; drops.length = 0; p.x = 1000; p.y = 1160;
-  loadMap('valley'); save(); return true;
+  mobs.length = 0; drops.length = 0; Object.assign(p,MAPS[p.mapId].entry);
+  travelCombat.time=0;loadMap('town'); save(); return true;
 }
 
 function upgradeParagon() {

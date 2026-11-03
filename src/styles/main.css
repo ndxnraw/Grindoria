@@ -158,3 +158,5 @@ body.character-select .game-shell:fullscreen,body.native-fullscreen.character-se
 .overlay:has(.rarity-guide-grid){position:fixed;inset:0;z-index:50;padding:20px;background:#080b0bd9;backdrop-filter:blur(4px)}
 
 #playerclass[hidden]{display:none}
+
+.weapon-upgrade-aura{animation:weapon-glow 1.5s ease-in-out infinite alternate;transform-origin:32px 40px}.upgrade-7{animation-duration:1.2s}.upgrade-8{animation-duration:.95s}.upgrade-9{animation-duration:.7s}@keyframes weapon-glow{from{opacity:.55}to{opacity:1}}@media(prefers-reduced-motion:reduce){.weapon-upgrade-aura{animation:none}}

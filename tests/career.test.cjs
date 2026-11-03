@@ -63,11 +63,11 @@ test('skill practice requires a real eligible kill; repeated hits do not multipl
 
 test('biologist consumes samples, requires farming between submissions and grants permanent bonuses', () => {
   const { run } = createGame();
-  run('p.gold=10000;p.career.materials.wolf=20;');
+  run('running=true;loadMap("town",true);p.x=NPCS.biologist.x;p.y=NPCS.biologist.y;p.gold=10000;p.career.materials.wolf=20;');
   assert.equal(run('completeBiology()'), true); assert.equal(run('completeBiology()'), false);
   assert.equal(run('p.career.materials.wolf'), 19);
-  run('p.x=500;p.y=500;p.career.eligibleKills=10;'); assert.equal(run('completeBiology()'), false);
-  run('p.x=1000;p.y=1160;');
+  run('p.x=100;p.y=100;p.career.eligibleKills=10;'); assert.equal(run('completeBiology()'), false);
+  run('p.x=NPCS.biologist.x;p.y=NPCS.biologist.y;');
   const hp = run('maxHP()');
   for (let i = 1; i < 10; i++) { run(`p.career.eligibleKills=${i * 10};`); assert.equal(run('completeBiology()'), true); }
   assert.equal(run('p.career.biology.stage'), 1); assert.equal(run('maxHP()'), hp + 30);
@@ -77,7 +77,7 @@ test('biologist consumes samples, requires farming between submissions and grant
 
 test('enhancement follows the item across swaps and cannot be bought without ore', () => {
   const { run } = createGame();
-  run('p.equipped.weapon={name:"A",slot:"weapon",bonus:10,rarity:0,value:10};p.bag=[{name:"B",slot:"weapon",bonus:12,rarity:0,value:10}];p.gold=1000;');
+  run('running=true;loadMap("town",true);p.x=NPCS.smith.x;p.y=NPCS.smith.y;rand=()=>0;p.equipped.weapon={name:"A",slot:"weapon",bonus:10,rarity:0,value:10};p.bag=[{name:"B",slot:"weapon",bonus:12,rarity:0,value:10}];p.gold=1000;');
   assert.equal(run('enhanceEquipment("weapon")'), false); assert.equal(run('p.gold'), 1000);
   run('p.career.materials.ore=10;'); assert.equal(run('enhanceEquipment("weapon")'), true);
   assert.equal(run('equippedBonus("weapon")'), 13);

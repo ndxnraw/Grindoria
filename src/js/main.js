@@ -32,7 +32,7 @@ function handleGameKeyDown(e) {
   if(key==='y'){e.preventDefault();pickNearbyGroundDrops();return;}
   if(spellKeys.includes(key))castSkill(spellKeys.indexOf(key));
   if(key==='b')useBraveryCape();if(key==='p')careerPanel();if(key==='k')spellbook();if(key==='m')travelMenu();
-  if(key==='e')potion();if(key==='i')inventory();if(key==='f')shop();if(key==='j')journal();if(key==='c')combatManual();if(key==='?')help();
+  if(key==='e')potion();if(key==='i')inventory();if(key==='f')interactNPC();if(key==='j')journal();if(key==='c')combatManual();if(key==='?')help();
 }
 
 canvas.addEventListener('pointermove',setCombatPointer);canvas.addEventListener('pointerleave',leaveCombatPointer);window.addEventListener('blur',combatBlur);

@@ -1,17 +1,17 @@
 function hit(m, amount, type='physical',penetrated=false) {
   if (m.hp <= 0 || !Number.isFinite(amount) || amount <= 0) return 0;
   const damage = m.type === 'stone' ? metinDamage(m, amount, type,penetrated) : resolveEnemyDamage(m, amount, type,penetrated), actual = Math.min(m.hp, damage);
-  registerPlayerCombat(m);
+  travelCombat.time=WORLD_RULES.travelCooldown;registerPlayerCombat(m);
   if (m.type === 'stone') registerMetinAttack(m); else provokeEnemyGroup(m);
   m.hp = Math.max(0, m.hp - damage); m.hit = .15;
   float('-' + actual, m.x, m.y - 65); beep(170);
   if (m.hp <= 0) {
     if(target===m)clearCombatTarget();m.dot=null;m.dots=[];
-    m.windup = 0; m.dead = m.metinParentId ? 1 : m.respawnSeconds || (m.type === 'boss' ? 40 : m.type === 'stone' ? 18 : 5);
+    m.windup = 0; m.dead = m.metinParentId ? 1 : m.respawnSeconds || (m.type === 'boss' ? 40 : m.type === 'stone' ? 18 : 8);
     if (m.type === 'boss') p.bossKills++; else p[m.type === 'stone' ? 'stones' : 'kills']++;
     recordCharacterKill(m);
-    const gained = enemyXP(m); careerKill(m);
-    if (m.type === 'stone') { m.metinCombat = 0; m.metinWaveTimer = 0; dropMetinLoot(m); }
+    const gained = enemyXP(m); careerKill(m);dropForgeSupplies(m);
+    if (m.type === 'stone') { m.metinCombat = 0; m.metinWaveTimer = 0; dropMetinLoot(m);for(const guard of mobs.filter(guard=>guard.hp>0&&guard.metinParentId===m.spawnId&&guard.metinGeneration===m.metinGeneration))hit(guard,guard.hp,'arcane',true); }
     else {
       farmBonusLoot(m);
       spawnGroundDrop({ kind: 'gold', count: Math.round((m.type === 'boss' ? 120 : 7 + Math.floor(rand() * 7)) * (m.metinParentId ? m.attackScale * .5 : map().scale) * (ENEMY_VARIANTS[m.variant]?.gold || 1)) }, m);
@@ -40,7 +40,7 @@ function drinkPotion(allowPaused=false) {
   float('+'+Math.round(healed)+' zdravia',p.x,p.y-65,'#a9e0ac');beep(520,.2);updateHUD();save();return true;
 }
 
-function death(){resetCombatFlow();p.mp=maxMP();shots.length=0;Object.keys(buffs).forEach(k=>delete buffs[k]);p.gold=Math.floor(p.gold*.9);p.x=1000;p.y=1160;p.hp=maxHP();target=null;mobs.forEach(m=>m.cd=2);toast('Záchrana v útočisku\nStratil si 10 % zlata.');save();}
+function death(){resetCombatFlow();p.mp=maxMP();shots.length=0;Object.keys(buffs).forEach(k=>delete buffs[k]);p.gold=Math.floor(p.gold*.9);Object.assign(p,map().entry);p.hp=maxHP();target=null;mobs.forEach(m=>m.cd=2);toast('Návrat do bezpečnej zóny\nStratil si 10 % zlata.');save();}
 
 function school(){return SCHOOLS[p.schools[p.classId]];}
 
@@ -92,7 +92,7 @@ function takeDamage(amount,source,type=enemyDamageType(source)) {
   const armorFactor=type==='physical'?1:type==='piercing'?.6:.25;
   const n=Math.max(1,Math.round((amount-defense()*armorFactor)*factor*(1-(playerResistances()[type]||0))));
   if(source)registerPlayerCombat(source);
-  p.hp-=n;float('-'+n,p.x,p.y-70,DAMAGE_TYPES[type]?.color||'#eda28d');
+  travelCombat.time=WORLD_RULES.travelCooldown;p.hp-=n;float('-'+n,p.x,p.y-70,DAMAGE_TYPES[type]?.color||'#eda28d');
   if(source&&(active('reflect')||active('armor'))&&source.hp>0)hit(source,Math.max(1,Math.round(n*(active('reflect')?.35:.2))),'arcane');
   return n;
 }
@@ -107,4 +107,4 @@ function updateCombat(dt) {
   if(active('spirit')&&!isSanctuary(p)){spiritTick-=dt;if(spiritTick<=0){spiritTick=1.5;const m=nearest(430);if(m)shoot(m,.85,'fireArrow',{skillKey:'black:3',type:'fire',multiplier:1});}}
 }
 
-function updateBoss(dt,safe){const b=mobs.find(m=>m.type==='boss');if(!b||b.hp<=0||b.stun>0)return;const d=Math.hypot(b.x-p.x,b.y-p.y);if(safe||(!(b.taunt>0||b.engaged>0)&&d>500)||active('stealth')){b.windup=0;b.taunt=0;b.engaged=0;const home=Math.hypot(b.x-1690,b.y-330);if(home>4)walkEnemy(b,1690,330,90,dt);b.hp=Math.min(b.max,b.hp+10*dt);return;}const enraged=b.hp<b.max*.3&&!(b.suppressed>0);if(b.windup>0){b.windup-=dt;if(b.windup<=0){b.cd=enraged?2:3;if(d<120){takeDamage(Math.round(26*(b.attackScale||map().scale)*(enraged?1.3:1)),b);beep(90,.25);}else float('ÚHYB!',p.x,p.y-75,'#acd9b0');}return;}if(d<100&&b.cd<=0){b.windup=1;beep(100,.2);return;}if(d>65){const speed=(enraged?115:90)*(b.slow>0?.55:1)*(active('fear')?.65:1);walkEnemy(b,p.x,p.y,speed,dt);}}
+function updateBoss(dt,safe){const b=mobs.find(m=>m.type==='boss');if(!b||b.hp<=0||b.stun>0)return;const d=Math.hypot(b.x-p.x,b.y-p.y);if(safe||(!(b.taunt>0||b.engaged>0)&&d>500)||active('stealth')){b.windup=0;b.taunt=0;b.engaged=0;const home=Math.hypot(b.x-b.homeX,b.y-b.homeY);if(home>4)walkEnemy(b,b.homeX,b.homeY,90,dt);b.hp=Math.min(b.max,b.hp+10*dt);return;}const enraged=b.hp<b.max*.3&&!(b.suppressed>0);if(b.windup>0){b.windup-=dt;if(b.windup<=0){b.cd=enraged?2:3;if(d<120){takeDamage(Math.round(26*(b.attackScale||map().scale)*(enraged?1.3:1)),b);beep(90,.25);}else float('ÚHYB!',p.x,p.y-75,'#acd9b0');}return;}if(d<100&&b.cd<=0){b.windup=1;beep(100,.2);return;}if(d>65){const speed=(enraged?115:90)*(b.slow>0?.55:1)*(active('fear')?.65:1);walkEnemy(b,p.x,p.y,speed,dt);}}

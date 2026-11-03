@@ -62,7 +62,7 @@ test('legacy large bags migrate without losses, duplicates or changes to enhance
   const { run, saved } = createGame({ level: 5, bag: items, equipped: { weapon: { name: 'Meč', slot: 'weapon', bonus: 25, enhance: 2 } }, potions: 123, braveryCapes: 321 });
   assert.equal(run('p.bag.length'), 24); assert(run('p.inventory.pages>=4'));
   assert.equal(run('new Set(p.bag.map(i=>i.uid)).size'), 24);
-  assert(run('p.bag.every(i=>i.enhance===3)')); assert.equal(run('equippedBonus("weapon")'), 31);
+  assert(run('p.bag.every(i=>i.enhance===3)')); assert.equal(run('equippedBonus("weapon")'), 32);
   run('let cell=p.bag[3].cell;save();'); const reload = createGame(readSavedProfile(saved));
   assert.equal(reload.run('p.bag[3].cell'), run('cell')); assert.equal(reload.run('p.bag.length'), 24);
   assert.equal(reload.run('p.potions'), 123); assert.equal(reload.run('p.braveryCapes'), 321);
@@ -101,10 +101,10 @@ test('delete confirmation preserves items until confirmed and partial stack remo
 
 test('all new slots drop as real equipment and can be enhanced with materials', () => {
   const { run } = createGame();
-  const slots = Object.keys(run('EQUIPMENT'));
+  run('running=true;loadMap("town",true);p.x=NPCS.smith.x;p.y=NPCS.smith.y;');const slots = Object.keys(run('EQUIPMENT'));
   slots.forEach((slot, i) => {
     run(`rand=()=>${(i + .5) / slots.length};`); assert.equal(run('makeItem(true).slot'), slot);
-    run(`p.equipped['${slot}']={slot:'${slot}',name:'Test',bonus:5,enhance:0};p.gold=1000;p.career.materials.ore=100;`);
+    run(`p.equipped['${slot}']={slot:'${slot}',name:'Test',bonus:5,enhance:0};p.gold=1000;p.career.materials.ore=100;rand=()=>0;`);
     assert.equal(run(`enhanceEquipment('${slot}')`), true);
     assert.equal(run(`p.equipped['${slot}'].enhance`), 1);
   });

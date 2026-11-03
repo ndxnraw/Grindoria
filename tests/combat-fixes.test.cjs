@@ -22,7 +22,7 @@ test('automatic potions use finite supplies below 45 percent with a shared four 
  run('p.hp=maxHP()-10;drinkPotion();');assert.equal(run('p.hp'),run('maxHP()'));assert.equal(run('p.potions'),7);
 });
 test('automatic potions pause in dialogs, blur, hidden tabs, sanctuary and never revive or create supplies',()=>{
- for(const condition of ['running=false','paused=true','combatAssist.focused=false','document.hidden=true','p.hp=0','p.potions=0','p.x=1000;p.y=1050']){
+ for(const condition of ['running=false','paused=true','combatAssist.focused=false','document.hidden=true','p.hp=0','p.potions=0','p.x=map().entry.x;p.y=map().entry.y']){
   const {run}=createGame();arena(run);run('p.hp=1;p.combatAssist.autoPotion=true;'+condition+';var health=p.hp,count=p.potions;updateAutoPotion();');assert.equal(run('p.hp'),run('health'),condition);assert.equal(run('p.potions'),run('count'),condition);
  }
 });

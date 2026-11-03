@@ -7,7 +7,7 @@ test('Šuterland contains exactly one protected Metin for every level 1–99 and
   assert.equal(run('mobs.length'), 99); assert(run('mobs.every(m=>m.type==="stone")'));
   assert.equal(run('spawnPoints.length'), 99); assert.equal(run('new Set(mobs.map(m=>m.spawnId)).size'), 99);
   assert(run('stones.every((m,i)=>m.level===i+1&&m.metinType===metinTypeForLevel(i+1))'));
-  assert(run('stones.every(m=>!isSanctuary(m)&&Math.hypot(m.x-1000,m.y-1050)>=SPAWN_RULES.spawnClearance)'));
+  assert(run('stones.every(m=>!isSanctuary(m)&&Math.hypot(m.x-safeZone().x,m.y-safeZone().y)>=SPAWN_RULES.spawnClearance)'));
   assert.equal(run('new Set(stones.map(m=>m.metinType)).size'), 8);
   run('for(let i=0;i<100;i++)updateMetins(.05,false);draw();');
   assert.equal(run('mobs.length'), 99);
@@ -40,7 +40,7 @@ test('Metin HP, armor and resistance scale with level and actual damage and life
 
 test('attacking summons frequent matching-level aggressive waves that move and hurt the player', () => {
   const { run } = createGame();
-  run('running=true;loadMap("suterland",true);let stone=mobs.find(m=>m.level===50);p.level=50;p.x=stone.x-65;p.y=stone.y;p.hp=100000;let health=p.hp;hit(stone,1);updateMetins(.19,false);');
+  run('running=true;loadMap("suterland",true);let stone=mobs.find(m=>m.level===50);p.level=50;p.x=stone.x-65;p.y=stone.y;p.hp=100000;let health=p.hp;hit(stone,1);updateMetins(.09,false);');
   assert.equal(run('mobs.filter(m=>m.metinParentId).length'), 0);
   run('updateMetins(.02,false);let first=mobs.filter(m=>m.metinParentId);let distances=first.map(m=>Math.hypot(m.x-p.x,m.y-p.y));');
   assert.equal(run('first.length'), 4);
@@ -109,9 +109,9 @@ test('drop chances differ by type, weak stones cannot farm advancement loot and 
 
 test('new upgrade stones have a real forge cost from +4 and old material balances migrate intact', () => {
   const { run, saved } = createGame();
-  run('p.gold=10000;p.career.materials.ore=1000;p.equipped.weapon={name:"Meč",slot:"weapon",bonus:10,enhance:3};');
-  assert.equal(run('enhanceEquipment("weapon")'),false); assert.equal(run('p.gold'),10000); assert.equal(run('p.career.materials.ore'),1000);
-  run('addMaterial("upgradeStones",1);'); assert.equal(run('enhanceEquipment("weapon")'),true);
+  run('running=true;loadMap("town",true);p.x=NPCS.smith.x;p.y=NPCS.smith.y;rand=()=>0;p.gold=1000000;p.career.materials.ore=1000;p.equipped.weapon={name:"Meč",slot:"weapon",bonus:10,enhance:3};');
+  assert.equal(run('enhanceEquipment("weapon")'),false); assert.equal(run('p.gold'),1000000); assert.equal(run('p.career.materials.ore'),1000);
+  run('addMaterial("upgradeStones",3);'); assert.equal(run('enhanceEquipment("weapon")'),true);
   assert.equal(run('p.equipped.weapon.enhance'),4); assert.equal(run('p.career.materials.upgradeStones'),0);
   run('save();'); const profile=readSavedProfile(saved); delete profile.career.materials.upgradeStones;
   const reload=createGame(profile); assert.equal(reload.run('p.career.materials.upgradeStones'),0); assert.equal(reload.run('p.career.materials.ore'),run('p.career.materials.ore'));
@@ -135,7 +135,7 @@ test('old stones retain HP percentage, death timers and loot while gaining new t
   for(const s of stones)for(const key of Object.keys(s))if(key.startsWith('metin'))delete s[key];
   Object.assign(stones[0],{max:160,hp:80}); Object.assign(stones[1],{max:160,hp:0,dead:7});
   old.worldStates.valley.drops=[{x:400,y:400,value:50}]; const reload=createGame(old);
-  assert.equal(reload.run('mobs.length'),157); assert.equal(reload.run('mobs.filter(m=>m.type==="stone")[1].dead'),7);
+  assert.equal(reload.run('mobs.length'),301); assert.equal(reload.run('mobs.filter(m=>m.type==="stone")[1].dead'),7);
   assert.equal(reload.run('mobs.filter(m=>m.type==="stone")[1].hp'),0);
   assert(Math.abs(reload.run('mobs.filter(m=>m.type==="stone")[0].hp/mobs.filter(m=>m.type==="stone")[0].max')-.5)<.005);
   assert(reload.run('mobs.filter(m=>m.type==="stone").every(m=>m.metinType&&m.metinResistance>0)'));
