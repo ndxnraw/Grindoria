@@ -21,7 +21,7 @@ function groundDropTooltip(drop) {
     const specials = Array.isArray(item.special) ? item.special : [];
     details = `<h4>Základné atribúty</h4><div class="loot-stat"><span>${ITEM_STATS[spec.stat]}</span><b>${signedItemStat(spec.stat, base)}</b></div><div class="loot-stat"><span>Vylepšenie +${item.enhance || 0}</span><b>${signedItemStat(spec.stat, (item.enhance || 0) * 3 * (spec.stat === 'crit' ? .01 : 1))}</b></div><h4>Bonusy</h4>${extras.length ? extras.map(([stat, value]) => `<div class="loot-stat"><span>${ITEM_STATS[stat]}</span><b>${signedItemStat(stat, value)}</b></div>`).join('') : '<p>Bez dodatočných bonusov.</p>'}<h4>Špeciálne vlastnosti</h4><p>${specials.length ? specials.map(value => escapeHTML(value)).join('<br>') : 'Žiadne.'}</p><p class="${usable ? 'stat-gain' : 'stat-loss'}">${usable ? 'Možno vybaviť · ' + spec.name : escapeHTML(itemEquipReason(item))}</p>${usable ? groundItemComparison(item) : ''}`;
   } else details = `<p>${escapeHTML(item.description)}</p><div class="loot-stat"><span>Množstvo</span><b>${item.count.toLocaleString('sk-SK')}</b></div><h4>Vybavenie</h4><p>${drop.kind === 'relic' ? 'Relikvia zbierky · nezaberá slot výbavy.' : 'Nie je výbava postavy.'}</p>`;
-  return `<div class="loot-heading rarity-${item.rarity || 0}"><div class="loot-item-icon">${itemIcon(item)}</div><div><small>${gear ? EQUIPMENT[item.slot].name : drop.kind === 'gold' ? 'MENA' : drop.kind === 'relic' ? 'RELIKVIA' : 'ZÁSOBY'} · ${rarityName(item.rarity)}</small><h3>${escapeHTML(item.name)}${gear ? ' +' + (item.enhance || 0) : ''}</h3></div></div><div class="loot-stat ${p.level < required ? 'stat-loss' : ''}"><span>Požadovaná úroveň</span><b>${required}</b></div>${details}<p class="loot-controls">${drop.fallAge < LOOT_RULES.fallDuration ? 'Predmet dopadá na zem…' : Math.hypot(drop.x - p.x, drop.y - p.y) > LOOT_RULES.pickupRange ? 'Priblíž sa · dosah zbierania 180' : drop.kind === 'gold' || drop.kind === 'supply' ? 'Zbiera sa automaticky v okolí postavy' : 'Ľavé tlačidlo · predmet / Y · korisť v okolí'}</p>`;
+  return `<div class="loot-heading rarity-${item.rarity || 0}"><div class="loot-item-icon">${itemIcon(item)}</div><div><small>${gear ? EQUIPMENT[item.slot].name : drop.kind === 'gold' ? 'MENA' : drop.kind === 'relic' ? 'RELIKVIA' : 'ZÁSOBY'} · ${rarityName(item.rarity)}</small><h3>${escapeHTML(item.name)}${gear ? ' +' + (item.enhance || 0) : ''}</h3></div></div><div class="loot-stat ${p.level < required ? 'stat-loss' : ''}"><span>Požadovaná úroveň</span><b>${required}</b></div>${details}<p class="loot-controls">${drop.fallAge < LOOT_RULES.fallDuration ? 'Predmet dopadá na zem…' : Math.hypot(drop.x - p.x, drop.y - p.y) > LOOT_RULES.pickupRange ? 'Priblíž sa · dosah zbierania 180' : drop.kind === 'gold' || drop.kind === 'supply' ? 'Zbiera sa automaticky v okolí postavy' : 'Ľavé tlačidlo · predmet / Y · korisť v okolí'}</p><p class="loot-expiry">Nepozbierané zmizne po ${groundDropLifetime(drop) / 60} min od vypadnutia.</p>`;
 }
 
 function floatingTooltipPosition(x, y, width, height, viewportWidth, viewportHeight) {
@@ -38,15 +38,19 @@ function floatingTooltipPosition(x, y, width, height, viewportWidth, viewportHei
   return { left: clamp(x + gap, viewportWidth - w - edge), top: below >= above ? y + gap : y - gap - maxHeight, maxHeight };
 }
 
-function updateLootHover() {
-  if (!running || paused || !lootPointer.inside) { hoveredLootId = null; $('loot-tooltip').hidden = true; canvas.style.cursor = ''; return; }
+function updateLootHover(dt = 0) {
+  if (!running || paused || !lootPointer.inside) { lootHover.id = null; lootHover.elapsed = 0; hoveredLootId = null; $('loot-tooltip').hidden = true; canvas.style.cursor = ''; return; }
   // Scrolling or resizing can move the canvas underneath a stationary cursor.
   const canvasRect = canvas.getBoundingClientRect();
   lootPointer.x = lootPointer.clientX - (canvasRect.left || 0); lootPointer.y = lootPointer.clientY - (canvasRect.top || 0);
-  if (lootPointer.x < 0 || lootPointer.y < 0 || lootPointer.x > W || lootPointer.y > H) { hoveredLootId = null; $('loot-tooltip').hidden = true; canvas.style.cursor = ''; return; }
+  if (lootPointer.x < 0 || lootPointer.y < 0 || lootPointer.x > W || lootPointer.y > H) { lootHover.id = null; lootHover.elapsed = 0; hoveredLootId = null; $('loot-tooltip').hidden = true; canvas.style.cursor = ''; return; }
   const drop = groundDropAt(lootPointer.x, lootPointer.y);
-  if (!drop) { hoveredLootId = null; $('loot-tooltip').hidden = true; canvas.style.cursor = ''; return; }
-  hoveredLootId = drop.id; canvas.style.cursor = 'pointer';
+  if (!drop || drop.expiresAt <= Date.now()) { lootHover.id = null; lootHover.elapsed = 0; hoveredLootId = null; $('loot-tooltip').hidden = true; canvas.style.cursor = ''; return; }
+  canvas.style.cursor = 'pointer';
+  if (lootHover.id !== drop.id) { lootHover.id = drop.id; lootHover.elapsed = 0; }
+  lootHover.elapsed += Math.max(0, dt);
+  if (lootHover.elapsed < LOOT_RULES.hoverDelay) { hoveredLootId = null; $('loot-tooltip').hidden = true; return; }
+  hoveredLootId = drop.id;
   const signature = [drop.id, p.level, p.classId, drop.fallAge >= LOOT_RULES.fallDuration, Math.hypot(drop.x - p.x, drop.y - p.y) <= LOOT_RULES.pickupRange, JSON.stringify(p.equipped)].join('|');
   const tooltip = $('loot-tooltip');
   if (signature !== lootTooltipSignature) { tooltip.innerHTML = groundDropTooltip(drop); lootTooltipSignature = signature; }

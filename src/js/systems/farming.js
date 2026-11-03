@@ -11,30 +11,21 @@ function farmAreaAt(entity = p) {
   return FARM_AREAS[(entity.y < 1000 ? 2 : 0) + (entity.x > 1000 ? 1 : 0)];
 }
 
-function spawnJitter(id, axis) {
-  let hash = 2166136261;
-  for (const char of id + axis) hash = Math.imul(hash ^ char.charCodeAt(0), 16777619);
-  hash = Math.imul(hash ^ (hash >>> 16), 2246822507);
-  hash = Math.imul(hash ^ (hash >>> 13), 3266489909);
-  hash ^= hash >>> 16;
-  return ((hash >>> 0) / 4294967296 - .5) * 110;
-}
-
 function buildSpawnPoints(id) {
   if (MAPS[id].metinsOnly) return buildSuterlandPoints();
-  const cfg = MAPS[id], points = [], perArea = cfg.packCount / 4;
+  const points = [], random = layoutRandom(id + ':' + MAPS[id].seed + ':layout2'), perArea = MAPS[id].packCount / 4;
   for (const area of FARM_AREAS) {
-    const rows = Math.ceil(perArea / 2);
-    for (let i = 0; i < perArea; i++) {
-      const pointId = `${id}:${area.id}:pack:${i}`;
-      const x = area.x1 + 80 + (area.x2 - area.x1 - 160) * ((i % 2 + .5) / 2) + spawnJitter(pointId, 'x');
-      const y = area.y1 + 80 + (area.y2 - area.y1 - 160) * ((Math.floor(i / 2) + .5) / rows) + spawnJitter(pointId, 'y');
-      points.push({ id: `${id}:${area.id}:pack:${i}`, kind: 'pack', x, y, area: area.id, offset: area.offset, starter: area.offset === 0 && i === 0 });
-    }
-    points.push({ id: `${id}:${area.id}:rare`, kind: 'rare', x: (area.x1 + area.x2) / 2, y: (area.y1 + area.y2) / 2, area: area.id, offset: area.offset });
-    for (let i = 0; i < 2; i++) points.push({ id: `${id}:${area.id}:stone:${i}`, kind: 'stone', x: i ? area.x2 - 100 : area.x1 + 100, y: i ? area.y2 - 100 : area.y1 + 100, area: area.id, offset: area.offset });
+    const local = [];
+    const add = (kind, suffix, extra = {}) => {
+      const location = naturalSpawnLocation(area, local, random);
+      const point = { id: id + ':' + area.id + ':' + suffix, kind, ...location, area: area.id, offset: area.offset, ...extra };
+      points.push(point); local.push(point);
+    };
+    for (let i = 0; i < perArea; i++) add('pack', 'pack:' + i, { starter: area.offset === 0 && i === 0 });
+    add('rare', 'rare');
+    for (let i = 0; i < 2; i++) add('stone', 'stone:' + i);
   }
-  points.push({ id: `${id}:boss`, kind: 'boss', x: 1690, y: 330, area: 'northeast', offset: 6 });
+  points.push({ id: id + ':boss', kind: 'boss', x: 1690, y: 330, area: 'northeast', offset: 6 });
   return points;
 }
 
@@ -47,7 +38,7 @@ function rollEnemyVariant(point, slot) {
 
 function createSpawnEnemy(point, slot = 0) {
   const cfg = map(), type = point.kind === 'pack' || point.kind === 'rare' ? 'wolf' : point.kind;
-  const angle = rand() * Math.PI * 2, radius = point.kind === 'pack' ? Math.sqrt(rand()) * 60 : 0;
+  const angle = rand() * Math.PI * 2, radius = point.kind === 'pack' ? Math.sqrt(rand()) * 90 : 0;
   let x = point.x + Math.cos(angle) * radius, y = point.y + Math.sin(angle) * radius;
   if (Math.hypot(x - 1000, y - 1050) < SPAWN_RULES.spawnClearance) {
     const a = Math.atan2(y - 1050, x - 1000);
@@ -94,8 +85,8 @@ function hydrateSpawnPopulation(old) {
     const saved = new Map(old.mobs.map(m => [m.spawnId, m]));
     return restoreMetinGuards(generated.map(m => {
       const prior = saved.get(m.spawnId);
-      if (m.type === 'stone') return restoreMetin(m, prior);
-      return prior ? { ...m, ...cloneEnemyState(prior), dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0, roamTarget: null, roamWait: rand() * 4, returning: false } : m;
+      if (m.type === 'stone') return restoreSpawnLocation(restoreMetin(m, prior), m, old);
+      return prior ? restoreSpawnLocation({ ...m, ...cloneEnemyState(prior), dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0, roamTarget: null, roamWait: rand() * 4, returning: false }, m, old) : m;
     }), old.mobs);
   }
   // Upgrade old sparse populations into distinct new slots without reviving their dead.
@@ -137,7 +128,13 @@ function respawnEnemy(m) {
     if (m.type === 'stone') { m.metinCombat = 0; m.metinWaveTimer = 0; m.metinGeneration = (m.metinGeneration || 0) + 1; }
     return;
   }
-  const fresh = createSpawnEnemy(point, m.spawnSlot);
+  let spawnPoint = point;
+  if (m.type === 'stone') {
+    const area = FARM_AREAS.find(area => area.id === point.area), random = layoutRandom(m.spawnId + ':' + ((m.metinGeneration || 0) + 1) + ':' + rand());
+    const others = mobs.filter(other => other !== m && other.type === 'stone' && other.hp > 0);
+    spawnPoint = { ...point, ...naturalSpawnLocation(area, others, random, 90) };
+  }
+  const fresh = createSpawnEnemy(spawnPoint, m.spawnSlot);
   if (m.type === 'stone') fresh.metinGeneration = (m.metinGeneration || 0) + 1;
   const run = p.career.endgame.run;
   if (run && p.mapId === 'temple') applyRiftScaling(fresh, run.tier, run.id);
@@ -286,6 +283,6 @@ function farmBonusLoot(m) {
 function dropFarmEquipment(m) {
   const rare = m.variant === 'rare', elite = m.variant === 'elite';
   if (m.type === 'boss') return spawnGroundDrop({ kind: 'gear', item: makeItem(true, m) }, m);
-  if (m.type === 'stone' || rare || rand() < (elite ? .75 : .32)) return spawnGroundDrop({ kind: 'gear', item: makeItem(rare ? rand() < .25 : elite && rand() < .08, m) }, m);
+  if (m.type === 'stone' || rare || rand() < (elite ? .2 : .03)) return spawnGroundDrop({ kind: 'gear', item: makeItem(rare ? rand() < .25 : elite && rand() < .08, m) }, m);
 }
 

@@ -73,3 +73,12 @@ nav{gap:18px}.player{min-height:92px}.mana{height:7px;margin-top:4px;background:
 .target-health{height:12px;position:relative;background:#241f20;border:1px solid #ac927944;overflow:hidden}.target-health i{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,#965c57,#d7987c)}.target-health span{position:absolute;inset:0;text-align:center;font-size:8px;color:#fae9cb;line-height:10px}.target-resistances{display:flex;flex-wrap:wrap;gap:3px 8px;margin-top:6px;font-size:8px;color:#aaa98d}.target-resistances .vulnerable{color:#a4ca8a}.target-resistances .resistant{color:#cdb08d}
 .combat-flow{left:22px;bottom:113px;padding:9px 12px;max-width:50%;font-size:10px;color:#ead19a;border-color:#ccb47777;background:#263020ed}.battle-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.battle-type-grid>div{display:flex;justify-content:space-between;gap:8px;border-left:3px solid;background:#ffffff06;padding:8px;font-size:10px}.battle-type-grid span{color:#d5c091}
 @media(max-width:850px){.target-panel{top:119px;left:12px;transform:none;width:215px;padding:8px 10px}.target-panel>b{font-size:12px}.target-panel>small{font-size:6px}.game-shell:has(.target-panel:not([hidden])) .buffs{top:245px;left:12px;max-width:200px}.combat-flow{bottom:150px;left:12px;max-width:49%;font-size:8px}}
+
+/* Fullscreen uses the same game shell in a browser and a native Electron window. */
+.fullscreen-control{position:absolute;right:5px;top:5px;width:30px;height:28px;padding:0;z-index:6;border:1px solid #c5ac7380;border-radius:3px;background:#10231ee8;color:#f1d99d;font-size:22px;line-height:1;cursor:pointer}
+.fullscreen-control:hover,.fullscreen-control:focus-visible{background:#3b4f38;outline:2px solid #d8bf80}
+.game-shell:fullscreen{width:100vw;height:100vh;height:100dvh;min-height:0;max-height:none;border:0;border-radius:0}
+body.native-fullscreen{margin:0;overflow:hidden}
+body.native-fullscreen>header,body.native-fullscreen .world-title,body.native-fullscreen main>footer{display:none}
+body.native-fullscreen main{padding:0;max-width:none;width:100%;margin:0}
+body.native-fullscreen .game-shell{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;min-height:0;max-height:none;border:0;border-radius:0}

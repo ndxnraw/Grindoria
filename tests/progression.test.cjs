@@ -1,7 +1,7 @@
 const vm=require('node:vm'),fs=require('node:fs'),assert=require('node:assert/strict');
 const elements=new Map(),saved=new Map();
-const element=id=>{if(!elements.has(id))elements.set(id,{style:{},textContent:'',innerHTML:'',hidden:true,querySelector:s=>element(id+s),getContext:()=>({setTransform(){}}),getBoundingClientRect:()=>({width:1200,height:700}),addEventListener(){},focus(){}});return elements.get(id);};
-const c=vm.createContext({document:{getElementById:element,querySelectorAll:()=>[],addEventListener(){},body:{classList:{add(){}}}},window:{addEventListener(){}},devicePixelRatio:1,localStorage:{getItem:k=>saved.get(k),setItem:(k,v)=>saved.set(k,v)},requestAnimationFrame(){},console});
+const element=id=>{if(!elements.has(id))elements.set(id,{style:{},setAttribute(){},textContent:'',innerHTML:'',hidden:true,querySelector:s=>element(id+s),getContext:()=>({setTransform(){}}),getBoundingClientRect:()=>({width:1200,height:700}),addEventListener(){},focus(){}});return elements.get(id);};
+const c=vm.createContext({document:{getElementById:element,querySelectorAll:()=>[],addEventListener(){},body:{classList:{add(){},toggle(){}}}},window:{addEventListener(){}},devicePixelRatio:1,localStorage:{getItem:k=>saved.get(k),setItem:(k,v)=>saved.set(k,v)},requestAnimationFrame(){},console});
 vm.runInContext(require('./helpers/source.cjs').runtimeSource(),c);
 const run=code=>vm.runInContext(code,c);
 run('running=true; mobs.forEach(m=>m.hp=0);p.x=400;p.y=400;mobs[0].hp=55;mobs[0].x=420;mobs[0].y=400;');

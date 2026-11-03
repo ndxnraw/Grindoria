@@ -11,7 +11,7 @@
 | Hory | 28 | 172 | 8 | 1 | 41 | 181 |
 | Chrám | 32 | 196 | 8 | 1 | 45 | 205 |
 
-Predtým bolo na mape len 18–24 pohyblivých príšer. Trvalé identifikátory slotov sa opakovane obnovujú; ich celkový počet nekontrolovane nerastie. Skupinové centrá majú nepravidelné posuny; počiatočná aj respawn pozícia sa náhodne vyberá v kruhu 60 jednotiek okolo centra. Domovské pozície sú mimo chráneného útočiska. Rozostupy skupiny a lokálne vyhýbanie sa obmedzujú skladanie všetkých tiel do jedného bodu.
+Predtým bolo na mape len 18–24 pohyblivých príšer. Trvalé identifikátory slotov sa opakovane obnovujú; ich celkový počet nekontrolovane nerastie. Skupinové centrá, hliadky aj Metiny sa vyberajú náhodným vzorkovaním v úrovňových oblastiach, bez radov alebo stĺpcov. Kandidáti rešpektujú ochranu útočiska a rozostupy; seed mapy stabilizuje základné rozloženie. Počiatočná aj respawn pozícia príšery sa náhodne vyberá v kruhu 90 jednotiek okolo skupinového centra. Domovské pozície sú mimo chráneného útočiska. Rozostupy skupiny a lokálne vyhýbanie sa obmedzujú skladanie všetkých tiel do jedného bodu.
 
 ## Oblasti a úrovne
 
@@ -36,13 +36,13 @@ Bežný skupinový slot pri prvom vytvorení a po každom skutočnom respawne m�
 
 Každá oblasť má aj jeden samostatný bod vzácnej hliadky. Tá je vždy vzácna a obnovuje sa po 75 sekundách. Kamene sa obnovujú po 18 sekundách, boss po 40 sekundách. Časovače bežia v aktívnom čase mapy, rovnako ako v predchádzajúcej verzii.
 
-Elita má vyššiu šancu na výbavu a vzácnosť; vzácny variant výbavu zaručí, minimálne vzácnu, s 25 % šancou na epický predmet. Primeraná elita pridá rudu a esenciu, primeraný vzácny nepriateľ aj prach, knihu a tréningovú pečať. Bossovia a vzácne príšery dopĺňajú aj plášte.
+Bežná príšera má **3 %** šancu na výbavu (predtým 32 %), elita **20 %** (predtým 75 %). Vzácny variant výbavu zaručí, minimálne vzácnu, s 25 % šancou na epický predmet. Primeraná elita pridá rudu a esenciu, primeraný vzácny nepriateľ aj prach, knihu a tréningovú pečať. Bossovia a vzácne príšery dopĺňajú aj plášte.
 
 Všetky EXP odmeny stále používajú rozdiel úrovní a percentuálne limity z [PROGRESSION.md](PROGRESSION.md). Ani vzácny slabý cieľ nemôže obísť nulovú EXP odmenu alebo neobmedzene vytvárať rozvojové materiály.
 
 ## Správanie nepriateľov
 
-Bežné, elitné aj vzácne pohyblivé príšery sú neutrálne. Samotná blízkosť hráča ich neaktivuje. V pokoji sa pohybujú 40 % bojovej rýchlosti v okruhu **85 jednotiek od domova**, vyberajú si nezávislé smery a medzi cestami odpočívajú 1,5–5 sekúnd. Neopúšťajú hranice mapy ani nevstupujú do útočiska. Kamene zostávajú nehybné.
+Bežné, elitné aj vzácne pohyblivé príšery sú neutrálne. Samotná blízkosť hráča ich neaktivuje. V pokoji sa pohybujú 40 % bojovej rýchlosti v okruhu **85 jednotiek od domova**, vyberajú si nezávislé smery a medzi cestami odpočívajú 1,5–5 sekúnd. Neopúšťajú hranice mapy ani nevstupujú do útočiska. Kamene zostávajú počas života nehybné; pri respawne si vyberú nové miesto vo vlastnej úrovňovej oblasti s odstupom od živých Metinov.
 
 Zásah vyprovokuje obeť a najbližších živých členov tej istej skupiny do vzdialenosti **300 jednotiek**, spolu najviac **päť príšer vrátane obete**. Pomoc sa ďalej nereťazí na susedné skupiny, mŕtvi ani vzdialení členovia sa nepridajú. Opakované zásahy do rovnakej obete nedopĺňajú šiesteho člena k už aktívnej pätici. Aj smrteľný zásah zalarmuje spojencov. Priame plošné zasiahnutie ďalších cieľov a plášť môžu úmyselne vyprovokovať viac než päť nepriateľov; limit sa vzťahuje na automatickú pomoc skupiny.
 
@@ -76,7 +76,7 @@ Nové aj migrované postavy dostanú jednorazovo zásobu 10 kusov. Už uložená
 
 ## Ukladanie a kompatibilita
 
-Každý slot má trvalé `spawnId`. Zostáva rovnaký pri smrti aj respawne a pri normálnom načítaní sa neprehadzuje variant či neobnovujú životy. Uloží sa korisť, zostávajúci čas do respawnu a stav populácie. Samotné vyprovokovanie sa po zmene mapy alebo načítaní zruší; spotrebované plášte zostávajú odpočítané.
+`layoutSchema: 2` prenesie staré pravidelné rozloženie na nové body bez obnovenia zdravia či časovačov smrti. Po migrácii sa polohy uchovávajú. Každý slot má trvalé `spawnId`. Zostáva rovnaký pri smrti aj respawne a pri normálnom načítaní sa neprehadzuje variant či neobnovujú životy. Uloží sa korisť, zostávajúci čas do respawnu a stav populácie. Samotné vyprovokovanie sa po zmene mapy alebo načítaní zruší; spotrebované plášte zostávajú odpočítané.
 
 Staré riedke mapy sa rozšíria pri načítaní. Ich mŕtvi nepriatelia sa prenesú do samostatných nových slotov bez duplikácie odmien a so zachovaným časovačom. Už rozbehnutá trhlina zo staršej verzie si ponechá pôvodnú populáciu do konca výpravy; bežný chrám sa rozšíri po návrate. Nové trhliny využívajú husté spawny a zachovávajú silu variantov pri škálovaní stupňa.
 

@@ -75,13 +75,22 @@ nav{gap:18px}.player{min-height:92px}.mana{height:7px;margin-top:4px;background:
 .target-health{height:12px;position:relative;background:#241f20;border:1px solid #ac927944;overflow:hidden}.target-health i{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,#965c57,#d7987c)}.target-health span{position:absolute;inset:0;text-align:center;font-size:8px;color:#fae9cb;line-height:10px}.target-resistances{display:flex;flex-wrap:wrap;gap:3px 8px;margin-top:6px;font-size:8px;color:#aaa98d}.target-resistances .vulnerable{color:#a4ca8a}.target-resistances .resistant{color:#cdb08d}
 .combat-flow{left:22px;bottom:113px;padding:9px 12px;max-width:50%;font-size:10px;color:#ead19a;border-color:#ccb47777;background:#263020ed}.battle-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.battle-type-grid>div{display:flex;justify-content:space-between;gap:8px;border-left:3px solid;background:#ffffff06;padding:8px;font-size:10px}.battle-type-grid span{color:#d5c091}
 @media(max-width:850px){.target-panel{top:119px;left:12px;transform:none;width:215px;padding:8px 10px}.target-panel>b{font-size:12px}.target-panel>small{font-size:6px}.game-shell:has(.target-panel:not([hidden])) .buffs{top:245px;left:12px;max-width:200px}.combat-flow{bottom:150px;left:12px;max-width:49%;font-size:8px}}
+
+/* Fullscreen uses the same game shell in a browser and a native Electron window. */
+.fullscreen-control{position:absolute;right:5px;top:5px;width:30px;height:28px;padding:0;z-index:6;border:1px solid #c5ac7380;border-radius:3px;background:#10231ee8;color:#f1d99d;font-size:22px;line-height:1;cursor:pointer}
+.fullscreen-control:hover,.fullscreen-control:focus-visible{background:#3b4f38;outline:2px solid #d8bf80}
+.game-shell:fullscreen{width:100vw;height:100vh;height:100dvh;min-height:0;max-height:none;border:0;border-radius:0}
+body.native-fullscreen{margin:0;overflow:hidden}
+body.native-fullscreen>header,body.native-fullscreen .world-title,body.native-fullscreen main>footer{display:none}
+body.native-fullscreen main{padding:0;max-width:none;width:100%;margin:0}
+body.native-fullscreen .game-shell{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;min-height:0;max-height:none;border:0;border-radius:0}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b>ALPHA 0.10.0</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b>ALPHA 0.11.0</b></span></header>
 <main><div class="world-title"><div><span class="eyebrow">KAPITOLA I · PREBUDENIE</span><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Pod pokojnými korunami sa prebúdza stará temnota.</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
-<section class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb iba WASD alebo šípkami, cieľ kliknutím, smerový útok myšou alebo medzerníkom, schopnosť Q, liečenie E, korisť ľavým kliknutím alebo Y v okolí, zlato a zásoby automaticky."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
+<section id="game-shell" class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb iba WASD alebo šípkami, cieľ kliknutím, smerový útok myšou alebo medzerníkom, schopnosť Q, liečenie E, korisť ľavým kliknutím alebo Y v okolí, zlato a zásoby automaticky."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
 <div class="hud player"><div class="portrait">侍</div><div><div class="player-name"><b id="playerclass">Bojovník</b> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 60 skúseností</small></div></div>
-<div class="hud map"><canvas id="minimap" width="138" height="118"></canvas><span id="minimaplabel">ÚDOLIE TICHÉHO VETRA</span></div>
+<div class="hud map"><button id="fullscreen" class="fullscreen-control" type="button" aria-label="Celá obrazovka" aria-pressed="false" title="Celá obrazovka · F10">⛶</button><canvas id="minimap" width="138" height="118"></canvas><span id="minimaplabel">ÚDOLIE TICHÉHO VETRA</span></div>
 <div class="hud quest"><span class="eyebrow">AKTÍVNA ÚLOHA</span><h3>Praskliny v pokoji</h3><p>Osloboď údolie od temnoty.</p><div id="q-wolves">◇ Poraz príšery <b>0 / 5</b></div><div id="q-stones">◇ Znič kamene osudu <b>0 / 3</b></div><button id="claim" hidden>Vyzdvihnúť odmenu · 150 zlata</button><small id="questnote">Odmena: 150 zlata + 60 skúseností</small></div>
 <div id="toast" role="status"></div><div id="target-panel" class="hud target-panel" aria-live="off" hidden></div><div id="combat-flow" class="hud combat-flow" aria-live="polite" hidden></div><div id="buffs" class="buffs" aria-live="off"></div><div class="hud location">⌖ &nbsp; <span id="coords">Útočisko pútnikov</span></div>
 <div class="hotbar"><button id="attack"><kbd>SPACE</kbd><span>⚔</span><small>Sek mečom</small></button><button id="skill"><kbd>Q</kbd><span>✺</span><small>Veterný kruh</small><em id="cooldown"></em></button><button id="skill2"><kbd>R</kbd><span>✧</span><small>Schopnosť</small><em id="cooldown2"></em></button><button id="skill3"><kbd>T</kbd><span>☄</span><small>Schopnosť</small><em id="cooldown3"></em></button><button id="skill4"><kbd>V</kbd><span>◈</span><small>Schopnosť</small><em id="cooldown4"></em></button><button id="skill5"><kbd>U</kbd><span>❖</span><small>Schopnosť</small><em id="cooldown5"></em></button><button id="skill6"><kbd>O</kbd><span>✥</span><small>Schopnosť</small><em id="cooldown6"></em></button><button id="potion"><kbd>E</kbd><span>⚱</span><small>Elixír <b id="pots">5</b></small></button><button id="bravery" title="Plášť statočnosti · B · dosah 650 · priťahovanie 18 s"><kbd>B</kbd><span>⚑</span><small>Plášť <b id="capes">10</b></small><em id="cape-cooldown"></em></button><div class="divider"></div><button id="inventory"><kbd>I</kbd><span>▣</span><small>Výbava</small></button></div>
@@ -579,13 +588,13 @@ function map(){return MAPS[p.mapId]||MAPS.valley;}
 function snapshotMap() {
   if (!mobs.length) return;
   p.worldStates[p.mapId] = {
-    progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
+    layoutSchema: SPAWN_LAYOUT_VERSION, progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
     mobs: mobs.map(cloneEnemyState),
     drops: drops.map(cloneGroundDrop)
   };
 }
 
-function save(){if(pendingSaveImports.length)return;snapshotMap();try{localStorage.setItem(SAVE,JSON.stringify(p));}catch{}}
+function save(){if(pendingSaveImports.length)return;expireGroundDrops();pruneStoredGroundDrops();snapshotMap();try{localStorage.setItem(SAVE,JSON.stringify(p));}catch{}}
 
 function loadMap(id, initial=false) {
   if (!MAPS[id]) return false;
@@ -898,6 +907,35 @@ function upgradeParagon() {
 }
 
 
+// src/js/systems/spawn-layout.js
+const SPAWN_LAYOUT_VERSION = 2;
+
+function layoutRandom(key) {
+  let value = 2166136261;
+  for (const char of key) value = Math.imul(value ^ char.charCodeAt(0), 16777619);
+  return () => { value = (Math.imul(value, 1664525) + 1013904223) >>> 0; return value / 4294967296; };
+}
+
+// Rejection sampling preserves open spaces without rows, columns or snapped cells.
+function naturalSpawnLocation(area, existing, random, gap = 115) {
+  let best = null, bestDistance = -1;
+  for (let attempt = 0; attempt < 160; attempt++) {
+    const at = { x: area.x1 + 50 + random() * (area.x2 - area.x1 - 100), y: area.y1 + 50 + random() * (area.y2 - area.y1 - 100) };
+    if (Math.hypot(at.x - 1000, at.y - 1050) < SPAWN_RULES.spawnClearance + 15) continue;
+    const distance = Math.min(Infinity, ...existing.map(other => Math.hypot(at.x - other.x, at.y - other.y)));
+    if (distance >= gap) return at;
+    if (distance > bestDistance) { best = at; bestDistance = distance; }
+  }
+  if (!best) throw new Error('Oblasť nemá bezpečné miesto na spawn.');
+  return best;
+}
+
+function restoreSpawnLocation(enemy, fresh, state) {
+  if (state.layoutSchema === SPAWN_LAYOUT_VERSION) return enemy;
+  return { ...enemy, x: fresh.x, y: fresh.y, homeX: fresh.homeX, homeY: fresh.homeY, roamTarget: null, returning: false };
+}
+
+
 // src/js/systems/farming.js
 function isSanctuary(entity) {
   return Math.hypot(entity.x - 1000, entity.y - 1050) < SPAWN_RULES.sanctuaryRadius;
@@ -912,30 +950,21 @@ function farmAreaAt(entity = p) {
   return FARM_AREAS[(entity.y < 1000 ? 2 : 0) + (entity.x > 1000 ? 1 : 0)];
 }
 
-function spawnJitter(id, axis) {
-  let hash = 2166136261;
-  for (const char of id + axis) hash = Math.imul(hash ^ char.charCodeAt(0), 16777619);
-  hash = Math.imul(hash ^ (hash >>> 16), 2246822507);
-  hash = Math.imul(hash ^ (hash >>> 13), 3266489909);
-  hash ^= hash >>> 16;
-  return ((hash >>> 0) / 4294967296 - .5) * 110;
-}
-
 function buildSpawnPoints(id) {
   if (MAPS[id].metinsOnly) return buildSuterlandPoints();
-  const cfg = MAPS[id], points = [], perArea = cfg.packCount / 4;
+  const points = [], random = layoutRandom(id + ':' + MAPS[id].seed + ':layout2'), perArea = MAPS[id].packCount / 4;
   for (const area of FARM_AREAS) {
-    const rows = Math.ceil(perArea / 2);
-    for (let i = 0; i < perArea; i++) {
-      const pointId = `${id}:${area.id}:pack:${i}`;
-      const x = area.x1 + 80 + (area.x2 - area.x1 - 160) * ((i % 2 + .5) / 2) + spawnJitter(pointId, 'x');
-      const y = area.y1 + 80 + (area.y2 - area.y1 - 160) * ((Math.floor(i / 2) + .5) / rows) + spawnJitter(pointId, 'y');
-      points.push({ id: `${id}:${area.id}:pack:${i}`, kind: 'pack', x, y, area: area.id, offset: area.offset, starter: area.offset === 0 && i === 0 });
-    }
-    points.push({ id: `${id}:${area.id}:rare`, kind: 'rare', x: (area.x1 + area.x2) / 2, y: (area.y1 + area.y2) / 2, area: area.id, offset: area.offset });
-    for (let i = 0; i < 2; i++) points.push({ id: `${id}:${area.id}:stone:${i}`, kind: 'stone', x: i ? area.x2 - 100 : area.x1 + 100, y: i ? area.y2 - 100 : area.y1 + 100, area: area.id, offset: area.offset });
+    const local = [];
+    const add = (kind, suffix, extra = {}) => {
+      const location = naturalSpawnLocation(area, local, random);
+      const point = { id: id + ':' + area.id + ':' + suffix, kind, ...location, area: area.id, offset: area.offset, ...extra };
+      points.push(point); local.push(point);
+    };
+    for (let i = 0; i < perArea; i++) add('pack', 'pack:' + i, { starter: area.offset === 0 && i === 0 });
+    add('rare', 'rare');
+    for (let i = 0; i < 2; i++) add('stone', 'stone:' + i);
   }
-  points.push({ id: `${id}:boss`, kind: 'boss', x: 1690, y: 330, area: 'northeast', offset: 6 });
+  points.push({ id: id + ':boss', kind: 'boss', x: 1690, y: 330, area: 'northeast', offset: 6 });
   return points;
 }
 
@@ -948,7 +977,7 @@ function rollEnemyVariant(point, slot) {
 
 function createSpawnEnemy(point, slot = 0) {
   const cfg = map(), type = point.kind === 'pack' || point.kind === 'rare' ? 'wolf' : point.kind;
-  const angle = rand() * Math.PI * 2, radius = point.kind === 'pack' ? Math.sqrt(rand()) * 60 : 0;
+  const angle = rand() * Math.PI * 2, radius = point.kind === 'pack' ? Math.sqrt(rand()) * 90 : 0;
   let x = point.x + Math.cos(angle) * radius, y = point.y + Math.sin(angle) * radius;
   if (Math.hypot(x - 1000, y - 1050) < SPAWN_RULES.spawnClearance) {
     const a = Math.atan2(y - 1050, x - 1000);
@@ -995,8 +1024,8 @@ function hydrateSpawnPopulation(old) {
     const saved = new Map(old.mobs.map(m => [m.spawnId, m]));
     return restoreMetinGuards(generated.map(m => {
       const prior = saved.get(m.spawnId);
-      if (m.type === 'stone') return restoreMetin(m, prior);
-      return prior ? { ...m, ...cloneEnemyState(prior), dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0, roamTarget: null, roamWait: rand() * 4, returning: false } : m;
+      if (m.type === 'stone') return restoreSpawnLocation(restoreMetin(m, prior), m, old);
+      return prior ? restoreSpawnLocation({ ...m, ...cloneEnemyState(prior), dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0, roamTarget: null, roamWait: rand() * 4, returning: false }, m, old) : m;
     }), old.mobs);
   }
   // Upgrade old sparse populations into distinct new slots without reviving their dead.
@@ -1038,7 +1067,13 @@ function respawnEnemy(m) {
     if (m.type === 'stone') { m.metinCombat = 0; m.metinWaveTimer = 0; m.metinGeneration = (m.metinGeneration || 0) + 1; }
     return;
   }
-  const fresh = createSpawnEnemy(point, m.spawnSlot);
+  let spawnPoint = point;
+  if (m.type === 'stone') {
+    const area = FARM_AREAS.find(area => area.id === point.area), random = layoutRandom(m.spawnId + ':' + ((m.metinGeneration || 0) + 1) + ':' + rand());
+    const others = mobs.filter(other => other !== m && other.type === 'stone' && other.hp > 0);
+    spawnPoint = { ...point, ...naturalSpawnLocation(area, others, random, 90) };
+  }
+  const fresh = createSpawnEnemy(spawnPoint, m.spawnSlot);
   if (m.type === 'stone') fresh.metinGeneration = (m.metinGeneration || 0) + 1;
   const run = p.career.endgame.run;
   if (run && p.mapId === 'temple') applyRiftScaling(fresh, run.tier, run.id);
@@ -1187,7 +1222,7 @@ function farmBonusLoot(m) {
 function dropFarmEquipment(m) {
   const rare = m.variant === 'rare', elite = m.variant === 'elite';
   if (m.type === 'boss') return spawnGroundDrop({ kind: 'gear', item: makeItem(true, m) }, m);
-  if (m.type === 'stone' || rare || rand() < (elite ? .75 : .32)) return spawnGroundDrop({ kind: 'gear', item: makeItem(rare ? rand() < .25 : elite && rand() < .08, m) }, m);
+  if (m.type === 'stone' || rare || rand() < (elite ? .2 : .03)) return spawnGroundDrop({ kind: 'gear', item: makeItem(rare ? rand() < .25 : elite && rand() < .08, m) }, m);
 }
 
 
@@ -1393,12 +1428,29 @@ function sellItem(index) {
 
 
 // src/js/systems/loot.js
-const LOOT_RULES = { fallDuration: .65, pickupRange: 180 };
+const LOOT_RULES = { fallDuration: .65, pickupRange: 180, hoverDelay: .55, lifetime: 180, rareLifetime: 600 };
 const lootPointer = { inside: false, x: 0, y: 0, clientX: 0, clientY: 0 };
 let hoveredLootId = null, lootTooltipSignature = '';
+const lootHover = { id: null, elapsed: 0 };
+
+function groundDropLifetime(drop) { return drop.kind === 'relic' || drop.kind === 'gear' && drop.item?.rarity === 2 ? LOOT_RULES.rareLifetime : LOOT_RULES.lifetime; }
+function pruneStoredGroundDrops(now = Date.now()) {
+  for (const state of [...Object.values(p.worldStates), p.career.normalTemple]) {
+    if (!Array.isArray(state?.drops)) continue;
+    state.drops = state.drops.filter(drop => {
+      if (!Number.isFinite(drop.expiresAt)) drop.expiresAt = now + groundDropLifetime(drop) * 1000;
+      return drop.expiresAt > now;
+    });
+  }
+}
+
+function expireGroundDrops(now = Date.now()) {
+  for (let i = drops.length - 1; i >= 0; i--) if (drops[i].expiresAt <= now) drops.splice(i, 1);
+}
 const lootSupplyCatalog = new Map();
 
 function initializeLoot() {
+  pruneStoredGroundDrops();
   lootSupplyCatalog.clear(); supplyDefinitions().forEach(item => lootSupplyCatalog.set(item.id, item));
   if (!Number.isSafeInteger(p.lootSerial) || p.lootSerial < 0) p.lootSerial = 0;
   for (const state of [...Object.values(p.worldStates), p.career.normalTemple]) {
@@ -1412,17 +1464,19 @@ function cloneGroundDrop(drop) {
 
 function hydrateGroundDrops(saved) {
   const ids = new Set();
+  const now = Date.now();
   return saved.map(prior => {
     const drop = cloneGroundDrop(prior);
     // Existing map snapshots contained only uncollected gold piles.
     drop.kind ??= 'gold';
+    drop.expiresAt = Number.isFinite(drop.expiresAt) ? Math.min(drop.expiresAt, now + groundDropLifetime(drop) * 1000) : now + groundDropLifetime(drop) * 1000;
     drop.count ??= drop.value || 1;
     if (!Number.isSafeInteger(drop.id) || drop.id < 1 || ids.has(drop.id)) drop.id = ++p.lootSerial;
     p.lootSerial = Math.max(p.lootSerial, drop.id); ids.add(drop.id);
     drop.fallAge = LOOT_RULES.fallDuration;
     drop.launchX = drop.x; drop.launchY = drop.y;
     return drop;
-  });
+  }).filter(drop => drop.expiresAt > now);
 }
 
 function spawnGroundDrop(payload, source) {
@@ -1433,6 +1487,7 @@ function spawnGroundDrop(payload, source) {
     y: Math.max(45, Math.min(SIZE - 45, source.y + Math.sin(angle) * radius)),
     launchX: source.x, launchY: source.y, fallAge: 0
   };
+  drop.expiresAt = Date.now() + groundDropLifetime(drop) * 1000;
   if (drop.kind === 'gold') drop.value = drop.count;
   drops.push(drop); return drop;
 }
@@ -1474,6 +1529,7 @@ function groundDropAt(x, y) {
 }
 
 function setLootPointer(event) {
+  if (Math.hypot(event.clientX - lootPointer.clientX, event.clientY - lootPointer.clientY) > 2) lootHover.elapsed = 0;
   const rect = canvas.getBoundingClientRect();
   lootPointer.x = event.clientX - (rect.left || 0); lootPointer.y = event.clientY - (rect.top || 0);
   lootPointer.clientX = event.clientX; lootPointer.clientY = event.clientY;
@@ -1482,7 +1538,7 @@ function setLootPointer(event) {
 }
 
 function clearLootPointer() {
-  lootPointer.inside = false; hoveredLootId = null; lootTooltipSignature = '';
+  lootPointer.inside = false; hoveredLootId = null; lootTooltipSignature = ''; lootHover.id = null; lootHover.elapsed = 0;
   $('loot-tooltip').hidden = true; canvas.style.cursor = '';
 }
 
@@ -1502,6 +1558,7 @@ function pickUpGroundDrop(id, batch = false) {
   const index = drops.findIndex(drop => drop.id === id);
   if (index < 0) return false;
   const drop = drops[index], view = groundDropView(drop);
+  if (drop.expiresAt <= Date.now()) { drops.splice(index, 1); updateLootHover(); return false; }
   if (!view || drop.fallAge < LOOT_RULES.fallDuration) return false;
   if (Math.hypot(drop.x - p.x, drop.y - p.y) > LOOT_RULES.pickupRange) { toast('Priblíž sa ku koristi a znova klikni alebo stlač Y.'); return false; }
   if (drop.kind === 'gear') {
@@ -1526,6 +1583,7 @@ function finishGroundPickup(items) {
 
 function collectNearbyGroundDrops(automaticOnly = false) {
   if (!running || paused || p.hp <= 0) return 0;
+  expireGroundDrops();
   const candidates = drops.filter(drop => (!automaticOnly || drop.kind === 'gold' || drop.kind === 'supply') && drop.fallAge >= LOOT_RULES.fallDuration && Math.hypot(drop.x - p.x, drop.y - p.y) <= LOOT_RULES.pickupRange);
   candidates.sort((a, b) => Math.hypot(a.x - p.x, a.y - p.y) - Math.hypot(b.x - p.x, b.y - p.y) || a.id - b.id);
   const collected = [];
@@ -1545,10 +1603,11 @@ function pickNearbyGroundDrops() {
 }
 
 function updateGroundLoot(dt) {
+  expireGroundDrops();
   if (!running || paused || p.hp <= 0) { updateLootHover(); return; }
   for (const drop of drops) drop.fallAge = Math.min(LOOT_RULES.fallDuration, (drop.fallAge || 0) + dt);
   collectNearbyGroundDrops(true);
-  updateLootHover();
+  updateLootHover(dt);
 }
 
 
@@ -1565,13 +1624,8 @@ function farmAreaLevelRange(area) {
 function buildSuterlandPoints() {
   const points = []; let level = 1;
   for (const [index, area] of FARM_AREAS.entries()) {
-    const locations = [];
-    for (let row = 0; row < 5; row++) for (let col = 0; col < 5; col++) {
-      let x = area.x1 + 45 + (area.x2 - area.x1 - 90) * col / 4, y = area.y1 + 45 + (area.y2 - area.y1 - 90) * row / 4;
-      const d = Math.hypot(x - 1000, y - 1050);
-      if (d < SPAWN_RULES.spawnClearance) { x = 1000 + (x - 1000) / d * 300; y = 1050 + (y - 1050) / d * 300; }
-      locations.push({ x, y });
-    }
+    const locations = [], random = layoutRandom('suterland:' + area.id + ':layout2');
+    for (let i = 0; i < (index === 3 ? 24 : 25); i++) locations.push(naturalSpawnLocation(area, locations, random, 90));
     locations.sort((a, b) => Math.hypot(a.x - 1000, a.y - 1050) - Math.hypot(b.x - 1000, b.y - 1050));
     for (const location of locations.slice(0, index === 3 ? 24 : 25)) {
       points.push({ id: 'suterland:metin:' + level, kind: 'stone', ...location, area: area.id, offset: level - 1, metinLevel: level, metinType: metinTypeForLevel(level) });
@@ -1621,7 +1675,16 @@ function upgradeLegacyMetin(m, point) {
 function restoreMetinGuards(population, prior) {
   const parents = new Set(population.filter(m => m.type === 'stone').map(m => m.spawnId));
   for (const m of prior || []) if (m.metinParentId && m.hp > 0 && m.metinLife > 0 && parents.has(m.metinParentId)) {
-    population.push({ ...cloneEnemyState(m), dot: m.dot ? { ...m.dot } : null, skillContributors: [...(m.skillContributors || [])], taunt: 0, engaged: 0, stun: 0, returning: true });
+    const parent = population.find(stone => stone.spawnId === m.metinParentId), priorParent = prior.find(stone => stone.spawnId === m.metinParentId);
+    const dx = priorParent ? parent.x - priorParent.x : 0, dy = priorParent ? parent.y - priorParent.y : 0;
+    const safePosition = (x, y) => {
+      x = Math.max(45, Math.min(SIZE-45, x+dx)); y = Math.max(45, Math.min(SIZE-45, y+dy));
+      const radius = SPAWN_RULES.sanctuaryRadius+24, distance = Math.hypot(x-1000,y-1050);
+      if (distance < radius) { const angle = Math.atan2(y-1050,x-1000); x=1000+Math.cos(angle)*radius; y=1050+Math.sin(angle)*radius; }
+      return {x,y};
+    };
+    const position = safePosition(m.x,m.y), home = safePosition(m.homeX??m.x,m.homeY??m.y);
+    population.push({ ...cloneEnemyState(m), ...position, homeX: home.x, homeY: home.y, dot: m.dot ? { ...m.dot } : null, skillContributors: [...(m.skillContributors || [])], taunt: 0, engaged: 0, stun: 0, returning: true });
   }
   return population;
 }
@@ -2029,7 +2092,7 @@ function journal(){if(!running)return;const huntTarget=(p.huntClaimed+1)*10;moda
 
 function travelMenu(){if(!running)return;if(p.career.endgame.run){careerPanel('endgame');return;}modal(`<span class="eyebrow">CESTY KRÁĽOVSTVA · M</span><h2>Cestovná mapa</h2><p>Cestovať môžeš z útočiska na každej mape. Vyššie oblasti sú prístupné hneď, ale ich príšery sú silnejšie.</p><div class="map-list">${Object.entries(MAPS).map(([id,c])=>`<button data-map="${id}" class="map-card ${p.mapId===id?'selected':''}" style="--map-color:${c.ground}"><b>${c.name}</b><small>Úroveň ${c.level}+ · ${c.mob} · ${c.boss}</small><small>${c.metinsOnly?'99 Metinov · úrovne 1–99 · bez voľných príšer':c.count+' pohyblivých príšer · '+c.packCount+' skupinových bodov'}</small><span>${p.mapId===id?'Nachádzaš sa tu':c.desc}</span></button>`).join('')}</div><button class="primary" id="metinAtlas">Atlas Metinov · úrovne, vlny a dropy</button><p id="travelmsg" role="status"></p>`);$('metinAtlas').onclick=metinCodex;document.querySelectorAll('[data-map]').forEach(b=>b.onclick=()=>{if(p.mapId===b.dataset.map)return;if(Math.hypot(p.x-1000,p.y-1050)>190){$('travelmsg').textContent='Najprv sa vráť do útočiska uprostred mapy.';return;}loadMap(b.dataset.map);});}
 
-function help(){modal('<span class="eyebrow">SPRIEVODCA</span><h2>Cesta bojovníka</h2><p><b>WASD / šípky</b> — pohyb; zrušia automatické nasledovanie<br><b>Ľavý klik</b> — cieľ alebo smerový útok, bez chôdze do prázdna<br><b>Medzerník</b> — smerový útok (možno držať)<br><b>C</b> — bojový manuál<br><b>Q R T V U O</b> — šesť schopností školy<br><b>P</b> — dlhodobá progresia<br><b>K</b> — kniha schopností a ich účinky<br><b>Y</b> — pozbierať predmety v okolí bez kurzora; zlato a zásoby sa zbierajú automaticky<br><b>E</b> — elixír zdravia<br><b>B</b> — Plášť statočnosti (650 jednotiek, 18 s)<br><b>I</b> — výbava a vlastnosti<br><b>J</b> — denník úloh<br><b>M</b> — cestovanie medzi mapami z útočiska<br><b>F</b> — obchodník<br><b>Esc</b> — zavrieť okno</p><p>Kliknutie na nepriateľa alebo Metin označí živý cieľ; postava ho nasleduje a v dosahu automaticky útočí. Po smrti cieľa zastaví. Bez cieľa mieriš kurzorom. Vyber si povolanie a školu pred vstupom do hry. Kúzla spotrebúvajú manu, ktorá sa automaticky obnovuje. Modré, zelené a fialové efekty označujú rôzne schopnosti, jedy a ochranné aury.</p><p>Príšery sa voľne potulujú po okolí. Zásah vyprovokuje ich skupinu, spolu najviac päť príšer; plášť pritiahne všetky pohyblivé ciele v dosahu. Bossovia napádajú automaticky. Fialové označenie znamená elitu, zlaté vzácnu príšeru. Respawn: bežné príšery 5 s, elity 8 s, vzácne varianty 20 s, vzácne hliadky 75 s, kamene 18 s a bossovia 40 s. Plášť spotrebuje 1 kus aj bez cieľov; ďalšie kúpiš u obchodníka alebo získaš z koristi. Útočisko je chránené: plášť ani útočné kúzla v ňom nefungujú. Útočenie na Metin privoláva vlny obrancov podľa jeho úrovne. Šuterland obsahuje Metiny Lv.1–99; otvor Mapy (M) a Atlas Metinov pre presné dropy. Každá mapa má vlastných protivníkov a silnejšie odmeny. Boss pod 30 % zdravia zúri; Sura ho dokáže potlačiť Zrušením kúzla.</p><p>Vlastná 2D adaptácia šiestich klasických schopností každej školy, nie pôvodné animácie ani presná simulácia hodnôt Metin2. Postup sa ukladá v tomto prehliadači.</p>');}
+function help(){modal('<span class="eyebrow">SPRIEVODCA</span><h2>Cesta bojovníka</h2><p><b>WASD / šípky</b> — pohyb; zrušia automatické nasledovanie<br><b>Ľavý klik</b> — cieľ alebo smerový útok, bez chôdze do prázdna<br><b>Medzerník</b> — smerový útok (možno držať)<br><b>F10 / ⛶</b> — celá obrazovka<br><b>C</b> — bojový manuál<br><b>Q R T V U O</b> — šesť schopností školy<br><b>P</b> — dlhodobá progresia<br><b>K</b> — kniha schopností a ich účinky<br><b>Y</b> — pozbierať predmety v okolí bez kurzora; zlato a zásoby sa zbierajú automaticky<br><b>E</b> — elixír zdravia<br><b>B</b> — Plášť statočnosti (650 jednotiek, 18 s)<br><b>I</b> — výbava a vlastnosti<br><b>J</b> — denník úloh<br><b>M</b> — cestovanie medzi mapami z útočiska<br><b>F</b> — obchodník<br><b>Esc</b> — zavrieť okno</p><p>Kliknutie na nepriateľa alebo Metin označí živý cieľ; postava ho nasleduje a v dosahu automaticky útočí. Po smrti cieľa zastaví. Bez cieľa mieriš kurzorom. Náhľad koristi sa otvorí až po zastavení kurzora na 0,55 s; bežná korisť zmizne po 3 minútach, epická výbava a relikvie po 10 minútach. Vyber si povolanie a školu pred vstupom do hry. Kúzla spotrebúvajú manu, ktorá sa automaticky obnovuje. Modré, zelené a fialové efekty označujú rôzne schopnosti, jedy a ochranné aury.</p><p>Príšery sa voľne potulujú po okolí. Zásah vyprovokuje ich skupinu, spolu najviac päť príšer; plášť pritiahne všetky pohyblivé ciele v dosahu. Bossovia napádajú automaticky. Fialové označenie znamená elitu, zlaté vzácnu príšeru. Respawn: bežné príšery 5 s, elity 8 s, vzácne varianty 20 s, vzácne hliadky 75 s, kamene 18 s a bossovia 40 s. Plášť spotrebuje 1 kus aj bez cieľov; ďalšie kúpiš u obchodníka alebo získaš z koristi. Útočisko je chránené: plášť ani útočné kúzla v ňom nefungujú. Útočenie na Metin privoláva vlny obrancov podľa jeho úrovne. Šuterland obsahuje Metiny Lv.1–99; otvor Mapy (M) a Atlas Metinov pre presné dropy. Každá mapa má vlastných protivníkov a silnejšie odmeny. Boss pod 30 % zdravia zúri; Sura ho dokáže potlačiť Zrušením kúzla.</p><p>Vlastná 2D adaptácia šiestich klasických schopností každej školy, nie pôvodné animácie ani presná simulácia hodnôt Metin2. Postup sa ukladá v tomto prehliadači.</p>');}
 
 function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
@@ -2256,7 +2319,7 @@ function groundDropTooltip(drop) {
     const specials = Array.isArray(item.special) ? item.special : [];
     details = `<h4>Základné atribúty</h4><div class="loot-stat"><span>${ITEM_STATS[spec.stat]}</span><b>${signedItemStat(spec.stat, base)}</b></div><div class="loot-stat"><span>Vylepšenie +${item.enhance || 0}</span><b>${signedItemStat(spec.stat, (item.enhance || 0) * 3 * (spec.stat === 'crit' ? .01 : 1))}</b></div><h4>Bonusy</h4>${extras.length ? extras.map(([stat, value]) => `<div class="loot-stat"><span>${ITEM_STATS[stat]}</span><b>${signedItemStat(stat, value)}</b></div>`).join('') : '<p>Bez dodatočných bonusov.</p>'}<h4>Špeciálne vlastnosti</h4><p>${specials.length ? specials.map(value => escapeHTML(value)).join('<br>') : 'Žiadne.'}</p><p class="${usable ? 'stat-gain' : 'stat-loss'}">${usable ? 'Možno vybaviť · ' + spec.name : escapeHTML(itemEquipReason(item))}</p>${usable ? groundItemComparison(item) : ''}`;
   } else details = `<p>${escapeHTML(item.description)}</p><div class="loot-stat"><span>Množstvo</span><b>${item.count.toLocaleString('sk-SK')}</b></div><h4>Vybavenie</h4><p>${drop.kind === 'relic' ? 'Relikvia zbierky · nezaberá slot výbavy.' : 'Nie je výbava postavy.'}</p>`;
-  return `<div class="loot-heading rarity-${item.rarity || 0}"><div class="loot-item-icon">${itemIcon(item)}</div><div><small>${gear ? EQUIPMENT[item.slot].name : drop.kind === 'gold' ? 'MENA' : drop.kind === 'relic' ? 'RELIKVIA' : 'ZÁSOBY'} · ${rarityName(item.rarity)}</small><h3>${escapeHTML(item.name)}${gear ? ' +' + (item.enhance || 0) : ''}</h3></div></div><div class="loot-stat ${p.level < required ? 'stat-loss' : ''}"><span>Požadovaná úroveň</span><b>${required}</b></div>${details}<p class="loot-controls">${drop.fallAge < LOOT_RULES.fallDuration ? 'Predmet dopadá na zem…' : Math.hypot(drop.x - p.x, drop.y - p.y) > LOOT_RULES.pickupRange ? 'Priblíž sa · dosah zbierania 180' : drop.kind === 'gold' || drop.kind === 'supply' ? 'Zbiera sa automaticky v okolí postavy' : 'Ľavé tlačidlo · predmet / Y · korisť v okolí'}</p>`;
+  return `<div class="loot-heading rarity-${item.rarity || 0}"><div class="loot-item-icon">${itemIcon(item)}</div><div><small>${gear ? EQUIPMENT[item.slot].name : drop.kind === 'gold' ? 'MENA' : drop.kind === 'relic' ? 'RELIKVIA' : 'ZÁSOBY'} · ${rarityName(item.rarity)}</small><h3>${escapeHTML(item.name)}${gear ? ' +' + (item.enhance || 0) : ''}</h3></div></div><div class="loot-stat ${p.level < required ? 'stat-loss' : ''}"><span>Požadovaná úroveň</span><b>${required}</b></div>${details}<p class="loot-controls">${drop.fallAge < LOOT_RULES.fallDuration ? 'Predmet dopadá na zem…' : Math.hypot(drop.x - p.x, drop.y - p.y) > LOOT_RULES.pickupRange ? 'Priblíž sa · dosah zbierania 180' : drop.kind === 'gold' || drop.kind === 'supply' ? 'Zbiera sa automaticky v okolí postavy' : 'Ľavé tlačidlo · predmet / Y · korisť v okolí'}</p><p class="loot-expiry">Nepozbierané zmizne po ${groundDropLifetime(drop) / 60} min od vypadnutia.</p>`;
 }
 
 function floatingTooltipPosition(x, y, width, height, viewportWidth, viewportHeight) {
@@ -2273,15 +2336,19 @@ function floatingTooltipPosition(x, y, width, height, viewportWidth, viewportHei
   return { left: clamp(x + gap, viewportWidth - w - edge), top: below >= above ? y + gap : y - gap - maxHeight, maxHeight };
 }
 
-function updateLootHover() {
-  if (!running || paused || !lootPointer.inside) { hoveredLootId = null; $('loot-tooltip').hidden = true; canvas.style.cursor = ''; return; }
+function updateLootHover(dt = 0) {
+  if (!running || paused || !lootPointer.inside) { lootHover.id = null; lootHover.elapsed = 0; hoveredLootId = null; $('loot-tooltip').hidden = true; canvas.style.cursor = ''; return; }
   // Scrolling or resizing can move the canvas underneath a stationary cursor.
   const canvasRect = canvas.getBoundingClientRect();
   lootPointer.x = lootPointer.clientX - (canvasRect.left || 0); lootPointer.y = lootPointer.clientY - (canvasRect.top || 0);
-  if (lootPointer.x < 0 || lootPointer.y < 0 || lootPointer.x > W || lootPointer.y > H) { hoveredLootId = null; $('loot-tooltip').hidden = true; canvas.style.cursor = ''; return; }
+  if (lootPointer.x < 0 || lootPointer.y < 0 || lootPointer.x > W || lootPointer.y > H) { lootHover.id = null; lootHover.elapsed = 0; hoveredLootId = null; $('loot-tooltip').hidden = true; canvas.style.cursor = ''; return; }
   const drop = groundDropAt(lootPointer.x, lootPointer.y);
-  if (!drop) { hoveredLootId = null; $('loot-tooltip').hidden = true; canvas.style.cursor = ''; return; }
-  hoveredLootId = drop.id; canvas.style.cursor = 'pointer';
+  if (!drop || drop.expiresAt <= Date.now()) { lootHover.id = null; lootHover.elapsed = 0; hoveredLootId = null; $('loot-tooltip').hidden = true; canvas.style.cursor = ''; return; }
+  canvas.style.cursor = 'pointer';
+  if (lootHover.id !== drop.id) { lootHover.id = drop.id; lootHover.elapsed = 0; }
+  lootHover.elapsed += Math.max(0, dt);
+  if (lootHover.elapsed < LOOT_RULES.hoverDelay) { hoveredLootId = null; $('loot-tooltip').hidden = true; return; }
+  hoveredLootId = drop.id;
   const signature = [drop.id, p.level, p.classId, drop.fallAge >= LOOT_RULES.fallDuration, Math.hypot(drop.x - p.x, drop.y - p.y) <= LOOT_RULES.pickupRange, JSON.stringify(p.equipped)].join('|');
   const tooltip = $('loot-tooltip');
   if (signature !== lootTooltipSignature) { tooltip.innerHTML = groundDropTooltip(drop); lootTooltipSignature = signature; }
@@ -2343,7 +2410,7 @@ function spellbook() {
 function combatManual() {
   if(!running)return;
   const resist=playerResistances();
-  modal(`<span class="eyebrow">ŠKOLA BOJA · C</span><h2>Bojový manuál</h2><p><b>WASD / šípky:</b> pohyb a prerušenie automatického nasledovania.<br><b>Klik na nepriateľa alebo Metin:</b> označiť, nasledovať živú pozíciu a automaticky útočiť v dosahu.<br><b>Klik do prázdna:</b> smerový útok, bez presunu postavy.<br><b>Kurzor:</b> orientácia bez cieľa. Medzerník útočí rovnakým smerom; môžeš ho držať.<br><b>Esc:</b> zatvoriť panel alebo zrušiť cieľ. Smrť cieľa, zmena mapy a strata zamerania okna zastavia nasledovanie.<br><b>Y:</b> korisť v okolí; zlato a zásoby sa zbierajú automaticky.</p><h3>Typy poškodenia a tvoje odolnosti</h3><div class="battle-type-grid">${Object.entries(DAMAGE_TYPES).map(([id,spec])=>`<div style="border-left-color:${spec.color}"><b>${spec.name}</b><span>${resistanceText(resist[id])}</span></div>`).join('')}</div><p>Fyzické zásahy používajú celú obranu, prierazné 60 % a elementálne či magické 25 %. Typová odolnosť sa potom uplatní samostatne. Pozitívna odolnosť cieľa škodu znižuje, negatívna znamená slabinu. Odolnosti sú obmedzené na 75 %, slabiny na −50 %. Metiny navyše používajú vlastný pancier a základnú odolnosť. Oslabenie Zrušením kúzla znižuje kladné typové odolnosti o 15 percentuálnych bodov a potláča zúrivosť bossa.</p><p>Kritický zásah spôsobí 1,8× poškodenie pred odolnosťami. Jed a oheň môžu pôsobiť naraz; opakovanie rovnakého efektu obnoví trvanie a ponechá silnejšiu hodnotu. Základný útok zblízka je čelný výsek; kruhové útoky sú určené na obkľúčenie. Šípy letia priamo a môžu minúť pohyblivý cieľ, vybrané magické strely sledujú označeného nepriateľa.</p>${passiveCard()}<h3>Kombá všetkých škôl</h3>${Object.entries(SCHOOL_COMBOS).map(([id,combo])=>`<div class="career-card"><h3>${combo.name}</h3><p>${SCHOOLS[id].name}: ${combo.sequence.map(i=>SCHOOLS[id].skills[i][0]).join(' → ')}<br>Do 4 sekúnd, +${Math.round(combo.bonus*100)} % poškodenia alebo liečenia druhej schopnosti.</p></div>`).join('')}`);
+  modal(`<span class="eyebrow">ŠKOLA BOJA · C</span><h2>Bojový manuál</h2><p><b>WASD / šípky:</b> pohyb a prerušenie automatického nasledovania.<br><b>Klik na nepriateľa alebo Metin:</b> označiť, nasledovať živú pozíciu a automaticky útočiť v dosahu.<br><b>Klik do prázdna:</b> smerový útok, bez presunu postavy.<br><b>Kurzor:</b> orientácia bez cieľa. Medzerník útočí rovnakým smerom; môžeš ho držať.<br><b>Esc:</b> zatvoriť panel alebo zrušiť cieľ. Smrť cieľa, zmena mapy a strata zamerania okna zastavia nasledovanie.<br><b>F10 / ⛶:</b> celá obrazovka.<br><b>Y:</b> korisť v okolí; zlato a zásoby sa zbierajú automaticky.</p><h3>Typy poškodenia a tvoje odolnosti</h3><div class="battle-type-grid">${Object.entries(DAMAGE_TYPES).map(([id,spec])=>`<div style="border-left-color:${spec.color}"><b>${spec.name}</b><span>${resistanceText(resist[id])}</span></div>`).join('')}</div><p>Fyzické zásahy používajú celú obranu, prierazné 60 % a elementálne či magické 25 %. Typová odolnosť sa potom uplatní samostatne. Pozitívna odolnosť cieľa škodu znižuje, negatívna znamená slabinu. Odolnosti sú obmedzené na 75 %, slabiny na −50 %. Metiny navyše používajú vlastný pancier a základnú odolnosť. Oslabenie Zrušením kúzla znižuje kladné typové odolnosti o 15 percentuálnych bodov a potláča zúrivosť bossa.</p><p>Kritický zásah spôsobí 1,8× poškodenie pred odolnosťami. Jed a oheň môžu pôsobiť naraz; opakovanie rovnakého efektu obnoví trvanie a ponechá silnejšiu hodnotu. Základný útok zblízka je čelný výsek; kruhové útoky sú určené na obkľúčenie. Šípy letia priamo a môžu minúť pohyblivý cieľ, vybrané magické strely sledujú označeného nepriateľa.</p>${passiveCard()}<h3>Kombá všetkých škôl</h3>${Object.entries(SCHOOL_COMBOS).map(([id,combo])=>`<div class="career-card"><h3>${combo.name}</h3><p>${SCHOOLS[id].name}: ${combo.sequence.map(i=>SCHOOLS[id].skills[i][0]).join(' → ')}<br>Do 4 sekúnd, +${Math.round(combo.bonus*100)} % poškodenia alebo liečenia druhej schopnosti.</p></div>`).join('')}`);
 }
 
 
@@ -2363,6 +2430,64 @@ function renderClasses(){$('classes').innerHTML=Object.entries(CLASSES).map(([id
 function updateClassHUD(){$('playerclass').textContent=role().name;$('classhint').textContent=role().desc;school().skills.forEach((s,i)=>{$(i?'skill'+(i+1):'skill').querySelector('small').textContent=s[0];$(i?'skill'+(i+1):'skill').title=`${s[0]} · stupeň ${skillProgress(skillKey(i)).rank} · ${s[3]} many · ${s[2]} s\n${s[6]}`;});$('attack').querySelector('small').textContent=p.classId==='ninja'&&p.schools.ninja==='archery'?'Streľba':p.classId==='shaman'?'Úder vejárom':'Základný útok';}
 
 function updateHUD(){baseHUD();$('capes').textContent=p.braveryCapes;$('cape-cooldown').textContent=capeCooldown>0?Math.ceil(capeCooldown):'';p.mp=Math.max(0,Math.min(maxMP(),p.mp));$('mpbar').style.width=p.mp/maxMP()*100+'%';$('mptext').textContent=Math.ceil(p.mp)+' / '+maxMP();for(let i=0;i<6;i++)$(i?'cooldown'+(i+1):'cooldown').textContent=spellCD[i]>0?Math.ceil(spellCD[i]):'';$('coords').textContent=Math.hypot(p.x-1000,p.y-1050)<190?'Útočisko · cestovanie M':farmAreaAt().name+(map().metinsOnly?' · Metiny Lv.':' · Lv.')+farmAreaLevelRange(farmAreaAt()).join('–');$('buffs').textContent=Object.entries(buffs).map(([id,t])=>{const s=Object.values(SCHOOLS).flatMap(c=>c.skills).find(s=>s[1]===id);return(s?s[0]:id)+' '+Math.ceil(t)+'s';}).join(' · ');if(p.claimed)$('questnote').textContent='✓ Dokončené · ďalšie úlohy v denníku J';updateCombatHUD();}
+
+
+// src/js/ui/fullscreen.js
+const fullscreenState = { active: false, native: false, busy: false };
+
+function nativeFullscreenBridge() {
+  const api = window.grindoriaDesktop?.fullscreen;
+  return api && typeof api.get === 'function' && typeof api.set === 'function' && typeof api.onChange === 'function' ? api : null;
+}
+
+function syncFullscreen(active, native = false) {
+  fullscreenState.active = Boolean(active); fullscreenState.native = native;
+  document.body.classList.toggle('native-fullscreen', native && fullscreenState.active);
+  const button = $('fullscreen');
+  button.setAttribute('aria-pressed', String(fullscreenState.active));
+  const label = fullscreenState.active ? 'Ukončiť celú obrazovku' : 'Celá obrazovka';
+  button.setAttribute('aria-label', label); button.title = label + ' · F10';
+  button.textContent = fullscreenState.active ? '⤡' : '⛶';
+  keysClear(); clearLootPointer(); resize(); requestAnimationFrame(resize);
+}
+
+function syncBrowserFullscreen() { syncFullscreen(document.fullscreenElement === $('game-shell')); }
+
+async function setGameFullscreen(wanted) {
+  if (fullscreenState.busy) return false;
+  fullscreenState.busy = true;
+  try {
+    const bridge = nativeFullscreenBridge();
+    if (bridge) syncFullscreen(await bridge.set(Boolean(wanted)), true);
+    else {
+      if (wanted) {
+        if (typeof $('game-shell').requestFullscreen !== 'function') throw new Error('Fullscreen nie je dostupný.');
+        await $('game-shell').requestFullscreen();
+      } else if (document.fullscreenElement) await document.exitFullscreen();
+      syncBrowserFullscreen();
+    }
+    canvas.focus(); return fullscreenState.active === Boolean(wanted);
+  } catch {
+    toast('Celú obrazovku sa nepodarilo prepnúť. Skús tlačidlo ⛶ v minimape.'); return false;
+  } finally { fullscreenState.busy = false; }
+}
+
+function toggleGameFullscreen() { return setGameFullscreen(!fullscreenState.active); }
+
+function initializeFullscreen() {
+  $('fullscreen').onclick = toggleGameFullscreen;
+  const bridge = nativeFullscreenBridge();
+  if (bridge) {
+    fullscreenState.native = true;
+    let notified = false;
+    bridge.onChange(active => { notified = true; syncFullscreen(active, true); });
+    Promise.resolve(bridge.get()).then(active => { if (!notified) syncFullscreen(active, true); }).catch(() => {});
+  } else {
+    document.addEventListener('fullscreenchange', syncBrowserFullscreen);
+    document.addEventListener('fullscreenerror', () => toast('Prehliadač nepovolil celú obrazovku.'));
+    syncBrowserFullscreen();
+  }
+}
 
 
 // src/js/ui/career.js
@@ -2717,12 +2842,7 @@ function suterlandGround() {
 // src/js/render/battle.js
 function drawCombatTarget() {
   if(!running)return;
-  if(!selectedEnemy()){
-    const a=screen(p.x,p.y),length=48,ux=Math.cos(face),uy=Math.sin(face)*.62;
-    line(a.x+ux*22,a.y+uy*22,a.x+ux*length,a.y+uy*length,'#e1d1a266',2);
-    polygon([[a.x+ux*56,a.y+uy*56],[a.x+ux*43-Math.sin(face)*5,a.y+uy*43+Math.cos(face)*3],[a.x+ux*43+Math.sin(face)*5,a.y+uy*43-Math.cos(face)*3]],'#e0cf9b88');
-    return;
-  }
+  if(!selectedEnemy())return;
   const enemy=selectedEnemy(),a=screen(enemy.x,enemy.y),radius=enemy.type==='boss'?48:enemy.type==='stone'?40:29,pulse=Math.sin(clock*5)*2;
   ctx.strokeStyle='#efd38f';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(a.x,a.y+3,radius+pulse,(radius+pulse)*.5,0,0,Math.PI*2);ctx.stroke();
   const top=a.y-(enemy.type==='stone'?145*metinModelScale(enemy):enemy.type==='boss'?135:enemy.skin==='wolf'?65:92);
@@ -2765,12 +2885,13 @@ initializeCareer();
 initializeInventory();
 initializeFarming();
 initializeLoot();
+initializeFullscreen();
 loadMap(p.mapId,true);
 window.addEventListener('resize',resize);resize();
 
 requestAnimationFrame(frame);
 document.addEventListener('visibilitychange',()=>{keysClear();save();});
-window.addEventListener('keydown',e=>{if([' ','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))e.preventDefault();let key=e.key.length===1?e.key.toLowerCase():e.key;if(key==='Escape'){keysClear();if(!$('modal').hidden)closeModal();else clearCombatTarget();return;}if(!running||paused)return;if(e.target&&['BUTTON','INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)&&key===' ')return;keys[key]=true;if(e.repeat)return;if(key==='y'){e.preventDefault();pickNearbyGroundDrops();return;}if(spellKeys.includes(key))castSkill(spellKeys.indexOf(key));if(key==='b')useBraveryCape();if(key==='p')careerPanel();if(key==='k')spellbook();if(key==='m')travelMenu();if(key==='e')potion();if(key==='i')inventory();if(key==='f')shop();if(key==='j')journal();if(key==='c')combatManual();if(key==='?')help();});window.addEventListener('keyup',e=>keys[e.key.length===1?e.key.toLowerCase():e.key]=false);
+window.addEventListener('keydown',e=>{if([' ','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))e.preventDefault();let key=e.key.length===1?e.key.toLowerCase():e.key;if(key==='F10'){e.preventDefault();if(!e.repeat)toggleGameFullscreen();return;}if(key==='Escape'&&fullscreenState.native&&fullscreenState.active){e.preventDefault();setGameFullscreen(false);return;}if(key==='Escape'){keysClear();if(!$('modal').hidden)closeModal();else clearCombatTarget();return;}if(!running||paused)return;if(e.target&&['BUTTON','INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)&&key===' ')return;keys[key]=true;if(e.repeat)return;if(key==='y'){e.preventDefault();pickNearbyGroundDrops();return;}if(spellKeys.includes(key))castSkill(spellKeys.indexOf(key));if(key==='b')useBraveryCape();if(key==='p')careerPanel();if(key==='k')spellbook();if(key==='m')travelMenu();if(key==='e')potion();if(key==='i')inventory();if(key==='f')shop();if(key==='j')journal();if(key==='c')combatManual();if(key==='?')help();});window.addEventListener('keyup',e=>keys[e.key.length===1?e.key.toLowerCase():e.key]=false);
 canvas.addEventListener('pointermove',setCombatPointer);canvas.addEventListener('pointerleave',leaveCombatPointer);window.addEventListener('blur',combatBlur);
 canvas.addEventListener('pointerdown',handleCombatClick);
 $('start').onclick=startGame;$('attack').onclick=()=>attack();$('skill').onclick=()=>attack(true);$('potion').onclick=potion;$('inventory').onclick=()=>{if(running)inventory();};$('close').onclick=closeModal;$('claim').onclick=()=>{if(p.claimed||p.kills<5||p.stones<3)return;p.claimed=true;p.gold+=150;experience(60);toast('Údolie je zachránené!\n+150 zlata · +60 skúseností');updateHUD();save();};

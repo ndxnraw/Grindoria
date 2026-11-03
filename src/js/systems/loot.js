@@ -1,9 +1,26 @@
-const LOOT_RULES = { fallDuration: .65, pickupRange: 180 };
+const LOOT_RULES = { fallDuration: .65, pickupRange: 180, hoverDelay: .55, lifetime: 180, rareLifetime: 600 };
 const lootPointer = { inside: false, x: 0, y: 0, clientX: 0, clientY: 0 };
 let hoveredLootId = null, lootTooltipSignature = '';
+const lootHover = { id: null, elapsed: 0 };
+
+function groundDropLifetime(drop) { return drop.kind === 'relic' || drop.kind === 'gear' && drop.item?.rarity === 2 ? LOOT_RULES.rareLifetime : LOOT_RULES.lifetime; }
+function pruneStoredGroundDrops(now = Date.now()) {
+  for (const state of [...Object.values(p.worldStates), p.career.normalTemple]) {
+    if (!Array.isArray(state?.drops)) continue;
+    state.drops = state.drops.filter(drop => {
+      if (!Number.isFinite(drop.expiresAt)) drop.expiresAt = now + groundDropLifetime(drop) * 1000;
+      return drop.expiresAt > now;
+    });
+  }
+}
+
+function expireGroundDrops(now = Date.now()) {
+  for (let i = drops.length - 1; i >= 0; i--) if (drops[i].expiresAt <= now) drops.splice(i, 1);
+}
 const lootSupplyCatalog = new Map();
 
 function initializeLoot() {
+  pruneStoredGroundDrops();
   lootSupplyCatalog.clear(); supplyDefinitions().forEach(item => lootSupplyCatalog.set(item.id, item));
   if (!Number.isSafeInteger(p.lootSerial) || p.lootSerial < 0) p.lootSerial = 0;
   for (const state of [...Object.values(p.worldStates), p.career.normalTemple]) {
@@ -17,17 +34,19 @@ function cloneGroundDrop(drop) {
 
 function hydrateGroundDrops(saved) {
   const ids = new Set();
+  const now = Date.now();
   return saved.map(prior => {
     const drop = cloneGroundDrop(prior);
     // Existing map snapshots contained only uncollected gold piles.
     drop.kind ??= 'gold';
+    drop.expiresAt = Number.isFinite(drop.expiresAt) ? Math.min(drop.expiresAt, now + groundDropLifetime(drop) * 1000) : now + groundDropLifetime(drop) * 1000;
     drop.count ??= drop.value || 1;
     if (!Number.isSafeInteger(drop.id) || drop.id < 1 || ids.has(drop.id)) drop.id = ++p.lootSerial;
     p.lootSerial = Math.max(p.lootSerial, drop.id); ids.add(drop.id);
     drop.fallAge = LOOT_RULES.fallDuration;
     drop.launchX = drop.x; drop.launchY = drop.y;
     return drop;
-  });
+  }).filter(drop => drop.expiresAt > now);
 }
 
 function spawnGroundDrop(payload, source) {
@@ -38,6 +57,7 @@ function spawnGroundDrop(payload, source) {
     y: Math.max(45, Math.min(SIZE - 45, source.y + Math.sin(angle) * radius)),
     launchX: source.x, launchY: source.y, fallAge: 0
   };
+  drop.expiresAt = Date.now() + groundDropLifetime(drop) * 1000;
   if (drop.kind === 'gold') drop.value = drop.count;
   drops.push(drop); return drop;
 }
@@ -79,6 +99,7 @@ function groundDropAt(x, y) {
 }
 
 function setLootPointer(event) {
+  if (Math.hypot(event.clientX - lootPointer.clientX, event.clientY - lootPointer.clientY) > 2) lootHover.elapsed = 0;
   const rect = canvas.getBoundingClientRect();
   lootPointer.x = event.clientX - (rect.left || 0); lootPointer.y = event.clientY - (rect.top || 0);
   lootPointer.clientX = event.clientX; lootPointer.clientY = event.clientY;
@@ -87,7 +108,7 @@ function setLootPointer(event) {
 }
 
 function clearLootPointer() {
-  lootPointer.inside = false; hoveredLootId = null; lootTooltipSignature = '';
+  lootPointer.inside = false; hoveredLootId = null; lootTooltipSignature = ''; lootHover.id = null; lootHover.elapsed = 0;
   $('loot-tooltip').hidden = true; canvas.style.cursor = '';
 }
 
@@ -107,6 +128,7 @@ function pickUpGroundDrop(id, batch = false) {
   const index = drops.findIndex(drop => drop.id === id);
   if (index < 0) return false;
   const drop = drops[index], view = groundDropView(drop);
+  if (drop.expiresAt <= Date.now()) { drops.splice(index, 1); updateLootHover(); return false; }
   if (!view || drop.fallAge < LOOT_RULES.fallDuration) return false;
   if (Math.hypot(drop.x - p.x, drop.y - p.y) > LOOT_RULES.pickupRange) { toast('Priblíž sa ku koristi a znova klikni alebo stlač Y.'); return false; }
   if (drop.kind === 'gear') {
@@ -131,6 +153,7 @@ function finishGroundPickup(items) {
 
 function collectNearbyGroundDrops(automaticOnly = false) {
   if (!running || paused || p.hp <= 0) return 0;
+  expireGroundDrops();
   const candidates = drops.filter(drop => (!automaticOnly || drop.kind === 'gold' || drop.kind === 'supply') && drop.fallAge >= LOOT_RULES.fallDuration && Math.hypot(drop.x - p.x, drop.y - p.y) <= LOOT_RULES.pickupRange);
   candidates.sort((a, b) => Math.hypot(a.x - p.x, a.y - p.y) - Math.hypot(b.x - p.x, b.y - p.y) || a.id - b.id);
   const collected = [];
@@ -150,8 +173,9 @@ function pickNearbyGroundDrops() {
 }
 
 function updateGroundLoot(dt) {
+  expireGroundDrops();
   if (!running || paused || p.hp <= 0) { updateLootHover(); return; }
   for (const drop of drops) drop.fallAge = Math.min(LOOT_RULES.fallDuration, (drop.fallAge || 0) + dt);
   collectNearbyGroundDrops(true);
-  updateLootHover();
+  updateLootHover(dt);
 }

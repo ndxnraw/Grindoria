@@ -41,6 +41,7 @@ Otvor `dist/Grindoria.html` dvojklikom v prehliadači. Celá hra je v jednom sú
 | M | Cestovanie z útočiska |
 | F | Obchodník |
 | C | Bojový manuál a odolnosti |
+| F10 / ⛶ v minimape | Celá obrazovka |
 | Esc | Zavrieť okno alebo zrušiť cieľ |
 
 Klik na nepriateľa alebo Metin ho označí: postava sleduje jeho aktuálnu polohu a v dosahu automaticky útočí. Smrť cieľa nasledovanie zastaví. WASD, šípky alebo Esc zrušia označenie. Klik do prázdna vyvolá útok bez pohybu; bez označeného cieľa postava mieri podľa kurzora. Ľavé kliknutie na korisť ju zdvihne; Y pozbiera predmety v okolí bez potreby kurzora. Dostupné je aj dotykové ovládanie.
@@ -73,7 +74,11 @@ Osem typov Metinov má vlastné modely, úrovne, obtiažnosť, životy, odolnos�
 
 ## Korisť na zemi
 
-Zlato a zásoby sa po dopade zbierajú **automaticky do 180 jednotiek**. **Y** pozbiera všetku dostupnú korisť v rovnakom okolí bez kurzora; konkrétny predmet možno zdvihnúť aj kliknutím. Výbava a relikvie vyžadujú Y alebo kliknutie. Plný inventár ponechá výbavu na zemi. Tooltip ukáže požadovanú úroveň a farebné porovnanie s nasadenou výbavou. Štvrtá schopnosť sa presunula na **V**. Podrobnosti: [LOOT.md](docs/LOOT.md).
+Zlato a zásoby sa po dopade zbierajú **automaticky do 180 jednotiek**. **Y** pozbiera všetku dostupnú korisť v rovnakom okolí bez kurzora; konkrétny predmet možno zdvihnúť aj kliknutím. Výbava a relikvie vyžadujú Y alebo kliknutie. Plný inventár ponechá výbavu na zemi. Tooltip sa otvorí po 0,55 s zastavenia kurzora a ukáže požadovanú úroveň a farebné porovnanie s nasadenou výbavou. Štvrtá schopnosť sa presunula na **V**. Podrobnosti: [LOOT.md](docs/LOOT.md).
+
+## Celá obrazovka a Electron
+
+**F10** alebo tlačidlo **⛶ v minimape** prepne celú hernú plochu na obrazovku. Návrat: rovnaké tlačidlo, F10 alebo Esc podľa prehliadača. Ovládanie, inventár aj tooltipy zostávajú v hre. Prehliadač používa Fullscreen API; pripravený Electron host používa izolovaný most a skutočný fullscreen okna. Zdroj hosta je v `desktop/`, postup a hranice overenia v [DESKTOP.md](docs/DESKTOP.md).
 
 ## Inventár a výbava
 
@@ -100,6 +105,7 @@ src/
     render/            Postavy, scéna a efekty
     ui/                Panely a HUD
     main.js            Pripojenie ovládania a spustenie
+desktop/               Electron host, preload a fullscreen most
 scripts/               Server, zostavenie, kontroly a vydávanie
 tests/                 Herné mechaniky a nástroje
 docs/                  Architektúra a vydávanie
@@ -119,7 +125,7 @@ npm run check:dist
 
 Testy pokrývajú všetkých 48 schopností, postup, ukladanie, mapy, respawn a prípravu vydania. Nenahrádzajú vizuálnu kontrolu v prehliadači. Rovnaké príkazy používa GitHub Actions na Windows a Linuxe.
 
-Zmeny zapisuj pod `[Unreleased]` v [CHANGELOG.md](CHANGELOG.md). Príkaz `npm run release -- 0.10.1` presunie poznámky do novej verzie, pridá dátum a odkazy, zosúladí verziu hry a vytvorí offline súbor. Sám necommituje ani neposiela zmeny na GitHub.
+Zmeny zapisuj pod `[Unreleased]` v [CHANGELOG.md](CHANGELOG.md). Príkaz `npm run release -- 0.11.1` presunie poznámky do novej verzie, pridá dátum a odkazy, zosúladí verziu hry a vytvorí offline súbor. Sám necommituje ani neposiela zmeny na GitHub.
 
 Podrobnosti: [vydávanie](docs/RELEASING.md), [architektúra](docs/ARCHITECTURE.md), [prispievanie](CONTRIBUTING.md).
 

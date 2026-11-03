@@ -16,7 +16,7 @@ test('spawn locations vary within each pack without changing slot identity or po
   const { run } = createGame();
   run('let point=spawnPoints.find(p=>p.kind==="pack"),samples=Array.from({length:20},()=>createSpawnEnemy(point,0));');
   assert.equal(run('new Set(samples.map(m=>m.x.toFixed(3)+":"+m.y.toFixed(3))).size'), 20);
-  assert(run('samples.every(m=>m.spawnId===samples[0].spawnId&&Math.hypot(m.x-point.x,m.y-point.y)<=60+1e-8&&!isSanctuary(m))'));
+  assert(run('samples.every(m=>m.spawnId===samples[0].spawnId&&Math.hypot(m.x-point.x,m.y-point.y)<=90+1e-8&&!isSanctuary(m))'));
   assert(run('spawnPoints.filter(p=>p.kind==="pack").every((p,i,all)=>all.every(q=>p===q||p.x!==q.x&&p.y!==q.y))'));
 });
 

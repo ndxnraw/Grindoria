@@ -3,13 +3,13 @@ function map(){return MAPS[p.mapId]||MAPS.valley;}
 function snapshotMap() {
   if (!mobs.length) return;
   p.worldStates[p.mapId] = {
-    progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
+    layoutSchema: SPAWN_LAYOUT_VERSION, progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
     mobs: mobs.map(cloneEnemyState),
     drops: drops.map(cloneGroundDrop)
   };
 }
 
-function save(){if(pendingSaveImports.length)return;snapshotMap();try{localStorage.setItem(SAVE,JSON.stringify(p));}catch{}}
+function save(){if(pendingSaveImports.length)return;expireGroundDrops();pruneStoredGroundDrops();snapshotMap();try{localStorage.setItem(SAVE,JSON.stringify(p));}catch{}}
 
 function loadMap(id, initial=false) {
   if (!MAPS[id]) return false;

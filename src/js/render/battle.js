@@ -1,11 +1,6 @@
 function drawCombatTarget() {
   if(!running)return;
-  if(!selectedEnemy()){
-    const a=screen(p.x,p.y),length=48,ux=Math.cos(face),uy=Math.sin(face)*.62;
-    line(a.x+ux*22,a.y+uy*22,a.x+ux*length,a.y+uy*length,'#e1d1a266',2);
-    polygon([[a.x+ux*56,a.y+uy*56],[a.x+ux*43-Math.sin(face)*5,a.y+uy*43+Math.cos(face)*3],[a.x+ux*43+Math.sin(face)*5,a.y+uy*43-Math.cos(face)*3]],'#e0cf9b88');
-    return;
-  }
+  if(!selectedEnemy())return;
   const enemy=selectedEnemy(),a=screen(enemy.x,enemy.y),radius=enemy.type==='boss'?48:enemy.type==='stone'?40:29,pulse=Math.sin(clock*5)*2;
   ctx.strokeStyle='#efd38f';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(a.x,a.y+3,radius+pulse,(radius+pulse)*.5,0,0,Math.PI*2);ctx.stroke();
   const top=a.y-(enemy.type==='stone'?145*metinModelScale(enemy):enemy.type==='boss'?135:enemy.skin==='wolf'?65:92);

@@ -88,3 +88,7 @@ Zdrojom nastavení je src/js/data/metins.js, logikou src/js/systems/metins.js, m
 ## Boj od 0.10.0
 
 Po pancieri a základnej odolnosti sa uplatní typová odolnosť alebo slabina. Osem profilov definuje METIN_RESISTS; Atlas aj panel označeného cieľa ich zobrazujú. Napríklad mráz dostáva o 20 % viac ohnivého poškodenia, žeravý Metin má 50 % odolnosť voči ohňu. Pozri [COMBAT.md](COMBAT.md).
+
+## Náhodné rozmiestnenie od 0.11.0
+
+Šuterland zachováva 99 identít a úrovne 1–99 v štyroch oblastiach. Súradnice vznikajú náhodným vzorkovaním s rozostupom približne 90 jednotiek, bez mriežky. Pôvodné mapy používajú rovnaký princíp pre svoje kamene aj skupiny. Pri respawne sa Metin premiestni vo svojej oblasti; typ, level a identita zostávajú zachované. Staré snímky sa prenesú bez oživenia mŕtvych alebo vytvorenia duplicitnej koristi.

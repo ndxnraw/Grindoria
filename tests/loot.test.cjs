@@ -134,7 +134,7 @@ test('tooltip positioning keeps the box in the viewport and away from the cursor
 
 test('hover is recalculated after canvas scrolling and equipment changes, rather than using stale coordinates', () => {
   const { run, elements } = createGame();
-  run('running=true;p.x=400;p.y=400;cam.x=400;cam.y=400;let drop=spawnGroundDrop({kind:"gear",item:{name:"Meč",slot:"weapon",bonus:10,rarity:1}},p);Object.assign(drop,{x:400,y:400,launchX:400,launchY:400,fallAge:.65});setLootPointer({clientX:600,clientY:333});');
+  run('running=true;p.x=400;p.y=400;cam.x=400;cam.y=400;let drop=spawnGroundDrop({kind:"gear",item:{name:"Meč",slot:"weapon",bonus:10,rarity:1}},p);Object.assign(drop,{x:400,y:400,launchX:400,launchY:400,fallAge:.65});setLootPointer({clientX:600,clientY:333});updateLootHover(LOOT_RULES.hoverDelay);');
   assert.match(elements.get('loot-tooltip').innerHTML, /stat-gain/);
   run('p.equipped.weapon={name:"Silnejší",slot:"weapon",bonus:20};updateLootHover();');
   assert.match(elements.get('loot-tooltip').innerHTML, /stat-loss/);

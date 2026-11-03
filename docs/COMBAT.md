@@ -155,3 +155,7 @@ Každá zo 48 aktivácií vykresľuje vlastný znak školy a slotu spolu s úči
 Uložené vybavenie a progres ostávajú kompatibilné. Súbežné poškodenia sa pri snímkovaní hlboko kopírujú, aby neaktívna mapa nezdieľala časovače s aktívnou. Cieľ, kombo, rozletené strely a animácie sa neukladajú.
 
 Testy battle-controls.test.cjs overujú smerovanie, živé nasledovanie, rušenie cieľa, trajektórie, typové poškodenie a výbavu, pasívne stupne, kombá, súbežný jed a oheň aj 48 animácií s manou a cooldownmi. Vizuálna kontrola vyžaduje prehliadač.
+
+## Prehľadnosť od 0.11.0
+
+Smerová šípka pri postave sa nevykresľuje; orientáciu určuje kurzor a smer zbrane. Označený nepriateľ si zachováva prsteň a značku cieľa. Náhľad koristi vyžaduje 0,55 s bez pohybu kurzora; prebehnutie myšou počas mierenia ho resetuje. F10 alebo tlačidlo ⛶ v minimape prepína celú obrazovku.

@@ -20,7 +20,7 @@ EXP, počítadlá úloh, prax schopností a body špecializácie sa započítaj�
 
 ## Náhľad a porovnanie
 
-Kurzor nad ikonou otvorí tooltip s názvom, ikonou, raritou, požadovanou úrovňou a druhom predmetu. Výbava uvádza základný atribút, hodnotu vylepšenia, dodatočné bonusy, špeciálne vlastnosti a informáciu, či ju postava dokáže vybaviť. Ak nemá žiadne bonusy alebo špeciálne vlastnosti, náhľad to uvedie.
+Kurzor musí nad rovnakou ikonou zastaviť aspoň na **0,55 sekundy**. Pohyb o viac než dva pixely odpočet resetuje a náhľad okamžite skryje; pri mierení cez korisť sa nezobrazí ani názov na zemi. Potom otvorí tooltip s názvom, ikonou, raritou, požadovanou úrovňou a druhom predmetu. Výbava uvádza základný atribút, hodnotu vylepšenia, dodatočné bonusy, špeciálne vlastnosti a informáciu, či ju postava dokáže vybaviť. Ak nemá žiadne bonusy alebo špeciálne vlastnosti, náhľad to uvedie.
 
 Pri použiteľnej výbave sa automaticky porovná celý súčet atribútov s aktuálnym predmetom toho istého slotu. Zahŕňa základ, vylepšenie aj bonusy. Prázdny slot má nulové hodnoty. Zvýšenia sú zelené so znamienkom plus, zníženia červené so znamienkom mínus a nezmenené hodnoty sivé; informáciu teda neprenáša iba farba.
 
@@ -28,13 +28,19 @@ Nová výbava vyžaduje úroveň zodpovedajúcu jej stupňu. Predmet možno zdvi
 
 Tooltip sa prepočítava pri pohybe kurzora, kamery, postavy, zmene výbavy aj veľkosti okna. Pri okrajoch sa preklopí, zachová odstup od kurzora a zostáva v obrazovke. Pri malej dostupnej ploche sa jeho maximálna výška obmedzí na voľný priestor.
 
+## Despawn
+
+Bežná výbava, zlato a zásoby zmiznú po **180 sekundách od vypadnutia**; epická výbava (rarita 2) a relikvie po **600 sekundách**. Čas je skutočný čas zariadenia a plynie aj pri pauze, zmene mapy a zatvorenej hre. Čistenie prebehne počas hry, pri uložení a pri načítaní. Predmet sa po expirácii nedá zdvihnúť ani premeniť na zlato.
+
+Pole `expiresAt` sa ukladá spolu s predmetom. Staršia korisť bez časovača dostane konečný limit jednorazovo; ďalšie načítanie ho neobnoví. Čistia sa aj neaktívne mapy a bežný chrám odložený počas trhliny.
+
 ## Uloženie
 
-Drop sa ukladá do snímky mapy vrátane celého predmetu, počtu, polohy a jedinečného `id`. Neaktívna mapa korisť zachová. Pri načítaní sú uložené predmety už dopadnuté; nedostanú novú náhodnú pozíciu. Po aktivácii mapy sa na zlato a zásoby uplatní automatické zbieranie v dosahu.
+Drop sa ukladá do snímky mapy vrátane celého predmetu, počtu, polohy a jedinečného `id`. Neaktívna mapa zachová korisť iba do uplynutia jej expirácie. Pri načítaní sú uložené predmety už dopadnuté; nedostanú novú náhodnú pozíciu. Po aktivácii mapy sa na zlato a zásoby uplatní automatické zbieranie v dosahu.
 
 Staršie nepozbierané zlaté kôpky sa premenia na dropy zbierateľné podľa aktuálnych pravidiel pri zachovaní hodnoty. Obsah inventára sa spätne nemení. Zdvihnutý drop sa zo snímky odstráni a opakovaný pokus s rovnakou identitou nepridá ďalšiu odmenu.
 
-Trhlina má samostatnú korisť. Nepozbierané predmety sa pri jej ukončení prenesú späť do bežného chrámu popri jeho pôvodnej koristi, bez duplikovania. Korisť nemá časovač automatického zmiznutia.
+Trhlina má samostatnú korisť. Nepozbierané predmety sa pri jej ukončení prenesú späť do bežného chrámu popri jeho pôvodnej koristi, bez duplikovania. Čas expirácie sa prenesie bez predĺženia.
 
 Logiku spravuje `systems/loot.js`, vykreslenie `render/loot.js` a tooltipy `ui/loot.js`. SVG ikony sú rovnaké ako v inventári a načítavajú sa z vložených dát, bez siete. Vykresľujú sa iba predmety vo viditeľnej oblasti; obrázky ikon sa zdieľajú cez cache.
 

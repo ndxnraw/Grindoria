@@ -10,13 +10,8 @@ function farmAreaLevelRange(area) {
 function buildSuterlandPoints() {
   const points = []; let level = 1;
   for (const [index, area] of FARM_AREAS.entries()) {
-    const locations = [];
-    for (let row = 0; row < 5; row++) for (let col = 0; col < 5; col++) {
-      let x = area.x1 + 45 + (area.x2 - area.x1 - 90) * col / 4, y = area.y1 + 45 + (area.y2 - area.y1 - 90) * row / 4;
-      const d = Math.hypot(x - 1000, y - 1050);
-      if (d < SPAWN_RULES.spawnClearance) { x = 1000 + (x - 1000) / d * 300; y = 1050 + (y - 1050) / d * 300; }
-      locations.push({ x, y });
-    }
+    const locations = [], random = layoutRandom('suterland:' + area.id + ':layout2');
+    for (let i = 0; i < (index === 3 ? 24 : 25); i++) locations.push(naturalSpawnLocation(area, locations, random, 90));
     locations.sort((a, b) => Math.hypot(a.x - 1000, a.y - 1050) - Math.hypot(b.x - 1000, b.y - 1050));
     for (const location of locations.slice(0, index === 3 ? 24 : 25)) {
       points.push({ id: 'suterland:metin:' + level, kind: 'stone', ...location, area: area.id, offset: level - 1, metinLevel: level, metinType: metinTypeForLevel(level) });
@@ -66,7 +61,16 @@ function upgradeLegacyMetin(m, point) {
 function restoreMetinGuards(population, prior) {
   const parents = new Set(population.filter(m => m.type === 'stone').map(m => m.spawnId));
   for (const m of prior || []) if (m.metinParentId && m.hp > 0 && m.metinLife > 0 && parents.has(m.metinParentId)) {
-    population.push({ ...cloneEnemyState(m), dot: m.dot ? { ...m.dot } : null, skillContributors: [...(m.skillContributors || [])], taunt: 0, engaged: 0, stun: 0, returning: true });
+    const parent = population.find(stone => stone.spawnId === m.metinParentId), priorParent = prior.find(stone => stone.spawnId === m.metinParentId);
+    const dx = priorParent ? parent.x - priorParent.x : 0, dy = priorParent ? parent.y - priorParent.y : 0;
+    const safePosition = (x, y) => {
+      x = Math.max(45, Math.min(SIZE-45, x+dx)); y = Math.max(45, Math.min(SIZE-45, y+dy));
+      const radius = SPAWN_RULES.sanctuaryRadius+24, distance = Math.hypot(x-1000,y-1050);
+      if (distance < radius) { const angle = Math.atan2(y-1050,x-1000); x=1000+Math.cos(angle)*radius; y=1050+Math.sin(angle)*radius; }
+      return {x,y};
+    };
+    const position = safePosition(m.x,m.y), home = safePosition(m.homeX??m.x,m.homeY??m.y);
+    population.push({ ...cloneEnemyState(m), ...position, homeX: home.x, homeY: home.y, dot: m.dot ? { ...m.dot } : null, skillContributors: [...(m.skillContributors || [])], taunt: 0, engaged: 0, stun: 0, returning: true });
   }
   return population;
 }

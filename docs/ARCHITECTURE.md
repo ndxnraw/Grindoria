@@ -78,3 +78,11 @@ Zostavenie vytvorí `dist/Grindoria.html` a totožné `dist/index.html`; oba sa 
 `data/battle.js` definuje sedem typov, profily odolností, metadáta schopností, osem pasívnych bonusov a osem komb. Animácie 48 aktivácií odlišuje `render/battle.js`; panel cieľa, knihu a manuál spravuje `ui/battle.js`. HUD prekresľuje detail cieľa iba pri zmene údajov.
 
 Jed a oheň sú samostatné položky `dots`; staré `dot` sa importuje raz. Snímky svetov, obnova populácie a Metinov používajú hlbokú kópiu stavov. Pasívny stupeň sa odvodzuje od levelu, bez ďalšej migrácie kariéry. Zameranie, kombo, strely a animácie sú dočasné. Podrobnosti a poradie výpočtov: [COMBAT.md](COMBAT.md).
+
+## Rozloženie, expirácie a fullscreen od 0.11.0
+
+`systems/spawn-layout.js` vytvára nepravidelné body pomocou seedu mapy a odmietania nevhodných kandidátov. `layoutSchema` je oddelená od schémy populácie: migrácia mení pozície bez zmeny identít, zdravia a časovačov. Metiny pri respawne dostávajú nové bezpečné miesto.
+
+Korisť nesie absolútny `expiresAt`. Čistenie aktívnych a uložených máp nepridáva odmeny. Hover má kandidáta a čas zastavenia; ukazovateľ mierenia nevytvára okamžité tooltipy.
+
+`ui/fullscreen.js` riadi jeden herný shell. V prehliadači žiada Fullscreen API a reaguje na skutočný `fullscreenchange`; v Electron hoste používa iba `window.grindoriaDesktop.fullscreen`. Most poskytuje get/set/onChange. Native fullscreen CSS zaplní okno, bežný webový režim nemení. Podrobnosti: [DESKTOP.md](DESKTOP.md).
