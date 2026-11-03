@@ -1,6 +1,6 @@
 function worldObjects(){
  if(map().town)return [...Object.entries(NPCS).map(([id,npc])=>({y:npc.y,draw:()=>drawTownNPC(id)}))];
- return [{y:safeZone().y-100,draw:drawSafeZone}];
+ return [...Object.entries(SECRET_PLACES).filter(([,s])=>s.map===p.mapId).map(([id,s])=>({y:s.y,draw:()=>drawSecretPlace(id)})),{y:safeZone().y-100,draw:drawSafeZone}];
 }
 function drawSafeZone(){
  const zone=safeZone(),at=screen(zone.x,zone.y);

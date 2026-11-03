@@ -182,7 +182,7 @@ function importCharacterBackup(prepared,mode,{renames={},confirmReplace=false}={
 }
 function saveGlobalSettings() {if(characterStore.activeId)return saveActiveCharacter();const next=copyCharacterData(characterStore.account);next.settings.sound=sound;try{return commitCharacterAccount(next);}catch(error){characterStore.writeError=error.message;return false;}}
 function recordCharacterKill(enemy) {
-  const key=enemy.type==='stone'?'metin:'+enemy.metinType:enemy.type==='boss'?'boss:'+p.mapId:enemy.skin||'wolf';p.bestiary[key]=(p.bestiary[key]||0)+1;
+  discoverEnemy(enemy);const key=discoveryEnemyKey(enemy);if(!key)return;p.bestiary[key]=(p.bestiary[key]||0)+1;
   if(enemy.type!=='stone')p.achievements.firstKill=true;if(enemy.type==='stone')p.achievements.firstMetin=true;if(enemy.type==='boss')p.achievements.firstBoss=true;if(p.kills>=100)p.achievements.hunter100=true;
 }
 

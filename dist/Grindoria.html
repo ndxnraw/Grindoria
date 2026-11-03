@@ -187,6 +187,8 @@ body{font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ui-text)}button,inp
 .requirement-row small{display:inline!important;margin:0!important}.requirement-row>span:nth-child(2){display:flex;gap:4px;align-items:baseline;justify-content:flex-end}
 .dungeon-difficulty{padding:12px 0;border-top:1px solid var(--ui-line);margin-top:12px}.dungeon-difficulty>small{display:block;color:var(--ui-muted);font-size:11px;line-height:1.6;margin:6px 0}.dungeon-status{position:absolute;top:116px;right:190px;z-index:3;max-width:420px;background:#142129ed;color:#ead6a6;border:1px solid #b39968;border-radius:8px;padding:9px 12px;font-size:11px}.dungeon-status[hidden]{display:none}.overlay .modal-card:has(.dungeon-panel){height:100%}@media(max-width:700px){.dungeon-status{top:218px;right:auto;left:12px;max-width:calc(100% - 24px);font-size:10px}}
 .character-select .dungeon-status{display:none}
+/* PC bestiary cards reuse the game's actual canvas models. */
+.discovery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.bestiary-model{display:block;width:220px;height:200px;max-width:100%;margin:auto;background:#101b20;border:1px solid var(--ui-line)}
 </style></head>
 <body>
 <header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.22.0</b></span></header>
@@ -682,6 +684,22 @@ const DUNGEON_UNIQUES={crypt:{name:'Náramok jedovatého kráľa',slot:'bracelet
 MAPS.dungeon={name:'Dungeon',region:'ODDELENÁ VÝPRAVA',desc:'Opakovateľný dungeon',level:20,enemyLevel:20,scale:4,seed:84217,ground:'#263a30',patch:'#8b9f7820',path:'#b1ad7b30',accent:'#a2c58a',water:'#38464f',mob:'Strážcovia',boss:'Strážca',skin:'scorpion',instance:true,size:DUNGEON_RULES.size,count:0,packCount:0,metinCount:0,safeZone:{x:900,y:1640,radius:100},entry:{x:900,y:1640},bossPosition:{x:900,y:380}};
 
 
+// src/js/systems/discovery.js
+// Additive, per-character progress. Existing bestiary kill counters remain authoritative.
+const SECRET_PLACES={grove:{name:'Zabudnutý háj',map:'valley',x:1750,y:2440},oasis:{name:'Ukrytá studňa',map:'desert',x:620,y:2440},shrine:{name:'Tichá svätyňa',map:'snow',x:1580,y:1560}};
+const DISCOVERY_REWARDS={hunter:{name:'Lovec tisícky',goal:1000,bonus:{hp:30},yang:1500},metins:{name:'Znalec ôsmich Metinov',goal:8,bonus:{magic:5},yang:2000},trophies:{name:'Trofeje štyroch strážcov',goal:4,bonus:{defense:3},yang:2500},dungeons:{name:'Trofeje troch dungeonov',goal:3,bonus:{attack:5},yang:5000},rarities:{name:'Zberateľ vzácnej výbavy',goal:4,bonus:{mp:30},yang:2000},explorer:{name:'Prieskumník',goal:3,bonus:{hp:40},yang:1500},relics:{name:'Úplná zbierka relikvií',goal:4,bonus:{attack:4},yang:3000}};
+function initializeDiscovery(){p.discovery??={seen:{},places:{},rarities:{},claimed:{}};trackCollectionGear();}
+function discoveryEnemyKey(m){return m.dungeonSeal?null:m.dungeonBoss?'dungeon:'+m.dungeonId:m.type==='stone'?'metin:'+m.metinType:m.type==='boss'?'boss:'+p.mapId:m.skin||'wolf';}
+function validDiscoveryKey(key){return ['wolf','scorpion','yeti','demon'].includes(key)||key.startsWith('metin:')&&Object.hasOwn(METIN_TYPES,key.slice(6))||key.startsWith('boss:')&&Object.hasOwn(MAPS,key.slice(5))||key.startsWith('dungeon:')&&Object.hasOwn(DUNGEONS,key.slice(8));}
+function discoverEnemy(m){const key=discoveryEnemyKey(m);if(!key)return;const d=p.discovery.seen;const old=d[key];const loc=m.dungeonId?'dungeon:'+m.dungeonId:p.mapId;const name=m.name||(m.type==='stone'?METIN_TYPES[m.metinType].name:m.type==='boss'?map().boss:map().mob);d[key]={name,level:enemyLevel(m),hp:m.max,attackScale:m.attackScale||1,armor:Number(m.armor)||0,damageType:enemyDamageType(m),skin:m.skin||'wolf',type:m.type,metinType:m.metinType||null,dungeonId:m.dungeonId||null,dungeonBoss:!!m.dungeonBoss,locations:[...new Set([...(old?.locations||[]),loc])]};}
+function trackCollectionGear(){if(!p.discovery)return;for(const item of [...(p.bag||[]),...Object.values(p.equipped||{})])if(item&&rarityRank(item.rarity)>=2)p.discovery.rarities[item.rarity]=true;}
+function updateDiscovery(){if(!p.discovery)initializeDiscovery();for(const m of mobs)if(m.hp>0&&!m.dungeonSeal&&Math.hypot(m.x-p.x,m.y-p.y)<420)discoverEnemy(m);trackCollectionGear();for(const [id,place]of Object.entries(SECRET_PLACES))if(place.map===p.mapId&&!p.discovery.places[id]&&Math.hypot(p.x-place.x,p.y-place.y)<85){p.discovery.places[id]=true;toast('Objavené: '+place.name);save();}}
+function discoveryProgress(id){switch(id){case'hunter':return p.career.eligibleKills;case'metins':return Object.keys(METIN_TYPES).filter(k=>p.bestiary['metin:'+k]>0).length;case'trophies':return ['valley','desert','snow','temple'].filter(k=>p.bestiary['boss:'+k]>0).length;case'dungeons':return Object.keys(DUNGEONS).filter(k=>p.bestiary['dungeon:'+k]>0).length;case'rarities':return [1,2,4,5].filter(k=>p.discovery.rarities[k]).length;case'explorer':return Object.keys(p.discovery.places).length;case'relics':return Object.values(p.career.collection).filter(Boolean).length;}return 0;}
+function claimDiscoveryReward(id){const reward=DISCOVERY_REWARDS[id];if(!running||!reward||p.discovery.claimed[id]||discoveryProgress(id)<reward.goal)return false;p.discovery.claimed[id]=true;p.gold+=reward.yang;save();updateHUD();return true;}
+function discoveryBonuses(){const b={};for(const [id,r]of Object.entries(DISCOVERY_REWARDS))if(p.discovery?.claimed[id])for(const [stat,n]of Object.entries(r.bonus))b[stat]=(b[stat]||0)+n;return b;}
+function validateDiscovery(data){if(data.discovery===undefined)return;const d=data.discovery;assertCharacterObject(d,'objavovanie');for(const key of ['seen','places','rarities','claimed'])assertCharacterObject(d[key],key);for(const [id,v]of Object.entries(d.places))if(!Object.hasOwn(SECRET_PLACES,id)||v!==true)characterDataError('skrytá lokalita.');for(const [id,v]of Object.entries(d.rarities))if(!['1','2','4','5'].includes(id)||v!==true)characterDataError('zbierka rarít.');for(const [id,v]of Object.entries(d.claimed))if(!Object.hasOwn(DISCOVERY_REWARDS,id)||v!==true)characterDataError('odmena zbierky.');for(const [id,s]of Object.entries(d.seen)){if(!validDiscoveryKey(id))characterDataError('objavený nepriateľ.');assertCharacterObject(s,'nepriateľ');if(typeof s.name!=='string'||s.name.length>150||!['wolf','boss','stone'].includes(s.type)||!['wolf','scorpion','yeti','demon'].includes(s.skin))characterDataError('model bestiára.');assertCharacterNumber(s.level,'úroveň',1,199,true);assertCharacterNumber(s.hp,'HP',1,1e12);assertCharacterNumber(s.attackScale,'sila útoku',0,1e9);assertCharacterNumber(s.armor,'pancier',0,1e9);if(!Object.hasOwn(DAMAGE_TYPES,s.damageType))characterDataError('poškodenie bestiára.');if(s.metinType!==null&&!Object.hasOwn(METIN_TYPES,s.metinType)||s.dungeonId!==null&&!Object.hasOwn(DUNGEONS,s.dungeonId)||typeof s.dungeonBoss!=='boolean')characterDataError('typ bestiára.');if(!Array.isArray(s.locations)||s.locations.length>12||new Set(s.locations).size!==s.locations.length||s.locations.some(k=>!Object.hasOwn(MAPS,k)&&!(k.startsWith('dungeon:')&&Object.hasOwn(DUNGEONS,k.slice(8)))))characterDataError('lokalita bestiára.');}}
+
+
 // src/js/core/persistence.js
 const pendingSaveImports = [];
 
@@ -914,7 +932,7 @@ function importCharacterBackup(prepared,mode,{renames={},confirmReplace=false}={
 }
 function saveGlobalSettings() {if(characterStore.activeId)return saveActiveCharacter();const next=copyCharacterData(characterStore.account);next.settings.sound=sound;try{return commitCharacterAccount(next);}catch(error){characterStore.writeError=error.message;return false;}}
 function recordCharacterKill(enemy) {
-  const key=enemy.type==='stone'?'metin:'+enemy.metinType:enemy.type==='boss'?'boss:'+p.mapId:enemy.skin||'wolf';p.bestiary[key]=(p.bestiary[key]||0)+1;
+  discoverEnemy(enemy);const key=discoveryEnemyKey(enemy);if(!key)return;p.bestiary[key]=(p.bestiary[key]||0)+1;
   if(enemy.type!=='stone')p.achievements.firstKill=true;if(enemy.type==='stone')p.achievements.firstMetin=true;if(enemy.type==='boss')p.achievements.firstBoss=true;if(p.kills>=100)p.achievements.hunter100=true;
 }
 
@@ -1028,7 +1046,7 @@ function validateCharacterProfile(record) {
   validateCraftingProfile(data);
   validateEconomyProfile(data);
   validateDungeonProfile(data);
-  assertCharacterObject(data.bestiary,'bestiár');for(const [key,value]of Object.entries(data.bestiary)){if(!['wolf','scorpion','yeti','demon'].includes(key)&&!(key.startsWith('metin:')&&Object.hasOwn(METIN_TYPES,key.slice(6)))&&!(key.startsWith('boss:')&&Object.hasOwn(MAPS,key.slice(5))))characterDataError('záznam bestiára.');assertCharacterNumber(value,'počet v bestiári',0,1e12,true);}
+  validateDiscovery(data);assertCharacterObject(data.bestiary,'bestiár');for(const [key,value]of Object.entries(data.bestiary)){if(!['wolf','scorpion','yeti','demon'].includes(key)&&!(key.startsWith('dungeon:')&&Object.hasOwn(DUNGEONS,key.slice(8)))&&!(key.startsWith('metin:')&&Object.hasOwn(METIN_TYPES,key.slice(6)))&&!(key.startsWith('boss:')&&Object.hasOwn(MAPS,key.slice(5))))characterDataError('záznam bestiára.');assertCharacterNumber(value,'počet v bestiári',0,1e12,true);}
   assertCharacterObject(data.achievements,'úspechy');for(const [key,value]of Object.entries(data.achievements))if(!Object.hasOwn(CHARACTER_ACHIEVEMENTS,key)||typeof value!=='boolean')characterDataError('úspech.');
   if(data.potionReadyAt!==undefined)assertCharacterNumber(data.potionReadyAt,'čas elixíru',0,Number.MAX_SAFE_INTEGER);
   if(data.combatAssist?.autoPotion!==undefined&&typeof data.combatAssist.autoPotion!=='boolean')characterDataError('automatické elixíry.');
@@ -1049,7 +1067,8 @@ function validateCharacterAccount(account) {
 
 // src/js/core/state.js
 'use strict';
-const $=id=>document.getElementById(id),canvas=$('game'),ctx=canvas.getContext('2d'),mini=$('minimap').getContext('2d');
+const $=id=>document.getElementById(id),canvas=$('game'),mini=$('minimap').getContext('2d');
+let ctx=canvas.getContext('2d');
 let SIZE=2000;const SAVE='grindoria-save-v1';
 let W=1200,H=700,dpr=1,running=false,paused=false,last=0,clock=0,target=null,face=0,attackCD=0,skillCD=0,slash=0,ring=0,toastTimer=0,saveTimer=0,sound=false,audio=null;
 const keys={},mouse={x:0,y:0},cam={x:1000,y:1050};
@@ -1096,7 +1115,7 @@ function keysClear(){Object.keys(keys).forEach(k=>keys[k]=false);}
 function update(dt) {
   clock+=dt;if(!running||paused)return;travelCombat.time=Math.max(0,travelCombat.time-dt);
   attackCD=Math.max(0,attackCD-dt);slash=Math.max(0,slash-dt);ring=Math.max(0,ring-dt);updateCombatAssistTimers(dt);updateAlchemy(dt);updateEconomy(dt);updateCombat(dt);
-  updatePlayerControl(dt);if(keys[' '])attack();updateAutoSpell(dt);
+  updateDiscovery();updatePlayerControl(dt);if(keys[' '])attack();updateAutoSpell(dt);
   const safe=isSanctuary(p);if(safe){p.hp=Math.min(maxHP(),p.hp+12*dt);p.mp=Math.min(maxMP(),p.mp+dt*10);}
   updateDungeon(dt,safe);updateMetins(dt,safe);updateEnemySpawns(dt,safe);updateGroundLoot(dt);updateBoss(dt,safe);updateAutoPotion();
   if(p.hp<=0)death();if(target&&!selectedEnemy())clearCombatTarget();
@@ -1105,6 +1124,17 @@ function update(dt) {
   toastTimer-=dt;if(toastTimer<0)$('toast').style.opacity='0';saveTimer+=dt;if(saveTimer>4){save();saveTimer=0;}updateHUD();
 }
 
+
+
+// src/js/ui/discovery.js
+function discoveryLocationName(id){return id.startsWith('dungeon:')?DUNGEONS[id.slice(8)].name:MAPS[id]?.name||id;}
+function knownEnemyDrops(key,s){if(key.startsWith('metin:')){const l=METIN_TYPES[key.slice(6)].loot;return 'Yang · '+Object.keys(l).filter(k=>Object.hasOwn(MATERIALS,k)).map(k=>MATERIALS[k]).join(' · ')+' · '+l.slots.map(k=>EQUIPMENT[k].name).join(', ')+' · '+RELICS[l.relic].name;}if(key.startsWith('dungeon:'))return 'Yang · materiály · '+DUNGEON_UNIQUES[key.slice(8)].name+(key==='dungeon:abyss'?' · Legendary / Mythic podľa obtiažnosti':'');return 'Yang · elixíry · výbava podľa rarity nepriateľa'+(s.type==='boss'?' · knihy, byliny, kože a vzácne materiály':' · primerané zabitia: byliny alebo kože')+' · relikvie podľa lokality a podmienok';}
+function discoveryPanel(){
+ const entries={...Object.fromEntries(Object.keys(p.bestiary).filter(k=>p.bestiary[k]>0).map(k=>[k,null])),...p.discovery.seen};
+ return '<h3>Bestiár · '+Object.keys(entries).length+' záznamov</h3><p>Nový záznam vzniká pri priblížení k živému nepriateľovi. Atribúty patria poslednému pozorovanému variantu; úroveň a obtiažnosť ich menia.</p><div class="discovery-grid">'+Object.entries(entries).map(([key,s],i)=>s?'<article class="career-card"><canvas class="bestiary-model" data-bestiary="'+escapeHTML(key)+'" width="220" height="200" aria-label="'+escapeHTML(s.name)+'"></canvas><h4>'+escapeHTML(s.name)+'</h4><p>Úroveň '+s.level+' · HP '+uiNumber(s.hp)+'<br>Útočný násobok ×'+s.attackScale.toFixed(2)+' · '+DAMAGE_TYPES[s.damageType].name+'<br>Pancier '+s.armor+'<br>'+s.locations.map(discoveryLocationName).map(escapeHTML).join('<br>')+'<br>Porazení: '+uiNumber(p.bestiary[key]||0)+'</p><h4>Známe dropy</h4><p>'+knownEnemyDrops(key,s)+'</p></article>':'<article class="career-card"><h4>'+escapeHTML(key)+'</h4><p>Porazení: '+uiNumber(p.bestiary[key])+'. Starší záznam; model a atribúty sa doplnia pri ďalšom stretnutí.</p></article>').join('')+'</div><h3>Trofeje a dlhodobé zbierky</h3><p>Trofeje získavaš prvým porazením každého bossa. Vzácna výbava sa započíta po získaní do inventára, relikvie cez pôvodnú zbierku. Odmena sa dá vyzdvihnúť raz za postavu.</p>'+Object.entries(DISCOVERY_REWARDS).map(([id,r])=>'<article class="career-card"><h4>'+r.name+'</h4>'+requirementRow('Postup',discoveryProgress(id),r.goal)+'<p>'+r.yang+' Yang · trvalo '+Object.entries(r.bonus).map(([k,n])=>'+'+n+' '+ITEM_STATS[k]).join(', ')+'</p><button data-discovery-claim="'+id+'" '+(p.discovery.claimed[id]||discoveryProgress(id)<r.goal?'disabled':'')+'>'+(p.discovery.claimed[id]?'Vyzdvihnuté':'Vyzdvihnúť odmenu')+'</button></article>').join('')+'<h3>Skryté lokality · '+Object.keys(p.discovery.places).length+' / 3</h3><p>'+Object.entries(SECRET_PLACES).map(([id,s])=>p.discovery.places[id]?s.name+' · '+MAPS[s.map].name:'Neobjavené · '+MAPS[s.map].name).join('<br>')+'</p>';
+}
+function bindDiscoveryUI(){document.querySelectorAll('[data-discovery-claim]').forEach(b=>b.onclick=()=>{if(claimDiscoveryReward(b.dataset.discoveryClaim))careerPanel('discovery');});document.querySelectorAll('[data-bestiary]').forEach(node=>{const s=p.discovery.seen[node.dataset.bestiary],old={ctx,cam:{...cam},W,H,map:p.mapId};try{ctx=node.getContext('2d');W=220;H=200;cam.x=0;cam.y=0;p.mapId=s.locations.find(k=>Object.hasOwn(MAPS,k))||'valley';ctx.clearRect(0,0,W,H);const m={...s,x:0,y:95,hp:s.hp,max:s.hp,hit:0,metinCombat:0,name:s.name,metinType:s.metinType};drawMobBase(m);}finally{ctx=old.ctx;Object.assign(cam,old.cam);W=old.W;H=old.H;p.mapId=old.map;}});}
+function drawSecretPlace(id){const s=SECRET_PLACES[id],a=screen(s.x,s.y);if(a.x<-70||a.x>W+70||a.y<-70||a.y>H+70)return;polygon([[a.x-18,a.y],[a.x-15,a.y-22],[a.x+14,a.y-26],[a.x+20,a.y]],'#68796a','#c7b887');line(a.x-5,a.y-17,a.x+6,a.y-9,'#d7c58e',2);if(p.discovery.places[id])text(s.name,a.x,a.y-38,'#ddcea2',11);}
 
 
 // src/js/systems/combat.js
@@ -1371,6 +1401,7 @@ function initializeCareer() {
     };
   }
   for (const id of Object.keys(MATERIALS)) p.career.materials[id] ??= 0;
+  initializeDiscovery();
   initializeCrafting();
   initializeEconomy();
   initializeDungeons();
@@ -1402,6 +1433,7 @@ function careerBonuses() {
   if (spec.focus === 'mystic') add({ magic: 4 * spec.rank, mp: 8 * spec.rank });
   add({ attack: p.career.endgame.paragon * 2, hp: p.career.endgame.paragon * 5 });
   add(alchemyBonuses());
+  add(discoveryBonuses());
   return b;
 }
 
@@ -2334,7 +2366,7 @@ function addGearItem(item) {
   if (!EQUIPMENT[item.slot]) return false;
   const layout = gearLayout([...p.bag, item]);
   if (!layout) return false;
-  item.uid = ++p.inventory.serial; p.bag.push(item); applyGearLayout(layout); return true;
+  item.uid = ++p.inventory.serial; p.bag.push(item); applyGearLayout(layout);trackCollectionGear(); return true;
 }
 
 function finishInventoryChange() {
@@ -4047,7 +4079,7 @@ function careerEndgame() {
 function careerPanel(tab = careerTab) {
   if (!running) return;
   const tabs = {
-    overview: ['Prehľad', careerOverview], training: ['Atribúty', careerTraining],
+    discovery: ['Bestiár a zbierky', discoveryPanel], overview: ['Prehľad', careerOverview], training: ['Atribúty', careerTraining],
     skills: ['Schopnosti', careerSkills], biology: ['Biológ', careerBiology],
     forge: ['Vylepšovanie', careerForge], crafting: ['Výroba', () => craftingRecipesPanel('crafting')], alchemy: ['Alchýmia', () => craftingRecipesPanel('alchemy') + careerAlchemy()],
     collection: ['Relikvie', careerCollection], specialization: ['Špecializácia', careerSpecialization],
@@ -4060,6 +4092,7 @@ function careerPanel(tab = careerTab) {
   if($('craft-filter')) $('craft-filter').onchange=event=>{craftingFilter=event.target.value;careerPanel(careerTab);};
   if(careerTab==='alchemy')$('alchemy-market').onclick=()=>marketPanel('alchemist');
   bindDungeonActions();
+  if(careerTab==='discovery')bindDiscoveryUI();
   const actions = {
     train: id => trainAttribute(id), skill: id => upgradeSkill(id), bio: completeBiology,
     recipe: craftRecipe, product: id => useAlchemyProduct(id, true), enhance: id => enhanceEquipment(id,forgeOptions[id]||{}), forgeSupport: craftForgeSupport, craft: id => craftGem(id), gem: id => upgradeGem(id),
@@ -4305,7 +4338,7 @@ ctx.restore();}for(const b of shots){if(b.opts.delay>0)continue;const a=screen(b
 // src/js/render/locations.js
 function worldObjects(){
  if(map().town)return [...Object.entries(NPCS).map(([id,npc])=>({y:npc.y,draw:()=>drawTownNPC(id)}))];
- return [{y:safeZone().y-100,draw:drawSafeZone}];
+ return [...Object.entries(SECRET_PLACES).filter(([,s])=>s.map===p.mapId).map(([id,s])=>({y:s.y,draw:()=>drawSecretPlace(id)})),{y:safeZone().y-100,draw:drawSafeZone}];
 }
 function drawSafeZone(){
  const zone=safeZone(),at=screen(zone.x,zone.y);

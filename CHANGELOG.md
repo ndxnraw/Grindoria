@@ -5,6 +5,9 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 ## [Unreleased]
 
 ### Added
+- Bestiár objavených nepriateľov s pôvodnými modelmi, atribútmi, výskytom, známymi dropmi a počtami porazených.
+- Bossové trofeje, štyri rarity výbavy, tri skryté lokality a sedem jednorazových zbierkových odmien s trvalými bonusmi.
+- Oddelený postup postáv, spätná kompatibilita uloženia a validácia objavovania pri importe.
 
 ### Changed
 

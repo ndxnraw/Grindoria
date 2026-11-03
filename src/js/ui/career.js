@@ -71,7 +71,7 @@ function careerEndgame() {
 function careerPanel(tab = careerTab) {
   if (!running) return;
   const tabs = {
-    overview: ['Prehľad', careerOverview], training: ['Atribúty', careerTraining],
+    discovery: ['Bestiár a zbierky', discoveryPanel], overview: ['Prehľad', careerOverview], training: ['Atribúty', careerTraining],
     skills: ['Schopnosti', careerSkills], biology: ['Biológ', careerBiology],
     forge: ['Vylepšovanie', careerForge], crafting: ['Výroba', () => craftingRecipesPanel('crafting')], alchemy: ['Alchýmia', () => craftingRecipesPanel('alchemy') + careerAlchemy()],
     collection: ['Relikvie', careerCollection], specialization: ['Špecializácia', careerSpecialization],
@@ -84,6 +84,7 @@ function careerPanel(tab = careerTab) {
   if($('craft-filter')) $('craft-filter').onchange=event=>{craftingFilter=event.target.value;careerPanel(careerTab);};
   if(careerTab==='alchemy')$('alchemy-market').onclick=()=>marketPanel('alchemist');
   bindDungeonActions();
+  if(careerTab==='discovery')bindDiscoveryUI();
   const actions = {
     train: id => trainAttribute(id), skill: id => upgradeSkill(id), bio: completeBiology,
     recipe: craftRecipe, product: id => useAlchemyProduct(id, true), enhance: id => enhanceEquipment(id,forgeOptions[id]||{}), forgeSupport: craftForgeSupport, craft: id => craftGem(id), gem: id => upgradeGem(id),

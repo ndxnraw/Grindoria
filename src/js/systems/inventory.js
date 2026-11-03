@@ -70,7 +70,7 @@ function addGearItem(item) {
   if (!EQUIPMENT[item.slot]) return false;
   const layout = gearLayout([...p.bag, item]);
   if (!layout) return false;
-  item.uid = ++p.inventory.serial; p.bag.push(item); applyGearLayout(layout); return true;
+  item.uid = ++p.inventory.serial; p.bag.push(item); applyGearLayout(layout);trackCollectionGear(); return true;
 }
 
 function finishInventoryChange() {

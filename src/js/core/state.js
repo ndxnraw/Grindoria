@@ -1,5 +1,6 @@
 'use strict';
-const $=id=>document.getElementById(id),canvas=$('game'),ctx=canvas.getContext('2d'),mini=$('minimap').getContext('2d');
+const $=id=>document.getElementById(id),canvas=$('game'),mini=$('minimap').getContext('2d');
+let ctx=canvas.getContext('2d');
 let SIZE=2000;const SAVE='grindoria-save-v1';
 let W=1200,H=700,dpr=1,running=false,paused=false,last=0,clock=0,target=null,face=0,attackCD=0,skillCD=0,slash=0,ring=0,toastTimer=0,saveTimer=0,sound=false,audio=null;
 const keys={},mouse={x:0,y:0},cam={x:1000,y:1050};

@@ -28,6 +28,7 @@ function initializeCareer() {
     };
   }
   for (const id of Object.keys(MATERIALS)) p.career.materials[id] ??= 0;
+  initializeDiscovery();
   initializeCrafting();
   initializeEconomy();
   initializeDungeons();
@@ -59,6 +60,7 @@ function careerBonuses() {
   if (spec.focus === 'mystic') add({ magic: 4 * spec.rank, mp: 8 * spec.rank });
   add({ attack: p.career.endgame.paragon * 2, hp: p.career.endgame.paragon * 5 });
   add(alchemyBonuses());
+  add(discoveryBonuses());
   return b;
 }
 

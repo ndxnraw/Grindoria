@@ -80,3 +80,7 @@ Panely zachovávajú pozíciu pri nákupe a predaji. Náklady ukazujú Máš / P
 ## Dungeony
 
 Mapy (M) → Dungeony alebo Progres (P) → Dungeony. Tri lokality, tri obtiažnosti, vlastné mechaniky bossov a unikátna korisť. Endgame Priepasť ponúka Legendary a Mythic výbavu so zárukou po sérii úspechov. [Pravidlá a odmeny](docs/DUNGEONS.md).
+
+## Bestiár a objavovanie
+
+Progres (P) → Bestiár a zbierky: objavení nepriatelia, bossové trofeje, skryté lokality a dlhodobé ciele s trvalými odmenami. [Pravidlá](docs/DISCOVERY.md). Cieľová platforma: PC prehliadač a existujúci Electron obal.
