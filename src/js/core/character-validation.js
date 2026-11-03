@@ -19,7 +19,7 @@ function validateCharacterItem(item,slot=null) {
   if(!Object.hasOwn(EQUIPMENT,item.slot)||slot&&item.slot!==slot)characterDataError('neplatný slot predmetu.');
   if(typeof item.name!=='string'||!item.name.length||item.name.length>150)characterDataError('názov predmetu.');
   for(const key of ['bonus','value'])if(item[key]!==undefined)assertCharacterNumber(item[key],key);
-  if(item.rarity!==undefined)assertCharacterNumber(item.rarity,'rarita',0,2,true);
+  if(item.rarity!==undefined)assertCharacterNumber(item.rarity,'rarita',0,5,true);
   if(item.enhance!==undefined)assertCharacterNumber(item.enhance,'vylepšenie',0,PROGRESSION.maxEnhancement,true);
   if(item.requiredLevel!==undefined)assertCharacterNumber(item.requiredLevel,'úroveň predmetu',1,105,true);
   if(item.tier!==undefined)assertCharacterNumber(item.tier,'stupeň predmetu',0,105,true);
@@ -28,6 +28,7 @@ function validateCharacterItem(item,slot=null) {
   if(item.icon!==undefined&&!Object.hasOwn(EQUIPMENT,item.icon))characterDataError('ikona výbavy.');
   if(item.classes!==undefined&&(!Array.isArray(item.classes)||item.classes.some(id=>!Object.hasOwn(CLASSES,id))))characterDataError('povolanie predmetu.');
   if(item.stats!==undefined){assertCharacterObject(item.stats,'bonusy predmetu');for(const [key,value]of Object.entries(item.stats)){if(!Object.hasOwn(ITEM_STATS,key))characterDataError('neznámy bonus predmetu.');assertCharacterNumber(value,'hodnota bonusu',-.5,1e9);}}
+  validateGeneratedItem(item);
   if(item.special!==undefined&&(!Array.isArray(item.special)||item.special.length>20||item.special.some(value=>typeof value!=='string'||value.length>500)))characterDataError('vlastnosti predmetu.');
 }
 function validateCharacterWorld(state) {

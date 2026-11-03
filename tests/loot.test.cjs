@@ -114,7 +114,7 @@ test('gear tooltips show requirements, rarity, icon, base stats, bonuses, specia
   const { run } = createGame();
   run('p.level=10;p.equipped.weapon={name:"Nasadený meč",slot:"weapon",bonus:10,enhance:2,stats:{hp:30}};let drop=spawnGroundDrop({kind:"gear",item:{name:"Nový <meč>",slot:"weapon",rarity:2,bonus:20,enhance:1,requiredLevel:8,stats:{hp:10,crit:.02},special:["Výskumný predmet"]}},p);let html=groundDropTooltip(drop);');
   const html = run('html');
-  for (const text of ['Požadovaná úroveň', 'Epická', '<svg', 'Základné atribúty', 'Bonusy', 'Špeciálne vlastnosti', 'Výskumný predmet', 'Možno vybaviť', 'Nasadený meč', 'stat-gain', 'stat-loss', '+7', '−20']) assert(html.includes(text), text);
+  for (const text of ['Požadovaná úroveň', 'Epic', '<svg', 'Základné atribúty', 'Bonusy', 'Špeciálne vlastnosti', 'Výskumný predmet', 'Možno vybaviť', 'Nasadený meč', 'stat-gain', 'stat-loss', '+7', '−20']) assert(html.includes(text), text);
   assert(html.includes('Nový &lt;meč&gt;'));
   run('p.level=1;'); assert.equal(run('canEquipItem(drop.item)'), false); assert.match(run('groundDropTooltip(drop)'), /Nedostatočná úroveň/);
   run('addGearItem({...drop.item});'); assert.equal(run('equipItem(0)'), false); assert.equal(run('p.equipped.weapon.name'), 'Nasadený meč');

@@ -10,6 +10,24 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.16.0] - 2026-11-03
+
+### Added
+- Šesť rarít Common, Uncommon, Rare, Epic, Legendary a Mythic s vlastnými farbami, pravdepodobnosťami a hodnotou.
+- Generátor 20 náhodných bonusov bez opakovania, s uloženými hodmi a rastom podľa úrovne a rarity.
+- Prenikavé zásahy, rýchlosť útoku a bonusové poškodenie proti šiestim skupinám nepriateľov priamo v boji.
+- Trhový odhad podľa kvality a synergie, výkup obchodníka za 25 % odhadu a sprievodca Rarity.
+- Dvanásť testov rarít, generovania, ekonomiky, boja, kompatibility a importu.
+
+### Changed
+- Dropy používajú tabuľky podľa zdroja; Legendary od Lv.50, Mythic od Lv.75, bez zvýšenia množstva výbavy na zemi.
+- Materiály a kovanie rozlišujú šesť rarít; vyššie rarity majú runy náhodných bonusov.
+- Staré Rare/Epic ID, bonusy a ceny zostávajú zachované.
+
+### Fixed
+- Triedenie používa poradie rarity, import overuje integritu náhodných bonusov.
+- Atlas uvádza výsledné šance šiestich rarít; Epic a vyššie majú dlhší despawn.
+
 ## [0.15.0] - 2026-11-03
 
 ### Added
@@ -320,7 +338,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.15.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.16.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -339,3 +357,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.13.0]: https://github.com/ndxnraw/Grindoria/compare/v0.12.0...v0.13.0
 [0.14.0]: https://github.com/ndxnraw/Grindoria/compare/v0.13.0...v0.14.0
 [0.15.0]: https://github.com/ndxnraw/Grindoria/compare/v0.14.0...v0.15.0
+[0.16.0]: https://github.com/ndxnraw/Grindoria/compare/v0.15.0...v0.16.0

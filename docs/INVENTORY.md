@@ -52,3 +52,7 @@ Batoh, desať slotov, rozmiestnenie a zásobníky patria konkrétnemu profilu. U
 ## Vzhľad výbavy
 
 Každý katalógový predmet má odlišnú siluetu podľa rodiny a typu. Nasadenie okamžite zmení náhľad aj postavu vo svete. Úroveň, rarita a vylepšenie menia kovanie a zdobenie. Pozri [APPEARANCE.md](APPEARANCE.md).
+
+## Rarity a bonusy
+
+Tlačidlo Rarity otvorí šance a pravidlá generovania. Nové predmety zobrazujú kvalitu náhodných bonusov, trhový odhad a skutočný výkup obchodníka. Triedenie rešpektuje poradie šiestich rarít; porovnanie zahŕňa aj nové bonusy. Pozri [RARITIES.md](RARITIES.md).

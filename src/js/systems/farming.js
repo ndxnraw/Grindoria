@@ -282,7 +282,7 @@ function farmBonusLoot(m) {
 
 function dropFarmEquipment(m) {
   const rare = m.variant === 'rare', elite = m.variant === 'elite';
-  if (m.type === 'boss') return spawnGroundDrop({ kind: 'gear', item: makeItem(true, m) }, m);
-  if (m.type === 'stone' || rare || rand() < (elite ? .2 : .03)) return spawnGroundDrop({ kind: 'gear', item: makeItem(rare ? rand() < .25 : elite && rand() < .08, m) }, m);
+  if (m.type === 'boss') return spawnGroundDrop({ kind: 'gear', item: makeItem(false, m) }, m);
+  if (m.type === 'stone' || rare || rand() < (elite ? .2 : .03)) return spawnGroundDrop({ kind: 'gear', item: makeItem(false, m) }, m);
 }
 

@@ -3,29 +3,32 @@ const appearancePaths = new Map();
 function appearanceHash(value) { let n=2166136261; for(const c of value) {n^=c.codePointAt(0);n=Math.imul(n,16777619);}return n>>>0; }
 function equipmentAppearance(item) {
   if(!item || !Object.hasOwn(EQUIPMENT,item.slot))return null;
-  const rarity=Math.max(0,Math.min(2,Math.floor(Number(item.rarity)||0)));
+  const rarity=raritySpec(item.rarity).id,rarityInfo=raritySpec(rarity);
   const tier=Math.max(1,Math.min(99,Math.floor(Number(item.tier)||Number(item.requiredLevel)||1)));
   const enhance=Math.max(0,Math.min(9,Math.floor(Number(item.enhance)||0)));
-  const family=rarity,kind=['bow','daggers','fan'].includes(item.weaponKind)?item.weaponKind:item.slot;
+  const family=rarityInfo.family,kind=['bow','daggers','fan'].includes(item.weaponKind)?item.weaponKind:item.slot;
   const models=EQUIPMENT_MODELS[item.slot],fallback=kind+'-'+family;
   const model=typeof item.modelId==='string' && Object.hasOwn(models,item.modelId)?item.modelId:fallback;
-  const seed=appearanceHash(String(item.name||EQUIPMENT[item.slot].names[family]));
+  const seed=appearanceHash(String(item.name||EQUIPMENT[item.slot].names[family])+JSON.stringify(item.affixes||[]));
   const power=Math.max(0,Math.min(1000,Math.floor(Number(item.bonus)||0)));
   const key=[item.slot,model,rarity,tier,enhance,seed,power].join(':');
   if(appearanceCache.has(key))return appearanceCache.get(key);
-  const look={...EQUIPMENT_LOOKS[rarity]},height=['weapon','talisman'].includes(item.slot)?96:64;
+  const look={...EQUIPMENT_LOOKS[family],...({3:{metal:'#bbd99c',dark:'#294c39',trim:'#83ca7b',gem:'#d1f19e'},4:{metal:'#e8bd66',dark:'#62442d',trim:'#ffe3a1',gem:'#ffc45d'},5:{metal:'#f3c0d0',dark:'#552d50',trim:'#f17eaa',gem:'#80e7ed'}}[rarity]||{})},height=['weapon','talisman'].includes(item.slot)?96:64;
   const parts=models[model](look);
   // Silhouette extension follows level, not inventory UID or slot coordinates.
   const grade=Math.min(4,Math.floor((tier-1)/20)),crestY=item.slot==='weapon'?59:item.slot==='talisman'?49:32;
   if(grade)parts.push(modelPath('M'+(32-grade*3)+' '+crestY+'l'+grade*3+'-'+(5+grade*2)+' '+grade*3+' '+(5+grade*2)+'-'+grade*3+' '+(5+grade*2)+'Z',look.metal,look.trim,1));
-  parts.push(modelGem(32,crestY,2+rarity+grade*.5,look.gem));
+  parts.push(modelGem(32,crestY,2+rarityInfo.rank*.6+grade*.5,look.gem));
   // A fixed name engraving distinguishes legacy/named gear without randomizing copies.
   const emblem=seed%4;
   parts.push(modelPath(emblem===0?'M29 '+crestY+'h6m-3-3v6':emblem===1?'M29 '+(crestY-2)+'l6 4m-6 0 6-4':emblem===2?'M29 '+crestY+'l3-3 3 3-3 3Z':'M29 '+(crestY+2)+'l3-5 3 5Z','none',look.trim,.8));
+  if(rarityInfo.rank===1)parts.push(modelPath('M18 18l4 5-4 5-4-5ZM46 18l4 5-4 5-4-5Z',look.gem,look.trim,.8));
+  if(rarityInfo.rank>=4)parts.push(modelPath(rarityInfo.rank===4?'M10 7l8 3-3 11-5-5ZM54 7l-8 3 3 11 5-5Z':'M5 4l15 5-7 14-6-8ZM59 4l-15 5 7 14 6-8ZM26 3l6 5 6-5-6 13Z',look.metal,look.trim,1.2));
+  for(let i=0;i<(item.affixes||[]).length;i++){const code=appearanceHash(item.affixes[i].stat),px=21+i*5;parts.push(modelPath('M'+px+' '+(crestY+15)+'l'+(code%2?2:1)+'-3 2 3-2 '+(1+code%3)+'Z',look.gem,look.trim,.5));}
   const marks=Math.min(5,Math.floor(power/15));
   for(let i=0;i<marks;i++)parts.push(modelPath('M'+(25+i*3)+' '+(crestY+9)+'v3','none',look.trim,.8));
   for(let i=0;i<enhance;i++)parts.push(modelGem(23+(i%5)*4,crestY-12-Math.floor(i/5)*4,1.3,enhance>=6?'#fff2ac':look.gem));
-  const result={key,model,slot:item.slot,height,parts,glow:enhance>=6?look.gem:null,grade,rarity,tier};
+  const result={key,model,slot:item.slot,height,parts,glow:enhance>=6||rarityInfo.rank>=4?look.gem:null,grade,rarity,tier};
   if(appearanceCache.size>=256)appearanceCache.delete(appearanceCache.keys().next().value);
   appearanceCache.set(key,result);return result;
 }
@@ -80,7 +83,7 @@ function drawWornEquipment(gear,x,y,step=0) {
 }
 function generatedWeaponKind() { return p.classId==='shaman'?'fan':p.classId==='ninja'?(p.schools.ninja==='archery'?'bow':'daggers'):'sword'; }
 function equipmentItemName(slot,rarity,weaponKind) {
- const name=EQUIPMENT[slot].names[rarity];
- if(slot==='weapon'&&weaponKind==='daggers')return ['Pútnické dvojdýky','Mesačné dvojdýky','Dračie dvojdýky'][rarity];
+ const name=EQUIPMENT[slot].names[raritySpec(rarity).family];
+ if(slot==='weapon'&&weaponKind==='daggers')return ['Pútnické dvojdýky','Mesačné dvojdýky','Dračie dvojdýky'][raritySpec(rarity).family];
  return slot==='weapon'?name.replace('meč',({bow:'luk',daggers:'dvojdýky',fan:'vejár'})[weaponKind]||'meč'):name;
 }

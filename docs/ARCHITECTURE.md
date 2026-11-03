@@ -98,3 +98,7 @@ data/characters.js centralizuje konfiguráciu. ui/characters.js riadi tvorbu, v�
 ## Modely výbavy
 
 Register data/equipment-models.js a resolver systems/appearance.js zdieľajú geometriu medzi SVG a Canvas Path2D. Výbava sa vrství na postave aj v portrétoch. Pozri [APPEARANCE.md](APPEARANCE.md).
+
+## Generátor predmetov
+
+Data/rarities.js definuje stabilné ID a poradie šiestich rarít, váhy zdrojov a bonusy. Systems/item-generation.js generuje a overuje hody aj stats a počíta hodnotu. Všetky prirodzené dropy používajú rovnaké tabuľky. Nové bojové bonusy používa hurtMob a attack; existujúce profiles zostávajú jediným úložiskom. Pozri [RARITIES.md](RARITIES.md).

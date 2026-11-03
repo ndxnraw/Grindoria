@@ -155,3 +155,5 @@ Hra nepoužíva originálne assety Metin2. Školy a názvy klasických schopnost
 
 
 Vizuálna výbava: 39 vektorových modelov pre desať slotov a štyri typy zbraní. Nasadené predmety sú viditeľné v hernom svete, inventári a výbere postáv. [Modely a rozširovanie](docs/APPEARANCE.md).
+
+Šesť rarít od Common po Mythic, 20 náhodných bonusov, kvalita hodov a odhad hodnoty. [Generovanie predmetov a šance](docs/RARITIES.md).

@@ -60,7 +60,7 @@ Každý typ má samostatné šance, množstvá, výber slotov výbavy, doplnkov�
 
 V bunkách materiálov je šanca / počet kusov. Množstvo Yang = základ z tabuľky × (1 + 0,12 × úroveň), zaokrúhlené. Yang používa rovnakú peňaženku ako zlato.
 
-| Typ | Yang – základ | Ruda | Knihy | Esencia | Prach | Kamene vylepšenia | Výbava | Epická pri drope výbavy | Relikvia |
+| Typ | Yang – základ | Ruda | Knihy | Esencia | Prach | Kamene vylepšenia | Výbava | Podiel prémiovej tabuľky | Relikvia |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Metin praskliny | 18–32 | 100 % / 1–2 | 35 % / 1–1 | 55 % / 1–3 | 20 % / 1–2 | 5 % / 1–1 | 45 % | 2,5 % | 1,5 % |
 | Metin šeliem | 25–42 | 85 % / 2–3 | 42 % / 1–1 | 60 % / 2–4 | 25 % / 1–2 | 8 % / 1–1 | 50 % | 4 % | 2 % |
@@ -92,3 +92,5 @@ Po pancieri a základnej odolnosti sa uplatní typová odolnosť alebo slabina. 
 ## Náhodné rozmiestnenie od 0.11.0
 
 Šuterland zachováva 99 identít a úrovne 1–99 v štyroch oblastiach. Súradnice vznikajú náhodným vzorkovaním s rozostupom približne 90 jednotiek, bez mriežky. Pôvodné mapy používajú rovnaký princíp pre svoje kamene aj skupiny. Pri respawne sa Metin premiestni vo svojej oblasti; typ, level a identita zostávajú zachované. Staré snímky sa prenesú bez oživenia mŕtvych alebo vytvorenia duplicitnej koristi.
+
+Od 0.16.0 stĺpec prémiovej tabuľky určuje miešanie šiestich rarít, nie výslednú šancu Epic. Reálne šance zobrazuje Atlas; podrobnosti sú v [RARITIES.md](RARITIES.md).

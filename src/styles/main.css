@@ -146,3 +146,13 @@ body.character-select .game-shell:fullscreen,body.native-fullscreen.character-se
 
 .game-shell:fullscreen .roster-stage,body.native-fullscreen .roster-stage{height:calc(100dvh - 260px);min-height:440px}
 .game-shell:fullscreen .roster-avatar,body.native-fullscreen .roster-avatar{height:min(650px,65dvh);width:min(100%,500px);max-width:500px}
+
+/* Six rarity identities; numeric IDs remain backward compatible. */
+.rarity-0{--rarity:#bfc5bd}.rarity-3{--rarity:#83ca7b}.rarity-1{--rarity:#86bdea}.rarity-2{--rarity:#cc9ce9}.rarity-4{--rarity:#f2b65d}.rarity-5{--rarity:#f17eaa}
+.grid-item[class*="rarity-"],.equipment-slot[class*="rarity-"],.roster-equipment .has-gear[class*="rarity-"],.rarity-guide-grid .career-card{border-color:var(--rarity);background-color:color-mix(in srgb,var(--rarity) 11%,#17231e)}
+.item-description[class*="rarity-"] h3,.loot-heading[class*="rarity-"] h3,.rarity-guide-grid [class*="rarity-"] h3{color:var(--rarity)}
+.item-roll-info{border-top:1px solid #88744955;margin-top:9px}.item-roll-info b{color:#e6ce91}
+.rarity-guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.rarity-guide-grid .career-card{margin:0}
+.rarity-odds{overflow-x:auto}.rarity-odds table{border-collapse:collapse;font-size:10px;white-space:nowrap}.rarity-odds td,.rarity-odds th{padding:8px 5px;border-bottom:1px solid #88744944;text-align:right}.rarity-odds th:first-child{text-align:left}
+
+.overlay:has(.rarity-guide-grid){position:fixed;inset:0;z-index:50;padding:20px;background:#080b0bd9;backdrop-filter:blur(4px)}

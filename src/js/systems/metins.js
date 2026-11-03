@@ -75,9 +75,9 @@ function restoreMetinGuards(population, prior) {
   return population;
 }
 
-function metinDamage(m, amount, type='physical') {
+function metinDamage(m, amount, type='physical',penetrated=false) {
   if (!Number.isFinite(amount) || amount <= 0) return 0;
-  return resolveEnemyDamage(m,Math.max(1, Math.round(Math.max(1, amount - (m.metinArmor || 0)) * (1 - (m.metinResistance || 0)))),type);
+  return resolveEnemyDamage(m,Math.max(1, Math.round(Math.max(1, amount - (penetrated?0:(m.metinArmor || 0))) * (1 - (penetrated?0:(m.metinResistance || 0))))),type,penetrated);
 }
 
 function registerMetinAttack(m) {
@@ -135,8 +135,7 @@ function dropMetinLoot(stone) {
   const [extra, chance, min, max] = pool.extra;
   if (rand() < chance) dropMaterial(extra, metinLootAmount(min, max), stone);
   if (rand() < pool.gear) {
-    const item = makeItem(rand() < pool.epic, stone), slot = pool.slots[Math.floor(rand() * pool.slots.length)], spec = EQUIPMENT[slot];
-    item.slot = slot; item.weaponKind=slot==='weapon'?(item.weaponKind||generatedWeaponKind()):undefined; item.name = equipmentItemName(slot,item.rarity,item.weaponKind); item.bonus = spec.base + Math.floor(item.tier * spec.scale) + item.rarity * spec.rare;
+    const slot=pool.slots[Math.min(pool.slots.length-1,Math.floor(itemRandom()*pool.slots.length))],item=makeItem(false,stone,slot);
     spawnGroundDrop({ kind: 'gear', item }, stone);
   }
   if (rand() < pool.rare) spawnGroundDrop({ kind: 'relic', relicId: pool.relic, count: 1 }, stone);

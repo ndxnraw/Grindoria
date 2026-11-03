@@ -19,7 +19,7 @@ function drawGroundLoot() {
     if (visual.x < -40 || visual.x > W + 40 || visual.y < -65 || visual.y > H + 40) continue;
     const item = groundDropView(drop); if (!item) continue;
     const location = screen(drop.x, drop.y), selected = drop.id === hoveredLootId;
-    const color = ['#cfbc7f', '#88c5dd', '#c899e5'][item.rarity || 0];
+    const color = rarityColor(item.rarity);
     ellipse(location.x, location.y, selected ? 19 : 12, selected ? 7 : 4, color + (selected ? '88' : '40'));
     const icon = groundIcon(item), height = item.slot === 'weapon' || item.slot === 'talisman' ? 36 : 28, width = height === 36 ? 23 : 28;
     if (icon) ctx.drawImage(icon, visual.x - width / 2, visual.y - height / 2, width, height);

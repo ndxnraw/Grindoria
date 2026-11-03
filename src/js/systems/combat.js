@@ -1,6 +1,6 @@
-function hit(m, amount, type='physical') {
+function hit(m, amount, type='physical',penetrated=false) {
   if (m.hp <= 0 || !Number.isFinite(amount) || amount <= 0) return 0;
-  const damage = m.type === 'stone' ? metinDamage(m, amount, type) : resolveEnemyDamage(m, amount, type), actual = Math.min(m.hp, damage);
+  const damage = m.type === 'stone' ? metinDamage(m, amount, type,penetrated) : resolveEnemyDamage(m, amount, type,penetrated), actual = Math.min(m.hp, damage);
   registerPlayerCombat(m);
   if (m.type === 'stone') registerMetinAttack(m); else provokeEnemyGroup(m);
   m.hp = Math.max(0, m.hp - damage); m.hit = .15;
@@ -62,10 +62,12 @@ function hurtMob(m,mult=1,magic=false,key=castingSkillKey,opts={}) {
   if(!m||m.hp<=0)return 0;if(key)rememberSkill(m,key);
   const type=opts.type||(key?skillDamageType(key):magic?'arcane':basicDamageType()),critical=rand()<criticalChance(),multiplier=opts.multiplier??castingMultiplier;
   const magicBonus=!['physical','piercing'].includes(type)?p.intelligence*4+careerBonuses().magic+equipmentBonuses().magic:0;
-  const raw=(damage()+magicBonus)*mult*(key?skillFactor(key):1)*multiplier*(1+(passiveBonuses().outgoing[type]||0))*(critical?1.8:1);
-  const actual=hit(m,Math.max(1,Math.round(raw*(.94+rand()*.12))),type);
+  const pierced=penetrationChance()>0 && rand()<penetrationChance();
+  const raw=(damage()+magicBonus)*mult*(key?skillFactor(key):1)*multiplier*(1+(passiveBonuses().outgoing[type]||0))*(critical?1.8:1)*(1+enemyGearBonus(m));
+  const actual=hit(m,Math.max(1,Math.round(raw*(.94+rand()*.12))),type,pierced);
   if(actual>0&&opts.basic)registerBasicHit(m);
   if(active('enchanted'))p.hp=Math.min(maxHP(),p.hp+actual*.15);
+  if(pierced&&actual>0)float('PRENIKAVÝ!',m.x,m.y-103,'#a9e5e0');
   if(critical&&actual>0)float('KRITICKÝ!',m.x,m.y-90,'#f2bc70');return actual;
 }
 

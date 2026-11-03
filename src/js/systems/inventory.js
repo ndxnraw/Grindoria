@@ -151,7 +151,7 @@ function sortInventory(tab = 'gear') {
   if (tab === 'supplies') {
     supplyEntries().sort((a, b) => a.name.localeCompare(b.name, 'sk')).forEach((item, i) => p.inventory.supplyCells[item.id] = i);
   } else {
-    const sorted = [...p.bag].sort((a, b) => { const [aw, ah] = itemSize(a), [bw, bh] = itemSize(b); return bw * bh - aw * ah || b.rarity - a.rarity || (b.tier || 0) - (a.tier || 0) || String(a.name).localeCompare(String(b.name), 'sk'); });
+    const sorted = [...p.bag].sort((a, b) => { const [aw, ah] = itemSize(a), [bw, bh] = itemSize(b); return bw * bh - aw * ah || rarityRank(b.rarity) - rarityRank(a.rarity) || (b.tier || 0) - (a.tier || 0) || String(a.name).localeCompare(String(b.name), 'sk'); });
     const layout = gearLayout(sorted, p.inventory.pages, false);
     if (!layout) return false;
     p.bag = sorted; applyGearLayout(layout);
@@ -192,6 +192,6 @@ function useInventorySupply(id) {
 
 function sellItem(index) {
   if (!Number.isInteger(index) || index < 0 || index >= p.bag.length) return false;
-  p.gold += p.bag.splice(index, 1)[0].value || 0;
+  p.gold += itemSaleValue(p.bag.splice(index, 1)[0]);
   finishInventoryChange(); inventory(); return true;
 }

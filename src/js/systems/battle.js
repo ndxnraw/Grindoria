@@ -34,15 +34,15 @@ function playerResistances() {
   return Object.fromEntries(Object.keys(DAMAGE_TYPES).map(type=>[type,Math.max(-.5,Math.min(.75,(gear[type+'Resist']||0)+(passive.resist[type]||0)))]));
 }
 
-function resolveEnemyDamage(m,amount,type='physical') {
+function resolveEnemyDamage(m,amount,type='physical',penetrated=false) {
   if(!Number.isFinite(amount)||amount<=0)return 0;
-  return Math.max(1,Math.round(amount*(1-(enemyResistances(m)[type]||0))));
+  return Math.max(1,Math.round(amount*(1-(penetrated?Math.min(0,enemyResistances(m)[type]||0):(enemyResistances(m)[type]||0)))));
 }
 
 function enemyDamageType(m) { return m?.damageType|| (m?.skin==='scorpion'?'poison':m?.skin==='demon'?'fire':'physical'); }
 function basicDamageType() { return rangedBasic()?'piercing':'physical'; }
 function skillDamageType(key) { return ACTIVE_SKILLS[key]?.type||'arcane'; }
-function percentItemStat(stat) { return stat==='crit'||stat.endsWith('Resist'); }
+function percentItemStat(stat) { return stat==='crit'||Boolean(ITEM_AFFIXES[stat]?.percent)||stat.endsWith('Resist'); }
 
 function resetCombatFlow() {
   combatAssist.aimTime = 0;

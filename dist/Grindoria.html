@@ -148,9 +148,19 @@ body.character-select .game-shell:fullscreen,body.native-fullscreen.character-se
 
 .game-shell:fullscreen .roster-stage,body.native-fullscreen .roster-stage{height:calc(100dvh - 260px);min-height:440px}
 .game-shell:fullscreen .roster-avatar,body.native-fullscreen .roster-avatar{height:min(650px,65dvh);width:min(100%,500px);max-width:500px}
+
+/* Six rarity identities; numeric IDs remain backward compatible. */
+.rarity-0{--rarity:#bfc5bd}.rarity-3{--rarity:#83ca7b}.rarity-1{--rarity:#86bdea}.rarity-2{--rarity:#cc9ce9}.rarity-4{--rarity:#f2b65d}.rarity-5{--rarity:#f17eaa}
+.grid-item[class*="rarity-"],.equipment-slot[class*="rarity-"],.roster-equipment .has-gear[class*="rarity-"],.rarity-guide-grid .career-card{border-color:var(--rarity);background-color:color-mix(in srgb,var(--rarity) 11%,#17231e)}
+.item-description[class*="rarity-"] h3,.loot-heading[class*="rarity-"] h3,.rarity-guide-grid [class*="rarity-"] h3{color:var(--rarity)}
+.item-roll-info{border-top:1px solid #88744955;margin-top:9px}.item-roll-info b{color:#e6ce91}
+.rarity-guide-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.rarity-guide-grid .career-card{margin:0}
+.rarity-odds{overflow-x:auto}.rarity-odds table{border-collapse:collapse;font-size:10px;white-space:nowrap}.rarity-odds td,.rarity-odds th{padding:8px 5px;border-bottom:1px solid #88744944;text-align:right}.rarity-odds th:first-child{text-align:left}
+
+.overlay:has(.rarity-guide-grid){position:fixed;inset:0;z-index:50;padding:20px;background:#080b0bd9;backdrop-filter:blur(4px)}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b id="game-version">ALPHA 0.15.0</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b id="game-version">ALPHA 0.16.0</b></span></header>
 <main><div class="world-title"><div><span class="eyebrow">KAPITOLA I · PREBUDENIE</span><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Pod pokojnými korunami sa prebúdza stará temnota.</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
 <section id="game-shell" class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb iba WASD alebo šípkami, cieľ kliknutím, smerový útok medzerníkom, schopnosť Q, liečenie E, korisť ľavým kliknutím alebo Y v okolí, zlato a zásoby automaticky."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
 <div class="hud player"><div id="portrait" class="portrait">侍</div><div><div class="player-name"><b id="playername">Pútnik</b><small id="playerclass">Bojovník</small> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 60 skúseností</small></div></div>
@@ -334,6 +344,40 @@ const EQUIPMENT = {
   talisman: { name: 'Talizman', size: [1, 2], stat: 'crit', base: 1, scale: .025, rare: 1, names: ['Pečať pútnika', 'Mesačná pečať', 'Dračia pečať'] }
 };
 const ITEM_STATS = { attack: 'Útok', defense: 'Obrana', hp: 'Max. zdravie', mp: 'Max. mana', magic: 'Sila kúziel', speed: 'Rýchlosť pohybu', crit: 'Kritický zásah' };
+
+
+// src/js/data/rarities.js
+// Stable numeric IDs preserve all pre-0.16 saves: 1=Rare, 2=Epic.
+// Always order by rank, never by numeric ID.
+const RARITIES = [
+ {id:0,name:'Common',rank:0,color:'#bfc5bd',family:0,affixes:0,power:0,market:1},
+ {id:3,name:'Uncommon',rank:1,color:'#83ca7b',family:0,affixes:1,power:.5,market:2},
+ {id:1,name:'Rare',rank:2,color:'#86bdea',family:1,affixes:2,power:1,market:5},
+ {id:2,name:'Epic',rank:3,color:'#cc9ce9',family:2,affixes:3,power:2,market:14},
+ {id:4,name:'Legendary',rank:4,color:'#f2b65d',family:2,affixes:4,power:3.5,market:45},
+ {id:5,name:'Mythic',rank:5,color:'#f17eaa',family:2,affixes:5,power:5,market:180}
+];
+const ITEM_GENERATION = {version:1,legendaryLevel:50,mythicLevel:75,maxAttackSpeed:.6,maxPenetration:.5,maxEnemyBonus:1};
+const RARITY_WEIGHTS = {
+ normal:[750000,190000,55000,4500,490,10],
+ elite:[550000,300000,130000,18000,1950,50],
+ rare:[300000,390000,260000,47000,2900,100],
+ boss:[150000,300000,420000,120000,9800,200],
+ metin:[500000,330000,140000,28000,1900,100],
+ reward:[0,0,0,980000,19800,200]
+};
+const ITEM_AFFIXES = {
+ attack:{base:3,scale:.3},hp:{base:25,scale:2},mp:{base:20,scale:1.6},
+ crit:{base:.01,scale:.0002,percent:true},penetration:{base:.012,scale:.0002,percent:true},
+ attackSpeed:{base:.012,scale:.0002,percent:true},speed:{base:3,scale:.1},
+ physicalResist:{base:.015,scale:.0003,percent:true},piercingResist:{base:.015,scale:.0003,percent:true},
+ fireResist:{base:.015,scale:.0003,percent:true},poisonResist:{base:.015,scale:.0003,percent:true},
+ darkResist:{base:.015,scale:.0003,percent:true},lightningResist:{base:.015,scale:.0003,percent:true},arcaneResist:{base:.015,scale:.0003,percent:true},
+ wolfDamage:{base:.025,scale:.0005,percent:true},scorpionDamage:{base:.025,scale:.0005,percent:true},
+ yetiDamage:{base:.025,scale:.0005,percent:true},demonDamage:{base:.025,scale:.0005,percent:true},
+ metinDamage:{base:.025,scale:.0005,percent:true},bossDamage:{base:.025,scale:.0005,percent:true}
+};
+Object.assign(ITEM_STATS,{penetration:'Prenikavý zásah',attackSpeed:'Rýchlosť útoku',wolfDamage:'Poškodenie · vlci',scorpionDamage:'Poškodenie · škorpióny',yetiDamage:'Poškodenie · yeti',demonDamage:'Poškodenie · démoni',metinDamage:'Poškodenie · Metiny',bossDamage:'Poškodenie · bossovia'});
 
 
 // src/js/data/equipment-models.js
@@ -754,7 +798,7 @@ function validateCharacterItem(item,slot=null) {
   if(!Object.hasOwn(EQUIPMENT,item.slot)||slot&&item.slot!==slot)characterDataError('neplatný slot predmetu.');
   if(typeof item.name!=='string'||!item.name.length||item.name.length>150)characterDataError('názov predmetu.');
   for(const key of ['bonus','value'])if(item[key]!==undefined)assertCharacterNumber(item[key],key);
-  if(item.rarity!==undefined)assertCharacterNumber(item.rarity,'rarita',0,2,true);
+  if(item.rarity!==undefined)assertCharacterNumber(item.rarity,'rarita',0,5,true);
   if(item.enhance!==undefined)assertCharacterNumber(item.enhance,'vylepšenie',0,PROGRESSION.maxEnhancement,true);
   if(item.requiredLevel!==undefined)assertCharacterNumber(item.requiredLevel,'úroveň predmetu',1,105,true);
   if(item.tier!==undefined)assertCharacterNumber(item.tier,'stupeň predmetu',0,105,true);
@@ -763,6 +807,7 @@ function validateCharacterItem(item,slot=null) {
   if(item.icon!==undefined&&!Object.hasOwn(EQUIPMENT,item.icon))characterDataError('ikona výbavy.');
   if(item.classes!==undefined&&(!Array.isArray(item.classes)||item.classes.some(id=>!Object.hasOwn(CLASSES,id))))characterDataError('povolanie predmetu.');
   if(item.stats!==undefined){assertCharacterObject(item.stats,'bonusy predmetu');for(const [key,value]of Object.entries(item.stats)){if(!Object.hasOwn(ITEM_STATS,key))characterDataError('neznámy bonus predmetu.');assertCharacterNumber(value,'hodnota bonusu',-.5,1e9);}}
+  validateGeneratedItem(item);
   if(item.special!==undefined&&(!Array.isArray(item.special)||item.special.length>20||item.special.some(value=>typeof value!=='string'||value.length>500)))characterDataError('vlastnosti predmetu.');
 }
 function validateCharacterWorld(state) {
@@ -912,9 +957,9 @@ function update(dt) {
 
 
 // src/js/systems/combat.js
-function hit(m, amount, type='physical') {
+function hit(m, amount, type='physical',penetrated=false) {
   if (m.hp <= 0 || !Number.isFinite(amount) || amount <= 0) return 0;
-  const damage = m.type === 'stone' ? metinDamage(m, amount, type) : resolveEnemyDamage(m, amount, type), actual = Math.min(m.hp, damage);
+  const damage = m.type === 'stone' ? metinDamage(m, amount, type,penetrated) : resolveEnemyDamage(m, amount, type,penetrated), actual = Math.min(m.hp, damage);
   registerPlayerCombat(m);
   if (m.type === 'stone') registerMetinAttack(m); else provokeEnemyGroup(m);
   m.hp = Math.max(0, m.hp - damage); m.hit = .15;
@@ -976,10 +1021,12 @@ function hurtMob(m,mult=1,magic=false,key=castingSkillKey,opts={}) {
   if(!m||m.hp<=0)return 0;if(key)rememberSkill(m,key);
   const type=opts.type||(key?skillDamageType(key):magic?'arcane':basicDamageType()),critical=rand()<criticalChance(),multiplier=opts.multiplier??castingMultiplier;
   const magicBonus=!['physical','piercing'].includes(type)?p.intelligence*4+careerBonuses().magic+equipmentBonuses().magic:0;
-  const raw=(damage()+magicBonus)*mult*(key?skillFactor(key):1)*multiplier*(1+(passiveBonuses().outgoing[type]||0))*(critical?1.8:1);
-  const actual=hit(m,Math.max(1,Math.round(raw*(.94+rand()*.12))),type);
+  const pierced=penetrationChance()>0 && rand()<penetrationChance();
+  const raw=(damage()+magicBonus)*mult*(key?skillFactor(key):1)*multiplier*(1+(passiveBonuses().outgoing[type]||0))*(critical?1.8:1)*(1+enemyGearBonus(m));
+  const actual=hit(m,Math.max(1,Math.round(raw*(.94+rand()*.12))),type,pierced);
   if(actual>0&&opts.basic)registerBasicHit(m);
   if(active('enchanted'))p.hp=Math.min(maxHP(),p.hp+actual*.15);
+  if(pierced&&actual>0)float('PRENIKAVÝ!',m.x,m.y-103,'#a9e5e0');
   if(critical&&actual>0)float('KRITICKÝ!',m.x,m.y-90,'#f2bc70');return actual;
 }
 
@@ -1035,19 +1082,14 @@ function experience(n) {
   if (p.level === PROGRESSION.maxLevel) p.xp = 0;
 }
 
-function rarityName(r){return ['Bežná','Vzácna','Epická'][r]||'Bežná';}
+function rarityName(r){return raritySpec(r).name;}
 
-function makeItem(epic=false, source=null) {
-  const rarity = epic ? 2 : source?.variant==='rare' ? 1 : rand() < (source?.variant==='elite' ? .45 : .16) ? 1 : 0;
-  const slots = Object.keys(EQUIPMENT), slot = slots[Math.min(slots.length-1, Math.floor(rand()*slots.length))], spec = EQUIPMENT[slot];
-  const tier = Math.min(99, source ? enemyLevel(source) : map().enemyLevel);
-  const stats={};
-  if(rarity>0){if(slot==='weapon')stats.crit=.005*rarity;else{const skin=source?.type==='stone'?(METIN_GUARDS.find(t=>source.level<=t.max)?.skin||'demon'):source?.skin;const type=skin?enemyDamageType({skin}):Object.keys(DAMAGE_TYPES)[Math.floor(rand()*Object.keys(DAMAGE_TYPES).length)];stats[type+'Resist']=Math.min(.2,.02+rarity*.02+tier*.001);}}
-  const weaponKind=slot==='weapon'?generatedWeaponKind():undefined;
-  return { name: equipmentItemName(slot,rarity,weaponKind), weaponKind, slot, rarity, tier, requiredLevel: tier, enhance: 0, stats, bonus: spec.base + Math.floor(tier * spec.scale) + rarity * spec.rare, value: 12 + tier * 3 + rarity * 25 };
+function makeItem(epic=false, source=null, forcedSlot=null) {
+  const rarity=rollItemRarity(source,epic),slots=Object.keys(EQUIPMENT),slot=forcedSlot||slots[Math.min(slots.length-1,Math.floor(itemRandom()*slots.length))];
+  return generateEquipmentItem(slot,rarity,raritySourceLevel(source));
 }
 
-function awardItem(epic=false,source=null){const item=makeItem(epic,source);if(!addGearItem(item)){p.gold+=item.value;float('Batoh plný · +'+item.value+' zlata',p.x,p.y-110,'#d6cb99');return item;}float(item.name+' → I',p.x,p.y-110,item.rarity===2?'#d3a3eb':item.rarity===1?'#a3ceec':'#d1dab7');return item;}
+function awardItem(epic=false,source=null){const item=makeItem(epic,source);if(!addGearItem(item)){p.gold+=itemSaleValue(item);float('Batoh plný · +'+itemSaleValue(item)+' zlata',p.x,p.y-110,'#d6cb99');return item;}float(item.name+' → I',p.x,p.y-110,rarityColor(item.rarity));return item;}
 
 
 
@@ -1700,8 +1742,8 @@ function farmBonusLoot(m) {
 
 function dropFarmEquipment(m) {
   const rare = m.variant === 'rare', elite = m.variant === 'elite';
-  if (m.type === 'boss') return spawnGroundDrop({ kind: 'gear', item: makeItem(true, m) }, m);
-  if (m.type === 'stone' || rare || rand() < (elite ? .2 : .03)) return spawnGroundDrop({ kind: 'gear', item: makeItem(rare ? rand() < .25 : elite && rand() < .08, m) }, m);
+  if (m.type === 'boss') return spawnGroundDrop({ kind: 'gear', item: makeItem(false, m) }, m);
+  if (m.type === 'stone' || rare || rand() < (elite ? .2 : .03)) return spawnGroundDrop({ kind: 'gear', item: makeItem(false, m) }, m);
 }
 
 
@@ -1860,7 +1902,7 @@ function sortInventory(tab = 'gear') {
   if (tab === 'supplies') {
     supplyEntries().sort((a, b) => a.name.localeCompare(b.name, 'sk')).forEach((item, i) => p.inventory.supplyCells[item.id] = i);
   } else {
-    const sorted = [...p.bag].sort((a, b) => { const [aw, ah] = itemSize(a), [bw, bh] = itemSize(b); return bw * bh - aw * ah || b.rarity - a.rarity || (b.tier || 0) - (a.tier || 0) || String(a.name).localeCompare(String(b.name), 'sk'); });
+    const sorted = [...p.bag].sort((a, b) => { const [aw, ah] = itemSize(a), [bw, bh] = itemSize(b); return bw * bh - aw * ah || rarityRank(b.rarity) - rarityRank(a.rarity) || (b.tier || 0) - (a.tier || 0) || String(a.name).localeCompare(String(b.name), 'sk'); });
     const layout = gearLayout(sorted, p.inventory.pages, false);
     if (!layout) return false;
     p.bag = sorted; applyGearLayout(layout);
@@ -1901,7 +1943,7 @@ function useInventorySupply(id) {
 
 function sellItem(index) {
   if (!Number.isInteger(index) || index < 0 || index >= p.bag.length) return false;
-  p.gold += p.bag.splice(index, 1)[0].value || 0;
+  p.gold += itemSaleValue(p.bag.splice(index, 1)[0]);
   finishInventoryChange(); inventory(); return true;
 }
 
@@ -1912,29 +1954,32 @@ const appearancePaths = new Map();
 function appearanceHash(value) { let n=2166136261; for(const c of value) {n^=c.codePointAt(0);n=Math.imul(n,16777619);}return n>>>0; }
 function equipmentAppearance(item) {
   if(!item || !Object.hasOwn(EQUIPMENT,item.slot))return null;
-  const rarity=Math.max(0,Math.min(2,Math.floor(Number(item.rarity)||0)));
+  const rarity=raritySpec(item.rarity).id,rarityInfo=raritySpec(rarity);
   const tier=Math.max(1,Math.min(99,Math.floor(Number(item.tier)||Number(item.requiredLevel)||1)));
   const enhance=Math.max(0,Math.min(9,Math.floor(Number(item.enhance)||0)));
-  const family=rarity,kind=['bow','daggers','fan'].includes(item.weaponKind)?item.weaponKind:item.slot;
+  const family=rarityInfo.family,kind=['bow','daggers','fan'].includes(item.weaponKind)?item.weaponKind:item.slot;
   const models=EQUIPMENT_MODELS[item.slot],fallback=kind+'-'+family;
   const model=typeof item.modelId==='string' && Object.hasOwn(models,item.modelId)?item.modelId:fallback;
-  const seed=appearanceHash(String(item.name||EQUIPMENT[item.slot].names[family]));
+  const seed=appearanceHash(String(item.name||EQUIPMENT[item.slot].names[family])+JSON.stringify(item.affixes||[]));
   const power=Math.max(0,Math.min(1000,Math.floor(Number(item.bonus)||0)));
   const key=[item.slot,model,rarity,tier,enhance,seed,power].join(':');
   if(appearanceCache.has(key))return appearanceCache.get(key);
-  const look={...EQUIPMENT_LOOKS[rarity]},height=['weapon','talisman'].includes(item.slot)?96:64;
+  const look={...EQUIPMENT_LOOKS[family],...({3:{metal:'#bbd99c',dark:'#294c39',trim:'#83ca7b',gem:'#d1f19e'},4:{metal:'#e8bd66',dark:'#62442d',trim:'#ffe3a1',gem:'#ffc45d'},5:{metal:'#f3c0d0',dark:'#552d50',trim:'#f17eaa',gem:'#80e7ed'}}[rarity]||{})},height=['weapon','talisman'].includes(item.slot)?96:64;
   const parts=models[model](look);
   // Silhouette extension follows level, not inventory UID or slot coordinates.
   const grade=Math.min(4,Math.floor((tier-1)/20)),crestY=item.slot==='weapon'?59:item.slot==='talisman'?49:32;
   if(grade)parts.push(modelPath('M'+(32-grade*3)+' '+crestY+'l'+grade*3+'-'+(5+grade*2)+' '+grade*3+' '+(5+grade*2)+'-'+grade*3+' '+(5+grade*2)+'Z',look.metal,look.trim,1));
-  parts.push(modelGem(32,crestY,2+rarity+grade*.5,look.gem));
+  parts.push(modelGem(32,crestY,2+rarityInfo.rank*.6+grade*.5,look.gem));
   // A fixed name engraving distinguishes legacy/named gear without randomizing copies.
   const emblem=seed%4;
   parts.push(modelPath(emblem===0?'M29 '+crestY+'h6m-3-3v6':emblem===1?'M29 '+(crestY-2)+'l6 4m-6 0 6-4':emblem===2?'M29 '+crestY+'l3-3 3 3-3 3Z':'M29 '+(crestY+2)+'l3-5 3 5Z','none',look.trim,.8));
+  if(rarityInfo.rank===1)parts.push(modelPath('M18 18l4 5-4 5-4-5ZM46 18l4 5-4 5-4-5Z',look.gem,look.trim,.8));
+  if(rarityInfo.rank>=4)parts.push(modelPath(rarityInfo.rank===4?'M10 7l8 3-3 11-5-5ZM54 7l-8 3 3 11 5-5Z':'M5 4l15 5-7 14-6-8ZM59 4l-15 5 7 14 6-8ZM26 3l6 5 6-5-6 13Z',look.metal,look.trim,1.2));
+  for(let i=0;i<(item.affixes||[]).length;i++){const code=appearanceHash(item.affixes[i].stat),px=21+i*5;parts.push(modelPath('M'+px+' '+(crestY+15)+'l'+(code%2?2:1)+'-3 2 3-2 '+(1+code%3)+'Z',look.gem,look.trim,.5));}
   const marks=Math.min(5,Math.floor(power/15));
   for(let i=0;i<marks;i++)parts.push(modelPath('M'+(25+i*3)+' '+(crestY+9)+'v3','none',look.trim,.8));
   for(let i=0;i<enhance;i++)parts.push(modelGem(23+(i%5)*4,crestY-12-Math.floor(i/5)*4,1.3,enhance>=6?'#fff2ac':look.gem));
-  const result={key,model,slot:item.slot,height,parts,glow:enhance>=6?look.gem:null,grade,rarity,tier};
+  const result={key,model,slot:item.slot,height,parts,glow:enhance>=6||rarityInfo.rank>=4?look.gem:null,grade,rarity,tier};
   if(appearanceCache.size>=256)appearanceCache.delete(appearanceCache.keys().next().value);
   appearanceCache.set(key,result);return result;
 }
@@ -1989,9 +2034,82 @@ function drawWornEquipment(gear,x,y,step=0) {
 }
 function generatedWeaponKind() { return p.classId==='shaman'?'fan':p.classId==='ninja'?(p.schools.ninja==='archery'?'bow':'daggers'):'sword'; }
 function equipmentItemName(slot,rarity,weaponKind) {
- const name=EQUIPMENT[slot].names[rarity];
- if(slot==='weapon'&&weaponKind==='daggers')return ['Pútnické dvojdýky','Mesačné dvojdýky','Dračie dvojdýky'][rarity];
+ const name=EQUIPMENT[slot].names[raritySpec(rarity).family];
+ if(slot==='weapon'&&weaponKind==='daggers')return ['Pútnické dvojdýky','Mesačné dvojdýky','Dračie dvojdýky'][raritySpec(rarity).family];
  return slot==='weapon'?name.replace('meč',({bow:'luk',daggers:'dvojdýky',fan:'vejár'})[weaponKind]||'meč'):name;
+}
+
+
+// src/js/systems/item-generation.js
+function raritySpec(id) {return RARITIES.find(spec=>spec.id===id)||RARITIES[0];}
+function rarityRank(id) {return raritySpec(id).rank;}
+function rarityColor(id) {return raritySpec(id).color;}
+function raritySourceLevel(source) {return Math.max(1,Math.min(99,source?enemyLevel(source):map().enemyLevel));}
+function itemRarityWeights(source=null,epic=false) {
+ const level=raritySourceLevel(source);
+ let weights=[...RARITY_WEIGHTS[epic?'reward':source?.type==='boss'?'boss':source?.type==='stone'?'metin':source?.variant==='rare'?'rare':source?.variant==='elite'?'elite':'normal']];
+ if(!epic&&source?.type==='stone'){
+  const chance=METIN_TYPES[source.metinType]?.loot.epic||0;
+  weights=weights.map((weight,i)=>weight*(1-chance)+RARITY_WEIGHTS.reward[i]*chance);
+ }
+ if(level<ITEM_GENERATION.legendaryLevel)weights[4]=0;
+ if(level<ITEM_GENERATION.mythicLevel)weights[5]=0;
+ return weights;
+}
+function itemRarityChances(source=null,epic=false) {const weights=itemRarityWeights(source,epic),sum=weights.reduce((a,b)=>a+b,0);return weights.map((weight,i)=>({id:RARITIES[i].id,chance:weight/sum}));}
+function itemRandom(rng=rand) {const n=Number(rng());return Number.isFinite(n)?Math.max(0,Math.min(1-Number.EPSILON,n)):0;}
+function rollItemRarity(source=null,epic=false,rng=rand) {
+ const chances=itemRarityChances(source,epic);let roll=itemRandom(rng);
+ for(const entry of chances){roll-=entry.chance;if(roll<0)return entry.id;}return chances.findLast(entry=>entry.chance>0).id;
+}
+function affixValue(stat,tier,rarity,roll) {
+ const spec=ITEM_AFFIXES[stat],rank=rarityRank(rarity);
+ const value=(spec.base+Math.max(1,Math.min(99,tier))*spec.scale)*(1+rank*.22)*(.35+.65*roll/100);
+ return spec.percent?Math.round(value*10000)/10000:Math.max(1,Math.round(value));
+}
+function rollItemAffixes(item,rng=rand) {
+ const pool=Object.keys(ITEM_AFFIXES),affixes=[],stats={};
+ for(let i=0;i<raritySpec(item.rarity).affixes;i++){
+  const stat=pool.splice(Math.floor(itemRandom(rng)*pool.length),1)[0],roll=Math.floor(itemRandom(rng)*101);
+  affixes.push({stat,roll});stats[stat]=affixValue(stat,item.tier,item.rarity,roll);
+ }
+ return {affixes,stats};
+}
+function itemRollQuality(item) {return item.affixes?.length?item.affixes.reduce((sum,affix)=>sum+affix.roll,0)/item.affixes.length:0;}
+function itemSynergy(item) {
+ const stats=item.stats||{};let pairs=0;
+ for(const [a,b]of [['attack','crit'],['attack','attackSpeed'],['attack','penetration'],['hp','physicalResist'],['hp','fireResist'],['mp','attackSpeed']])if(stats[a]>0&&stats[b]>0)pairs++;
+ if(stats.attack>0&&Object.keys(stats).some(key=>key.endsWith('Damage')&&stats[key]>0))pairs++;
+ return pairs;
+}
+function itemMarketValue(item) {
+ if(item.generationVersion!==ITEM_GENERATION.version)return Math.max(0,Math.floor(Number(item.value)||0));
+ const base=12+item.tier*3,quality=itemRollQuality(item)/100,perfect=item.affixes.filter(affix=>affix.roll>=95).length;
+ return Math.max(1,Math.round(base*raritySpec(item.rarity).market*(1+quality*2)*(1+perfect*.35)*(1+itemSynergy(item)*.25)*(1+(item.enhance||0)*.12)));
+}
+function itemSaleValue(item) {return item.generationVersion===ITEM_GENERATION.version?Math.max(1,Math.floor(itemMarketValue(item)*.25)):Math.max(0,Math.floor(Number(item.value)||0));}
+function generateEquipmentItem(slot,rarity,tier,weaponKind=generatedWeaponKind(),rng=rand) {
+ const spec=EQUIPMENT[slot],rank=raritySpec(rarity),item={generationVersion:ITEM_GENERATION.version,name:equipmentItemName(slot,rarity,weaponKind),slot,rarity,tier,requiredLevel:tier,enhance:0,bonus:spec.base+Math.floor(tier*spec.scale)+Math.round(rank.power*spec.rare)};
+ if(slot==='weapon')item.weaponKind=weaponKind;
+ Object.assign(item,rollItemAffixes(item,rng));item.value=itemSaleValue(item);return item;
+}
+function validateGeneratedItem(item) {
+ if(item.generationVersion===undefined){if(item.affixes!==undefined)characterDataError('bonusy bez verzie generátora.');return;}
+ if(item.generationVersion!==ITEM_GENERATION.version||!RARITIES.some(spec=>spec.id===item.rarity)||!Number.isSafeInteger(item.tier)||item.tier<1||item.tier>99||!Array.isArray(item.affixes)||item.affixes.length!==raritySpec(item.rarity).affixes)characterDataError('generované bonusy predmetu.');
+ const seen=new Set();assertCharacterObject(item.stats,'generované štatistiky');
+ for(const affix of item.affixes){
+  assertCharacterObject(affix,'bonus predmetu');
+  if(!Object.hasOwn(ITEM_AFFIXES,affix.stat)||seen.has(affix.stat)||!Number.isInteger(affix.roll)||affix.roll<0||affix.roll>100)characterDataError('náhodný bonus predmetu.');
+  seen.add(affix.stat);const expected=affixValue(affix.stat,item.tier,item.rarity,affix.roll);
+  if(!Number.isFinite(item.stats[affix.stat])||Math.abs(item.stats[affix.stat]-expected)>1e-8)characterDataError('hodnota náhodného bonusu.');
+ }
+ if(Object.keys(item.stats).length!==seen.size)characterDataError('nadbytočné bonusy predmetu.');
+}
+function penetrationChance(){return Math.max(0,Math.min(ITEM_GENERATION.maxPenetration,equipmentBonuses().penetration));}
+function itemAttackSpeed(){return Math.max(0,Math.min(ITEM_GENERATION.maxAttackSpeed,equipmentBonuses().attackSpeed));}
+function enemyGearBonus(enemy) {
+ const kind=enemy.type==='stone'?'metin':enemy.type==='boss'?'boss':enemy.skin||'wolf';
+ return Math.max(0,Math.min(ITEM_GENERATION.maxEnemyBonus,equipmentBonuses()[kind+'Damage']||0));
 }
 
 
@@ -2001,7 +2119,7 @@ const lootPointer = { inside: false, x: 0, y: 0, clientX: 0, clientY: 0 };
 let hoveredLootId = null, lootTooltipSignature = '';
 const lootHover = { id: null, elapsed: 0 };
 
-function groundDropLifetime(drop) { return drop.kind === 'relic' || drop.kind === 'gear' && drop.item?.rarity === 2 ? LOOT_RULES.rareLifetime : LOOT_RULES.lifetime; }
+function groundDropLifetime(drop) { return drop.kind === 'relic' || drop.kind === 'gear' && rarityRank(drop.item?.rarity) >= rarityRank(2) ? LOOT_RULES.rareLifetime : LOOT_RULES.lifetime; }
 function pruneStoredGroundDrops(now = Date.now()) {
   for (const state of [...Object.values(p.worldStates), p.career.normalTemple]) {
     if (!Array.isArray(state?.drops)) continue;
@@ -2257,9 +2375,9 @@ function restoreMetinGuards(population, prior) {
   return population;
 }
 
-function metinDamage(m, amount, type='physical') {
+function metinDamage(m, amount, type='physical',penetrated=false) {
   if (!Number.isFinite(amount) || amount <= 0) return 0;
-  return resolveEnemyDamage(m,Math.max(1, Math.round(Math.max(1, amount - (m.metinArmor || 0)) * (1 - (m.metinResistance || 0)))),type);
+  return resolveEnemyDamage(m,Math.max(1, Math.round(Math.max(1, amount - (penetrated?0:(m.metinArmor || 0))) * (1 - (penetrated?0:(m.metinResistance || 0))))),type,penetrated);
 }
 
 function registerMetinAttack(m) {
@@ -2317,8 +2435,7 @@ function dropMetinLoot(stone) {
   const [extra, chance, min, max] = pool.extra;
   if (rand() < chance) dropMaterial(extra, metinLootAmount(min, max), stone);
   if (rand() < pool.gear) {
-    const item = makeItem(rand() < pool.epic, stone), slot = pool.slots[Math.floor(rand() * pool.slots.length)], spec = EQUIPMENT[slot];
-    item.slot = slot; item.weaponKind=slot==='weapon'?(item.weaponKind||generatedWeaponKind()):undefined; item.name = equipmentItemName(slot,item.rarity,item.weaponKind); item.bonus = spec.base + Math.floor(item.tier * spec.scale) + item.rarity * spec.rare;
+    const slot=pool.slots[Math.min(pool.slots.length-1,Math.floor(itemRandom()*pool.slots.length))],item=makeItem(false,stone,slot);
     spawnGroundDrop({ kind: 'gear', item }, stone);
   }
   if (rand() < pool.rare) spawnGroundDrop({ kind: 'relic', relicId: pool.relic, count: 1 }, stone);
@@ -2469,15 +2586,15 @@ function playerResistances() {
   return Object.fromEntries(Object.keys(DAMAGE_TYPES).map(type=>[type,Math.max(-.5,Math.min(.75,(gear[type+'Resist']||0)+(passive.resist[type]||0)))]));
 }
 
-function resolveEnemyDamage(m,amount,type='physical') {
+function resolveEnemyDamage(m,amount,type='physical',penetrated=false) {
   if(!Number.isFinite(amount)||amount<=0)return 0;
-  return Math.max(1,Math.round(amount*(1-(enemyResistances(m)[type]||0))));
+  return Math.max(1,Math.round(amount*(1-(penetrated?Math.min(0,enemyResistances(m)[type]||0):(enemyResistances(m)[type]||0)))));
 }
 
 function enemyDamageType(m) { return m?.damageType|| (m?.skin==='scorpion'?'poison':m?.skin==='demon'?'fire':'physical'); }
 function basicDamageType() { return rangedBasic()?'piercing':'physical'; }
 function skillDamageType(key) { return ACTIVE_SKILLS[key]?.type||'arcane'; }
-function percentItemStat(stat) { return stat==='crit'||stat.endsWith('Resist'); }
+function percentItemStat(stat) { return stat==='crit'||Boolean(ITEM_AFFIXES[stat]?.percent)||stat.endsWith('Resist'); }
 
 function resetCombatFlow() {
   combatAssist.aimTime = 0;
@@ -2642,7 +2759,7 @@ function castSkill(index) {
 function attack(skill=false) {
   if(skill)return castSkill(0);
   if(!running||paused||p.hp<=0||attackCD>0||isSanctuary(p))return false;
-  updateFacing(true);combatAssist.aimTime=.22;const fighting=selectedEnemy();if(fighting&&Math.hypot(fighting.x-p.x,fighting.y-p.y)<=basicAttackRange())registerPlayerCombat(fighting);attackCD=(p.classId==='ninja'?.32:.42)*(active('berserk')?.6:1);slash=.22;castStyle='basic';
+  updateFacing(true);combatAssist.aimTime=.22;const fighting=selectedEnemy();if(fighting&&Math.hypot(fighting.x-p.x,fighting.y-p.y)<=basicAttackRange())registerPlayerCombat(fighting);attackCD=Math.max(.16,(p.classId==='ninja'?.32:.42)*(active('berserk')?.6:1)/(1+itemAttackSpeed()));slash=.22;castStyle='basic';
   if(rangedBasic())shoot(selectedEnemy()&&Math.hypot(target.x-p.x,target.y-p.y)<=BATTLE.rangedRange?target:null,1,'arrow',{basic:true,type:'piercing',range:BATTLE.rangedRange,skillKey:null,multiplier:1});
   else{
     fx(p.classId==='ninja'?'cross':p.classId==='shaman'?'fan':'slash',p.x,p.y,role().color,.25,face);
@@ -2838,7 +2955,7 @@ function itemBonusText(item) {
 function itemDescription(entry, tooltip = false) {
   const item = entry.item, gear = entry.kind !== 'supply';
   const [w, h] = gear ? itemSize(item) : [1, 1];
-  return `<div class="item-description rarity-${item.rarity || 0}"><small>${gear ? (entry.kind === 'equipped' ? 'NASADENÉ · ' : '') + EQUIPMENT[item.slot].name : 'ZÁSOBY · ' + item.count.toLocaleString('sk-SK') + ' ks'}</small><h3>${escapeHTML(item.name)}${gear ? ' +' + (item.enhance || 0) : ''}</h3>${!tooltip ? `<div class="detail-icon">${itemIcon(item)}</div>` : ''}${gear ? `<p>${rarityName(item.rarity)} · stupeň ${item.tier || 1} · ${w} × ${h} políčka</p><p class="${canEquipItem(item) ? 'inventory-usable' : 'inventory-unusable'}">Požadovaná úroveň: ${requiredItemLevel(item)}<br>${escapeHTML(itemEquipReason(item))}</p>${itemBonusText(item)}<p class="item-price">Predaj: ${item.value || 0} zlata</p>` : `<p>${escapeHTML(item.description)}</p><p>Rovnaký typ sa automaticky stackuje.<br>Množstvo: <b>${item.count.toLocaleString('sk-SK')} ks</b></p>`}</div>`;
+  return `<div class="item-description rarity-${item.rarity || 0}"><small>${gear ? (entry.kind === 'equipped' ? 'NASADENÉ · ' : '') + EQUIPMENT[item.slot].name : 'ZÁSOBY · ' + item.count.toLocaleString('sk-SK') + ' ks'}</small><h3>${escapeHTML(item.name)}${gear ? ' +' + (item.enhance || 0) : ''}</h3>${!tooltip ? `<div class="detail-icon">${itemIcon(item)}</div>` : ''}${gear ? `<p>${rarityName(item.rarity)} · stupeň ${item.tier || 1} · ${w} × ${h} políčka</p><p class="${canEquipItem(item) ? 'inventory-usable' : 'inventory-unusable'}">Požadovaná úroveň: ${requiredItemLevel(item)}<br>${escapeHTML(itemEquipReason(item))}</p>${itemBonusText(item)}${itemGenerationDescription(item)}<p class="item-price">Predaj: ${itemSaleValue(item)} zlata</p>` : `<p>${escapeHTML(item.description)}</p><p>Rovnaký typ sa automaticky stackuje.<br>Množstvo: <b>${item.count.toLocaleString('sk-SK')} ks</b></p>`}</div>`;
 }
 
 function inventory() {
@@ -2850,15 +2967,16 @@ function inventory() {
   modal(`<section class="inventory-window"><header class="inventory-title"><span class="window-sigil">G</span><div><small>${escapeHTML(characterDisplayName(p))} · ${role().name}</small><h2>Výbava a inventár</h2></div><span class="inv-level">ÚR. ${p.level}</span></header>
     <div class="inventory-columns"><section class="character-panel"><h3>Vybavenie postavy</h3><div class="equipment-board">${equipmentFigure()}${Object.entries(EQUIPMENT).map(([id, spec]) => {
       const item = p.equipped[id];
-      return `<button class="equipment-slot slot-${id} ${item ? 'filled rarity-' + item.rarity : ''}" data-equip-slot="${id}" ${item ? `data-entry="equipped:${id}" draggable="true"` : ''} aria-label="${spec.name}${item ? ': ' + escapeHTML(item.name) : ': prázdny slot'}"><span>${itemIcon(item || { slot: id }, !item)}</span><small>${spec.name}</small>${item ? '<i>✓</i>' : ''}</button>`;
-    }).join('')}</div><div class="character-values"><span>Útok <b>${damage()}</b></span><span>Obrana <b>${defense()}</b></span><span>Zdravie <b>${Math.ceil(p.hp)} / ${maxHP()}</b></span><span>Mana <b>${Math.ceil(p.mp)} / ${maxMP()}</b></span><span>Kritický zásah <b>${(criticalChance() * 100).toFixed(1)} %</b></span><span>Rýchlosť <b>${Math.round(speedValue())}</b></span><span>Sila kúziel <b>${p.intelligence * 4 + careerBonuses().magic + equipmentBonuses().magic}</b></span></div><details class="inventory-attributes"><summary>Vlastnosti · ${p.points} voľných bodov</summary>${[['strength', 'Sila'], ['vitality', 'Vitalita'], ['dexterity', 'Obratnosť'], ['intelligence', 'Inteligencia']].map(([id, name]) => `<div>${name}<b>${p[id]}</b><button data-stat="${id}" ${p.points ? '' : 'disabled'} aria-label="Zlepšiť: ${name}">+</button></div>`).join('')}</details></section>
-    <section class="bag-panel"><div class="bag-heading"><h3>Inventár</h3><small>${inventoryTab === 'gear' ? occupied + ' / ' + p.inventory.pages * INVENTORY.pageSize + ' políčok' : 'Automatické stackovanie'}</small></div><div class="inventory-tabs"><button data-inv-tab="gear" aria-pressed="${inventoryTab === 'gear'}">Predmety</button><button data-inv-tab="supplies" aria-pressed="${inventoryTab === 'supplies'}">Zásoby</button></div><div class="inventory-pages">${inventoryTab === 'gear' ? Array.from({ length: p.inventory.pages }, (_, i) => `<button data-inv-page="${i}" aria-label="Strana ${i + 1}" aria-pressed="${page === i}">${i + 1}</button>`).join('') : '<span>Elixíry · plášte · materiály · kamene</span>'}<button id="inv-sort" title="Zoradiť podľa veľkosti, vzácnosti a stupňa">Zoradiť</button></div>
+      return `<button class="equipment-slot slot-${id} ${item ? 'filled rarity-' + item.rarity : ''}" data-equip-slot="${id}" ${item ? `data-entry="equipped:${id}" draggable="true"` : ''} aria-label="${spec.name}${item ? ': ' + escapeHTML(item.name) + ' · ' + rarityName(item.rarity) : ': prázdny slot'}"><span>${itemIcon(item || { slot: id }, !item)}</span><small>${spec.name}</small>${item ? '<i>✓</i>' : ''}</button>`;
+    }).join('')}</div><div class="character-values"><span>Útok <b>${damage()}</b></span><span>Obrana <b>${defense()}</b></span><span>Zdravie <b>${Math.ceil(p.hp)} / ${maxHP()}</b></span><span>Mana <b>${Math.ceil(p.mp)} / ${maxMP()}</b></span><span>Kritický zásah <b>${(criticalChance() * 100).toFixed(1)} %</b></span><span>Prenikavý zásah <b>${(penetrationChance()*100).toFixed(1)} %</b></span><span>Rýchlosť útoku <b>+${(itemAttackSpeed()*100).toFixed(1)} %</b></span><span>Rýchlosť <b>${Math.round(speedValue())}</b></span><span>Sila kúziel <b>${p.intelligence * 4 + careerBonuses().magic + equipmentBonuses().magic}</b></span></div><details class="inventory-attributes"><summary>Vlastnosti · ${p.points} voľných bodov</summary>${[['strength', 'Sila'], ['vitality', 'Vitalita'], ['dexterity', 'Obratnosť'], ['intelligence', 'Inteligencia']].map(([id, name]) => `<div>${name}<b>${p[id]}</b><button data-stat="${id}" ${p.points ? '' : 'disabled'} aria-label="Zlepšiť: ${name}">+</button></div>`).join('')}</details></section>
+    <section class="bag-panel"><div class="bag-heading"><h3>Inventár</h3><small>${inventoryTab === 'gear' ? occupied + ' / ' + p.inventory.pages * INVENTORY.pageSize + ' políčok' : 'Automatické stackovanie'}</small></div><div class="inventory-tabs"><button data-inv-tab="gear" aria-pressed="${inventoryTab === 'gear'}">Predmety</button><button data-inv-tab="supplies" aria-pressed="${inventoryTab === 'supplies'}">Zásoby</button></div><div class="inventory-pages">${inventoryTab === 'gear' ? Array.from({ length: p.inventory.pages }, (_, i) => `<button data-inv-page="${i}" aria-label="Strana ${i + 1}" aria-pressed="${page === i}">${i + 1}</button>`).join('') : '<span>Elixíry · plášte · materiály · kamene</span>'}<button id="rarity-guide" type="button">Rarity</button><button id="inv-sort" title="Zoradiť podľa veľkosti, vzácnosti a stupňa">Zoradiť</button></div>
     <div class="inventory-grid" id="inventory-grid" role="group" aria-label="Mriežka inventára, 5 stĺpcov a 9 riadkov">${Array.from({ length: INVENTORY.pageSize }, (_, i) => `<button class="inventory-cell" data-cell="${offset + i}" aria-label="Prázdne políčko ${offset + i + 1}" style="grid-column:${i % 5 + 1};grid-row:${Math.floor(i / 5) + 1}"></button>`).join('')}${entries.map(entry => {
       const item = entry.item, [w, h] = entry.kind === 'gear' ? itemSize(item) : [1, 1], local = item.cell % INVENTORY.pageSize;
-      return `<button class="grid-item rarity-${item.rarity || 0}" draggable="true" data-entry="${entry.id}" aria-label="${escapeHTML(item.name)}${entry.kind === 'supply' ? ', ' + item.count + ' kusov' : ', +' + (item.enhance || 0)}" aria-pressed="${inventorySelection === entry.id}" style="grid-column:${local % 5 + 1} / span ${w};grid-row:${Math.floor(local / 5) + 1} / span ${h}">${itemIcon(item)}${entry.kind === 'supply' ? `<b class="stack-count">${item.count}</b>` : `<b class="enhance-count">+${item.enhance || 0}</b>`}</button>`;
+      return `<button class="grid-item rarity-${item.rarity || 0}" draggable="true" data-entry="${entry.id}" aria-label="${escapeHTML(item.name)}${entry.kind === 'gear' ? ' · ' + rarityName(item.rarity) : ''}${entry.kind === 'supply' ? ', ' + item.count + ' kusov' : ', +' + (item.enhance || 0)}" aria-pressed="${inventorySelection === entry.id}" style="grid-column:${local % 5 + 1} / span ${w};grid-row:${Math.floor(local / 5) + 1} / span ${h}">${itemIcon(item)}${entry.kind === 'supply' ? `<b class="stack-count">${item.count}</b>` : `<b class="enhance-count">+${item.enhance || 0}</b>`}</button>`;
     }).join('')}</div><p class="inventory-hint">Presuň predmet myšou. Na dotyku vyber predmet a potom cieľové políčko alebo slot.</p><div class="inventory-money">◉ <b>${p.gold.toLocaleString('sk-SK')}</b> <small>ZLATO</small></div></section>
     <aside class="item-inspector"><span class="eyebrow">PREDMET</span><div id="inventory-detail"></div><p class="inventory-message" id="inventory-message" role="status"></p><div class="inventory-shortcuts"><span>Plášť statočnosti: ${p.braveryCapes} ks · B</span><span>Elixíry: ${p.potions} · E</span><button id="inv-progress">Dlhodobá progresia · P</button></div></aside></div><div id="item-tooltip" class="item-tooltip" role="tooltip" hidden></div></section>`);
   $('modal').className = 'overlay inventory-overlay';
+  $('rarity-guide').onclick=rarityGuide;
   $('inv-sort').onclick = () => { if (sortInventory(inventoryTab)) inventory(); else inventoryMessage('Predmety sa do tohto rozloženia nezmestia.'); };
   $('inv-progress').onclick = () => careerPanel();
   document.querySelectorAll('[data-inv-tab]').forEach(button => button.onclick = () => { inventoryTab = button.dataset.invTab; inventorySelection = null; inventoryDeletePending = null; inventory(); });
@@ -2967,6 +3085,18 @@ function positionItemTooltip(event) {
 }
 
 
+// src/js/ui/rarities.js
+function itemGenerationDescription(item) {
+ if(item.generationVersion!==ITEM_GENERATION.version)return '';
+ const quality=itemRollQuality(item),perfect=item.affixes.filter(affix=>affix.roll>=95).length;
+ return '<div class="item-roll-info"><p>Náhodné bonusy: '+item.affixes.length+' · kvalita hodov '+quality.toFixed(1)+' %'+(perfect?' · špičkové hody '+perfect:'')+'</p><p>Odhad trhovej hodnoty: <b>'+itemMarketValue(item).toLocaleString('sk-SK')+' Yang</b><br>Výkup obchodníka: '+itemSaleValue(item).toLocaleString('sk-SK')+' Yang'+(itemSynergy(item)?'<br>Synergická kombinácia · '+itemSynergy(item)+' väzieb':'')+'</p></div>';
+}
+function rarityGuide() {
+ const sources=[['Obyčajná príšera',{type:'wolf',variant:'normal',level:99}],['Elita',{type:'wolf',variant:'elite',level:99}],['Vzácna príšera',{type:'wolf',variant:'rare',level:99}],['Boss',{type:'boss',level:99}],['Metin skazy',{type:'stone',metinType:'doom',level:99}]];
+ modal('<span class="eyebrow">KORISŤ · ŠESŤ RARÍT</span><h2>Hľadaj svoju dokonalú výbavu.</h2><p>Rarita určuje potenciál, konkrétne bonusy aj ich kvalita sú náhodné. Rovnaký typ predmetu môže podporovať úplne odlišný štýl boja.</p><div class="rarity-guide-grid">'+RARITIES.map(spec=>'<section class="career-card rarity-'+spec.id+'"><h3>'+spec.name+'</h3><p>'+spec.affixes+' náhodných bonusov · základ hodnoty ×'+spec.market+'<br>'+(spec.rank>=4?'Od úrovne nepriateľa '+(spec.rank===4?50:75):'Všetky úrovne nepriateľov')+'</p></section>').join('')+'</div><h3>Šance pri vypadnutí výbavy</h3><p>Referenčné zdroje na Lv.99. Toto sú podiely rarít po úspešnom drope výbavy; nezvyšujú množstvo padajúcich predmetov. Pod Lv.50 nepadá Legendary, pod Lv.75 Mythic; ostatné šance sa pomerne upravia.</p><div class="rarity-odds"><table><thead><tr><th>Zdroj</th>'+RARITIES.map(spec=>'<th style="color:'+spec.color+'">'+spec.name+'</th>').join('')+'</tr></thead><tbody>'+sources.map(([name,source])=>'<tr><th>'+name+'</th>'+itemRarityChances(source).map(entry=>'<td>'+(entry.chance*100).toLocaleString('sk-SK',{maximumFractionDigits:4})+' %</td>').join('')+'</tr>').join('')+'</tbody></table></div><h3>Bonusy, ktoré skutočne menia boj</h3><p>Útok, HP, MP, kritický a prenikavý zásah, rýchlosť útoku a pohybu, sedem typových odolností a poškodenie proti vlkom, škorpiónom, yeti, démonom, Metinom a bossom. Bonusy na jednom predmete sa neopakujú.</p><p>Prenikavý zásah ignoruje kladné odolnosti a ochranu Metinu; prirodzené slabiny ostávajú. Celková šanca má strop 50 %. Bonus rýchlosti útoku má strop 60 % a základný útok minimálny odstup 0,16 s. Bonus proti jednej skupine nepriateľov má strop +100 %.</p><h3>Hodnota ideálneho nálezu</h3><p>Každý bonus má uložený hod 0–100. Vysoké hody a spolupracujúce atribúty zvyšujú odhad hodnoty. Obchodník vykupuje za 25 % odhadu. Ide o lokálny odhad hodnoty, hra zatiaľ nemá hráčske trhovisko. Staré predmety zachovávajú pôvodnú cenu a bonusy.</p>');
+}
+
+
 // src/js/ui/loot.js
 function signedItemStat(stat, value) {
   const amount = percentItemStat(stat) ? Number((Math.abs(value) * 100).toFixed(2)) + ' %' : Number(Math.abs(value).toFixed(2));
@@ -2991,6 +3121,7 @@ function groundDropTooltip(drop) {
     const specials = Array.isArray(item.special) ? item.special : [];
     details = `<h4>Základné atribúty</h4><div class="loot-stat"><span>${ITEM_STATS[spec.stat]}</span><b>${signedItemStat(spec.stat, base)}</b></div><div class="loot-stat"><span>Vylepšenie +${item.enhance || 0}</span><b>${signedItemStat(spec.stat, (item.enhance || 0) * 3 * (spec.stat === 'crit' ? .01 : 1))}</b></div><h4>Bonusy</h4>${extras.length ? extras.map(([stat, value]) => `<div class="loot-stat"><span>${ITEM_STATS[stat]}</span><b>${signedItemStat(stat, value)}</b></div>`).join('') : '<p>Bez dodatočných bonusov.</p>'}<h4>Špeciálne vlastnosti</h4><p>${specials.length ? specials.map(value => escapeHTML(value)).join('<br>') : 'Žiadne.'}</p><p class="${usable ? 'stat-gain' : 'stat-loss'}">${usable ? 'Možno vybaviť · ' + spec.name : escapeHTML(itemEquipReason(item))}</p>${usable ? groundItemComparison(item) : ''}`;
   } else details = `<p>${escapeHTML(item.description)}</p><div class="loot-stat"><span>Množstvo</span><b>${item.count.toLocaleString('sk-SK')}</b></div><h4>Vybavenie</h4><p>${drop.kind === 'relic' ? 'Relikvia zbierky · nezaberá slot výbavy.' : 'Nie je výbava postavy.'}</p>`;
+  if(gear)details+=itemGenerationDescription(item);
   return `<div class="loot-heading rarity-${item.rarity || 0}"><div class="loot-item-icon">${itemIcon(item)}</div><div><small>${gear ? EQUIPMENT[item.slot].name : drop.kind === 'gold' ? 'MENA' : drop.kind === 'relic' ? 'RELIKVIA' : 'ZÁSOBY'} · ${rarityName(item.rarity)}</small><h3>${escapeHTML(item.name)}${gear ? ' +' + (item.enhance || 0) : ''}</h3></div></div><div class="loot-stat ${p.level < required ? 'stat-loss' : ''}"><span>Požadovaná úroveň</span><b>${required}</b></div>${details}<p class="loot-controls">${drop.fallAge < LOOT_RULES.fallDuration ? 'Predmet dopadá na zem…' : Math.hypot(drop.x - p.x, drop.y - p.y) > LOOT_RULES.pickupRange ? 'Priblíž sa · dosah zbierania 180' : drop.kind === 'gold' || drop.kind === 'supply' ? 'Zbiera sa automaticky v okolí postavy' : 'Ľavé tlačidlo · predmet / Y · korisť v okolí'}</p><p class="loot-expiry">Nepozbierané zmizne po ${groundDropLifetime(drop) / 60} min od vypadnutia.</p>`;
 }
 
@@ -3038,7 +3169,7 @@ function metinCodex() {
   if (!running) return;
   modal(`<span class="eyebrow">ŠUTERLAND · 1–99</span><h2>Atlas Metinov</h2><p>Poškodzovanie kameňa privoláva obrancov. Prvá vlna príde po 0,2 s, ďalšie pravidelne počas boja. Bežné mapy majú miestne typy; Šuterland má jeden Metin každej úrovne 1–99 a bez útoku žiadne voľné príšery.</p>${Object.entries(METIN_TYPES).map(([id, type]) => {
     const pool = type.loot, example = metinStats(type.levels[0], id);
-    return `<section class="career-card metin-card" style="border-left-color:${type.glow}"><h3>${type.name}</h3><p>Šuterland Lv.${type.levels.join('–')} · ${type.difficulty}<br>Vlny: ${type.wave} obrancovia každých ${type.interval.toLocaleString('sk-SK')} s · typy vlk / škorpión / yeti / démon podľa úrovne<br>Na Lv.${type.levels[0]}: ${example.hp} zdravia, ${example.armor} pancier, ${Math.round(example.resistance * 100)} % základná odolnosť<br>Typové odolnosti: ${Object.entries(METIN_RESISTS[id]||{}).map(([kind,value])=>DAMAGE_TYPES[kind].name+' '+resistanceText(value)).join(', ')}</p><h4>Vlastný loot pool</h4><p>Yang: vždy · základ ${pool.yang.join('–')} × (1 + úroveň × 0,12)<br>${['ore', 'books', 'essence', 'dust', 'upgradeStones'].map(key => MATERIALS[key] + ': ' + metinPercent(pool[key][0]) + ' · ' + pool[key][1] + '–' + pool[key][2] + ' ks').join('<br>')}<br>Výbava: ${metinPercent(pool.gear)} · ${pool.slots.map(slot => EQUIPMENT[slot].name).join(', ')}<br>Epická výbava pri úspešnom drope výbavy: ${metinPercent(pool.epic)}<br>Vzácna relikvia: ${metinPercent(pool.rare)} · ${RELICS[pool.relic].name}<br>${MATERIALS[pool.extra[0]]}: ${metinPercent(pool.extra[1])}</p></section>`;
+    return `<section class="career-card metin-card" style="border-left-color:${type.glow}"><h3>${type.name}</h3><p>Šuterland Lv.${type.levels.join('–')} · ${type.difficulty}<br>Vlny: ${type.wave} obrancovia každých ${type.interval.toLocaleString('sk-SK')} s · typy vlk / škorpión / yeti / démon podľa úrovne<br>Na Lv.${type.levels[0]}: ${example.hp} zdravia, ${example.armor} pancier, ${Math.round(example.resistance * 100)} % základná odolnosť<br>Typové odolnosti: ${Object.entries(METIN_RESISTS[id]||{}).map(([kind,value])=>DAMAGE_TYPES[kind].name+' '+resistanceText(value)).join(', ')}</p><h4>Vlastný loot pool</h4><p>Yang: vždy · základ ${pool.yang.join('–')} × (1 + úroveň × 0,12)<br>${['ore', 'books', 'essence', 'dust', 'upgradeStones'].map(key => MATERIALS[key] + ': ' + metinPercent(pool[key][0]) + ' · ' + pool[key][1] + '–' + pool[key][2] + ' ks').join('<br>')}<br>Výbava: ${metinPercent(pool.gear)} · ${pool.slots.map(slot => EQUIPMENT[slot].name).join(', ')}<br>Rarity výbavy na Lv.${type.levels[0]}: ${itemRarityChances({type:'stone',metinType:id,level:type.levels[0]}).map(entry=>rarityName(entry.id)+' '+Number((entry.chance*100).toFixed(4)).toLocaleString('sk-SK')+' %').join(', ')}<br>Vzácna relikvia: ${metinPercent(pool.rare)} · ${RELICS[pool.relic].name}<br>${MATERIALS[pool.extra[0]]}: ${metinPercent(pool.extra[1])}</p></section>`;
   }).join('')}<p>Materiály, výbava a relikvie padajú iba z primeraných kameňov, najviac 5 úrovní pod postavou. Všetko dopadne na zem; Yang a zásoby sa potom zbierajú automaticky v dosahu, výbavu a relikvie zdvihneš Y alebo kliknutím. Kamene vylepšenia potrebuje kováč od +4. Najviac 8 živých obrancov na kameň a 60 na mape; neporažení po 45 s aktívnej simulácie zmiznú bez odmeny.</p>`);
 }
 
@@ -3293,7 +3424,7 @@ function setCharacterScreenMode(selecting) {
 let characterDraft = null, pendingCharacterImport = null;
 function rosterMessage(text) { $('roster-message').textContent=text; }
 function characterEquipmentSummary(record) {
-  return '<div class="roster-equipment">'+Object.entries(EQUIPMENT).map(([slot,spec])=>{const item=record.data.equipped?.[slot];return '<div title="'+escapeHTML(item?item.name+' +'+(item.enhance||0):spec.name+' · prázdne')+'" class="'+(item?'has-gear':'')+'">'+itemIcon(item||{slot},!item)+'<span>'+spec.name+'</span></div>';}).join('')+'</div>';
+  return '<div class="roster-equipment">'+Object.entries(EQUIPMENT).map(([slot,spec])=>{const item=record.data.equipped?.[slot];return '<div title="'+escapeHTML(item?item.name+' +'+(item.enhance||0):spec.name+' · prázdne')+'" class="'+(item?'has-gear rarity-'+item.rarity:'')+'">'+itemIcon(item||{slot},!item)+'<span>'+spec.name+'</span></div>';}).join('')+'</div>';
 }
 function renderCharacterScreen() {
   characterDraft=null;$('intro').inert=false;document.body.classList.add('character-select');setCharacterScreenMode(true);
@@ -3509,7 +3640,7 @@ function drawGroundLoot() {
     if (visual.x < -40 || visual.x > W + 40 || visual.y < -65 || visual.y > H + 40) continue;
     const item = groundDropView(drop); if (!item) continue;
     const location = screen(drop.x, drop.y), selected = drop.id === hoveredLootId;
-    const color = ['#cfbc7f', '#88c5dd', '#c899e5'][item.rarity || 0];
+    const color = rarityColor(item.rarity);
     ellipse(location.x, location.y, selected ? 19 : 12, selected ? 7 : 4, color + (selected ? '88' : '40'));
     const icon = groundIcon(item), height = item.slot === 'weapon' || item.slot === 'talisman' ? 36 : 28, width = height === 36 ? 23 : 28;
     if (icon) ctx.drawImage(icon, visual.x - width / 2, visual.y - height / 2, width, height);

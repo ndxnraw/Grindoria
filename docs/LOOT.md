@@ -30,7 +30,7 @@ Tooltip sa prepočítava pri pohybe kurzora, kamery, postavy, zmene výbavy aj v
 
 ## Despawn
 
-Bežná výbava, zlato a zásoby zmiznú po **180 sekundách od vypadnutia**; epická výbava (rarita 2) a relikvie po **600 sekundách**. Čas je skutočný čas zariadenia a plynie aj pri pauze, zmene mapy a zatvorenej hre. Čistenie prebehne počas hry, pri uložení a pri načítaní. Predmet sa po expirácii nedá zdvihnúť ani premeniť na zlato.
+Bežná výbava, zlato a zásoby zmiznú po **180 sekundách od vypadnutia**; výbava Epic, Legendary, Mythic a relikvie po **600 sekundách**. Čas je skutočný čas zariadenia a plynie aj pri pauze, zmene mapy a zatvorenej hre. Čistenie prebehne počas hry, pri uložení a pri načítaní. Predmet sa po expirácii nedá zdvihnúť ani premeniť na zlato.
 
 Pole `expiresAt` sa ukladá spolu s predmetom. Staršia korisť bez časovača dostane konečný limit jednorazovo; ďalšie načítanie ho neobnoví. Čistia sa aj neaktívne mapy a bežný chrám odložený počas trhliny.
 
