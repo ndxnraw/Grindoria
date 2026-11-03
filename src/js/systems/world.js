@@ -12,7 +12,9 @@ function snapshotMap() {
 function save(){return saveActiveCharacter();}
 
 function loadMap(id, initial=false) {
-  if (!MAPS[id]) return false;
+  if (!MAPS[id]||MAPS[id].instance&&!dungeonRun()) return false;
+  if(dungeonRun()&&!initial){toast('Najprv dokonči alebo opusti dungeon (P).');return false;}
+  if(id==='dungeon')configureDungeonMap();
   if (p.career?.endgame.run && !initial) { toast('Najprv dokonči alebo opusti trhlinu (P).'); return false; }
   if (!initial) {
     if (!canTravel()) { toast('Cestovanie nie je dostupné počas boja.'); return false; }
@@ -24,14 +26,14 @@ function loadMap(id, initial=false) {
   const cfg=map(), prior=p.worldStates[id],old=migrateMapSize(prior,id);SIZE=cfg.size;
   if(initial&&prior&&(prior.worldSize||2000)!==cfg.size){const factor=cfg.size/(prior.worldSize||2000);resumePosition.x*=factor;resumePosition.y*=factor;if(Math.hypot(resumePosition.x-1000*factor,resumePosition.y-1050*factor)<190*factor)Object.assign(resumePosition,cfg.entry);}
   cfg.mobSpeed=75+(cfg.scale-1)*14; seed=cfg.seed; decor.length=0;
-  for(let i=0;i<250;i++) {
+  for(let i=0;i<(cfg.instance?0:250);i++) {
     const x=rand()*SIZE,y=rand()*SIZE;
     if(!isSanctuary({x,y})) decor.push({x,y,type:rand()<(cfg.metinsOnly?0:id==='valley'?.67:id==='snow'?.45:id==='desert'?.2:.12)?'tree':'rock',s:.6+rand()*.8,t:rand()});
   }
   legacyRiftLayout=false; spawnPoints.length=0;
   spawnPoints.push(...buildSpawnPoints(id));
   const oldRun=p.career.endgame.run&&id==='temple'&&old?.mobs?.length&&old.spawnSchema!==SPAWN_RULES.schema;
-  const population=oldRun?loadLegacyRift(old):hydrateSpawnPopulation(old);
+  const population=cfg.instance?hydrateDungeonPopulation(old):oldRun?loadLegacyRift(old):hydrateSpawnPopulation(old);
   mobs.length=0; mobs.push(...population); drops.length=0;
   drops.push(...hydrateGroundDrops(old?.drops||[]));
   clearLootPointer();

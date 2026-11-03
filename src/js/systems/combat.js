@@ -1,5 +1,6 @@
 function hit(m, amount, type='physical',penetrated=false) {
   if (m.hp <= 0 || !Number.isFinite(amount) || amount <= 0) return 0;
+  if(m.dungeonBoss&&!dungeonUnlocked()){toast('Najprv poraz strážcov a znič tri pečate.');return 0;}
   const damage = m.type === 'stone' ? metinDamage(m, amount, type,penetrated) : resolveEnemyDamage(m, amount, type,penetrated), actual = Math.min(m.hp, damage);
   travelCombat.time=WORLD_RULES.travelCooldown;registerPlayerCombat(m);
   if (m.type === 'stone') registerMetinAttack(m); else provokeEnemyGroup(m);
@@ -8,6 +9,7 @@ function hit(m, amount, type='physical',penetrated=false) {
   if (m.hp <= 0) {
     if(target===m)clearCombatTarget();m.dot=null;m.dots=[];
     m.windup = 0; m.dead = m.metinParentId ? 1 : m.respawnSeconds || (m.type === 'boss' ? 40 : m.type === 'stone' ? 18 : 8);
+    if(m.dungeonSeal){dungeonUnlocked();return actual;}
     if (m.type === 'boss') p.bossKills++; else p[m.type === 'stone' ? 'stones' : 'kills']++;
     recordCharacterKill(m);
     const gained = enemyXP(m); careerKill(m);dropForgeSupplies(m);dropCraftMaterials(m);
@@ -15,12 +17,13 @@ function hit(m, amount, type='physical',penetrated=false) {
     else {
       farmBonusLoot(m);
       spawnGroundDrop({ kind: 'gold', count: Math.round((m.type === 'boss' ? 120 : 7 + Math.floor(rand() * 7)) * (m.metinParentId ? m.attackScale * .5 : map().scale) * (ENEMY_VARIANTS[m.variant]?.gold || 1)) }, m);
-      dropFarmEquipment(m);
+      if(!m.dungeonBoss)dropFarmEquipment(m);
       if (rand() < .25) spawnGroundDrop({ kind: 'supply', supplyId: 'potions', count: 1 }, m);
     }
+    if(m.dungeonBoss)dungeonBossReward(m);
     experience(gained);
     float(gained ? '+' + gained + ' EXP' : 'Slabý cieľ · bez EXP', m.x, m.y - 85, gained ? '#d6c28c' : '#8e9f92');
-    if (m.type === 'boss') toast('Strážca padol! Korisť leží na zemi · klikni alebo Y.');
+    if (m.type === 'boss'&&!m.dungeonBoss) toast('Strážca padol! Korisť leží na zemi · klikni alebo Y.');
     else if (!p.claimed && p.kills >= 5 && p.stones >= 3) toast('Úloha splnená! Vyzdvihni si odmenu.');
   }
   return actual;
@@ -40,7 +43,7 @@ function drinkPotion(allowPaused=false) {
   float('+'+Math.round(healed)+' zdravia',p.x,p.y-65,'#a9e0ac');beep(520,.2);updateHUD();save();return true;
 }
 
-function death(){resetCombatFlow();p.mp=maxMP();shots.length=0;Object.keys(buffs).forEach(k=>delete buffs[k]);p.gold=Math.floor(p.gold*.9);Object.assign(p,map().entry);p.hp=maxHP();target=null;mobs.forEach(m=>m.cd=2);toast('Návrat do bezpečnej zóny\nStratil si 10 % zlata.');save();}
+function death(){resetDungeonBoss();resetCombatFlow();p.mp=maxMP();shots.length=0;Object.keys(buffs).forEach(k=>delete buffs[k]);p.gold=Math.floor(p.gold*.9);Object.assign(p,map().entry);p.hp=maxHP();target=null;mobs.forEach(m=>m.cd=2);toast('Návrat do bezpečnej zóny\nStratil si 10 % zlata.');save();}
 
 function school(){return SCHOOLS[p.schools[p.classId]];}
 
@@ -52,7 +55,7 @@ function attackPower(){return (active('aura')||active('enchanted')?1.45:1)*(acti
 
 function armorBonus(){return active('guard')?12:active('armor')?8:0;}
 
-function speedValue(){return (role().speed+p.dexterity*2+equipmentBonuses().speed)*(active('speed')?1.45:active('berserk')?1.22:1);}
+function speedValue(){return dungeonSpeedFactor()*(role().speed+p.dexterity*2+equipmentBonuses().speed)*(active('speed')?1.45:active('berserk')?1.22:1);}
 
 function criticalChance(){return Math.min(.8,role().crit+p.dexterity*.01+careerBonuses().crit+equipmentBonuses().crit+passiveBonuses().crit+(active('dragonPower')?.25:0));}
 
@@ -107,5 +110,5 @@ function updateCombat(dt) {
   if(active('spirit')&&!isSanctuary(p)){spiritTick-=dt;if(spiritTick<=0){spiritTick=1.5;const m=nearest(430);if(m)shoot(m,.85,'fireArrow',{skillKey:'black:3',type:'fire',multiplier:1});}}
 }
 
-function updateBoss(dt,safe){const b=mobs.find(m=>m.type==='boss');if(!b||b.hp<=0||b.stun>0)return;const d=Math.hypot(b.x-p.x,b.y-p.y);if(safe||(!(b.taunt>0||b.engaged>0)&&d>500)||active('stealth')){b.windup=0;b.taunt=0;b.engaged=0;const home=Math.hypot(b.x-b.homeX,b.y-b.homeY);if(home>4)walkEnemy(b,b.homeX,b.homeY,90,dt);b.hp=Math.min(b.max,b.hp+10*dt);return;}const enraged=b.hp<b.max*.3&&!(b.suppressed>0);if(b.windup>0){b.windup-=dt;if(b.windup<=0){b.cd=enraged?2:3;if(d<120){takeDamage(Math.round(26*(b.attackScale||map().scale)*(enraged?1.3:1)),b);beep(90,.25);}else float('ÚHYB!',p.x,p.y-75,'#acd9b0');}return;}if(d<100&&b.cd<=0){b.windup=1;beep(100,.2);return;}if(d>65){const speed=(enraged?115:90)*(b.slow>0?.55:1)*(active('fear')?.65:1);walkEnemy(b,p.x,p.y,speed,dt);}}
+function updateBoss(dt,safe){const b=mobs.find(m=>m.type==='boss');if(!b||b.hp<=0||b.stun>0)return;if(b.dungeonBoss){updateDungeonBoss(b,dt,safe);return;}const d=Math.hypot(b.x-p.x,b.y-p.y);if(safe||(!(b.taunt>0||b.engaged>0)&&d>500)||active('stealth')){b.windup=0;b.taunt=0;b.engaged=0;const home=Math.hypot(b.x-b.homeX,b.y-b.homeY);if(home>4)walkEnemy(b,b.homeX,b.homeY,90,dt);b.hp=Math.min(b.max,b.hp+10*dt);return;}const enraged=b.hp<b.max*.3&&!(b.suppressed>0);if(b.windup>0){b.windup-=dt;if(b.windup<=0){b.cd=enraged?2:3;if(d<120){takeDamage(Math.round(26*(b.attackScale||map().scale)*(enraged?1.3:1)),b);beep(90,.25);}else float('ÚHYB!',p.x,p.y-75,'#acd9b0');}return;}if(d<100&&b.cd<=0){b.windup=1;beep(100,.2);return;}if(d>65){const speed=(enraged?115:90)*(b.slow>0?.55:1)*(active('fear')?.65:1);walkEnemy(b,p.x,p.y,speed,dt);}}
 

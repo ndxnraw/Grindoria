@@ -30,6 +30,7 @@ function initializeCareer() {
   for (const id of Object.keys(MATERIALS)) p.career.materials[id] ??= 0;
   initializeCrafting();
   initializeEconomy();
+  initializeDungeons();
   p.level = Math.max(1, Math.min(PROGRESSION.maxLevel, p.level));
   if (p.level === PROGRESSION.maxLevel) p.xp = 0;
   // World difficulty changed; preserve death timers/positions while scaling HP proportionally.
@@ -205,7 +206,7 @@ function careerKill(m) {
       c.specialization.points++;
     }
   }
-  if (m.type === 'boss') {
+  if (m.type === 'boss'&&!m.dungeonBoss) {
     c.keyPity++;
     if (c.keyPity >= 3) { giveMaterial('keys'); c.keyPity = 0; }
     c.relicPity[p.mapId] = (c.relicPity[p.mapId] || 0) + 1;
@@ -230,7 +231,7 @@ function rebalanceEnemy(m, cfg, index) {
 
 function enterRift() {
   const end = p.career.endgame;
-  if (p.level < 35 || end.run || !canTravel()) return false;
+  if (p.level < 35 || end.run || dungeonRun() || !canTravel()) return false;
   if (!pay({ keys: 3 })) return false;
   const tier = Math.min(PROGRESSION.maxRiftTier, end.highest + 1);
   loadMap('temple');

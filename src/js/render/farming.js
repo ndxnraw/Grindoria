@@ -1,5 +1,5 @@
 function drawFarmRegions() {
-  if(map().town)return;
+  if(map().town||map().instance)return;
   for (const area of FARM_AREAS) {
     const a = screen((area.x1 + area.x2) / 2, area.y1 - 35);
     if (a.x < -160 || a.x > W + 160 || a.y < -40 || a.y > H + 40) continue;
@@ -56,7 +56,7 @@ function drawFarmingEffects() {
 }
 
 function drawFarmMinimap() {
-  if(map().town)return;
+  if(map().town||map().instance)return;
   mini.strokeStyle = '#ece2b22b'; mini.lineWidth = 1;
   mini.beginPath(); mini.moveTo(69, 0); mini.lineTo(69, 118); mini.moveTo(0, 59); mini.lineTo(138, 59); mini.stroke();
   mini.font = '7px Segoe UI'; mini.textAlign = 'left'; mini.fillStyle = '#fff1c6';

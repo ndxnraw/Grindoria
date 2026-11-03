@@ -12,7 +12,7 @@ function farmAreaAt(entity = p) {
 }
 
 function buildSpawnPoints(id) {
-  if(MAPS[id].town)return [];
+  if(MAPS[id].town||MAPS[id].instance)return [];
   if (MAPS[id].metinsOnly) return buildSuterlandPoints();
   const points = [], random = layoutRandom(id + ':' + MAPS[id].seed + ':layout2'), perArea = MAPS[id].packCount / 4;
   for (const area of FARM_AREAS) {
@@ -225,7 +225,9 @@ function updateEnemySpawns(dt, safe) {
     m.hit = Math.max(0, (m.hit || 0) - dt); m.cd = (m.cd || 0) - dt;
     m.taunt = Math.max(0, (m.taunt || 0) - dt); m.engaged = Math.max(0, (m.engaged || 0) - dt);
     if (safe || active('stealth')) { m.taunt = 0; m.engaged = 0; }
-    if (m.hp <= 0) { if (m.metinParentId) continue; m.dead -= dt; if (m.dead <= 0) respawnEnemy(m); continue; }
+    if (m.hp <= 0) { if (m.metinParentId||m.noRespawn) continue; m.dead -= dt; if (m.dead <= 0) respawnEnemy(m); continue; }
+    if(m.dungeonSeal)continue;
+    if(m.dungeonId&&!safe&&Math.hypot(m.x-p.x,m.y-p.y)<260)m.engaged=Math.max(m.engaged,5);
     if (m.type !== 'wolf' || m.stun > 0) continue;
     const d = Math.hypot(m.x - p.x, m.y - p.y), home = Math.hypot(m.x - m.homeX, m.y - m.homeY);
     const forced = m.taunt > 0 || m.engaged > 0;
