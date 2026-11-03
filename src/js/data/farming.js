@@ -1,6 +1,7 @@
 const SPAWN_RULES = {
   schema: 1, packSize: 6, sanctuaryRadius: 190, spawnClearance: 290,
-  leash: 700, capeRange: 650, capeDuration: 18,
+  leash: 700, roamRadius: 85, roamSpeed: .4, assistRange: 300, assistLimit: 5,
+  capeRange: 650, capeDuration: 18,
   capeCooldown: 2, capeBundle: 10, capePrice: 100,
   rareChance: .02, eliteChance: .12
 };

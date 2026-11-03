@@ -29,7 +29,7 @@ nav{gap:18px}.player{min-height:92px}.mana{height:7px;margin-top:4px;background:
 .brand small{font-size:9px;letter-spacing:.7px}@media(max-width:450px){.brand small{font-size:8px;letter-spacing:.3px}}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b>ALPHA 0.6.0</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b>ALPHA 0.6.1</b></span></header>
 <main><div class="world-title"><div><span class="eyebrow">KAPITOLA I · PREBUDENIE</span><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Pod pokojnými korunami sa prebúdza stará temnota.</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
 <section class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb WASD, útok medzerník, schopnosť Q, liečenie E."></canvas><div class="vignette"></div>
 <div class="hud player"><div class="portrait">侍</div><div><div class="player-name"><b id="playerclass">Bojovník</b> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 60 skúseností</small></div></div>
@@ -175,7 +175,8 @@ const SPECIALIZATIONS = {
 // src/js/data/farming.js
 const SPAWN_RULES = {
   schema: 1, packSize: 6, sanctuaryRadius: 190, spawnClearance: 290,
-  leash: 700, capeRange: 650, capeDuration: 18,
+  leash: 700, roamRadius: 85, roamSpeed: .4, assistRange: 300, assistLimit: 5,
+  capeRange: 650, capeDuration: 18,
   capeCooldown: 2, capeBundle: 10, capePrice: 100,
   rareChance: .02, eliteChance: .12
 };
@@ -296,7 +297,7 @@ function update(dt){clock+=dt;if(!running||paused)return;attackCD=Math.max(0,att
 
 
 // src/js/systems/combat.js
-function hit(m,amount){if(m.hp<=0)return;if(m.type==='wolf'||m.type==='boss')m.engaged=Math.max(m.engaged||0,8);m.hp-=amount;m.hit=.15;float('-'+amount,m.x,m.y-65);beep(170);if(m.hp<=0){m.hp=0;m.windup=0;m.dead=m.respawnSeconds||(m.type==='boss'?40:m.type==='stone'?18:5);if(m.type==='boss')p.bossKills++;else p[m.type==='stone'?'stones':'kills']++;const gained=enemyXP(m);careerKill(m);farmBonusLoot(m);experience(gained);float(gained?'+'+gained+' EXP':'Slabý cieľ · bez EXP',m.x,m.y-85,gained?'#d6c28c':'#8e9f92');drops.push({x:m.x,y:m.y,value:Math.round((m.type==='boss'?120:m.type==='stone'?35:7+Math.floor(rand()*7))*map().scale*(ENEMY_VARIANTS[m.variant]?.gold||1))});dropFarmEquipment(m);if(rand()<.25){p.potions++;float('+1 elixír',m.x,m.y-100,'#a8d9b0');}if(m.type==='boss')toast('Strážca padol! Korisť čaká vo výbave (I).');else if(!p.claimed&&p.kills>=5&&p.stones>=3)toast('Úloha splnená! Vyzdvihni si odmenu.');}}
+function hit(m,amount){if(m.hp<=0)return;if(amount>0)provokeEnemyGroup(m);m.hp-=amount;m.hit=.15;float('-'+amount,m.x,m.y-65);beep(170);if(m.hp<=0){m.hp=0;m.windup=0;m.dead=m.respawnSeconds||(m.type==='boss'?40:m.type==='stone'?18:5);if(m.type==='boss')p.bossKills++;else p[m.type==='stone'?'stones':'kills']++;const gained=enemyXP(m);careerKill(m);farmBonusLoot(m);experience(gained);float(gained?'+'+gained+' EXP':'Slabý cieľ · bez EXP',m.x,m.y-85,gained?'#d6c28c':'#8e9f92');drops.push({x:m.x,y:m.y,value:Math.round((m.type==='boss'?120:m.type==='stone'?35:7+Math.floor(rand()*7))*map().scale*(ENEMY_VARIANTS[m.variant]?.gold||1))});dropFarmEquipment(m);if(rand()<.25){p.potions++;float('+1 elixír',m.x,m.y-100,'#a8d9b0');}if(m.type==='boss')toast('Strážca padol! Korisť čaká vo výbave (I).');else if(!p.claimed&&p.kills>=5&&p.stones>=3)toast('Úloha splnená! Vyzdvihni si odmenu.');}}
 
 function potion(){if(!running||paused)return;if(p.potions<=0){toast('Nemáš elixíry. Navštív obchodníka (F).');return;}if(p.hp>=maxHP()){toast('Zdravie máš plné.');return;}p.potions--;p.hp=Math.min(maxHP(),p.hp+65);float('+65 zdravia',p.x,p.y-65,'#a9e0ac');beep(520,.2);updateHUD();}
 
@@ -717,13 +718,23 @@ function farmAreaAt(entity = p) {
   return FARM_AREAS[(entity.y < 1000 ? 2 : 0) + (entity.x > 1000 ? 1 : 0)];
 }
 
+function spawnJitter(id, axis) {
+  let hash = 2166136261;
+  for (const char of id + axis) hash = Math.imul(hash ^ char.charCodeAt(0), 16777619);
+  hash = Math.imul(hash ^ (hash >>> 16), 2246822507);
+  hash = Math.imul(hash ^ (hash >>> 13), 3266489909);
+  hash ^= hash >>> 16;
+  return ((hash >>> 0) / 4294967296 - .5) * 110;
+}
+
 function buildSpawnPoints(id) {
   const cfg = MAPS[id], points = [], perArea = cfg.packCount / 4;
   for (const area of FARM_AREAS) {
     const rows = Math.ceil(perArea / 2);
     for (let i = 0; i < perArea; i++) {
-      const x = area.x1 + 80 + (area.x2 - area.x1 - 160) * ((i % 2 + .5) / 2);
-      const y = area.y1 + 80 + (area.y2 - area.y1 - 160) * ((Math.floor(i / 2) + .5) / rows);
+      const pointId = `${id}:${area.id}:pack:${i}`;
+      const x = area.x1 + 80 + (area.x2 - area.x1 - 160) * ((i % 2 + .5) / 2) + spawnJitter(pointId, 'x');
+      const y = area.y1 + 80 + (area.y2 - area.y1 - 160) * ((Math.floor(i / 2) + .5) / rows) + spawnJitter(pointId, 'y');
       points.push({ id: `${id}:${area.id}:pack:${i}`, kind: 'pack', x, y, area: area.id, offset: area.offset, starter: area.offset === 0 && i === 0 });
     }
     points.push({ id: `${id}:${area.id}:rare`, kind: 'rare', x: (area.x1 + area.x2) / 2, y: (area.y1 + area.y2) / 2, area: area.id, offset: area.offset });
@@ -742,7 +753,7 @@ function rollEnemyVariant(point, slot) {
 
 function createSpawnEnemy(point, slot = 0) {
   const cfg = map(), type = point.kind === 'pack' || point.kind === 'rare' ? 'wolf' : point.kind;
-  const angle = slot * Math.PI / 3 + .15, radius = point.kind === 'pack' ? 45 + rand() * 10 : 0;
+  const angle = rand() * Math.PI * 2, radius = point.kind === 'pack' ? Math.sqrt(rand()) * 60 : 0;
   let x = point.x + Math.cos(angle) * radius, y = point.y + Math.sin(angle) * radius;
   if (Math.hypot(x - 1000, y - 1050) < SPAWN_RULES.spawnClearance) {
     const a = Math.atan2(y - 1050, x - 1000);
@@ -760,7 +771,8 @@ function createSpawnEnemy(point, slot = 0) {
     x, y, homeX: x, homeY: y, level, baseLevel: level, hp, max: hp, baseMax: hp,
     attackScale: attack, baseAttack: attack, speedScale: type === 'wolf' ? v.speed : 1,
     respawnSeconds: type === 'boss' ? 40 : type === 'stone' ? 18 : point.kind === 'rare' ? 75 : v.respawn,
-    dead: 0, cd: 1, hit: 0, windup: 0, taunt: 0, engaged: 0, skillContributors: []
+    dead: 0, cd: 1, hit: 0, windup: 0, taunt: 0, engaged: 0,
+    roamTarget: null, roamWait: rand() * 4, returning: false, skillContributors: []
   };
 }
 
@@ -786,7 +798,7 @@ function hydrateSpawnPopulation(old) {
     const saved = new Map(old.mobs.map(m => [m.spawnId, m]));
     return generated.map(m => {
       const prior = saved.get(m.spawnId);
-      return prior ? { ...m, ...prior, dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0 } : m;
+      return prior ? { ...m, ...prior, dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0, roamTarget: null, roamWait: rand() * 4, returning: false } : m;
     });
   }
   // Upgrade old sparse populations into distinct new slots without reviving their dead.
@@ -823,6 +835,7 @@ function respawnEnemy(m) {
   if (!point || legacyRiftLayout) {
     m.hp = m.max; m.x = m.homeX ?? m.x; m.y = m.homeY ?? m.y;
     m.dead = 0; m.cd = 1; m.taunt = 0; m.engaged = 0; m.stun = 0; m.slow = 0; m.dot = null; m.windup = 0; m.skillContributors = [];
+    m.roamTarget = null; m.roamWait = rand() * 4; m.returning = false;
     return;
   }
   const fresh = createSpawnEnemy(point, m.spawnSlot);
@@ -869,6 +882,47 @@ function walkEnemy(m, x, y, speed, dt, grid = null) {
   m.x = Math.max(45, Math.min(SIZE - 45, nx)); m.y = Math.max(45, Math.min(SIZE - 45, ny));
 }
 
+// Assistance is requested only by a direct damage event, never by another helper.
+function provokeEnemyGroup(victim) {
+  if (victim.type !== 'wolf' && victim.type !== 'boss') return;
+  victim.engaged = Math.max(victim.engaged || 0, 8);
+  if (victim.type !== 'wolf' || !victim.spawnPointId) return;
+  const group = mobs.filter(m => m !== victim && m.type === 'wolf' && m.hp > 0 && m.spawnPointId === victim.spawnPointId);
+  const activeCount = 1 + group.filter(m => m.engaged > 0 || m.taunt > 0).length;
+  let remaining = Math.max(0, SPAWN_RULES.assistLimit - activeCount);
+  group.sort((a, b) => Math.hypot(a.x - victim.x, a.y - victim.y) - Math.hypot(b.x - victim.x, b.y - victim.y));
+  for (const m of group) {
+    if (Math.hypot(m.x - victim.x, m.y - victim.y) > SPAWN_RULES.assistRange) continue;
+    if (Math.hypot(m.x - m.homeX, m.y - m.homeY) >= SPAWN_RULES.leash) continue;
+    if (m.engaged > 0 || m.taunt > 0) m.engaged = Math.max(m.engaged || 0, 8);
+    else if (remaining > 0) { m.engaged = 8; remaining--; }
+  }
+}
+
+function wanderEnemy(m, dt, grid) {
+  m.roamWait = Math.max(0, (m.roamWait || 0) - dt);
+  if (m.roamWait > 0) return;
+  if (!m.roamTarget) {
+    for (let attempt = 0; attempt < 8; attempt++) {
+      const angle = rand() * Math.PI * 2, radius = SPAWN_RULES.roamRadius * Math.sqrt(rand());
+      const x = m.homeX + Math.cos(angle) * radius, y = m.homeY + Math.sin(angle) * radius;
+      if (x < 45 || x > SIZE - 45 || y < 45 || y > SIZE - 45 || Math.hypot(x - 1000, y - 1050) < SPAWN_RULES.sanctuaryRadius + 18) continue;
+      m.roamTarget = { x, y }; break;
+    }
+    if (!m.roamTarget) { m.roamWait = 2; return; }
+  }
+  const slow = m.slow > 0 ? .55 : 1;
+  walkEnemy(m, m.roamTarget.x, m.roamTarget.y, map().mobSpeed * (m.speedScale || 1) * SPAWN_RULES.roamSpeed * slow, dt, grid);
+  const distance = Math.hypot(m.x - m.homeX, m.y - m.homeY);
+  if (distance > SPAWN_RULES.roamRadius) {
+    m.x = m.homeX + (m.x - m.homeX) / distance * SPAWN_RULES.roamRadius;
+    m.y = m.homeY + (m.y - m.homeY) / distance * SPAWN_RULES.roamRadius;
+  }
+  if (Math.hypot(m.x - m.roamTarget.x, m.y - m.roamTarget.y) < 5) {
+    m.roamTarget = null; m.roamWait = 1.5 + rand() * 3.5;
+  }
+}
+
 function updateEnemySpawns(dt, safe) {
   capeCooldown = Math.max(0, capeCooldown - dt);
   const grid = buildMobGrid();
@@ -882,14 +936,20 @@ function updateEnemySpawns(dt, safe) {
     const forced = m.taunt > 0 || m.engaged > 0;
     const chasing = !safe && !active('stealth') && forced && (m.taunt > 0 || home < SPAWN_RULES.leash);
     if (chasing) {
+      m.returning = true; m.roamTarget = null;
       const slow = (active('fear') && d < 300 ? .5 : 1) * (m.slow > 0 ? .55 : 1);
       const angle = (m.spawnSlot || 0) * 2.39996, spread = d < 110 ? 28 : 0;
       if (d > 33) walkEnemy(m, p.x + Math.cos(angle) * spread, p.y + Math.sin(angle) * spread, map().mobSpeed * (m.speedScale || 1) * slow, dt, grid);
       if (d < 55 && m.cd <= 0) { m.engaged = Math.max(m.engaged || 0, 8); takeDamage(Math.max(4, Math.round(9 * (m.attackScale || map().scale) - p.level * .5)), m); m.cd = 1.3; }
-    } else if (home > 4) {
+    } else {
       m.taunt = 0; m.engaged = 0;
-      walkEnemy(m, m.homeX, m.homeY, map().mobSpeed * 1.15, dt, grid);
-      if (home < 20) m.hp = Math.min(m.max, m.hp + m.max * dt * .2);
+      if (m.returning || home > SPAWN_RULES.roamRadius + 1e-6) {
+        walkEnemy(m, m.homeX, m.homeY, map().mobSpeed * 1.15, dt, grid);
+        if (home < 20) m.hp = Math.min(m.max, m.hp + m.max * dt * .2);
+        if (Math.hypot(m.x - m.homeX, m.y - m.homeY) <= 4) {
+          m.returning = false; m.roamTarget = null; m.roamWait = 1.5 + rand() * 3.5;
+        }
+      } else wanderEnemy(m, dt, grid);
     }
   }
 }
@@ -946,7 +1006,7 @@ function travelMenu(){if(!running)return;if(p.career.endgame.run){careerPanel('e
 
 function spellbook(){if(!running)return;modal(`<span class="eyebrow">${role().name} · ${school().name}</span><h2>Kniha schopností</h2><p>Šesť klasických schopností školy podľa Metin2. Popisy uvádzajú základné hodnoty na stupni 1. Vyššie stupne zlepšujú silu kúzla alebo trvanie aury a skracujú obnovu. Vlastné 2D animácie sú prispôsobené tomuto prototypu.</p><div class="spell-list">${school().skills.map((s,i)=>`<div><kbd>${spellKeys[i].toUpperCase()}</kbd><span><b>${s[0]} · stupeň ${skillProgress(skillKey(i)).rank}</b><small>${s[6]}<br>${s[3]} many · obnova ${s[2]} s</small></span></div>`).join('')}</div><p>Manu obnovuješ priebežne, rýchlejšie v útočisku. Inteligencia zvyšuje manu aj poškodenie kúziel. Školu si vyber pred vstupom do hry. Prax a knihy pre zvyšovanie schopností nájdeš v Progrese (P).</p>`);}
 
-function help(){modal('<span class="eyebrow">SPRIEVODCA</span><h2>Cesta bojovníka</h2><p><b>WASD / šípky</b> — pohyb<br><b>Medzerník</b> — základný útok (možno držať)<br><b>Q R T Y U O</b> — šesť schopností školy<br><b>P</b> — dlhodobá progresia<br><b>K</b> — kniha schopností a ich účinky<br><b>E</b> — elixír zdravia<br><b>B</b> — Plášť statočnosti (650 jednotiek, 18 s)<br><b>I</b> — výbava a vlastnosti<br><b>J</b> — denník úloh<br><b>M</b> — cestovanie medzi mapami z útočiska<br><b>F</b> — obchodník<br><b>Esc</b> — zavrieť okno</p><p>Vyber si povolanie a školu pred vstupom do hry. Kúzla spotrebúvajú manu, ktorá sa automaticky obnovuje. Modré, zelené a fialové efekty označujú rôzne schopnosti, jedy a ochranné aury.</p><p>Príšery útočia až po tvojom zásahu alebo privolaní plášťom. Bossovia napádajú automaticky. Fialové označenie znamená elitu, zlaté vzácnu príšeru. Respawn: bežné príšery 5 s, elity 8 s, vzácne varianty 20 s, vzácne hliadky 75 s, kamene 18 s a bossovia 40 s. Plášť spotrebuje 1 kus aj bez cieľov; ďalšie kúpiš u obchodníka alebo získaš z koristi. Útočisko je chránené: plášť ani útočné kúzla v ňom nefungujú. Každá mapa má vlastných protivníkov a silnejšie odmeny. Boss pod 30 % zdravia zúri; Sura ho dokáže potlačiť Zrušením kúzla.</p><p>Vlastná 2D adaptácia šiestich klasických schopností každej školy, nie pôvodné animácie ani presná simulácia hodnôt Metin2. Postup sa ukladá v tomto prehliadači.</p>');}
+function help(){modal('<span class="eyebrow">SPRIEVODCA</span><h2>Cesta bojovníka</h2><p><b>WASD / šípky</b> — pohyb<br><b>Medzerník</b> — základný útok (možno držať)<br><b>Q R T Y U O</b> — šesť schopností školy<br><b>P</b> — dlhodobá progresia<br><b>K</b> — kniha schopností a ich účinky<br><b>E</b> — elixír zdravia<br><b>B</b> — Plášť statočnosti (650 jednotiek, 18 s)<br><b>I</b> — výbava a vlastnosti<br><b>J</b> — denník úloh<br><b>M</b> — cestovanie medzi mapami z útočiska<br><b>F</b> — obchodník<br><b>Esc</b> — zavrieť okno</p><p>Vyber si povolanie a školu pred vstupom do hry. Kúzla spotrebúvajú manu, ktorá sa automaticky obnovuje. Modré, zelené a fialové efekty označujú rôzne schopnosti, jedy a ochranné aury.</p><p>Príšery sa voľne potulujú po okolí. Zásah vyprovokuje ich skupinu, spolu najviac päť príšer; plášť pritiahne všetky pohyblivé ciele v dosahu. Bossovia napádajú automaticky. Fialové označenie znamená elitu, zlaté vzácnu príšeru. Respawn: bežné príšery 5 s, elity 8 s, vzácne varianty 20 s, vzácne hliadky 75 s, kamene 18 s a bossovia 40 s. Plášť spotrebuje 1 kus aj bez cieľov; ďalšie kúpiš u obchodníka alebo získaš z koristi. Útočisko je chránené: plášť ani útočné kúzla v ňom nefungujú. Každá mapa má vlastných protivníkov a silnejšie odmeny. Boss pod 30 % zdravia zúri; Sura ho dokáže potlačiť Zrušením kúzla.</p><p>Vlastná 2D adaptácia šiestich klasických schopností každej školy, nie pôvodné animácie ani presná simulácia hodnôt Metin2. Postup sa ukladá v tomto prehliadači.</p>');}
 
 function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 

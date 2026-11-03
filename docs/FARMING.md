@@ -11,7 +11,7 @@ Každá mapa má štyri priestorovo oddelené oblasti. Skupinový bod obsahuje �
 | Hory | 28 | 172 | 8 | 1 | 41 | 181 |
 | Chrám | 32 | 196 | 8 | 1 | 45 | 205 |
 
-Predtým bolo na mape len 18–24 pohyblivých príšer. Nové pevné sloty sa opakovane obnovujú; ich celkový počet nekontrolovane nerastie. Domovské pozície sú mimo chráneného útočiska. Rozostupy skupiny a lokálne vyhýbanie sa obmedzujú skladanie všetkých tiel do jedného bodu.
+Predtým bolo na mape len 18–24 pohyblivých príšer. Trvalé identifikátory slotov sa opakovane obnovujú; ich celkový počet nekontrolovane nerastie. Skupinové centrá majú nepravidelné posuny; počiatočná aj respawn pozícia sa náhodne vyberá v kruhu 60 jednotiek okolo centra. Domovské pozície sú mimo chráneného útočiska. Rozostupy skupiny a lokálne vyhýbanie sa obmedzujú skladanie všetkých tiel do jedného bodu.
 
 ## Oblasti a úrovne
 
@@ -42,7 +42,11 @@ Všetky EXP odmeny stále používajú rozdiel úrovní a percentuálne limity z
 
 ## Správanie nepriateľov
 
-Bežné, elitné aj vzácne pohyblivé príšery sú neutrálne. Samotná blízkosť hráča ich neaktivuje. Po zásahu hráča sa bránia a prenasledujú ho; každý ich útok predĺži bojové vyprovokovanie na 8 sekúnd. Pri úteku čas vyprší a vrátia sa domov, bežné prenasledovanie má hranicu 700 jednotiek od domova. Bossovia sú výnimka: hráča automaticky napádajú v dosahu 500 jednotiek.
+Bežné, elitné aj vzácne pohyblivé príšery sú neutrálne. Samotná blízkosť hráča ich neaktivuje. V pokoji sa pohybujú 40 % bojovej rýchlosti v okruhu **85 jednotiek od domova**, vyberajú si nezávislé smery a medzi cestami odpočívajú 1,5–5 sekúnd. Neopúšťajú hranice mapy ani nevstupujú do útočiska. Kamene zostávajú nehybné.
+
+Zásah vyprovokuje obeť a najbližších živých členov tej istej skupiny do vzdialenosti **300 jednotiek**, spolu najviac **päť príšer vrátane obete**. Pomoc sa ďalej nereťazí na susedné skupiny, mŕtvi ani vzdialení členovia sa nepridajú. Opakované zásahy do rovnakej obete nedopĺňajú šiesteho člena k už aktívnej pätici. Aj smrteľný zásah zalarmuje spojencov. Priame plošné zasiahnutie ďalších cieľov a plášť môžu úmyselne vyprovokovať viac než päť nepriateľov; limit sa vzťahuje na automatickú pomoc skupiny.
+
+Vyprovokované príšery sa bránia a prenasledujú hráča; každý ich útok predĺži bojové vyprovokovanie na 8 sekúnd. Pri úteku čas vyprší a vrátia sa domov, po návrate opäť pokračujú v potulovaní. Bežné prenasledovanie má hranicu 700 jednotiek od domova. Bossovia sú výnimka: hráča automaticky napádajú v dosahu 500 jednotiek.
 
 ## Plášť statočnosti
 

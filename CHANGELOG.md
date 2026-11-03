@@ -10,6 +10,22 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.6.1] - 2026-11-03
+
+### Added
+
+- Nezávislé pokojové potulovanie príšer v okruhu 85 jednotiek s prirodzenými prestávkami.
+- Pomoc vlastnej skupiny po zásahu: najviac päť živých členov vrátane obete, bez reťazenia na susedné skupiny.
+- Testy pohybu na všetkých mapách, skupinového limitu, smrteľného zásahu, úteku a kompatibility ukladania.
+
+### Changed
+
+- Nepravidelné centrá skupín a náhodné pozície pri spawne aj respawne pri zachovaní identifikátorov a hustoty.
+
+### Fixed
+
+- Príšery už nestoja v pevných rozostupoch. Po ukončení prenasledovania sa vrátia domov a pokračujú v potulovaní.
+
 ## [0.6.0] - 2026-11-02
 
 ### Added
@@ -123,7 +139,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.6.1...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -131,3 +147,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.4.0]: https://github.com/ndxnraw/Grindoria/compare/v0.3.1...v0.4.0
 [0.5.0]: https://github.com/ndxnraw/Grindoria/compare/v0.4.0...v0.5.0
 [0.6.0]: https://github.com/ndxnraw/Grindoria/compare/v0.5.0...v0.6.0
+[0.6.1]: https://github.com/ndxnraw/Grindoria/compare/v0.6.0...v0.6.1

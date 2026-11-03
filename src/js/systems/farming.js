@@ -11,13 +11,23 @@ function farmAreaAt(entity = p) {
   return FARM_AREAS[(entity.y < 1000 ? 2 : 0) + (entity.x > 1000 ? 1 : 0)];
 }
 
+function spawnJitter(id, axis) {
+  let hash = 2166136261;
+  for (const char of id + axis) hash = Math.imul(hash ^ char.charCodeAt(0), 16777619);
+  hash = Math.imul(hash ^ (hash >>> 16), 2246822507);
+  hash = Math.imul(hash ^ (hash >>> 13), 3266489909);
+  hash ^= hash >>> 16;
+  return ((hash >>> 0) / 4294967296 - .5) * 110;
+}
+
 function buildSpawnPoints(id) {
   const cfg = MAPS[id], points = [], perArea = cfg.packCount / 4;
   for (const area of FARM_AREAS) {
     const rows = Math.ceil(perArea / 2);
     for (let i = 0; i < perArea; i++) {
-      const x = area.x1 + 80 + (area.x2 - area.x1 - 160) * ((i % 2 + .5) / 2);
-      const y = area.y1 + 80 + (area.y2 - area.y1 - 160) * ((Math.floor(i / 2) + .5) / rows);
+      const pointId = `${id}:${area.id}:pack:${i}`;
+      const x = area.x1 + 80 + (area.x2 - area.x1 - 160) * ((i % 2 + .5) / 2) + spawnJitter(pointId, 'x');
+      const y = area.y1 + 80 + (area.y2 - area.y1 - 160) * ((Math.floor(i / 2) + .5) / rows) + spawnJitter(pointId, 'y');
       points.push({ id: `${id}:${area.id}:pack:${i}`, kind: 'pack', x, y, area: area.id, offset: area.offset, starter: area.offset === 0 && i === 0 });
     }
     points.push({ id: `${id}:${area.id}:rare`, kind: 'rare', x: (area.x1 + area.x2) / 2, y: (area.y1 + area.y2) / 2, area: area.id, offset: area.offset });
@@ -36,7 +46,7 @@ function rollEnemyVariant(point, slot) {
 
 function createSpawnEnemy(point, slot = 0) {
   const cfg = map(), type = point.kind === 'pack' || point.kind === 'rare' ? 'wolf' : point.kind;
-  const angle = slot * Math.PI / 3 + .15, radius = point.kind === 'pack' ? 45 + rand() * 10 : 0;
+  const angle = rand() * Math.PI * 2, radius = point.kind === 'pack' ? Math.sqrt(rand()) * 60 : 0;
   let x = point.x + Math.cos(angle) * radius, y = point.y + Math.sin(angle) * radius;
   if (Math.hypot(x - 1000, y - 1050) < SPAWN_RULES.spawnClearance) {
     const a = Math.atan2(y - 1050, x - 1000);
@@ -54,7 +64,8 @@ function createSpawnEnemy(point, slot = 0) {
     x, y, homeX: x, homeY: y, level, baseLevel: level, hp, max: hp, baseMax: hp,
     attackScale: attack, baseAttack: attack, speedScale: type === 'wolf' ? v.speed : 1,
     respawnSeconds: type === 'boss' ? 40 : type === 'stone' ? 18 : point.kind === 'rare' ? 75 : v.respawn,
-    dead: 0, cd: 1, hit: 0, windup: 0, taunt: 0, engaged: 0, skillContributors: []
+    dead: 0, cd: 1, hit: 0, windup: 0, taunt: 0, engaged: 0,
+    roamTarget: null, roamWait: rand() * 4, returning: false, skillContributors: []
   };
 }
 
@@ -80,7 +91,7 @@ function hydrateSpawnPopulation(old) {
     const saved = new Map(old.mobs.map(m => [m.spawnId, m]));
     return generated.map(m => {
       const prior = saved.get(m.spawnId);
-      return prior ? { ...m, ...prior, dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0 } : m;
+      return prior ? { ...m, ...prior, dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0, roamTarget: null, roamWait: rand() * 4, returning: false } : m;
     });
   }
   // Upgrade old sparse populations into distinct new slots without reviving their dead.
@@ -117,6 +128,7 @@ function respawnEnemy(m) {
   if (!point || legacyRiftLayout) {
     m.hp = m.max; m.x = m.homeX ?? m.x; m.y = m.homeY ?? m.y;
     m.dead = 0; m.cd = 1; m.taunt = 0; m.engaged = 0; m.stun = 0; m.slow = 0; m.dot = null; m.windup = 0; m.skillContributors = [];
+    m.roamTarget = null; m.roamWait = rand() * 4; m.returning = false;
     return;
   }
   const fresh = createSpawnEnemy(point, m.spawnSlot);
@@ -163,6 +175,47 @@ function walkEnemy(m, x, y, speed, dt, grid = null) {
   m.x = Math.max(45, Math.min(SIZE - 45, nx)); m.y = Math.max(45, Math.min(SIZE - 45, ny));
 }
 
+// Assistance is requested only by a direct damage event, never by another helper.
+function provokeEnemyGroup(victim) {
+  if (victim.type !== 'wolf' && victim.type !== 'boss') return;
+  victim.engaged = Math.max(victim.engaged || 0, 8);
+  if (victim.type !== 'wolf' || !victim.spawnPointId) return;
+  const group = mobs.filter(m => m !== victim && m.type === 'wolf' && m.hp > 0 && m.spawnPointId === victim.spawnPointId);
+  const activeCount = 1 + group.filter(m => m.engaged > 0 || m.taunt > 0).length;
+  let remaining = Math.max(0, SPAWN_RULES.assistLimit - activeCount);
+  group.sort((a, b) => Math.hypot(a.x - victim.x, a.y - victim.y) - Math.hypot(b.x - victim.x, b.y - victim.y));
+  for (const m of group) {
+    if (Math.hypot(m.x - victim.x, m.y - victim.y) > SPAWN_RULES.assistRange) continue;
+    if (Math.hypot(m.x - m.homeX, m.y - m.homeY) >= SPAWN_RULES.leash) continue;
+    if (m.engaged > 0 || m.taunt > 0) m.engaged = Math.max(m.engaged || 0, 8);
+    else if (remaining > 0) { m.engaged = 8; remaining--; }
+  }
+}
+
+function wanderEnemy(m, dt, grid) {
+  m.roamWait = Math.max(0, (m.roamWait || 0) - dt);
+  if (m.roamWait > 0) return;
+  if (!m.roamTarget) {
+    for (let attempt = 0; attempt < 8; attempt++) {
+      const angle = rand() * Math.PI * 2, radius = SPAWN_RULES.roamRadius * Math.sqrt(rand());
+      const x = m.homeX + Math.cos(angle) * radius, y = m.homeY + Math.sin(angle) * radius;
+      if (x < 45 || x > SIZE - 45 || y < 45 || y > SIZE - 45 || Math.hypot(x - 1000, y - 1050) < SPAWN_RULES.sanctuaryRadius + 18) continue;
+      m.roamTarget = { x, y }; break;
+    }
+    if (!m.roamTarget) { m.roamWait = 2; return; }
+  }
+  const slow = m.slow > 0 ? .55 : 1;
+  walkEnemy(m, m.roamTarget.x, m.roamTarget.y, map().mobSpeed * (m.speedScale || 1) * SPAWN_RULES.roamSpeed * slow, dt, grid);
+  const distance = Math.hypot(m.x - m.homeX, m.y - m.homeY);
+  if (distance > SPAWN_RULES.roamRadius) {
+    m.x = m.homeX + (m.x - m.homeX) / distance * SPAWN_RULES.roamRadius;
+    m.y = m.homeY + (m.y - m.homeY) / distance * SPAWN_RULES.roamRadius;
+  }
+  if (Math.hypot(m.x - m.roamTarget.x, m.y - m.roamTarget.y) < 5) {
+    m.roamTarget = null; m.roamWait = 1.5 + rand() * 3.5;
+  }
+}
+
 function updateEnemySpawns(dt, safe) {
   capeCooldown = Math.max(0, capeCooldown - dt);
   const grid = buildMobGrid();
@@ -176,14 +229,20 @@ function updateEnemySpawns(dt, safe) {
     const forced = m.taunt > 0 || m.engaged > 0;
     const chasing = !safe && !active('stealth') && forced && (m.taunt > 0 || home < SPAWN_RULES.leash);
     if (chasing) {
+      m.returning = true; m.roamTarget = null;
       const slow = (active('fear') && d < 300 ? .5 : 1) * (m.slow > 0 ? .55 : 1);
       const angle = (m.spawnSlot || 0) * 2.39996, spread = d < 110 ? 28 : 0;
       if (d > 33) walkEnemy(m, p.x + Math.cos(angle) * spread, p.y + Math.sin(angle) * spread, map().mobSpeed * (m.speedScale || 1) * slow, dt, grid);
       if (d < 55 && m.cd <= 0) { m.engaged = Math.max(m.engaged || 0, 8); takeDamage(Math.max(4, Math.round(9 * (m.attackScale || map().scale) - p.level * .5)), m); m.cd = 1.3; }
-    } else if (home > 4) {
+    } else {
       m.taunt = 0; m.engaged = 0;
-      walkEnemy(m, m.homeX, m.homeY, map().mobSpeed * 1.15, dt, grid);
-      if (home < 20) m.hp = Math.min(m.max, m.hp + m.max * dt * .2);
+      if (m.returning || home > SPAWN_RULES.roamRadius + 1e-6) {
+        walkEnemy(m, m.homeX, m.homeY, map().mobSpeed * 1.15, dt, grid);
+        if (home < 20) m.hp = Math.min(m.max, m.hp + m.max * dt * .2);
+        if (Math.hypot(m.x - m.homeX, m.y - m.homeY) <= 4) {
+          m.returning = false; m.roamTarget = null; m.roamWait = 1.5 + rand() * 3.5;
+        }
+      } else wanderEnemy(m, dt, grid);
     }
   }
 }

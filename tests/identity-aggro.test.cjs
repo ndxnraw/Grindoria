@@ -7,11 +7,11 @@ function profile(level = 17) {
   return JSON.parse(game.saved.get('grindoria-save-v1'));
 }
 
-test('ordinary, elite and rare enemies do not move towards or attack a nearby peaceful player', () => {
+test('ordinary, elite and rare enemies stay neutral while wandering near a peaceful player', () => {
   const { run } = createGame();
   run('running=true;let group=mobs.filter(m=>m.type==="wolf").slice(0,3);group.forEach((m,i)=>Object.assign(m,{variant:["normal","elite","rare"][i],x:400+i*30,y:1400,homeX:400+i*30,homeY:1400,engaged:0,taunt:0,cd:0}));p.x=445;p.y=1400;p.hp=maxHP();let health=p.hp,positions=group.map(m=>[m.x,m.y]);for(let i=0;i<100;i++)update(.05);');
   assert.equal(run('p.hp'), run('health'));
-  assert(run('group.every((m,i)=>m.x===positions[i][0]&&m.y===positions[i][1]&&m.engaged===0&&m.taunt===0)'));
+  assert(run('group.every(m=>Math.hypot(m.x-m.homeX,m.y-m.homeY)<=SPAWN_RULES.roamRadius+1e-8&&m.engaged===0&&m.taunt===0)'));
 });
 
 test('attacked enemies retaliate and maintain an ongoing fight', () => {
@@ -21,12 +21,12 @@ test('attacked enemies retaliate and maintain an ongoing fight', () => {
   assert(run('foe.engaged>0'));
 });
 
-test('a ranged hit attracts its victim but not untouched neighbors; escaping ends retaliation', () => {
+test('a ranged hit does not attract a neighboring different group; escaping ends retaliation', () => {
   const { run } = createGame();
-  run('running=true;mobs.forEach(m=>{m.hp=0;m.dead=1000;});let [foe,neighbor]=mobs.filter(m=>m.type==="wolf");Object.assign(foe,{hp:1000,x:400,y:1400,homeX:400,homeY:1400});Object.assign(neighbor,{hp:1000,x:450,y:1400,homeX:450,homeY:1400});p.x=850;p.y=1400;hit(foe,1);for(let i=0;i<60;i++)updateEnemySpawns(.05,false);');
-  assert(run('foe.x>400')); assert.equal(run('neighbor.x'), 450); assert.equal(run('neighbor.engaged'), 0);
+  run('running=true;mobs.forEach(m=>{m.hp=0;m.dead=1000;});let [foe,neighbor]=mobs.filter(m=>m.type==="wolf");Object.assign(foe,{hp:1000,x:400,y:1400,homeX:400,homeY:1400});Object.assign(neighbor,{hp:1000,x:450,y:1400,homeX:450,homeY:1400,spawnPointId:"another-pack"});p.x=850;p.y=1400;hit(foe,1);for(let i=0;i<60;i++)updateEnemySpawns(.05,false);');
+  assert(run('foe.x>400')); assert.equal(run('neighbor.engaged'), 0);
   run('p.x=1950;p.y=1950;for(let i=0;i<400;i++)updateEnemySpawns(.05,false);');
-  assert.equal(run('foe.engaged'), 0); assert(run('Math.hypot(foe.x-foe.homeX,foe.y-foe.homeY)<5'));
+  assert.equal(run('foe.engaged'), 0); assert(run('Math.hypot(foe.x-foe.homeX,foe.y-foe.homeY)<=SPAWN_RULES.roamRadius+1e-8'));
 });
 
 test('bosses still automatically approach a player within their natural aggro range', () => {
