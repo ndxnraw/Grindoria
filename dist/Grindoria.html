@@ -27,9 +27,45 @@ nav{gap:18px}.player{min-height:92px}.mana{height:7px;margin-top:4px;background:
 @media(min-width:651px){.hotbar{gap:4px}.hotbar button{width:54px}}
 
 .brand small{font-size:9px;letter-spacing:.7px}@media(max-width:450px){.brand small{font-size:8px;letter-spacing:.3px}}
+/* Classic inventory: original vector icons, bronze frames and a slate grid. */
+.inventory-overlay{position:fixed;inset:0;z-index:50;background:#080b0bd9;padding:20px;backdrop-filter:blur(4px)}
+.inventory-overlay .modal-card{width:850px;max-width:100%;max-height:94dvh;padding:0;overflow:auto;background:#1a1916;border:3px solid #8e7750;border-radius:3px;box-shadow:0 0 0 1px #25211b,0 0 0 4px #302a21,0 24px 100px #000c;scrollbar-color:#8e7750 #1a1916}
+.inventory-overlay .close{top:14px;right:14px;width:25px;height:25px;z-index:3;border:1px solid #9b8154;background:linear-gradient(#654936,#352a21);color:#e1c79a;font:21px/20px Georgia}
+.inventory-window{font:11px/1.5 'Segoe UI',sans-serif;color:#b7b19f;background:radial-gradient(ellipse at 35% 0,#453c2933,transparent 65%);min-width:0}
+.inventory-title{height:71px;padding:12px 48px 12px 20px;gap:12px;background:linear-gradient(#52422c,#2b271f);border-bottom:1px solid #8a734b;box-shadow:inset 0 1px #c6a97588;justify-content:flex-start}
+.inventory-title .window-sigil{width:35px;height:39px;border:1px solid #ac8c50;display:grid;place-items:center;color:#e6ce95;font:26px Georgia;box-shadow:inset 0 0 12px #000a;background:#24231d}
+.inventory-title small{font-size:8px;letter-spacing:2px;color:#b5a584}.inventory-title h2{font:23px/1.2 Georgia,serif;color:#ead4a4;margin:3px 0 0;text-shadow:0 2px #000}
+.inventory-title .inv-level{margin-left:auto;align-self:center;font-size:10px;letter-spacing:1px;color:#d2b276}
+.inventory-columns{display:grid;grid-template-columns:235px 238px minmax(0,1fr);gap:18px;padding:17px}
+.inventory-window h3{font:16px Georgia,serif;color:#d2b985;margin:0 0 12px}
+.character-panel,.bag-panel{min-width:0}.character-panel{padding-right:15px;border-right:1px solid #70604455}
+.equipment-board{position:relative;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(5,49px);gap:10px 8px;padding:5px 4px 8px;background:radial-gradient(ellipse,#52503e33,transparent 70%);border-top:1px solid #5f523533;border-bottom:1px solid #5f523555}
+.equipment-figure{position:absolute;width:153px;height:235px;left:34px;top:25px;opacity:.32;pointer-events:none}
+.equipment-slot{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:linear-gradient(135deg,#25251ee6,#131512ed);border:1px solid #6b6046;box-shadow:inset 1px 1px #0008,0 1px #b29b5630;padding:2px;min-width:0}
+.equipment-slot>span{display:grid;place-items:center;width:100%;height:33px}.equipment-slot .item-icon{height:32px;max-width:40px;opacity:.45}.equipment-slot.filled .item-icon{opacity:1}.equipment-slot small{font-size:8px;color:#a39476;white-space:nowrap}.equipment-slot.filled small{color:#cfbc94}.equipment-slot i{position:absolute;right:3px;top:0;font:9px Georgia;color:#9bbb7b}
+.slot-helmet{grid-column:2;grid-row:1}.slot-necklace{grid-column:1;grid-row:1}.slot-earrings{grid-column:3;grid-row:1}.slot-weapon{grid-column:1;grid-row:2 / span 2}.slot-weapon>span,.slot-armor>span{height:68px}.slot-weapon .item-icon,.slot-armor .item-icon{height:67px;max-width:55px}.slot-armor{grid-column:2;grid-row:2 / span 2}.slot-shield{grid-column:3;grid-row:2 / span 2}.slot-shield>span{height:60px}.slot-shield .item-icon{height:55px;max-width:51px}.slot-bracelet{grid-column:1;grid-row:4}.slot-belt{grid-column:2;grid-row:4}.slot-talisman{grid-column:3;grid-row:4 / span 2}.slot-talisman>span{height:67px}.slot-talisman .item-icon{height:65px;max-width:43px}.slot-boots{grid-column:2;grid-row:5}
+.character-values{margin-top:11px;display:grid;gap:2px}.character-values>span{display:flex;justify-content:space-between;gap:5px;font-size:10px;padding:3px 5px;border-bottom:1px solid #a2925e12;color:#a49e8c}.character-values b{font-weight:500;color:#dfcd9e}
+.inventory-attributes{margin-top:10px;font-size:10px}.inventory-attributes summary{cursor:pointer;padding:8px 4px;color:#bfaa7d;border:1px solid #77614355}.inventory-attributes>div{display:flex;align-items:center;padding:3px 5px;gap:10px}.inventory-attributes b{margin-left:auto}.inventory-attributes button{border:1px solid #786640;background:#473d2b;color:#e7d5ab;width:24px}
+.bag-heading{display:flex;align-items:baseline;justify-content:space-between;gap:5px}.bag-heading h3{margin-bottom:10px}.bag-heading>small{font-size:8px;color:#8f8977}
+.inventory-tabs{display:flex;gap:5px;margin-bottom:10px}.inventory-tabs button{flex:1;padding:7px 4px;border:1px solid #685b3e;background:linear-gradient(#39342a,#211f19);color:#a89c7e;font-size:10px}.inventory-tabs button[aria-pressed=true]{border-color:#b3965e;box-shadow:inset 0 -2px #b2965b;color:#ead5a0;background:linear-gradient(#574830,#30291f)}
+.inventory-pages{display:flex;gap:4px;align-items:center;margin-bottom:7px;min-height:25px}.inventory-pages>span{font-size:8px;color:#8d846f}.inventory-pages button{padding:3px 7px;background:#29271f;border:1px solid #64573b;color:#9f9478;font-size:9px}.inventory-pages button[aria-pressed=true]{background:#6a5430;color:#f2dba4;border-color:#af925b}.inventory-pages #inv-sort{margin-left:auto;white-space:nowrap}
+.inventory-grid{--cell:44px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:repeat(9,var(--cell));gap:2px;background:#080a09;padding:4px;border:2px solid #756344;box-shadow:0 0 0 1px #0c0e0c,inset 0 0 10px #000;position:relative}
+.inventory-cell{min-width:0;min-height:0;margin:0;padding:0;border:1px solid #48463a;background:linear-gradient(135deg,#242721,#171a17);box-shadow:inset 0 0 5px #080c09;position:relative}.inventory-cell:after{content:'';position:absolute;inset:3px;border-top:1px solid #ffffff03;border-left:1px solid #ffffff03;pointer-events:none}
+.grid-item{z-index:2;position:relative;min-width:0;min-height:0;margin:0;padding:5px;background:radial-gradient(ellipse,#5c58433b,#171a17aa);border:1px solid #8d876077;box-shadow:inset 0 0 10px #0006;cursor:grab;display:grid;place-items:center}.item-icon{width:100%;height:100%;max-height:100%;display:block;pointer-events:none;filter:drop-shadow(1px 2px 1px #0009)}
+.grid-item.rarity-1,.equipment-slot.rarity-1{border-color:#6a9baa;background-color:#25464a33}.grid-item.rarity-2,.equipment-slot.rarity-2{border-color:#9f79b4;background-color:#49305155}.grid-item[aria-pressed=true],.equipment-slot[aria-pressed=true]{border-color:#e5c77e;outline:1px solid #e3c078;outline-offset:-3px;background-color:#81643055}.grid-item:hover,.equipment-slot:hover{border-color:#cfb875;box-shadow:inset 0 0 15px #cfb87520}.stack-count,.enhance-count{position:absolute;right:3px;bottom:1px;color:#f2e9ca;text-shadow:1px 1px #000,-1px -1px #000,1px -1px #000,-1px 1px #000;font:bold 10px 'Segoe UI',sans-serif;pointer-events:none}.enhance-count{font-size:9px;color:#d1c39d}
+.inventory-window .inventory-hint{font-size:9px;line-height:1.5;color:#817e6e;margin:9px 0}.inventory-money{display:flex;gap:8px;align-items:center;background:#10130f;border:1px solid #655738;padding:8px 10px;color:#ceb573}.inventory-money b{margin-left:auto;font-size:14px;font-weight:500}.inventory-money small{font-size:8px;color:#8d8468}
+.item-inspector{border-left:1px solid #70604455;padding-left:15px;min-width:0;display:flex;flex-direction:column}.item-inspector>.eyebrow{font-size:8px;letter-spacing:2px;margin:2px 0 14px;color:#8e8268}.item-description>small{font-size:8px;letter-spacing:1px;color:#8e8975}.item-description h3{font:18px/1.4 Georgia,serif;margin:7px 0 10px;color:#ded0a6;overflow-wrap:anywhere}.item-description.rarity-1 h3{color:#91bfd2}.item-description.rarity-2 h3{color:#c5a1df}.detail-icon{height:110px;display:flex;justify-content:center;margin:12px 0 18px;background:radial-gradient(ellipse,#b29c5433,transparent 65%);padding:9px}.detail-icon .item-icon{width:auto;max-width:95px}.inventory-window .item-description p{font-size:10px;line-height:1.8;color:#9c9986;margin:10px 0}.bonus-line{display:flex;gap:6px;justify-content:space-between;padding:5px 0;border-bottom:1px solid #77684833;font-size:10px;color:#bdc5a3}.bonus-line b{color:#a8ce91;font-weight:500}.item-price{color:#b3a076!important}.item-actions{display:grid;gap:7px;margin-top:16px}.item-actions button,.delete-confirm button,.inventory-shortcuts button{border:1px solid #78613c;background:linear-gradient(#51412b,#2b261c);color:#dbc494;padding:8px;font-size:10px}.item-actions button:first-child{border-color:#b0975d;background:linear-gradient(#79613a,#45351e);color:#f0dca9}.item-actions .danger{color:#b99b89;border-color:#6e4d3c;background:#342720}.inventory-window .inventory-message{font-size:10px;color:#dfb18e;line-height:1.5;min-height:16px;margin:10px 0}.inventory-shortcuts{margin-top:auto;border-top:1px solid #71603d55;padding-top:12px;display:grid;gap:6px;font-size:9px;color:#8f927c}.inventory-shortcuts button{margin-top:4px;padding:7px;color:#b2a88a}.empty-inspector{text-align:center;padding:40px 0;font:35px Georgia;color:#796c49}.empty-inspector h3{font-size:17px;margin:25px 0 12px}.inventory-window .empty-inspector p{font:11px/1.9 'Segoe UI',sans-serif;color:#8d8b78}
+.delete-confirm{margin-top:10px;padding:10px;background:#442e2355;border:1px solid #97654777}.inventory-window .delete-confirm p{font-size:10px;color:#d9b6a0;margin:0 0 8px}.delete-confirm label{font-size:10px;display:flex;align-items:center;gap:6px}.delete-confirm input{min-width:0;width:85px;background:#191a14;border:1px solid #8f744a;color:#e5d5b3;padding:5px}.delete-confirm button{display:block;width:100%;margin-top:7px}.delete-confirm button:first-of-type{color:#ecc4a7;background:#65422b}
+.item-tooltip{position:fixed;z-index:100;pointer-events:none;width:240px;max-width:calc(100vw - 24px);padding:14px;background:#0c1211f5;border:1px solid #9a895a;box-shadow:0 5px 25px #000b;box-sizing:border-box}.item-tooltip[hidden]{display:none}.item-tooltip h3{font-size:16px}.item-tooltip p{font-size:10px!important;line-height:1.6!important}.item-tooltip .bonus-line{font-size:10px}
+@media(max-width:800px){.inventory-overlay{padding:12px}.inventory-overlay .modal-card{width:650px}.inventory-columns{grid-template-columns:minmax(190px,1fr) 238px;gap:15px}.item-inspector{grid-column:1 / -1;border-left:0;border-top:1px solid #70604455;padding:15px 0 0;display:block}.item-inspector>.eyebrow{display:none}.item-inspector .detail-icon{float:left;width:90px;height:90px;margin:5px 15px 5px 0}.item-actions{grid-template-columns:repeat(3,minmax(0,1fr))}.inventory-shortcuts{clear:both;margin-top:12px}.empty-inspector{padding:10px;font-size:20px}.empty-inspector h3{margin:7px 0}.empty-inspector p{margin:7px 0}.equipment-figure{left:calc(50% - 76px)}}
+@media(max-width:520px){.inventory-overlay{padding:8px}.inventory-title{padding-left:12px;height:64px}.inventory-title h2{font-size:20px}.inventory-title .inv-level{display:none}.inventory-columns{grid-template-columns:1fr;padding:12px;gap:17px}.character-panel{padding:0;border-right:0}.equipment-board{grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:repeat(2,60px);gap:6px}.equipment-slot{grid-column:auto;grid-row:auto}.equipment-slot>span,.slot-weapon>span,.slot-armor>span,.slot-shield>span,.slot-talisman>span{height:39px}.equipment-slot .item-icon,.slot-weapon .item-icon,.slot-armor .item-icon,.slot-shield .item-icon,.slot-talisman .item-icon{height:38px;max-width:36px}.equipment-slot small{font-size:7px}.equipment-figure{display:none}.character-values{grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 12px}.character-values>span{font-size:9px}.bag-panel{width:238px;max-width:100%;justify-self:center}.inventory-grid{--cell:41px}.bag-heading h3{font-size:18px}.inventory-window .inventory-hint{font-size:10px}.inventory-shortcuts{font-size:10px}.item-description>small{font-size:9px}.item-tooltip{display:none}}
+
+.equipment-slot:not(.filled) .item-icon{filter:grayscale(1);opacity:.28}
+
+.inventory-overlay{grid-template-columns:minmax(0,1fr)}.inventory-overlay .modal-card{min-width:0}.inventory-title{min-height:0;flex-wrap:nowrap}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b>ALPHA 0.6.1</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b>ALPHA 0.7.0</b></span></header>
 <main><div class="world-title"><div><span class="eyebrow">KAPITOLA I · PREBUDENIE</span><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Pod pokojnými korunami sa prebúdza stará temnota.</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
 <section class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb WASD, útok medzerník, schopnosť Q, liečenie E."></canvas><div class="vignette"></div>
 <div class="hud player"><div class="portrait">侍</div><div><div class="player-name"><b id="playerclass">Bojovník</b> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 60 skúseností</small></div></div>
@@ -196,6 +232,23 @@ const FARM_AREAS = [
 
 
 
+// src/js/data/items.js
+const INVENTORY = { schema: 1, columns: 5, rows: 9, pageSize: 45, pages: 2 };
+const EQUIPMENT = {
+  weapon: { name: 'Zbraň', size: [1, 3], stat: 'attack', base: 4, scale: .6, rare: 9, names: ['Pútnický meč', 'Mesačný meč', 'Dračí meč'] },
+  armor: { name: 'Brnenie', size: [2, 3], stat: 'defense', base: 2, scale: .25, rare: 3, names: ['Pútnická zbroj', 'Mesačná zbroj', 'Dračia zbroj'] },
+  helmet: { name: 'Prilba', size: [2, 1], stat: 'defense', base: 1, scale: .12, rare: 2, names: ['Železná prilba', 'Mesačná prilba', 'Dračia prilba'] },
+  shield: { name: 'Štít', size: [2, 2], stat: 'defense', base: 2, scale: .18, rare: 3, names: ['Okrúhly štít', 'Mesačný štít', 'Dračí štít'] },
+  boots: { name: 'Obuv', size: [2, 2], stat: 'speed', base: 3, scale: .12, rare: 3, names: ['Kožené čižmy', 'Tieňové čižmy', 'Dračie čižmy'] },
+  bracelet: { name: 'Náramok', size: [1, 1], stat: 'hp', base: 15, scale: 1.5, rare: 20, names: ['Medený náramok', 'Strieborný náramok', 'Dračí náramok'] },
+  necklace: { name: 'Náhrdelník', size: [1, 1], stat: 'mp', base: 12, scale: 1.2, rare: 15, names: ['Medený náhrdelník', 'Mesačný náhrdelník', 'Dračí náhrdelník'] },
+  earrings: { name: 'Náušnice', size: [1, 1], stat: 'magic', base: 2, scale: .2, rare: 4, names: ['Medené náušnice', 'Mesačné náušnice', 'Dračie náušnice'] },
+  belt: { name: 'Opasok', size: [2, 1], stat: 'defense', base: 1, scale: .1, rare: 2, names: ['Kožený opasok', 'Strážcov opasok', 'Dračí opasok'] },
+  talisman: { name: 'Talizman', size: [1, 2], stat: 'crit', base: 1, scale: .025, rare: 1, names: ['Pečať pútnika', 'Mesačná pečať', 'Dračia pečať'] }
+};
+const ITEM_STATS = { attack: 'Útok', defense: 'Obrana', hp: 'Max. zdravie', mp: 'Max. mana', magic: 'Sila kúziel', speed: 'Rýchlosť pohybu', crit: 'Kritický zásah' };
+
+
 // src/js/core/persistence.js
 const pendingSaveImports = [];
 
@@ -239,7 +292,7 @@ function chooseSaveImport(index) {
   if (!Number.isInteger(index) || index < -1 || index >= pendingSaveImports.length) return false;
   if (index >= 0) {
     p = { ...p, ...pendingSaveImports[index] };
-    initializeCareer(); initializeFarming(); loadMap(p.mapId, true);
+    initializeCareer(); initializeInventory(); initializeFarming(); loadMap(p.mapId, true);
     renderClasses(); updateClassHUD(); updateHUD();
   }
   pendingSaveImports.length = 0;
@@ -266,7 +319,7 @@ let spellCD=[0,0,0,0,0,0],castPose=0,castStyle='',spiritTick=0;
 p.classId=CLASSES[p.classId]?p.classId:'warrior';p.strength??=0;p.vitality??=0;p.dexterity??=0;p.points??=Math.max(0,(p.level-1)*3);p.bag??=[];p.equipped??={weapon:null,armor:null};p.bossKills??=0;p.bossClaimed??=false;p.huntClaimed??=0;
 p.intelligence??=0;p.mp??=100+p.level*8;p.worldStates??={};p.mapId=MAPS[p.mapId]?p.mapId:'valley';p.schools??={};for(const [classId,id] of Object.entries({warrior:'body',ninja:'blade',sura:'weapon',shaman:'dragon'})){if(SCHOOLS[p.schools[classId]]?.classId!==classId)p.schools[classId]=id;}
 const role=()=>CLASSES[p.classId],equippedBonus=slot=>(p.equipped[slot]?.bonus||0)+(p.equipped[slot]?.enhance||0)*3;
-const maxHP=()=>100+(p.level-1)*22+p.vitality*10+role().health+careerBonuses().hp,damage=()=>Math.round((18+(p.level-1)*2+p.strength*3+equippedBonus('weapon')+careerBonuses().attack)*attackPower()*(1+careerBonuses().attackPercent)),defense=()=>equippedBonus('armor')+Math.floor(p.vitality/3)+armorBonus()+careerBonuses().defense,needXP=()=>xpForLevel(p.level);
+const maxHP=()=>100+(p.level-1)*22+p.vitality*10+role().health+careerBonuses().hp+equipmentBonuses().hp,damage=()=>Math.round((18+(p.level-1)*2+p.strength*3+equipmentBonuses().attack+careerBonuses().attack)*attackPower()*(1+careerBonuses().attackPercent)),defense=()=>equipmentBonuses().defense+Math.floor(p.vitality/3)+armorBonus()+careerBonuses().defense,needXP=()=>xpForLevel(p.level);
 const mobs=[],particles=[],drops=[],decor=[];let seed=78231;
 
 let castingSkillKey=null, careerTab="overview";
@@ -299,7 +352,9 @@ function update(dt){clock+=dt;if(!running||paused)return;attackCD=Math.max(0,att
 // src/js/systems/combat.js
 function hit(m,amount){if(m.hp<=0)return;if(amount>0)provokeEnemyGroup(m);m.hp-=amount;m.hit=.15;float('-'+amount,m.x,m.y-65);beep(170);if(m.hp<=0){m.hp=0;m.windup=0;m.dead=m.respawnSeconds||(m.type==='boss'?40:m.type==='stone'?18:5);if(m.type==='boss')p.bossKills++;else p[m.type==='stone'?'stones':'kills']++;const gained=enemyXP(m);careerKill(m);farmBonusLoot(m);experience(gained);float(gained?'+'+gained+' EXP':'Slabý cieľ · bez EXP',m.x,m.y-85,gained?'#d6c28c':'#8e9f92');drops.push({x:m.x,y:m.y,value:Math.round((m.type==='boss'?120:m.type==='stone'?35:7+Math.floor(rand()*7))*map().scale*(ENEMY_VARIANTS[m.variant]?.gold||1))});dropFarmEquipment(m);if(rand()<.25){p.potions++;float('+1 elixír',m.x,m.y-100,'#a8d9b0');}if(m.type==='boss')toast('Strážca padol! Korisť čaká vo výbave (I).');else if(!p.claimed&&p.kills>=5&&p.stones>=3)toast('Úloha splnená! Vyzdvihni si odmenu.');}}
 
-function potion(){if(!running||paused)return;if(p.potions<=0){toast('Nemáš elixíry. Navštív obchodníka (F).');return;}if(p.hp>=maxHP()){toast('Zdravie máš plné.');return;}p.potions--;p.hp=Math.min(maxHP(),p.hp+65);float('+65 zdravia',p.x,p.y-65,'#a9e0ac');beep(520,.2);updateHUD();}
+function potion(){return drinkPotion(false);}
+
+function drinkPotion(allowPaused=false){if(!running||(paused&&!allowPaused)||p.hp<=0)return false;if(p.potions<=0){toast('Nemáš elixíry. Navštív obchodníka (F).');return;}if(p.hp>=maxHP()){toast('Zdravie máš plné.');return;}p.potions--;p.hp=Math.min(maxHP(),p.hp+65);float('+65 zdravia',p.x,p.y-65,'#a9e0ac');beep(520,.2);updateHUD();save();return true;}
 
 function death(){p.mp=maxMP();shots.length=0;Object.keys(buffs).forEach(k=>delete buffs[k]);p.gold=Math.floor(p.gold*.9);p.x=1000;p.y=1160;p.hp=maxHP();target=null;mobs.forEach(m=>m.cd=2);toast('Záchrana v útočisku\nStratil si 10 % zlata.');save();}
 
@@ -307,19 +362,19 @@ function school(){return SCHOOLS[p.schools[p.classId]];}
 
 function active(id){return (buffs[id]||0)>0;}
 
-function maxMP(){return 100+p.level*8+p.intelligence*5+careerBonuses().mp;}
+function maxMP(){return 100+p.level*8+p.intelligence*5+careerBonuses().mp+equipmentBonuses().mp;}
 
 function attackPower(){return (active('aura')||active('enchanted')?1.45:1)*(active('attackUp')?1.35:1);}
 
 function armorBonus(){return active('guard')?12:active('armor')?8:0;}
 
-function speedValue(){return (role().speed+p.dexterity*2)*(active('speed')?1.45:active('berserk')?1.22:1);}
+function speedValue(){return (role().speed+p.dexterity*2+equipmentBonuses().speed)*(active('speed')?1.45:active('berserk')?1.22:1);}
 
-function criticalChance(){return Math.min(.8,role().crit+p.dexterity*.01+careerBonuses().crit+(active('dragonPower')?.25:0));}
+function criticalChance(){return Math.min(.8,role().crit+p.dexterity*.01+careerBonuses().crit+equipmentBonuses().crit+(active('dragonPower')?.25:0));}
 
 function nearest(range=500,from=p){return mobs.filter(m=>m.hp>0&&Math.hypot(m.x-from.x,m.y-from.y)<range).sort((a,b)=>Math.hypot(a.x-from.x,a.y-from.y)-Math.hypot(b.x-from.x,b.y-from.y))[0];}
 
-function hurtMob(m,mult=1,magic=false,key=castingSkillKey){if(!m||m.hp<=0)return;if(key)rememberSkill(m,key);const crit=rand()<criticalChance(),raw=(damage()+(magic?p.intelligence*4+careerBonuses().magic:0))*mult*(key?skillFactor(key):1)*(crit?1.8:1),amount=Math.max(1,Math.round(raw*(.94+rand()*.12))),actual=Math.min(m.hp,amount);hit(m,amount);if(active('enchanted'))p.hp=Math.min(maxHP(),p.hp+actual*.15);if(crit)float('KRITICKÝ!',m.x,m.y-90,'#f2bc70');}
+function hurtMob(m,mult=1,magic=false,key=castingSkillKey){if(!m||m.hp<=0)return;if(key)rememberSkill(m,key);const crit=rand()<criticalChance(),raw=(damage()+(magic?p.intelligence*4+careerBonuses().magic+equipmentBonuses().magic:0))*mult*(key?skillFactor(key):1)*(crit?1.8:1),amount=Math.max(1,Math.round(raw*(.94+rand()*.12))),actual=Math.min(m.hp,amount);hit(m,amount);if(active('enchanted'))p.hp=Math.min(maxHP(),p.hp+actual*.15);if(crit)float('KRITICKÝ!',m.x,m.y-90,'#f2bc70');}
 
 function areaHit(x,y,r,mult,opts={}){for(const m of mobs)if(m.hp>0&&Math.hypot(m.x-x,(m.y-y)*.85)<r){hurtMob(m,mult,true,opts.skillKey||castingSkillKey);if(opts.stun)m.stun=Math.max(m.stun||0,opts.stun*(m.type==='boss'?.4:1));if(opts.dot&&m.hp>0)m.dot={time:6,tick:1,power:Math.max(3,Math.round(damage()*.18)),kind:opts.dot};if(opts.knock&&m.type!=='stone'){let d=Math.hypot(m.x-x,m.y-y)||1;m.x=Math.max(45,Math.min(SIZE-45,m.x+(m.x-x)/d*45));m.y=Math.max(45,Math.min(SIZE-45,m.y+(m.y-y)/d*45));}}}
 
@@ -367,17 +422,14 @@ function rarityName(r){return ['Bežná','Vzácna','Epická'][r]||'Bežná';}
 
 function makeItem(epic=false, source=null) {
   const rarity = epic ? 2 : source?.variant==='rare' ? 1 : rand() < (source?.variant==='elite' ? .45 : .16) ? 1 : 0;
-  const slot = rand() < .5 ? 'weapon' : 'armor';
+  const slots = Object.keys(EQUIPMENT), slot = slots[Math.min(slots.length-1, Math.floor(rand()*slots.length))], spec = EQUIPMENT[slot];
   const tier = Math.min(99, source ? enemyLevel(source) : map().enemyLevel);
-  const name = ['Pútnický', 'Mesačný', 'Dračí'][rarity] + (slot === 'weapon' ? ' meč' : ' pancier');
-  return { name, slot, rarity, tier, enhance: 0, bonus: slot === 'weapon' ? 4 + Math.floor(tier * .6) + rarity * 9 : 2 + Math.floor(tier * .25) + rarity * 3, value: 12 + tier * 3 + rarity * 25 };
+  return { name: spec.names[rarity], slot, rarity, tier, enhance: 0, bonus: spec.base + Math.floor(tier * spec.scale) + rarity * spec.rare, value: 12 + tier * 3 + rarity * 25 };
 }
 
-function awardItem(epic=false,source=null){const item=makeItem(epic,source);if(p.bag.length>=24){p.gold+=item.value;float('Batoh plný · +'+item.value+' zlata',p.x,p.y-110,'#d6cb99');return item;}p.bag.push(item);float(item.name+' → I',p.x,p.y-110,item.rarity===2?'#d3a3eb':item.rarity===1?'#a3ceec':'#d1dab7');return item;}
+function awardItem(epic=false,source=null){const item=makeItem(epic,source);if(!addGearItem(item)){p.gold+=item.value;float('Batoh plný · +'+item.value+' zlata',p.x,p.y-110,'#d6cb99');return item;}float(item.name+' → I',p.x,p.y-110,item.rarity===2?'#d3a3eb':item.rarity===1?'#a3ceec':'#d1dab7');return item;}
 
-function equipItem(index){if(!Number.isInteger(index)||index<0||index>=p.bag.length)return;const item=p.bag.splice(index,1)[0],old=p.equipped[item.slot];p.equipped[item.slot]=item;if(old)p.bag.push(old);updateHUD();save();inventory();}
 
-function sellItem(index){if(!Number.isInteger(index)||index<0||index>=p.bag.length)return;p.gold+=p.bag.splice(index,1)[0].value;updateHUD();save();inventory();}
 
 function allocate(stat){if(p.points<=0||!['strength','vitality','dexterity','intelligence'].includes(stat))return;p.points--;p[stat]++;if(stat==='vitality')p.hp=Math.min(maxHP(),p.hp+10);updateHUD();save();inventory();}
 
@@ -578,7 +630,7 @@ function enhancementCost(item) { const rank = (item?.enhance || 0) + 1; return {
 
 function enhanceEquipment(slot) {
   const item = p.equipped[slot];
-  if (!['weapon', 'armor'].includes(slot) || !item || (item.enhance || 0) >= PROGRESSION.maxEnhancement) return false;
+  if (!EQUIPMENT[slot] || !item || (item.enhance || 0) >= PROGRESSION.maxEnhancement) return false;
   if (!pay(enhancementCost(item))) return false;
   item.enhance = (item.enhance || 0) + 1;
   save(); return true;
@@ -991,12 +1043,203 @@ function dropFarmEquipment(m) {
 
 
 
+// src/js/systems/inventory.js
+function itemSize(item) { return EQUIPMENT[item.slot]?.size || [1, 1]; }
+
+function itemCells(item, cell) {
+  const [w, h] = itemSize(item), page = Math.floor(cell / INVENTORY.pageSize), local = cell % INVENTORY.pageSize;
+  if (!Number.isInteger(cell) || cell < 0 || local % INVENTORY.columns + w > INVENTORY.columns || Math.floor(local / INVENTORY.columns) + h > INVENTORY.rows) return null;
+  return Array.from({ length: h }, (_, y) => Array.from({ length: w }, (_, x) => page * INVENTORY.pageSize + local + y * INVENTORY.columns + x)).flat();
+}
+
+function gearLayout(items, pages = p.inventory.pages, preserve = true) {
+  const occupied = new Set(), layout = new Map(), pending = [];
+  const fits = (item, cell) => { const cells = itemCells(item, cell); return cells && cells.every(n => n < pages * INVENTORY.pageSize && !occupied.has(n)); };
+  const place = (item, cell) => { itemCells(item, cell).forEach(n => occupied.add(n)); layout.set(item, cell); };
+  for (const item of items) {
+    if (preserve && fits(item, item.cell)) place(item, item.cell);
+    else pending.push(item);
+  }
+  for (const item of pending) {
+    let cell = 0;
+    while (cell < pages * INVENTORY.pageSize && !fits(item, cell)) cell++;
+    if (cell === pages * INVENTORY.pageSize) return null;
+    place(item, cell);
+  }
+  return layout;
+}
+
+function applyGearLayout(layout) { for (const [item, cell] of layout) item.cell = cell; }
+
+function initializeInventory() {
+  p.inventory ??= { schema: INVENTORY.schema, pages: INVENTORY.pages, serial: 0, supplyCells: {} };
+  p.inventory.pages = Math.max(INVENTORY.pages, Math.floor(Number(p.inventory.pages) || 0));
+  p.inventory.serial = Math.max(0, Math.floor(Number(p.inventory.serial) || 0));
+  p.inventory.supplyCells ??= {};
+  const used = new Set();
+  for (const item of [...p.bag, ...Object.values(p.equipped).filter(Boolean)]) {
+    if (!EQUIPMENT[item.slot]) item.slot = 'talisman';
+    if (!Number.isSafeInteger(item.uid) || item.uid < 1 || used.has(item.uid)) item.uid = ++p.inventory.serial;
+    used.add(item.uid); p.inventory.serial = Math.max(p.inventory.serial, item.uid);
+  }
+  for (const id of Object.keys(EQUIPMENT)) p.equipped[id] ??= null;
+  // Expand only to preserve existing items during migration; ordinary drops never expand the bag.
+  let layout = gearLayout(p.bag);
+  while (!layout) { p.inventory.pages++; layout = gearLayout(p.bag); }
+  applyGearLayout(layout); p.inventory.schema = INVENTORY.schema;
+}
+
+function itemBonuses(item) {
+  const b = Object.fromEntries(Object.keys(ITEM_STATS).map(id => [id, 0]));
+  if (!item || !EQUIPMENT[item.slot]) return b;
+  const stat = EQUIPMENT[item.slot].stat;
+  b[stat] += ((Number(item.bonus) || 0) + (Number(item.enhance) || 0) * 3) * (stat === 'crit' ? .01 : 1);
+  for (const [id, value] of Object.entries(item.stats || {})) if (Object.hasOwn(b, id) && Number.isFinite(value)) b[id] += value;
+  return b;
+}
+
+function equipmentBonuses() {
+  const b = itemBonuses(null);
+  for (const id of Object.keys(EQUIPMENT)) {
+    const item = p.equipped[id];
+    if (!item || item.slot !== id) continue;
+    for (const [stat, value] of Object.entries(itemBonuses(item))) b[stat] += value;
+  }
+  return b;
+}
+
+function addGearItem(item) {
+  if (!EQUIPMENT[item.slot]) return false;
+  const layout = gearLayout([...p.bag, item]);
+  if (!layout) return false;
+  item.uid = ++p.inventory.serial; p.bag.push(item); applyGearLayout(layout); return true;
+}
+
+function finishInventoryChange() {
+  p.hp = Math.min(p.hp, maxHP()); p.mp = Math.min(p.mp, maxMP());
+  updateHUD(); save();
+}
+
+function equipItem(index) {
+  if (!Number.isInteger(index) || index < 0 || index >= p.bag.length) return false;
+  const item = p.bag[index], slot = item.slot;
+  if (!EQUIPMENT[slot]) return false;
+  const old = p.equipped[slot], next = p.bag.filter((_, i) => i !== index);
+  if (old) next.push(old);
+  const layout = gearLayout(next);
+  if (!layout) return false;
+  p.bag = next; p.equipped[slot] = item; delete item.cell; applyGearLayout(layout);
+  finishInventoryChange(); inventory(); return true;
+}
+
+function unequipItem(slot, cell = null) {
+  const item = p.equipped[slot];
+  if (!EQUIPMENT[slot] || !item) return false;
+  const oldCell = item.cell;
+  if (cell !== null) item.cell = cell;
+  const next = [...p.bag, item], layout = gearLayout(next);
+  if (cell !== null && layout?.get(item) !== cell || !layout) { item.cell = oldCell; return false; }
+  p.bag = next; p.equipped[slot] = null; applyGearLayout(layout);
+  finishInventoryChange(); inventory(); return true;
+}
+
+function moveGearItem(uid, cell) {
+  const item = p.bag.find(item => item.uid === uid);
+  if (!item || !itemCells(item, cell) || cell >= p.inventory.pages * INVENTORY.pageSize) return false;
+  const target = new Set(itemCells(item, cell)), conflicts = p.bag.filter(other => other !== item && itemCells(other, other.cell)?.some(n => target.has(n)));
+  if (conflicts.length > 1) return false;
+  const other = conflicts[0], old = item.cell, otherCell = other?.cell;
+  item.cell = cell; if (other) other.cell = old;
+  const layout = gearLayout(p.bag);
+  if (!layout || p.bag.some(m => layout.get(m) !== m.cell)) {
+    item.cell = old; if (other) other.cell = otherCell; return false;
+  }
+  applyGearLayout(layout); finishInventoryChange(); return true;
+}
+
+function supplyEntries() {
+  const all = [
+    { id: 'potions', name: 'Liečivý elixír', count: p.potions, icon: 'potion', description: 'Obnoví 65 zdravia. Kláves E.', action: 'drink' },
+    { id: 'braveryCapes', name: 'Plášť statočnosti', count: p.braveryCapes, icon: 'cape', description: 'Privolá pohyblivých nepriateľov v dosahu 650 na 18 sekúnd. Kláves B.', action: 'cape' },
+    ...Object.entries(MATERIALS).map(([id, name]) => ({ id: 'material:' + id, name, count: p.career.materials[id], icon: id, description: 'Rozvojový materiál. Použitie otvorí príslušnú cestu progresie.', action: 'material', material: id })),
+    ...Object.entries(GEMS).map(([id, gem]) => ({ id: 'gem:' + id, name: gem.name, count: p.career.alchemy.stock[id], icon: id, description: gem.text + ' Použitie otvorí alchýmiu.', action: 'alchemy' }))
+  ];
+  const entries = all.filter(item => item.count > 0), occupied = new Set();
+  for (const item of entries) {
+    let cell = p.inventory.supplyCells[item.id];
+    if (!Number.isInteger(cell) || cell < 0 || cell >= INVENTORY.pageSize || occupied.has(cell)) {
+      cell = 0; while (occupied.has(cell)) cell++;
+      p.inventory.supplyCells[item.id] = cell;
+    }
+    item.cell = cell; occupied.add(cell);
+  }
+  return entries;
+}
+
+function moveSupplyItem(id, cell) {
+  if (!Number.isInteger(cell) || cell < 0 || cell >= INVENTORY.pageSize) return false;
+  const entries = supplyEntries(), item = entries.find(item => item.id === id);
+  if (!item) return false;
+  const other = entries.find(item => item.cell === cell);
+  if (other) p.inventory.supplyCells[other.id] = item.cell;
+  p.inventory.supplyCells[id] = cell; save(); return true;
+}
+
+function sortInventory(tab = 'gear') {
+  if (tab === 'supplies') {
+    supplyEntries().sort((a, b) => a.name.localeCompare(b.name, 'sk')).forEach((item, i) => p.inventory.supplyCells[item.id] = i);
+  } else {
+    const sorted = [...p.bag].sort((a, b) => { const [aw, ah] = itemSize(a), [bw, bh] = itemSize(b); return bw * bh - aw * ah || b.rarity - a.rarity || (b.tier || 0) - (a.tier || 0) || String(a.name).localeCompare(String(b.name), 'sk'); });
+    const layout = gearLayout(sorted, p.inventory.pages, false);
+    if (!layout) return false;
+    p.bag = sorted; applyGearLayout(layout);
+  }
+  save(); return true;
+}
+
+function consumeSupply(id, count) {
+  if (!Number.isSafeInteger(count) || count < 1) return false;
+  const item = supplyEntries().find(item => item.id === id);
+  if (!item || item.count < count) return false;
+  if (id.startsWith('material:')) p.career.materials[id.slice(9)] -= count;
+  else if (id.startsWith('gem:')) p.career.alchemy.stock[id.slice(4)] -= count;
+  else p[id] -= count;
+  return true;
+}
+
+function deleteInventoryItem(id, count = 1) {
+  if (id.startsWith('gear:')) {
+    const index = p.bag.findIndex(item => 'gear:' + item.uid === id);
+    if (index < 0 || count !== 1) return false;
+    p.bag.splice(index, 1);
+  } else if (!consumeSupply(id, count)) return false;
+  finishInventoryChange(); return true;
+}
+
+function useInventorySupply(id) {
+  const item = supplyEntries().find(item => item.id === id);
+  if (!item || !running || p.hp <= 0) return false;
+  if (item.action === 'drink') return drinkPotion(true);
+  if (item.action === 'cape') {
+    if (isSanctuary(p) || capeCooldown > 0) return false;
+    closeModal(); return useBraveryCape();
+  }
+  const tab = item.action === 'alchemy' || ['dust', 'essence'].includes(item.material) ? 'alchemy' : item.material === 'ore' ? 'forge' : item.material === 'books' ? 'skills' : item.material === 'training' ? 'training' : ['keys', 'shards'].includes(item.material) ? 'endgame' : 'biology';
+  careerPanel(tab); return true;
+}
+
+function sellItem(index) {
+  if (!Number.isInteger(index) || index < 0 || index >= p.bag.length) return false;
+  p.gold += p.bag.splice(index, 1)[0].value || 0;
+  finishInventoryChange(); inventory(); return true;
+}
+
+
 // src/js/ui/panels.js
-function modal(html){paused=true;keysClear();$('modalcontent').innerHTML=html;$('modal').hidden=false;}
+function modal(html){$('modal').className='overlay';paused=true;keysClear();$('modalcontent').innerHTML=html;$('modal').hidden=false;}
 
-function closeModal(){$('modal').hidden=true;paused=false;canvas.focus();}
+function closeModal(){$('modal').className='overlay';$('modal').hidden=true;paused=false;canvas.focus();}
 
-function inventory(){modal(`<span class="eyebrow">TVÔJ HRDINA · ${role().name}</span><h2>Výbava a vlastnosti</h2><div class="stats"><div>Úroveň<b>${p.level}</b></div><div>Útok / obrana<b>${damage()} / ${defense()}</b></div><div>Zdravie<b>${Math.ceil(p.hp)} / ${maxHP()}</b></div><div>Kritický zásah<b>${Math.round(criticalChance()*100)} %</b></div></div><h3>Vlastnosti <small>Voľné body: ${p.points}</small></h3><div class="attributes">${[['strength','Sila','+3 útok'],['vitality','Vitalita','+10 zdravia'],['dexterity','Obratnosť','+1 % kritický zásah, +2 rýchlosť'],['intelligence','Inteligencia','+5 mana a +4 sila kúziel']].map(([id,label,desc])=>`<div><span>${label} <b>${p[id]}</b><small>${desc}</small></span><button data-stat="${id}" ${p.points?'':'disabled'} aria-label="Pridať bod: ${label}">+</button></div>`).join('')}</div><h3>Nasadená výbava</h3><p>⚔ ${escapeHTML(p.equipped.weapon?.name||'Pútnický meč')} +${p.equipped.weapon?.enhance||0}<br>◈ ${escapeHTML(p.equipped.armor?.name||'Cestovateľská zbroj')} +${p.equipped.armor?.enhance||0}</p><h3>Batoh <small>${p.bag.length} / 24</small></h3><div class="bag">${p.bag.length?p.bag.map((item,i)=>`<div class="item rarity-${item.rarity}"><div><b>${escapeHTML(item.name)} +${item.enhance||0}</b><small>${rarityName(item.rarity)} · +${item.bonus} ${item.slot==='weapon'?'útok':'obrana'} · predaj ${item.value} zlata</small></div><button data-equip="${i}">Nasadiť</button><button data-sell="${i}">Predať</button></div>`).join(''):'<p>Prázdny batoh. Výbavu získavaš z príšer a kameňov.</p>'}</div><p>Plášť statočnosti: ${p.braveryCapes} ks · použitie B (mimo útočiska)<br>Elixíry: ${p.potions} · Zlato: ${p.gold}<br>Tréning, biológ, alchýmia a ďalšie cesty: Progres (P).</p>`);document.querySelectorAll('[data-stat]').forEach(b=>b.onclick=()=>allocate(b.dataset.stat));document.querySelectorAll('[data-equip]').forEach(b=>b.onclick=()=>equipItem(Number(b.dataset.equip)));document.querySelectorAll('[data-sell]').forEach(b=>b.onclick=()=>sellItem(Number(b.dataset.sell)));}
 
 function shop(){if(Math.hypot(p.x-1110,p.y-1110)>160){toast('Obchodník ťa čaká v útočisku.');return;}modal('<span class="eyebrow">ÚTOČISKO PÚTNIKOV</span><h2>Obchodník a kováč</h2><p id="balance">Zlato: '+p.gold+'</p><button class="primary" id="buyPotion">Kúpiť 3 elixíry · 25 zlata</button><button class="primary" id="buyCapes">Kúpiť 10 Plášťov statočnosti · 100 zlata</button><button class="primary" id="upgrade">Kováč · vylepšenie nasadenej výbavy</button><p id="shopmsg" role="status"></p>');$('buyPotion').onclick=()=>{if(!pay({gold:25})){$('shopmsg').textContent='Potrebuješ 25 zlata.';return;}p.potions+=3;$('balance').textContent='Zlato: '+p.gold;$('shopmsg').textContent='Získal si 3 elixíry.';save();updateHUD();};$('buyCapes').onclick=()=>{if(buyBraveryCapes()){$('balance').textContent='Zlato: '+p.gold;$('shopmsg').textContent='Získal si 10 Plášťov statočnosti.';}else $('shopmsg').textContent='Potrebuješ 100 zlata.';};$('upgrade').onclick=()=>careerPanel('forge');}
 
@@ -1011,6 +1254,200 @@ function help(){modal('<span class="eyebrow">SPRIEVODCA</span><h2>Cesta bojovní
 function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
 
+
+
+// src/js/ui/item-icons.js
+function itemIcon(item, empty = false) {
+  const id = item.icon || item.slot, rarity = item.rarity || 0;
+  const metal = empty ? '#766c58' : ['#a5afae', '#9fcad5', '#d5b1e2'][rarity];
+  const gold = empty ? '#766c58' : '#d8ad5c', dark = empty ? '#403d34' : '#444c52';
+  const gem = empty ? '#4b463a' : ['#a24f3f', '#59b4c0', '#bc7bdb'][rarity];
+  const shapes = {
+    weapon: `<path fill="${dark}" d="M34 6 41 20 31 65 24 67 27 20Z"/><path fill="${metal}" d="M34 6 36 23 27 64 23 62 29 19Z"/><path fill="#eff0dc" d="m34 6-3 22-6 32 3-37Z"/><path fill="${gold}" d="m14 62 28 4-1 6-29-4Z"/><path fill="#764a32" d="m23 69 9 1-3 17-9-1Z"/><path fill="${gold}" d="m18 85 14 2-1 5-14-2Z"/>`,
+    armor: `<path fill="${dark}" d="m20 8 12 7 12-7 14 12-7 13-7-3 4 26-16 5-16-5 4-26-7 3-7-13Z"/><path fill="${metal}" d="m21 14 11 6 11-6 9 8-8 8 1 20-13 6-13-6 1-20-8-8Z"/><path fill="${gold}" d="m27 21 5 6 5-6-1 26-4 5-4-5Z"/><path fill="${gem}" d="m32 25 5 7-5 7-5-7Z"/><path d="m19 46 13 6 13-6M16 18l5 6m27-6-5 6" stroke="#eee0b1" fill="none"/>`,
+    helmet: `<path fill="${dark}" d="M8 49V30Q9 12 32 9q23 3 24 21v19l-15 8-9-12-9 12Z"/><path fill="${metal}" d="M12 44V30q1-16 20-18 19 2 20 18v14L38 34H26Z"/><path fill="${gold}" d="m29 7 6 0 2 30-5 14-5-14Z"/><path fill="#191c1d" d="m15 32 12 2-2 7-10 1m34-10-12 2 2 7 10 1"/><path fill="${gem}" d="m32 16 4 6-4 6-4-6Z"/>`,
+    shield: `<path fill="${gold}" d="m32 3 24 9-3 29Q45 55 32 62 19 55 11 41L8 12Z"/><path fill="${dark}" d="m32 8 19 8-3 24Q41 51 32 56 23 51 16 40l-3-24Z"/><path fill="${metal}" d="m32 10 16 7-3 22-13 14-13-14-3-22Z"/><path fill="${gold}" d="M29 15h6v31h-6zM19 26h26v6H19z"/><path fill="${gem}" d="m32 22 8 8-8 9-8-9Z"/>`,
+    boots: `<path fill="${dark}" d="m10 8 16 2-1 27 8 10-2 10H6l-2-8 7-13Zm28 0 16 2-1 27 8 10-2 10H34l-2-8 7-13Z"/><path fill="${metal}" d="m12 11 11 1-1 21-11-1Zm28 0 11 1-1 21-11-1Z"/><path fill="${gold}" d="M8 34h17v5H8zm28 0h17v5H36zM6 51h25v5H6zm28 0h25v5H34z"/><path fill="${gem}" d="M15 17h5v8h-5zm28 0h5v8h-5z"/>`,
+    bracelet: `<ellipse cx="32" cy="35" rx="23" ry="21" fill="${dark}" stroke="${gold}" stroke-width="5"/><ellipse cx="32" cy="35" rx="14" ry="12" fill="#181a19" stroke="${metal}" stroke-width="2"/><path fill="${gem}" stroke="${gold}" stroke-width="2" d="m32 6 11 10-11 11-11-11Z"/><path d="m12 24 5 3m30-3-5 3M13 44l5-3m28 3-5-3" stroke="#f0d68f" stroke-width="3"/>`,
+    necklace: `<path d="M9 8q3 40 23 40Q52 48 55 8" fill="none" stroke="${gold}" stroke-width="4"/><path d="M12 8q5 34 20 37Q47 42 52 8" fill="none" stroke="${metal}"/><path fill="${gem}" stroke="${gold}" stroke-width="3" d="m32 36 12 11-12 15-12-15Z"/><path d="m32 40 6 7-6 9" fill="none" stroke="#f3dfa6"/>`,
+    earrings: `<path d="M19 7c-7-1-10 7-4 12m30-12c-7-1-10 7-4 12" fill="none" stroke="${gold}" stroke-width="3"/><path fill="${gold}" d="m17 16 11 17-11 24L6 33Zm26 0 11 17-11 24-11-24Z"/><path fill="${gem}" d="m17 25 6 9-6 15-6-15Zm26 0 6 9-6 15-6-15Z"/>`,
+    belt: `<path fill="#69442b" stroke="${gold}" stroke-width="2" d="M3 19q29 7 58 0v24q-29 7-58 0Z"/><rect x="22" y="20" width="23" height="25" rx="3" fill="${gold}"/><rect x="27" y="25" width="13" height="15" fill="${dark}"/><path d="M27 32h18" stroke="${metal}" stroke-width="3"/><circle cx="11" cy="31" r="2" fill="${gold}"/><circle cx="53" cy="31" r="2" fill="${gold}"/>`,
+    talisman: `<path d="M21 8q11-10 22 0L32 25Z" fill="none" stroke="${gold}" stroke-width="3"/><path fill="#aa4936" stroke="${gold}" stroke-width="3" d="m19 23 26-1 3 52-17 13-15-13Z"/><path d="m24 34 13-2-6 12 10 4-14 3 5 13-8 8m6-32 8 25" fill="none" stroke="#ead396" stroke-width="3"/><path d="M23 82v9m8-5v8m8-12v9" stroke="${gold}" stroke-width="2"/>`,
+    potion: '<path fill="#b8c7b7" d="M24 4h16v15l11 12v25Q32 65 13 56V31l11-12Z"/><path fill="#b43734" d="m18 33 28 0v19q-14 7-28 0Z"/><path fill="#f28264" d="M20 34h6v16h-6Z"/><path fill="#9b783e" stroke="#dec78b" d="M23 4h18v11H23Z"/><path d="M27 18v9l-9 8" fill="none" stroke="#f3f2d8" stroke-width="2"/>',
+    cape: '<path d="M23 7q9 8 18 0l7 9 11 40-14-5-12 9-12-9-16 5 12-40Z" fill="#994439" stroke="#d0a75e" stroke-width="2"/><path d="m23 13 9 9 9-9-3 38-6 7-6-7Z" fill="#b96340"/><path d="M24 12q8 8 16 0M20 22l-5 26m29-26 6 26" fill="none" stroke="#e0bc7a" stroke-width="2"/>',
+    ore: '<path d="m7 42 9-27 24-8 18 23-8 25-28 5Z" fill="#677e87" stroke="#a9b9b4" stroke-width="2"/><path d="m16 15 15 21L7 42m24-6 9-29m-9 29 19 19m-19-19 27-6" fill="none" stroke="#a9bec1"/><path d="m18 26 8-5 6 9-8 5Z" fill="#cfaf62"/>',
+    books: '<path d="m10 11 32-6 13 10v42l-33 4-12-9Z" fill="#725247" stroke="#bb9b64" stroke-width="2"/><path d="m13 14 30-5v42l-30 5Z" fill="#984c36"/><path d="m45 14 8 4v35l-8-4Z" fill="#dfc899"/><path d="m23 23 12-3-5 12 7 7-13 3 6-11Z" fill="#e8c77b"/><path d="m15 15 3 38" stroke="#e8c77b"/>',
+    training: '<path fill="#c7b486" stroke="#e0cd95" d="m15 5 37 5-7 46-13 5-19-10Z"/><path d="m23 17 17 2-9 9 8 9-17-1 6-9Z" fill="none" stroke="#9c4033" stroke-width="4"/><circle cx="38" cy="49" r="8" fill="#9b3d31"/><path d="m36 44 5 5-6 3" stroke="#e4b86b" fill="none"/>',
+    essence: '<path d="M32 3Q50 24 50 39a18 18 0 0 1-36 0Q14 23 32 3Z" fill="#447c9e" stroke="#a3d3d8" stroke-width="2"/><path d="M28 20q-13 19-6 26" fill="none" stroke="#d0efe1" stroke-width="4"/><path d="m32 30 8 12-8 10-7-10Z" fill="#91d8db"/>',
+    dust: '<path d="m22 8 20 0-4 9 13 15 4 24Q32 64 9 56l4-24 13-15Z" fill="#775b95" stroke="#bca1bd" stroke-width="2"/><path d="M20 19h25" stroke="#d6bb6c" stroke-width="4"/><path d="m30 29 3 8 8 1-7 5 1 9-6-6-8 3 4-8-5-7 9 1Z" fill="#e1c58e"/>',
+    wolf: '<path d="m4 35 9-23 15 5 10-5 20 21-6 14-12-7-9 18-10-17-12 8Z" fill="#9d8c75" stroke="#c1b69d" stroke-width="2"/><path d="m20 27 9 4 8-5-4 18-6 6-5-8Z" fill="#67564a"/><path d="m17 19 7 4m16-2 8 7" stroke="#e5d3ac" stroke-width="3"/>',
+    venom: '<path d="M25 5h14v12q16 4 16 23Q51 59 32 61 13 59 9 40q0-19 16-23Z" fill="#508c42" stroke="#b2c67d" stroke-width="2"/><path d="m24 6 3 13 10-1 2-12" fill="#a5b581"/><circle cx="25" cy="33" r="5" fill="#99c36c"/><circle cx="39" cy="42" r="7" fill="#7ebd5b"/>',
+    frost: '<path d="m32 3 20 14 7 27-27 18L5 44l7-27Z" fill="#629bbc" stroke="#b1e0ed" stroke-width="2"/><path d="m32 3-6 28L5 44m21-13 26-14M26 31l6 31m-6-31 33 13" fill="none" stroke="#d0edf0" stroke-width="2"/>',
+    ember: '<path d="M32 3q-3 18 7 15l-1-9q20 18 17 34-4 17-23 19Q7 61 8 39q0-9 9-19 0 15 8 12Q18 18 32 3Z" fill="#d57637" stroke="#ecc36c"/><path d="M31 29q-2 13 9 11 6 14-8 17-15-4-9-17 2 8 8-11Z" fill="#f5cf6a"/>',
+    keys: '<path d="m21 4 13 10-2 13-8 5-1 25-9 4-2-11 5-3 1-15-9-7 1-14Z" fill="#be9952" stroke="#e8cf84" stroke-width="2"/><path d="m21 11 6 5-1 7-6 1-4-6Z" fill="#333d39"/><path d="m41 20 11 4 4 13-7 8-3 16-8-2 3-17-6-8Z" fill="#a3aeb1"/>',
+    shards: '<path d="m32 3 10 22-8 11-15-10Z" fill="#d3a8d4" stroke="#eee2d8"/><path d="m48 29 12 17-13 14-7-23Z" fill="#b992ca" stroke="#e3c5e8"/><path d="m14 34 19 9-13 18L3 48Z" fill="#a481bb" stroke="#d8b7e1"/>'
+  };
+  const gemColors = { ruby: '#c94d48', sapphire: '#5c9ed0', jade: '#61b28b' };
+  const shape = shapes[id] || `<path d="m32 4 24 17-6 29-18 12-18-12-6-29Z" fill="${gemColors[id] || gem}" stroke="#ead19a" stroke-width="2"/><path d="m32 4-9 24 9 34 9-34Zm-24 17 15 7 18 0 15-7" fill="none" stroke="#eadfb4"/>`;
+  return `<svg class="item-icon" viewBox="0 0 64 ${['weapon', 'talisman'].includes(id) ? 96 : 64}" aria-hidden="true" focusable="false">${shape}</svg>`;
+}
+
+function equipmentFigure() {
+  return '<svg class="equipment-figure" viewBox="0 0 180 250" aria-hidden="true"><path d="M90 15q-22 0-22 25l8 19-28 16-20 65 20 7 14-43-3 69-12 60h28l15-55 15 55h28l-12-60-3-69 14 43 20-7-20-65-28-16 8-19q0-25-22-25Z" fill="#515048" stroke="#9c8a5d"/><path d="m63 78 27 16 27-16-8 68-19 19-19-19Z" fill="#696253"/><path d="M90 95v63m-23-39 23 10 23-10" stroke="#b6a16b" fill="none"/><circle cx="90" cy="41" r="16" fill="#82735b"/></svg>';
+}
+
+
+// src/js/ui/inventory.js
+let inventoryTab = 'gear', inventoryPage = 0, inventorySelection = null, inventoryDrag = null, inventoryDeletePending = null;
+
+function inventoryEntry(id) {
+  if (!id) return null;
+  if (id.startsWith('gear:')) {
+    const item = p.bag.find(item => 'gear:' + item.uid === id);
+    return item ? { id, item, kind: 'gear' } : null;
+  }
+  if (id.startsWith('equipped:')) {
+    const item = p.equipped[id.slice(9)];
+    return item ? { id, item, kind: 'equipped' } : null;
+  }
+  const item = supplyEntries().find(item => item.id === id);
+  return item ? { id, item, kind: 'supply' } : null;
+}
+
+function itemBonusText(item) {
+  return Object.entries(itemBonuses(item)).filter(([, value]) => value).map(([stat, value]) => `<span class="bonus-line">${ITEM_STATS[stat]} <b>+${stat === 'crit' ? (value * 100).toFixed(1) + ' %' : value}</b></span>`).join('');
+}
+
+function itemDescription(entry, tooltip = false) {
+  const item = entry.item, gear = entry.kind !== 'supply';
+  const [w, h] = gear ? itemSize(item) : [1, 1];
+  return `<div class="item-description rarity-${item.rarity || 0}"><small>${gear ? (entry.kind === 'equipped' ? 'NASADENÉ · ' : '') + EQUIPMENT[item.slot].name : 'ZÁSOBY · ' + item.count.toLocaleString('sk-SK') + ' ks'}</small><h3>${escapeHTML(item.name)}${gear ? ' +' + (item.enhance || 0) : ''}</h3>${!tooltip ? `<div class="detail-icon">${itemIcon(item)}</div>` : ''}${gear ? `<p>${rarityName(item.rarity)} · stupeň ${item.tier || 1} · ${w} × ${h} políčka</p>${itemBonusText(item)}<p class="item-price">Predaj: ${item.value || 0} zlata</p>` : `<p>${escapeHTML(item.description)}</p><p>Rovnaký typ sa automaticky stackuje.<br>Množstvo: <b>${item.count.toLocaleString('sk-SK')} ks</b></p>`}</div>`;
+}
+
+function inventory() {
+  initializeInventory();
+  inventoryPage = Math.min(inventoryPage, p.inventory.pages - 1);
+  const page = inventoryTab === 'supplies' ? 0 : inventoryPage, offset = page * INVENTORY.pageSize;
+  const entries = inventoryTab === 'supplies' ? supplyEntries().map(item => ({ id: item.id, item, kind: 'supply' })) : p.bag.filter(item => Math.floor(item.cell / INVENTORY.pageSize) === page).map(item => ({ id: 'gear:' + item.uid, item, kind: 'gear' }));
+  const occupied = p.bag.reduce((n, item) => n + itemSize(item)[0] * itemSize(item)[1], 0);
+  modal(`<section class="inventory-window"><header class="inventory-title"><span class="window-sigil">G</span><div><small>GRINDORIA · ${role().name}</small><h2>Výbava a inventár</h2></div><span class="inv-level">ÚR. ${p.level}</span></header>
+    <div class="inventory-columns"><section class="character-panel"><h3>Vybavenie postavy</h3><div class="equipment-board">${equipmentFigure()}${Object.entries(EQUIPMENT).map(([id, spec]) => {
+      const item = p.equipped[id];
+      return `<button class="equipment-slot slot-${id} ${item ? 'filled rarity-' + item.rarity : ''}" data-equip-slot="${id}" ${item ? `data-entry="equipped:${id}" draggable="true"` : ''} aria-label="${spec.name}${item ? ': ' + escapeHTML(item.name) : ': prázdny slot'}"><span>${itemIcon(item || { slot: id }, !item)}</span><small>${spec.name}</small>${item ? '<i>✓</i>' : ''}</button>`;
+    }).join('')}</div><div class="character-values"><span>Útok <b>${damage()}</b></span><span>Obrana <b>${defense()}</b></span><span>Zdravie <b>${Math.ceil(p.hp)} / ${maxHP()}</b></span><span>Mana <b>${Math.ceil(p.mp)} / ${maxMP()}</b></span><span>Kritický zásah <b>${(criticalChance() * 100).toFixed(1)} %</b></span><span>Rýchlosť <b>${Math.round(speedValue())}</b></span><span>Sila kúziel <b>${p.intelligence * 4 + careerBonuses().magic + equipmentBonuses().magic}</b></span></div><details class="inventory-attributes"><summary>Vlastnosti · ${p.points} voľných bodov</summary>${[['strength', 'Sila'], ['vitality', 'Vitalita'], ['dexterity', 'Obratnosť'], ['intelligence', 'Inteligencia']].map(([id, name]) => `<div>${name}<b>${p[id]}</b><button data-stat="${id}" ${p.points ? '' : 'disabled'} aria-label="Zlepšiť: ${name}">+</button></div>`).join('')}</details></section>
+    <section class="bag-panel"><div class="bag-heading"><h3>Inventár</h3><small>${inventoryTab === 'gear' ? occupied + ' / ' + p.inventory.pages * INVENTORY.pageSize + ' políčok' : 'Automatické stackovanie'}</small></div><div class="inventory-tabs"><button data-inv-tab="gear" aria-pressed="${inventoryTab === 'gear'}">Predmety</button><button data-inv-tab="supplies" aria-pressed="${inventoryTab === 'supplies'}">Zásoby</button></div><div class="inventory-pages">${inventoryTab === 'gear' ? Array.from({ length: p.inventory.pages }, (_, i) => `<button data-inv-page="${i}" aria-label="Strana ${i + 1}" aria-pressed="${page === i}">${i + 1}</button>`).join('') : '<span>Elixíry · plášte · materiály · kamene</span>'}<button id="inv-sort" title="Zoradiť podľa veľkosti, vzácnosti a stupňa">Zoradiť</button></div>
+    <div class="inventory-grid" id="inventory-grid" role="group" aria-label="Mriežka inventára, 5 stĺpcov a 9 riadkov">${Array.from({ length: INVENTORY.pageSize }, (_, i) => `<button class="inventory-cell" data-cell="${offset + i}" aria-label="Prázdne políčko ${offset + i + 1}" style="grid-column:${i % 5 + 1};grid-row:${Math.floor(i / 5) + 1}"></button>`).join('')}${entries.map(entry => {
+      const item = entry.item, [w, h] = entry.kind === 'gear' ? itemSize(item) : [1, 1], local = item.cell % INVENTORY.pageSize;
+      return `<button class="grid-item rarity-${item.rarity || 0}" draggable="true" data-entry="${entry.id}" aria-label="${escapeHTML(item.name)}${entry.kind === 'supply' ? ', ' + item.count + ' kusov' : ', +' + (item.enhance || 0)}" aria-pressed="${inventorySelection === entry.id}" style="grid-column:${local % 5 + 1} / span ${w};grid-row:${Math.floor(local / 5) + 1} / span ${h}">${itemIcon(item)}${entry.kind === 'supply' ? `<b class="stack-count">${item.count}</b>` : `<b class="enhance-count">+${item.enhance || 0}</b>`}</button>`;
+    }).join('')}</div><p class="inventory-hint">Presuň predmet myšou. Na dotyku vyber predmet a potom cieľové políčko alebo slot.</p><div class="inventory-money">◉ <b>${p.gold.toLocaleString('sk-SK')}</b> <small>ZLATO</small></div></section>
+    <aside class="item-inspector"><span class="eyebrow">PREDMET</span><div id="inventory-detail"></div><p class="inventory-message" id="inventory-message" role="status"></p><div class="inventory-shortcuts"><span>Plášť statočnosti: ${p.braveryCapes} ks · B</span><span>Elixíry: ${p.potions} · E</span><button id="inv-progress">Dlhodobá progresia · P</button></div></aside></div><div id="item-tooltip" class="item-tooltip" role="tooltip" hidden></div></section>`);
+  $('modal').className = 'overlay inventory-overlay';
+  $('inv-sort').onclick = () => { if (sortInventory(inventoryTab)) inventory(); else inventoryMessage('Predmety sa do tohto rozloženia nezmestia.'); };
+  $('inv-progress').onclick = () => careerPanel();
+  document.querySelectorAll('[data-inv-tab]').forEach(button => button.onclick = () => { inventoryTab = button.dataset.invTab; inventorySelection = null; inventoryDeletePending = null; inventory(); });
+  document.querySelectorAll('[data-inv-page]').forEach(button => button.onclick = () => { inventoryPage = Number(button.dataset.invPage); inventory(); });
+  document.querySelectorAll('[data-stat]').forEach(button => button.onclick = () => allocate(button.dataset.stat));
+  document.querySelectorAll('[data-entry]').forEach(button => {
+    button.onclick = () => selectInventoryEntry(button.dataset.entry);
+    button.ondblclick = () => activateInventoryEntry(button.dataset.entry);
+    button.onmouseenter = event => showItemTooltip(button.dataset.entry, event);
+    button.onmousemove = event => positionItemTooltip(event);
+    button.onmouseleave = () => $('item-tooltip').hidden = true;
+    button.onfocus = () => showItemTooltip(button.dataset.entry, { clientX: button.getBoundingClientRect().left, clientY: button.getBoundingClientRect().bottom });
+    button.onblur = () => $('item-tooltip').hidden = true;
+    button.ondragstart = event => {
+      inventoryDrag = { id: button.dataset.entry, x: 0, y: 0 };
+      if (button.className.includes('grid-item')) {
+        const rect = button.getBoundingClientRect(), grid = $('inventory-grid').getBoundingClientRect();
+        inventoryDrag.x = Math.floor((event.clientX - rect.left) / (grid.width / 5));
+        inventoryDrag.y = Math.floor((event.clientY - rect.top) / (grid.height / 9));
+      }
+      event.dataTransfer.setData('text/plain', button.dataset.entry); event.dataTransfer.effectAllowed = 'move'; $('item-tooltip').hidden = true;
+    };
+    button.ondragend = () => { inventoryDrag = null; };
+  });
+  document.querySelectorAll('[data-equip-slot]').forEach(button => {
+    if (!button.dataset.entry) button.onclick = () => dropOnEquipment(button.dataset.equipSlot, inventorySelection);
+    else { const choose = button.onclick; button.onclick = () => inventoryEntry(inventorySelection)?.kind === 'gear' && inventoryEntry(inventorySelection).item.slot === button.dataset.equipSlot ? dropOnEquipment(button.dataset.equipSlot, inventorySelection) : choose(); }
+    button.ondragover = event => { event.preventDefault(); event.dataTransfer.dropEffect = 'move'; };
+    button.ondrop = event => { event.preventDefault(); dropOnEquipment(button.dataset.equipSlot, inventoryDrag?.id); inventoryDrag = null; };
+  });
+  document.querySelectorAll('[data-cell]').forEach(button => button.onclick = () => dropOnInventoryCell(inventorySelection, Number(button.dataset.cell)));
+  const grid = $('inventory-grid');
+  grid.ondragover = event => { event.preventDefault(); event.dataTransfer.dropEffect = 'move'; };
+  grid.ondrop = event => {
+    event.preventDefault(); if (!inventoryDrag) return;
+    const rect = grid.getBoundingClientRect(), col = Math.floor((event.clientX - rect.left) / (rect.width / 5)) - inventoryDrag.x, row = Math.floor((event.clientY - rect.top) / (rect.height / 9)) - inventoryDrag.y;
+    if (col >= 0 && col < 5 && row >= 0 && row < 9) dropOnInventoryCell(inventoryDrag.id, offset + row * 5 + col);
+    else inventoryMessage('Predmet by presahoval okraj mriežky.');
+    inventoryDrag = null;
+  };
+  selectInventoryEntry(inventoryEntry(inventorySelection) ? inventorySelection : null);
+}
+
+function inventoryMessage(message) { $('inventory-message').textContent = message; }
+
+function selectInventoryEntry(id) {
+  inventorySelection = id; inventoryDeletePending = null;
+  document.querySelectorAll('[data-entry]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.entry === id)));
+  renderInventoryDetail();
+}
+
+function renderInventoryDetail() {
+  const entry = inventoryEntry(inventorySelection);
+  if (!entry) { $('inventory-detail').innerHTML = '<div class="empty-inspector">◇<h3>Tvoja korisť, tvoja sila</h3><p>Vyber predmet a prezri si jeho vlastnosti. Prázdne sloty čakajú na výbavu z lovu.</p></div>'; return; }
+  const gear = entry.kind !== 'supply', item = entry.item;
+  $('inventory-detail').innerHTML = itemDescription(entry) + `<div class="item-actions"><button id="inv-use">${entry.kind === 'equipped' ? 'Zložiť výbavu' : gear ? 'Nasadiť' : ['drink', 'cape'].includes(item.action) ? 'Použiť' : 'Otvoriť progresiu'}</button>${entry.kind === 'gear' ? '<button id="inv-sell">Predať</button>' : ''}${entry.kind !== 'equipped' ? '<button id="inv-delete" class="danger">Odstrániť…</button>' : ''}</div>${inventoryDeletePending === entry.id ? `<div class="delete-confirm"><p>Odstránenie je trvalé. ${gear ? 'Odstrániť tento predmet?' : 'Koľko kusov odstrániť?'}</p>${gear ? '' : `<label>Počet <input id="inv-delete-count" type="number" min="1" max="${item.count}" value="1" step="1"></label>`}<button id="inv-delete-confirm">Potvrdiť odstránenie</button><button id="inv-delete-cancel">Zrušiť</button></div>` : ''}`;
+  $('inv-use').onclick = () => activateInventoryEntry(entry.id);
+  if (entry.kind === 'gear') $('inv-sell').onclick = () => { sellItem(p.bag.findIndex(item => 'gear:' + item.uid === entry.id)); inventorySelection = null; renderInventoryDetail(); };
+  if (entry.kind !== 'equipped') $('inv-delete').onclick = () => { inventoryDeletePending = entry.id; renderInventoryDetail(); };
+  if (inventoryDeletePending === entry.id) {
+    $('inv-delete-cancel').onclick = () => { inventoryDeletePending = null; renderInventoryDetail(); };
+    $('inv-delete-confirm').onclick = () => {
+      const count = gear ? 1 : Number($('inv-delete-count').value);
+      if (deleteInventoryItem(entry.id, count)) { inventorySelection = null; inventoryDeletePending = null; inventory(); }
+      else inventoryMessage('Zadaj platný počet kusov.');
+    };
+  }
+}
+
+function activateInventoryEntry(id) {
+  const entry = inventoryEntry(id); if (!entry) return false;
+  if (entry.kind === 'gear') return equipItem(p.bag.findIndex(item => item.uid === entry.item.uid));
+  if (entry.kind === 'equipped') { const ok = unequipItem(entry.item.slot); if (!ok) inventoryMessage('V inventári nie je dosť súvislého miesta.'); return ok; }
+  const ok = useInventorySupply(id);
+  if (ok && entry.item.action === 'drink') inventory();
+  if (!ok) inventoryMessage(entry.item.action === 'drink' ? 'Zdravie je plné alebo elixír nemožno použiť.' : 'Plášť použi mimo útočiska a počkaj na obnovenie.');
+  return ok;
+}
+
+function dropOnInventoryCell(id, cell) {
+  if (!id) return false;
+  let ok = false;
+  if (id.startsWith('equipped:') && inventoryTab === 'gear') { const result = unequipItem(id.slice(9), cell); if (!result) inventoryMessage('Výbava sa na toto miesto nezmestí.'); return result; }
+  if (id.startsWith('gear:') && inventoryTab === 'gear') ok = moveGearItem(Number(id.slice(5)), cell);
+  else if (!id.startsWith('gear:') && inventoryTab === 'supplies') ok = moveSupplyItem(id, cell);
+  if (ok) inventory(); else inventoryMessage('Predmet sa sem nezmestí. Výbava a zásoby majú vlastné záložky.');
+  return ok;
+}
+
+function dropOnEquipment(slot, id) {
+  const entry = inventoryEntry(id);
+  if (!entry || entry.kind !== 'gear' || entry.item.slot !== slot) { inventoryMessage('Tento predmet patrí do iného slotu.'); return false; }
+  return equipItem(p.bag.findIndex(item => item.uid === entry.item.uid));
+}
+
+function showItemTooltip(id, event) {
+  const entry = inventoryEntry(id); if (!entry) return;
+  $('item-tooltip').innerHTML = itemDescription(entry, true); $('item-tooltip').hidden = false; positionItemTooltip(event);
+}
+
+function positionItemTooltip(event) {
+  const tooltip = $('item-tooltip'), width = window.innerWidth || W, height = window.innerHeight || H;
+  const rect = tooltip.getBoundingClientRect();
+  tooltip.style.left = Math.max(8, Math.min(event.clientX + 14, width - rect.width - 12)) + 'px';
+  tooltip.style.top = Math.max(8, Math.min(event.clientY + 14, height - rect.height - 12)) + 'px';
+}
 
 
 // src/js/ui/hud.js
@@ -1069,9 +1506,9 @@ function careerBiology() {
 }
 
 function careerForge() {
-  return `<p>Vylepšenie patrí konkrétnemu predmetu a zostáva na ňom pri výmene. Maximálne +9. Kováč pracuje spoľahlivo; cena rudy a zlata rastie s druhou mocninou stupňa. Ruda pochádza z každého piateho primeraného zabitia.</p>${['weapon', 'armor'].map(slot => {
+  return `<p>Vylepšenie patrí konkrétnemu predmetu a zostáva na ňom pri výmene. Maximálne +9. Kováč pracuje spoľahlivo; cena rudy a zlata rastie s druhou mocninou stupňa. Ruda pochádza z každého piateho primeraného zabitia.</p>${Object.keys(EQUIPMENT).map(slot => {
     const item = p.equipped[slot];
-    return `<div class="career-card"><h3>${slot === 'weapon' ? 'Zbraň' : 'Zbroj'}</h3>${item ? `<p>${escapeHTML(item.name)} +${item.enhance || 0}<br>Základný bonus ${item.bonus}; vylepšenie +${(item.enhance || 0) * 3} ${slot === 'weapon' ? 'útok' : 'obrana'}<br>Ďalší stupeň: ${costLabel(enhancementCost(item))}</p><button class="primary" data-action="enhance" data-id="${slot}" ${(item.enhance || 0) >= PROGRESSION.maxEnhancement ? 'disabled' : ''}>Vylepšiť predmet</button>` : '<p>Najprv nasaď predmet vo výbave (I).</p>'}</div>`;
+    return `<div class="career-card"><h3>${EQUIPMENT[slot].name}</h3>${item ? `<p>${escapeHTML(item.name)} +${item.enhance || 0}<br>Základný bonus ${item.bonus}; vylepšenie +${(item.enhance || 0) * 3} ${ITEM_STATS[EQUIPMENT[slot].stat]}<br>Ďalší stupeň: ${costLabel(enhancementCost(item))}</p><button class="primary" data-action="enhance" data-id="${slot}" ${(item.enhance || 0) >= PROGRESSION.maxEnhancement ? 'disabled' : ''}>Vylepšiť predmet</button>` : '<p>Najprv nasaď predmet vo výbave (I).</p>'}</div>`;
   }).join('')}`;
 }
 
@@ -1265,6 +1702,7 @@ function drawFarmMinimap() {
 
 // src/js/main.js
 initializeCareer();
+initializeInventory();
 initializeFarming();
 loadMap(p.mapId,true);
 window.addEventListener('resize',resize);resize();

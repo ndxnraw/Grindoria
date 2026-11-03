@@ -1,4 +1,5 @@
 initializeCareer();
+initializeInventory();
 initializeFarming();
 loadMap(p.mapId,true);
 window.addEventListener('resize',resize);resize();

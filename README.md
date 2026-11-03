@@ -48,7 +48,8 @@ Kliknutie v teréne presúva postavu, kliknutie na blízku príšeru útočí. D
 - Bojovník, nindža, Sura a šaman; každé povolanie má dve školy.
 - Údolie tichého vetra, Púšť zapadnutých chrámov, Hory večného mrazu a Chrám červeného plameňa.
 - Úrovne, skúsenosti, zlato, mana, sila, vitalita, obratnosť a inteligencia.
-- Batoh, tri vzácnosti výbavy, nasadzovanie, predaj a vylepšovanie.
+- Mriežkový inventár 5 × 9 na dvoch stranách, viacpolíčkové predmety, presúvanie, tooltipy, triedenie a zásobníky.
+- Desať slotov výbavy s okamžitými bonusmi, vlastné ikony, nasadzovanie, predaj, potvrdené odstraňovanie a vylepšovanie.
 - Strely, plošné útoky, jed, popálenie, omráčenie, aury a liečenie.
 - Pomalé levelovanie, tréning atribútov, stupne schopností, biologické úlohy, alchýmia, relikvie, špecializácia a endgame trhliny.
 - Husté skupinové spawny v štyroch úrovňových oblastiach každej mapy; elitné a vzácne varianty s lepšou korisťou.
@@ -57,6 +58,10 @@ Kliknutie v teréne presúva postavu, kliknutie na blízku príšeru útočí. D
 - Respawn: bežné príšery 5 s, elity 8 s, vzácne varianty 20 s, hliadky 75 s, kamene 18 s a bossovia 40 s aktívneho času mapy.
 
 Postup sa ukladá v `localStorage` pod kľúčom `grindoria-save-v1`. Závisí od prehliadača a umiestnenia súboru; medzi zariadeniami a adresami sa automaticky neprenáša. Stav neaktívnej mapy vrátane časovačov je pozastavený.
+
+## Inventár a výbava
+
+**I** otvorí výbavu postavy a inventár. Predmety presúvaj myšou; na dotyku vyber predmet a potom cieľové políčko. Dvojklik alebo tlačidlo v detaile predmet nasadí či použije. Záložka **Zásoby** automaticky zlučuje elixíry, plášte, materiály a kamene. Odstraňovanie vyžaduje potvrdenie. Rozmery, bonusy a prenos starého batohu opisuje [INVENTORY.md](docs/INVENTORY.md).
 
 ## Dlhodobá progresia
 
@@ -98,7 +103,7 @@ npm run check:dist
 
 Testy pokrývajú všetkých 48 schopností, postup, ukladanie, mapy, respawn a prípravu vydania. Nenahrádzajú vizuálnu kontrolu v prehliadači. Rovnaké príkazy používa GitHub Actions na Windows a Linuxe.
 
-Zmeny zapisuj pod `[Unreleased]` v [CHANGELOG.md](CHANGELOG.md). Príkaz `npm run release -- 0.6.2` presunie poznámky do novej verzie, pridá dátum a odkazy, zosúladí verziu hry a vytvorí offline súbor. Sám necommituje ani neposiela zmeny na GitHub.
+Zmeny zapisuj pod `[Unreleased]` v [CHANGELOG.md](CHANGELOG.md). Príkaz `npm run release -- 0.7.1` presunie poznámky do novej verzie, pridá dátum a odkazy, zosúladí verziu hry a vytvorí offline súbor. Sám necommituje ani neposiela zmeny na GitHub.
 
 Podrobnosti: [vydávanie](docs/RELEASING.md), [architektúra](docs/ARCHITECTURE.md), [prispievanie](CONTRIBUTING.md).
 

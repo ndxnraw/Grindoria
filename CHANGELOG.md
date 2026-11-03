@@ -10,6 +10,27 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.7.0] - 2026-11-03
+
+### Added
+
+- Klasicky ladený inventár s bronzovým rámom, vlastnými SVG ikonami a dvoma mriežkovými stranami 5 × 9.
+- Rozmery predmetov, presúvanie a výmena myšou, dotykový výber cieľa, tooltipy, detail a triedenie.
+- Prilba, štít, obuv, náramok, náhrdelník, náušnice, opasok a talizman popri zbrani a brnení.
+- Samostatná mriežka zásob so stackovaním elixírov, plášťov, materiálov a vyrobených kameňov.
+- Použitie predmetov z inventára, zloženie výbavy a odstraňovanie s potvrdením a voľbou počtu kusov.
+- Testy rozmerov, kolízií, plného batohu, všetkých slotov, zásobníkov, potvrdenia odstránenia a migrácie.
+
+### Changed
+
+- Všetky sloty padajú z koristi, možno ich vylepšovať a okamžite ovplyvňujú skutočné štatistiky postavy.
+- Kapacitu výbavy určujú obsadené políčka; staré väčšie batohy dostávajú potrebné dodatočné strany bez straty predmetov.
+
+### Fixed
+
+- Neplatné presuny a zloženie do plného batohu nemenia predmety. Výmena predmetov neposkytuje bezplatné liečenie.
+- Responzívne okno inventára nepreteká za šírku mobilného displeja.
+
 ## [0.6.1] - 2026-11-03
 
 ### Added
@@ -139,7 +160,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.6.1...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.7.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -148,3 +169,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.5.0]: https://github.com/ndxnraw/Grindoria/compare/v0.4.0...v0.5.0
 [0.6.0]: https://github.com/ndxnraw/Grindoria/compare/v0.5.0...v0.6.0
 [0.6.1]: https://github.com/ndxnraw/Grindoria/compare/v0.6.0...v0.6.1
+[0.7.0]: https://github.com/ndxnraw/Grindoria/compare/v0.6.1...v0.7.0

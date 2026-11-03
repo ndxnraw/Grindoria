@@ -19,13 +19,14 @@ Funkcie môžu medzi súbormi volať zdieľané pomenované funkcie. Načítanie
 
 | Priečinok | Obsah |
 | --- | --- |
-| `data/` | `CLASSES`, `SCHOOLS`, `MAPS` a herné hodnoty |
+| `data/` | `CLASSES`, `SCHOOLS`, `MAPS`, `EQUIPMENT`, rozmery predmetov a herné hodnoty |
 | `core/` | Stav, náhodný generátor, kamera, časovanie a aktualizácia sveta |
 | `systems/combat.js` | Útoky, kúzla, mana, stavy, strely a AI bossa |
 | `systems/progression.js` | Skúsenosti, výbava, vlastnosti a odmeny |
 | `systems/world.js` | Generovanie, cestovanie, snímky máp a uloženie |
 | `systems/career.js` | EXP ekonomika, migrácia, tréning, schopnosti, biológia, alchýmia, relikvie, špecializácia a expedície |
 | `systems/farming.js` | Skupinové body, varianty, trvalé spawn sloty, respawn, potulovanie, pomoc skupiny, aggro, priestorová mriežka a Plášť statočnosti |
+| `systems/inventory.js` | Rozloženie mriežky, migrácia, presun, nasadenie, bonusy a zásobníky |
 | `ui/` | Rozhranie, obchod, výbava, úlohy a kniha schopností |
 | `render/` | Vektorové kreslenie prostredia, postáv, príšer a efektov |
 
@@ -48,6 +49,8 @@ Populácia má vlastné `spawnSchema` a trvalé identifikátory slotov. `hydrate
 Pokojový pohyb používa nezávislé ciele a prestávky; `wanderEnemy()` drží každého protivníka v okruhu domova. `provokeEnemyGroup()` reaguje na poškodenie a vyberá pomocníkov výlučne podľa `spawnPointId` s limitom piatich aktívnych členov vrátane obete; pomocníci sami ďalšiu pomoc nevyvolávajú. Identifikátory slotov aj populácia ostávajú kompatibilné, dočasný pohyb sa pri načítaní resetuje.
 
 Plášť je uložený ako stoh `p.braveryCapes`, podobne ako elixíry. Výzva nastaví časovač `taunt` iba živým pohyblivým cieľom v dosahu; bežná AI aj AI bossa ho rešpektujú. Kreslenie vlny, označenie variantov a oblastí patrí do `render/farming.js`. Pozri [FARMING.md](FARMING.md).
+
+`initializeInventory()` beží po migrácii kariéry a pred prvým načítaním mapy. Sloty definuje `data/items.js`; model pracuje s pôvodným batohom a číta množstvá zásob priamo z existujúcich počítadiel. `gearLayout()` najprv overí navrhnuté rozmiestnenie, až potom sa vykoná presun či výmena. `equipmentBonuses()` agreguje všetkých desať slotov do živých výpočtov štatistík. Vlastné SVG ikony sú v `ui/item-icons.js`, rozhranie v `ui/inventory.js`. Podrobnosti: [INVENTORY.md](INVENTORY.md).
 
 ## Overovanie
 

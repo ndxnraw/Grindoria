@@ -15,17 +15,14 @@ function rarityName(r){return ['Bežná','Vzácna','Epická'][r]||'Bežná';}
 
 function makeItem(epic=false, source=null) {
   const rarity = epic ? 2 : source?.variant==='rare' ? 1 : rand() < (source?.variant==='elite' ? .45 : .16) ? 1 : 0;
-  const slot = rand() < .5 ? 'weapon' : 'armor';
+  const slots = Object.keys(EQUIPMENT), slot = slots[Math.min(slots.length-1, Math.floor(rand()*slots.length))], spec = EQUIPMENT[slot];
   const tier = Math.min(99, source ? enemyLevel(source) : map().enemyLevel);
-  const name = ['Pútnický', 'Mesačný', 'Dračí'][rarity] + (slot === 'weapon' ? ' meč' : ' pancier');
-  return { name, slot, rarity, tier, enhance: 0, bonus: slot === 'weapon' ? 4 + Math.floor(tier * .6) + rarity * 9 : 2 + Math.floor(tier * .25) + rarity * 3, value: 12 + tier * 3 + rarity * 25 };
+  return { name: spec.names[rarity], slot, rarity, tier, enhance: 0, bonus: spec.base + Math.floor(tier * spec.scale) + rarity * spec.rare, value: 12 + tier * 3 + rarity * 25 };
 }
 
-function awardItem(epic=false,source=null){const item=makeItem(epic,source);if(p.bag.length>=24){p.gold+=item.value;float('Batoh plný · +'+item.value+' zlata',p.x,p.y-110,'#d6cb99');return item;}p.bag.push(item);float(item.name+' → I',p.x,p.y-110,item.rarity===2?'#d3a3eb':item.rarity===1?'#a3ceec':'#d1dab7');return item;}
+function awardItem(epic=false,source=null){const item=makeItem(epic,source);if(!addGearItem(item)){p.gold+=item.value;float('Batoh plný · +'+item.value+' zlata',p.x,p.y-110,'#d6cb99');return item;}float(item.name+' → I',p.x,p.y-110,item.rarity===2?'#d3a3eb':item.rarity===1?'#a3ceec':'#d1dab7');return item;}
 
-function equipItem(index){if(!Number.isInteger(index)||index<0||index>=p.bag.length)return;const item=p.bag.splice(index,1)[0],old=p.equipped[item.slot];p.equipped[item.slot]=item;if(old)p.bag.push(old);updateHUD();save();inventory();}
 
-function sellItem(index){if(!Number.isInteger(index)||index<0||index>=p.bag.length)return;p.gold+=p.bag.splice(index,1)[0].value;updateHUD();save();inventory();}
 
 function allocate(stat){if(p.points<=0||!['strength','vitality','dexterity','intelligence'].includes(stat))return;p.points--;p[stat]++;if(stat==='vitality')p.hp=Math.min(maxHP(),p.hp+10);updateHUD();save();inventory();}
 

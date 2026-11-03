@@ -35,9 +35,9 @@ function careerBiology() {
 }
 
 function careerForge() {
-  return `<p>Vylepšenie patrí konkrétnemu predmetu a zostáva na ňom pri výmene. Maximálne +9. Kováč pracuje spoľahlivo; cena rudy a zlata rastie s druhou mocninou stupňa. Ruda pochádza z každého piateho primeraného zabitia.</p>${['weapon', 'armor'].map(slot => {
+  return `<p>Vylepšenie patrí konkrétnemu predmetu a zostáva na ňom pri výmene. Maximálne +9. Kováč pracuje spoľahlivo; cena rudy a zlata rastie s druhou mocninou stupňa. Ruda pochádza z každého piateho primeraného zabitia.</p>${Object.keys(EQUIPMENT).map(slot => {
     const item = p.equipped[slot];
-    return `<div class="career-card"><h3>${slot === 'weapon' ? 'Zbraň' : 'Zbroj'}</h3>${item ? `<p>${escapeHTML(item.name)} +${item.enhance || 0}<br>Základný bonus ${item.bonus}; vylepšenie +${(item.enhance || 0) * 3} ${slot === 'weapon' ? 'útok' : 'obrana'}<br>Ďalší stupeň: ${costLabel(enhancementCost(item))}</p><button class="primary" data-action="enhance" data-id="${slot}" ${(item.enhance || 0) >= PROGRESSION.maxEnhancement ? 'disabled' : ''}>Vylepšiť predmet</button>` : '<p>Najprv nasaď predmet vo výbave (I).</p>'}</div>`;
+    return `<div class="career-card"><h3>${EQUIPMENT[slot].name}</h3>${item ? `<p>${escapeHTML(item.name)} +${item.enhance || 0}<br>Základný bonus ${item.bonus}; vylepšenie +${(item.enhance || 0) * 3} ${ITEM_STATS[EQUIPMENT[slot].stat]}<br>Ďalší stupeň: ${costLabel(enhancementCost(item))}</p><button class="primary" data-action="enhance" data-id="${slot}" ${(item.enhance || 0) >= PROGRESSION.maxEnhancement ? 'disabled' : ''}>Vylepšiť predmet</button>` : '<p>Najprv nasaď predmet vo výbave (I).</p>'}</div>`;
   }).join('')}`;
 }
 

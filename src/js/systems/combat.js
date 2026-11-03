@@ -1,6 +1,8 @@
 function hit(m,amount){if(m.hp<=0)return;if(amount>0)provokeEnemyGroup(m);m.hp-=amount;m.hit=.15;float('-'+amount,m.x,m.y-65);beep(170);if(m.hp<=0){m.hp=0;m.windup=0;m.dead=m.respawnSeconds||(m.type==='boss'?40:m.type==='stone'?18:5);if(m.type==='boss')p.bossKills++;else p[m.type==='stone'?'stones':'kills']++;const gained=enemyXP(m);careerKill(m);farmBonusLoot(m);experience(gained);float(gained?'+'+gained+' EXP':'Slabý cieľ · bez EXP',m.x,m.y-85,gained?'#d6c28c':'#8e9f92');drops.push({x:m.x,y:m.y,value:Math.round((m.type==='boss'?120:m.type==='stone'?35:7+Math.floor(rand()*7))*map().scale*(ENEMY_VARIANTS[m.variant]?.gold||1))});dropFarmEquipment(m);if(rand()<.25){p.potions++;float('+1 elixír',m.x,m.y-100,'#a8d9b0');}if(m.type==='boss')toast('Strážca padol! Korisť čaká vo výbave (I).');else if(!p.claimed&&p.kills>=5&&p.stones>=3)toast('Úloha splnená! Vyzdvihni si odmenu.');}}
 
-function potion(){if(!running||paused)return;if(p.potions<=0){toast('Nemáš elixíry. Navštív obchodníka (F).');return;}if(p.hp>=maxHP()){toast('Zdravie máš plné.');return;}p.potions--;p.hp=Math.min(maxHP(),p.hp+65);float('+65 zdravia',p.x,p.y-65,'#a9e0ac');beep(520,.2);updateHUD();}
+function potion(){return drinkPotion(false);}
+
+function drinkPotion(allowPaused=false){if(!running||(paused&&!allowPaused)||p.hp<=0)return false;if(p.potions<=0){toast('Nemáš elixíry. Navštív obchodníka (F).');return;}if(p.hp>=maxHP()){toast('Zdravie máš plné.');return;}p.potions--;p.hp=Math.min(maxHP(),p.hp+65);float('+65 zdravia',p.x,p.y-65,'#a9e0ac');beep(520,.2);updateHUD();save();return true;}
 
 function death(){p.mp=maxMP();shots.length=0;Object.keys(buffs).forEach(k=>delete buffs[k]);p.gold=Math.floor(p.gold*.9);p.x=1000;p.y=1160;p.hp=maxHP();target=null;mobs.forEach(m=>m.cd=2);toast('Záchrana v útočisku\nStratil si 10 % zlata.');save();}
 
@@ -8,19 +10,19 @@ function school(){return SCHOOLS[p.schools[p.classId]];}
 
 function active(id){return (buffs[id]||0)>0;}
 
-function maxMP(){return 100+p.level*8+p.intelligence*5+careerBonuses().mp;}
+function maxMP(){return 100+p.level*8+p.intelligence*5+careerBonuses().mp+equipmentBonuses().mp;}
 
 function attackPower(){return (active('aura')||active('enchanted')?1.45:1)*(active('attackUp')?1.35:1);}
 
 function armorBonus(){return active('guard')?12:active('armor')?8:0;}
 
-function speedValue(){return (role().speed+p.dexterity*2)*(active('speed')?1.45:active('berserk')?1.22:1);}
+function speedValue(){return (role().speed+p.dexterity*2+equipmentBonuses().speed)*(active('speed')?1.45:active('berserk')?1.22:1);}
 
-function criticalChance(){return Math.min(.8,role().crit+p.dexterity*.01+careerBonuses().crit+(active('dragonPower')?.25:0));}
+function criticalChance(){return Math.min(.8,role().crit+p.dexterity*.01+careerBonuses().crit+equipmentBonuses().crit+(active('dragonPower')?.25:0));}
 
 function nearest(range=500,from=p){return mobs.filter(m=>m.hp>0&&Math.hypot(m.x-from.x,m.y-from.y)<range).sort((a,b)=>Math.hypot(a.x-from.x,a.y-from.y)-Math.hypot(b.x-from.x,b.y-from.y))[0];}
 
-function hurtMob(m,mult=1,magic=false,key=castingSkillKey){if(!m||m.hp<=0)return;if(key)rememberSkill(m,key);const crit=rand()<criticalChance(),raw=(damage()+(magic?p.intelligence*4+careerBonuses().magic:0))*mult*(key?skillFactor(key):1)*(crit?1.8:1),amount=Math.max(1,Math.round(raw*(.94+rand()*.12))),actual=Math.min(m.hp,amount);hit(m,amount);if(active('enchanted'))p.hp=Math.min(maxHP(),p.hp+actual*.15);if(crit)float('KRITICKÝ!',m.x,m.y-90,'#f2bc70');}
+function hurtMob(m,mult=1,magic=false,key=castingSkillKey){if(!m||m.hp<=0)return;if(key)rememberSkill(m,key);const crit=rand()<criticalChance(),raw=(damage()+(magic?p.intelligence*4+careerBonuses().magic+equipmentBonuses().magic:0))*mult*(key?skillFactor(key):1)*(crit?1.8:1),amount=Math.max(1,Math.round(raw*(.94+rand()*.12))),actual=Math.min(m.hp,amount);hit(m,amount);if(active('enchanted'))p.hp=Math.min(maxHP(),p.hp+actual*.15);if(crit)float('KRITICKÝ!',m.x,m.y-90,'#f2bc70');}
 
 function areaHit(x,y,r,mult,opts={}){for(const m of mobs)if(m.hp>0&&Math.hypot(m.x-x,(m.y-y)*.85)<r){hurtMob(m,mult,true,opts.skillKey||castingSkillKey);if(opts.stun)m.stun=Math.max(m.stun||0,opts.stun*(m.type==='boss'?.4:1));if(opts.dot&&m.hp>0)m.dot={time:6,tick:1,power:Math.max(3,Math.round(damage()*.18)),kind:opts.dot};if(opts.knock&&m.type!=='stone'){let d=Math.hypot(m.x-x,m.y-y)||1;m.x=Math.max(45,Math.min(SIZE-45,m.x+(m.x-x)/d*45));m.y=Math.max(45,Math.min(SIZE-45,m.y+(m.y-y)/d*45));}}}
 

@@ -146,7 +146,7 @@ function enhancementCost(item) { const rank = (item?.enhance || 0) + 1; return {
 
 function enhanceEquipment(slot) {
   const item = p.equipped[slot];
-  if (!['weapon', 'armor'].includes(slot) || !item || (item.enhance || 0) >= PROGRESSION.maxEnhancement) return false;
+  if (!EQUIPMENT[slot] || !item || (item.enhance || 0) >= PROGRESSION.maxEnhancement) return false;
   if (!pay(enhancementCost(item))) return false;
   item.enhance = (item.enhance || 0) + 1;
   save(); return true;
