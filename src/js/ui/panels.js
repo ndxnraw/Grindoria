@@ -1,11 +1,25 @@
-function modal(html){setCharacterScreenMode(true);$('intro').inert=true;clearLootPointer();$('modal').className='overlay';paused=true;keysClear();$('modalcontent').innerHTML=html;$('modal').hidden=false;$('modalcard').scrollTop=0;$('close').focus({preventScroll:true});}
+function modal(html,options={}){
+  const same=!$('modal').hidden&&options.key&&panelState.key===options.key;
+  const scroll=same?$('modalcard').scrollTop||0:0,focus=same?modalFocusToken():null;
+  setCharacterScreenMode(true);$('intro').inert=true;clearLootPointer();$('modal').className='overlay';$('modal').ondragover=null;$('modal').ondrop=null;
+  paused=true;keysClear();updateHotbarState();$('modalcontent').innerHTML=html;$('modal').hidden=false;panelState.key=options.key||null;
+  $('modalcard').scrollTop=scroll;
+  if(same)restoreModalFocus(focus);else $('close').focus({preventScroll:true});
+  $('modalcard').scrollTop=scroll;
+}
 
-function closeModal(){$('modal').className='overlay';$('modal').hidden=true;paused=false;$('intro').inert=false;setCharacterScreenMode(!running);if(running)canvas.focus({preventScroll:true});else $('create-character').focus({preventScroll:true});}
+function closeModal(){panelState.key=null;inventoryDropPending=null;inventoryDrag=null;$('modal').className='overlay';$('modal').hidden=true;paused=false;updateHotbarState();$('intro').inert=false;setCharacterScreenMode(!running);if(running)canvas.focus({preventScroll:true});else $('create-character').focus({preventScroll:true});}
 
 
 function shop(){marketPanel('merchant');}
 
-function journal(){if(!running)return;const huntTarget=(p.huntClaimed+1)*10;modal(`<span class="eyebrow">ÚLOHY · J</span><h2>Denník úloh</h2><div class="journal-entry"><h3>Praskliny v pokoji</h3><p>Príšery ${Math.min(5,p.kills)} / 5 · Kamene ${Math.min(3,p.stones)} / 3<br>Odmena: 150 zlata + 60 skúseností</p><button class="primary" id="journalMain" ${p.claimed||p.kills<5||p.stones<3?'disabled':''}>${p.claimed?'✓ Dokončené':'Vyzdvihnúť odmenu'}</button></div><div class="journal-entry"><h3>Prvý strážca</h3><p>Poraz bossa na bojovej mape.<br>Údolie: odporúčaná úroveň 10+ · Porazení: ${p.bossKills}<br>Odmena: epická výbava + 200 zlata + 80 skúseností</p><button class="primary" id="claimBoss" ${p.bossClaimed||!p.bossKills?'disabled':''}>${p.bossClaimed?'✓ Dokončené':'Vyzdvihnúť odmenu'}</button></div><div class="journal-entry"><h3>Lovec údolia · opakovateľná</h3><p>Primerané príšery: ${Math.min(p.career.eligibleKills,huntTarget)} / ${huntTarget}<br>Odmena za každých 10 príšer: 60 zlata + 1 tréningová pečať (bez EXP)</p><button class="primary" id="claimHunt" ${p.career.eligibleKills<huntTarget?'disabled':''}>Vyzdvihnúť odmenu</button></div>`);$('journalMain').onclick=()=>{if(p.claimed||p.kills<5||p.stones<3)return;$('claim').onclick();journal();};$('claimBoss').onclick=claimBoss;$('claimHunt').onclick=claimHunt;}
+function journal(){
+ if(!running)return;
+ const huntTarget=(p.huntClaimed+1)*10;
+ const card=(title,objectives,reward,button)=>'<article class="journal-entry"><h3>'+title+'</h3><div class="requirements"><div class="requirement-heading"><span>Cieľ</span><span>Postup / Cieľ</span></div>'+objectives+'</div><p class="quest-reward"><b>Odmena</b> · '+reward+'</p>'+button+'</article>';
+ modal('<span class="eyebrow">ÚLOHY · J</span><h2>Denník úloh</h2>'+card('Praskliny v pokoji',requirementRow('Príšery',Math.min(p.kills,5),5)+requirementRow('Kamene',Math.min(p.stones,3),3),'150 Yang + 60 skúseností','<button class="primary" id="journalMain" '+(p.claimed||p.kills<5||p.stones<3?'disabled':'')+'>'+(p.claimed?'✓ Dokončené':'Vyzdvihnúť odmenu')+'</button>')+card('Prvý strážca',requirementRow('Boss · Údolie: odporúčaná úroveň 10+',Math.min(p.bossKills,1),1),'epická výbava + 200 Yang + 80 skúseností','<button class="primary" id="claimBoss" '+(p.bossClaimed||!p.bossKills?'disabled':'')+'>'+(p.bossClaimed?'✓ Dokončené':'Vyzdvihnúť odmenu')+'</button>')+card('Lovec údolia · opakovateľná',requirementRow('Primerané príšery',Math.min(p.career.eligibleKills,huntTarget),huntTarget),'60 Yang + 1 tréningová pečať (bez EXP)','<button class="primary" id="claimHunt" '+(p.career.eligibleKills<huntTarget?'disabled':'')+'>Vyzdvihnúť odmenu</button>'),{key:'journal'});
+ $('journalMain').onclick=()=>{if(p.claimed||p.kills<5||p.stones<3)return;$('claim').onclick();journal();};$('claimBoss').onclick=claimBoss;$('claimHunt').onclick=claimHunt;
+}
 
 function travelMenu(){if(!running)return;if(p.career.endgame.run){careerPanel('endgame');return;}if(!canTravel()){toast('Cestovanie nie je dostupné počas boja.');return;}modal(`<span class="eyebrow">MAPY · M</span><h2>Cestovanie</h2><p>Cestovanie mimo boja.</p><div class="map-list">${Object.entries(MAPS).map(([id,c])=>`<button data-map="${id}" class="map-card ${p.mapId===id?'selected':''}" style="--map-color:${c.ground}"><b>${c.name}</b><small>${c.town?c.desc:'Úroveň '+c.level+'+ · '+c.mob+' · '+c.boss}</small>${p.mapId===id?'<span>Aktuálna mapa</span>':''}</button>`).join('')}</div><button class="primary" id="metinAtlas">Atlas Metinov · úrovne, vlny a dropy</button><p id="travelmsg" role="status"></p>`);$('metinAtlas').onclick=metinCodex;document.querySelectorAll('[data-map]').forEach(b=>b.onclick=()=>{if(p.mapId===b.dataset.map)return;if(!canTravel()){$('travelmsg').textContent='Najprv ukonči boj.';return;}loadMap(b.dataset.map);});}
 

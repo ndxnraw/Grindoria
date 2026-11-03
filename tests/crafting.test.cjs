@@ -80,6 +80,6 @@ test('crafted equipment, active tonic and practice survive reload and backup rep
   reloaded.run('returnToCharacters();var prepared=prepareCharacterImport('+JSON.stringify(run('backup'))+');importCharacterBackup(prepared,"replace",{confirmReplace:true});playCharacter();');assert.equal(reloaded.run('p.career.alchemy.xp'),700);assert.equal(reloaded.run('p.career.alchemy.active.id'),'might');assert.equal(reloaded.run('p.bag[0].rarity'),2);
 });
 test('both panels show progress, recipes, resource counts, gates and usable products', () => {
-  const {run,elements} = workshop('alchemy');run('careerPanel("alchemy");');let html=elements.get('modalcontent').innerHTML;assert.match(html,/Alchymista · úroveň 1/);assert.match(html,/Elixír many/);assert.match(html,/máš/);assert.match(html,/Koncentrát sily/);
+  const {run,elements} = workshop('alchemy');run('careerPanel("alchemy");');let html=elements.get('modalcontent').innerHTML;assert.match(html,/Alchymista · úroveň 1/);assert.match(html,/Elixír many/);assert.match(html,/Máš \/ Potrebuješ/);assert.match(html,/Koncentrát sily/);
   run('p.x=NPCS.smith.x;careerPanel("crafting");');html=elements.get('modalcontent').innerHTML;assert.match(html,/Výroba u kováča/);assert.match(html,/Zbraň/);assert.match(html,/Kľúč trhliny/);
 });

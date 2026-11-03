@@ -117,3 +117,7 @@ Target zostáva referencia na vybraného nepriateľa. Dočasný combatSelection.
 ## NPC ekonomika od 0.20.0
 
 Data/economy.js definuje tovar a obchodníkov. Systems/economy.js spravuje p.economy, čas simulácie, zásoby, deterministické ponuky a ceny. UI/economy.js poskytuje nákup a výkup. Pôvodný shop(), buyBraveryCapes() a sellItem() delegujú na spoločnú logiku. Profily sa migrujú pri inicializácii; zálohy validuje validateEconomyProfile(). Pozri [ECONOMY.md](ECONOMY.md).
+
+## Jednotné rozhranie od 0.21.0
+
+UI/common.js obsahuje riadky požiadaviek, identitu panelu, obnovu fokusu a stavy hotbaru. Modal() zachováva posunutie pri rovnakej identite; každý nový panel ho resetuje. Systems/inventory-drop.js vykonáva potvrdený presun inventára na zem cez existujúci spawnGroundDrop(). Korisť s manualPickup sa nezbiera automaticky; používa existujúce ručné zbieranie, snímky a expiráciu. Pozri [UI.md](UI.md).

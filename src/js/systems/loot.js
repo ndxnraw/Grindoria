@@ -61,7 +61,7 @@ function spawnGroundDrop(payload, source) {
   };
   drop.expiresAt = Date.now() + groundDropLifetime(drop) * 1000;
   if (drop.kind === 'gold') drop.value = drop.count;
-  if(drop.kind==='gold'||drop.kind==='supply'){grantAutomaticDrop(drop);return drop;}
+  if(!drop.manualPickup&&(drop.kind==='gold'||drop.kind==='supply')){grantAutomaticDrop(drop);return drop;}
   drops.push(drop); return drop;
 }
 
@@ -179,7 +179,7 @@ function finishGroundPickup(items) {
 function collectNearbyGroundDrops(automaticOnly = false) {
   if (!running || paused || p.hp <= 0) return 0;
   expireGroundDrops();
-  const candidates = drops.filter(drop => (!automaticOnly || drop.kind === 'gold' || drop.kind === 'supply') && drop.fallAge >= LOOT_RULES.fallDuration && Math.hypot(drop.x - p.x, drop.y - p.y) <= LOOT_RULES.pickupRange);
+  const candidates = drops.filter(drop => (!automaticOnly || !drop.manualPickup && (drop.kind === 'gold' || drop.kind === 'supply')) && drop.fallAge >= LOOT_RULES.fallDuration && Math.hypot(drop.x - p.x, drop.y - p.y) <= LOOT_RULES.pickupRange);
   candidates.sort((a, b) => Math.hypot(a.x - p.x, a.y - p.y) - Math.hypot(b.x - p.x, b.y - p.y) || a.id - b.id);
   const collected = [];
   let blockedGear = false;
@@ -201,7 +201,7 @@ function updateGroundLoot(dt) {
   expireGroundDrops();
   if (!running || paused || p.hp <= 0) { updateLootHover(); return; }
   for (const drop of drops) drop.fallAge = Math.min(LOOT_RULES.fallDuration, (drop.fallAge || 0) + dt);
-  for(let i=drops.length-1;i>=0;i--)if((drops[i].kind==='gold'||drops[i].kind==='supply')&&grantAutomaticDrop(drops[i]))drops.splice(i,1);
+  for(let i=drops.length-1;i>=0;i--)if(!drops[i].manualPickup&&(drops[i].kind==='gold'||drops[i].kind==='supply')&&grantAutomaticDrop(drops[i]))drops.splice(i,1);
   flushAutomaticLoot();
   updateLootHover(dt);
 }
