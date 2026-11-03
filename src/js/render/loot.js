@@ -2,10 +2,11 @@ const groundIconCache = new Map();
 
 function groundIcon(item) {
   if (typeof Image === 'undefined') return null;
-  const key = (item.icon || item.slot) + ':' + (item.rarity || 0);
+  const key = equipmentAppearance(item)?.key || (item.icon || item.slot) + ':' + (item.rarity || 0);
   if (!groundIconCache.has(key)) {
     const image = new Image();
     image.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(itemIcon(item).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" '));
+    if(groundIconCache.size>=256)groundIconCache.delete(groundIconCache.keys().next().value);
     groundIconCache.set(key, image);
   }
   const image = groundIconCache.get(key);

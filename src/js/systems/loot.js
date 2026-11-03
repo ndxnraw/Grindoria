@@ -74,7 +74,7 @@ function groundDropView(drop) {
   }
   if (drop.kind === 'relic' && RELICS[drop.relicId]) {
     const relic = RELICS[drop.relicId];
-    return { name: relic.name, icon: 'shards', count: 1, rarity: 2, requiredLevel: 1, description: relic.text + (p.career.collection[drop.relicId] ? ' Ďalší exemplár sa po zdvihnutí premení na 10 prachov.' : 'Po zdvihnutí aktivuje trvalý bonus zbierky.') };
+    return { name: relic.name, icon: 'relic-'+drop.relicId, count: 1, rarity: 2, requiredLevel: 1, description: relic.text + (p.career.collection[drop.relicId] ? ' Ďalší exemplár sa po zdvihnutí premení na 10 prachov.' : 'Po zdvihnutí aktivuje trvalý bonus zbierky.') };
   }
   if (drop.kind === 'gold') return { name: drop.currencyName || 'Zlato', icon: 'gold', count: drop.count, rarity: 0, requiredLevel: 1, description: 'Mena pre obchodníka, kováča a rozvoj postavy.' };
   return null;

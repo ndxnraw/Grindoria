@@ -153,3 +153,5 @@ História 0.1.0–0.3.0 opisuje prototyp pred založením repozitára; nejde o s
 Hra nepoužíva originálne assety Metin2. Školy a názvy klasických schopností vychádzajú z [Metin2 Wiki](https://en-wiki.metin2.gameforge.com/index.php/Category:Skills). Ochranné známky patria ich príslušným vlastníkom. Pozri [NOTICE.md](NOTICE.md). Licenciu na ďalšie šírenie zdrojov zatiaľ vlastník nezvolil.
 
 
+
+Vizuálna výbava: 39 vektorových modelov pre desať slotov a štyri typy zbraní. Nasadené predmety sú viditeľné v hernom svete, inventári a výbere postáv. [Modely a rozširovanie](docs/APPEARANCE.md).

@@ -136,7 +136,7 @@ function dropMetinLoot(stone) {
   if (rand() < chance) dropMaterial(extra, metinLootAmount(min, max), stone);
   if (rand() < pool.gear) {
     const item = makeItem(rand() < pool.epic, stone), slot = pool.slots[Math.floor(rand() * pool.slots.length)], spec = EQUIPMENT[slot];
-    item.slot = slot; item.name = spec.names[item.rarity]; item.bonus = spec.base + Math.floor(item.tier * spec.scale) + item.rarity * spec.rare;
+    item.slot = slot; item.weaponKind=slot==='weapon'?(item.weaponKind||generatedWeaponKind()):undefined; item.name = equipmentItemName(slot,item.rarity,item.weaponKind); item.bonus = spec.base + Math.floor(item.tier * spec.scale) + item.rarity * spec.rare;
     spawnGroundDrop({ kind: 'gear', item }, stone);
   }
   if (rand() < pool.rare) spawnGroundDrop({ kind: 'relic', relicId: pool.relic, count: 1 }, stone);

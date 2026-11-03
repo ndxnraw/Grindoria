@@ -1,9 +1,19 @@
 function itemIcon(item, empty = false) {
+  if (!empty && Object.hasOwn(EQUIPMENT,item.slot)) { const model=equipmentAppearance(item);return `<svg class="item-icon" viewBox="0 0 64 ${model.height}" aria-hidden="true" focusable="false">${equipmentModelSVG(item)}</svg>`; }
   const id = item.icon || item.slot, rarity = item.rarity || 0;
   const metal = empty ? '#766c58' : ['#a5afae', '#9fcad5', '#d5b1e2'][rarity];
   const gold = empty ? '#766c58' : '#d8ad5c', dark = empty ? '#403d34' : '#444c52';
   const gem = empty ? '#4b463a' : ['#a24f3f', '#59b4c0', '#bc7bdb'][rarity];
   const shapes = {
+    ruby:'<path d="m18 7 28 0 15 19-29 35L3 26Z" fill="#b7364a" stroke="#f4b0a6" stroke-width="2"/><path d="M3 26h58M18 7l-4 19 18 35L25 7m21 0 4 19-18 35 7-54" fill="none" stroke="#ed7984" stroke-width="2"/>',
+    sapphire:'<path d="m22 3 20 0 15 18v25L42 62H22L7 46V21Z" fill="#3f6fb5" stroke="#b1d4f3" stroke-width="2"/><path d="m22 3 3 14-8 8v16l8 8-3 13m20-59-3 14 8 8v16l-8 8 3 13M25 17h14m-14 32h14" fill="none" stroke="#7eb9eb" stroke-width="2"/>',
+    jade:'<path d="M32 3a29 29 0 1 1-.1 0ZM32 21a11 11 0 1 0 .1 0Z" fill="#45996c" fill-rule="evenodd" stroke="#b3dfb5" stroke-width="2"/><path d="M15 15q-8 16-1 26m34-25q8 16 0 31M19 51q14 9 24-1" stroke="#93cfa1" fill="none" stroke-width="3"/>',
+
+    'relic-valley':'<path d="M19 6 47 9 46 30 24 61 13 55 27 27Z" fill="#e0d9b3" stroke="#9f8655" stroke-width="2"/><path d="m22 12 18 2-6 12-5 20" fill="none" stroke="#7e9e71" stroke-width="3"/><path d="M18 8h30v9H18Z" fill="#8f6846"/>',
+    'relic-desert':'<path d="M3 32Q32 1 61 32 32 63 3 32Z" fill="#c8994c" stroke="#f1d186" stroke-width="2"/><ellipse cx="32" cy="32" rx="14" ry="20" fill="#587e83"/><path d="M32 13l5 19-5 19-5-19Z" fill="#17252b"/><path d="m7 17 9 4m32 0 9-4M9 48l8-5m30 0 8 5" stroke="#e7c177" stroke-width="3"/>',
+    'relic-snow':'<path d="m32 2 13 15 14 7-8 27-19 12-19-12-8-27 14-7Z" fill="#96dce6" stroke="#e5ffff" stroke-width="2"/><path d="M32 3v57M8 25l46 24M56 25 10 49M21 17l11 8 11-8M21 48l11-8 11 8" stroke="#d8f7ff" stroke-width="2" fill="none"/>',
+    'relic-temple':'<path d="m32 3 21 10 8 21-12 24-17 5-17-5L3 34 11 13Z" fill="#743b42" stroke="#e7b268" stroke-width="3"/><path d="M33 11q-2 15 8 9l-1-8q21 25 7 37-20 17-29-2-9-15 5-26-2 15 8 13-8-12 2-23Z" fill="#e9a156"/><path d="m32 36 7 9-7 9-7-9Z" fill="#fff0b7"/>',
+
     upgradeStones: '<path d="m32 4 24 17-5 30-19 11-19-11-5-30Z" fill="#576779" stroke="#b2c8da" stroke-width="2"/><path d="m32 12 10 14-10 26-10-26Z" fill="#ad91cb" stroke="#e6c9ec"/><path d="m25 30 7-9 7 9-7 10Z" fill="#edd49a"/><path d="M15 21l6 4m28-4-6 4M18 47l6-4m22 4-6-4" stroke="#c2cba9" stroke-width="2"/>',
     gold: '<ellipse cx="32" cy="47" rx="25" ry="12" fill="#9d702f" stroke="#e5c96b" stroke-width="2"/><ellipse cx="28" cy="36" rx="22" ry="11" fill="#b98e39" stroke="#edce78" stroke-width="2"/><ellipse cx="35" cy="23" rx="23" ry="12" fill="#e2bd5c" stroke="#f3dd99" stroke-width="2"/><path d="M35 15v16m-6-13 8-2 6 4-11 5 8 4" stroke="#9a712c" fill="none" stroke-width="2"/>',
     weapon: `<path fill="${dark}" d="M34 6 41 20 31 65 24 67 27 20Z"/><path fill="${metal}" d="M34 6 36 23 27 64 23 62 29 19Z"/><path fill="#eff0dc" d="m34 6-3 22-6 32 3-37Z"/><path fill="${gold}" d="m14 62 28 4-1 6-29-4Z"/><path fill="#764a32" d="m23 69 9 1-3 17-9-1Z"/><path fill="${gold}" d="m18 85 14 2-1 5-14-2Z"/>`,
@@ -36,5 +46,5 @@ function itemIcon(item, empty = false) {
 }
 
 function equipmentFigure() {
-  return '<svg class="equipment-figure" viewBox="0 0 180 250" aria-hidden="true"><path d="M90 15q-22 0-22 25l8 19-28 16-20 65 20 7 14-43-3 69-12 60h28l15-55 15 55h28l-12-60-3-69 14 43 20-7-20-65-28-16 8-19q0-25-22-25Z" fill="#515048" stroke="#9c8a5d"/><path d="m63 78 27 16 27-16-8 68-19 19-19-19Z" fill="#696253"/><path d="M90 95v63m-23-39 23 10 23-10" stroke="#b6a16b" fill="none"/><circle cx="90" cy="41" r="16" fill="#82735b"/></svg>';
+  return characterAvatar({classId:p.classId,data:p}).replace('class="roster-avatar"','class="equipment-figure"');
 }

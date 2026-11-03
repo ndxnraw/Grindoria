@@ -10,6 +10,23 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.15.0] - 2026-11-03
+
+### Added
+- Modulárny register 39 odlišných vektorových modelov: desať slotov, meče, dvojdýky, luky a vejáre.
+- Viditeľná nasadená výbava vo svete, inventári aj výbere postáv vrátane šperkov a talizmanu.
+- Úrovňové kovanie, rytiny sily, kamene vylepšenia a svetelný lem od +6.
+- Odlišné tvary alchymistických kameňov a štyroch relikvií.
+- Dokumentácia registra a osem testov modelov a kompatibility.
+
+### Changed
+- Nové zbrane dostávajú typ a názov podľa povolania a školy bez zmeny bojových pravidiel.
+- SVG ikony a Canvas postava zdieľajú geometriu; staré predmety získajú vzhľad bez prepisu dát.
+
+### Fixed
+- Cache koristi rozlišuje model, úroveň a vylepšenie.
+- Import odmietne neznáme modely a neplatné typy zbraní.
+
 ## [0.14.0] - 2026-11-03
 
 ### Added
@@ -303,7 +320,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.14.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.15.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -321,3 +338,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.12.0]: https://github.com/ndxnraw/Grindoria/compare/v0.11.0...v0.12.0
 [0.13.0]: https://github.com/ndxnraw/Grindoria/compare/v0.12.0...v0.13.0
 [0.14.0]: https://github.com/ndxnraw/Grindoria/compare/v0.13.0...v0.14.0
+[0.15.0]: https://github.com/ndxnraw/Grindoria/compare/v0.14.0...v0.15.0

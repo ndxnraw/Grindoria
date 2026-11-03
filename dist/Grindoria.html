@@ -150,7 +150,7 @@ body.character-select .game-shell:fullscreen,body.native-fullscreen.character-se
 .game-shell:fullscreen .roster-avatar,body.native-fullscreen .roster-avatar{height:min(650px,65dvh);width:min(100%,500px);max-width:500px}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b id="game-version">ALPHA 0.14.0</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b id="game-version">ALPHA 0.15.0</b></span></header>
 <main><div class="world-title"><div><span class="eyebrow">KAPITOLA I · PREBUDENIE</span><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Pod pokojnými korunami sa prebúdza stará temnota.</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
 <section id="game-shell" class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb iba WASD alebo šípkami, cieľ kliknutím, smerový útok medzerníkom, schopnosť Q, liečenie E, korisť ľavým kliknutím alebo Y v okolí, zlato a zásoby automaticky."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
 <div class="hud player"><div id="portrait" class="portrait">侍</div><div><div class="player-name"><b id="playername">Pútnik</b><small id="playerclass">Bojovník</small> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 60 skúseností</small></div></div>
@@ -334,6 +334,91 @@ const EQUIPMENT = {
   talisman: { name: 'Talizman', size: [1, 2], stat: 'crit', base: 1, scale: .025, rare: 1, names: ['Pečať pútnika', 'Mesačná pečať', 'Dračia pečať'] }
 };
 const ITEM_STATS = { attack: 'Útok', defense: 'Obrana', hp: 'Max. zdravie', mp: 'Max. mana', magic: 'Sila kúziel', speed: 'Rýchlosť pohybu', crit: 'Kritický zásah' };
+
+
+// src/js/data/equipment-models.js
+// Model geometry is shared by SVG icons, portraits and the Canvas world.
+// Add a model with registerEquipmentModel(slot, id, geometry); never store SVG in saves.
+const EQUIPMENT_MODELS = Object.create(null);
+function registerEquipmentModel(slot, id, geometry) {
+  if (!Object.hasOwn(EQUIPMENT,slot) || !/^[a-z0-9-]+$/.test(id) || typeof geometry !== 'function') throw new Error('Neplatný model výbavy.');
+  EQUIPMENT_MODELS[slot] ??= Object.create(null);
+  if (Object.hasOwn(EQUIPMENT_MODELS[slot],id)) throw new Error('Duplicitný model výbavy.');
+  EQUIPMENT_MODELS[slot][id] = geometry;
+}
+const EQUIPMENT_LOOKS = [
+  {metal:'#b9bdb0',dark:'#504b3d',trim:'#ae8452',gem:'#d17c50'},
+  {metal:'#aedbe4',dark:'#314e69',trim:'#e1c98f',gem:'#80e1ed'},
+  {metal:'#d0b2de',dark:'#4d315d',trim:'#e9bb68',gem:'#ed9dcf'}
+];
+function modelPath(d,fill,stroke='#1b2928',width=1.4) { return {d,fill,stroke,width}; }
+function modelGem(x,y,size,color) { return modelPath('M'+x+' '+(y-size)+'l'+size+' '+size+'-'+size+' '+size+'-'+size+'-'+size+'Z',color,'#fff0bd',.8); }
+const MODEL_SHAPES = {
+ weapon: [
+  ['M32 3 38 16 36 60 28 60 26 16Z','M21 60h22v6H21zM29 66h6v19h-6zM27 86h10v6H27z'],
+  ['M32 2Q49 23 37 59L27 59Q37 28 25 16Z','M14 58q18 11 36-3l-4 13-13-3-15 5ZM29 66h7v21h-7zM25 86h15v7H25z'],
+  ['M32 1 44 18 38 32 45 45 37 61H26l-8-16 8-11-6-17Z','M10 60l15-9 7 7 7-7 15 9-8 9-14-4-15 4ZM28 66h8v21h-8zM22 87l10-5 10 5-10 8Z']
+ ],
+ armor: [
+  ['M21 9l11 5 11-5 15 11-8 13-7-3 3 25-14 5-14-5 3-25-7 3-8-13Z','M26 19h12l3 31-9 5-9-5Z'],
+  ['M22 6l10 9L42 6l18 12-8 19-10-7 4 25-14 7-14-7 4-25-10 7-8-19Z','M32 18l10 15-10 19-10-19ZM10 18l10 4-6 10m40-14-10 4 6 10'],
+  ['M20 7l12 5 12-5 17 4-3 23-12-5 6 29-20 5-20-5 6-29L6 34 3 11Z','M9 15l10 1-5 11ZM55 15l-10 1 5 11ZM32 18l11 14-11 24-11-24Z']
+ ],
+ helmet: [
+  ['M10 51V30Q12 9 32 8q20 1 22 22v21L42 56l-4-18H26l-4 18Z','M29 9h6v25h-6zM14 30h36v5H14z'],
+  ['M8 50V28L19 7l13 11L45 7l11 21v22l-16 9-8-18-8 18Z','M32 7l7 20-7 13-7-13ZM12 29l12 3-3 8-9-1m40-10-12 3 3 8 9-1'],
+  ['M7 50l4-26L3 2l21 12 8-8 8 8L61 2l-8 22 4 26-15 12-10-19-10 19Z','M30 14h4l6 20-8 12-8-12ZM13 29l11 6-4 6-8-3m39-9-11 6 4 6 8-3']
+ ],
+ shield: [
+  ['M32 4a28 28 0 1 1-.1 0Z','M32 10a22 22 0 1 1-.1 0ZM29 12h6v40h-6zM12 29h40v6H12z'],
+  ['M32 2 57 13 50 43 32 62 14 43 7 13Z','M32 10 49 18 43 41 32 53 21 41 15 18ZM32 15l8 16-8 15-8-15Z'],
+  ['M32 1 45 12 61 7 55 40 43 47 32 63 21 47 9 40 3 7 19 12Z','M15 15l13 9-10 9 14 18 14-18-10-9 13-9-8 23-9 8-9-8Z']
+ ],
+ boots: [
+  ['M10 8h15l-1 29 8 12v11H4V49l6-15Zm28 0h15l-1 29 8 12v11H32V49l6-15Z','M10 12h15v7H10zM38 12h15v7H38zM4 53h28v7H4zM32 53h28v7H32z'],
+  ['M8 3l18 6-3 28 9 11-3 14H2V48l7-13Zm30 0 18 6-3 28 9 11-3 14H32V48l7-13Z','M11 10l9 5-4 17-6-2ZM41 10l9 5-4 17-6-2ZM6 45l20 6-1 6H6zM36 45l20 6-1 6H36z'],
+  ['M5 2l11 9L28 2l-3 32 8 12-5 16H1l4-28Zm30 0 11 9L58 2l-3 32 8 12-5 16H31l4-28Z','M12 18l10 7-10 12-6-7ZM42 18l10 7-10 12-6-7ZM3 47l23 4-3 8H3zM33 47l23 4-3 8H33z']
+ ],
+ bracelet: [
+  ['M32 13a24 22 0 1 1-.1 0ZM32 22a15 13 0 1 0 .1 0Z','M11 27l5-8 6 5-4 8ZM48 19l5 8-7 5-4-8Z'],
+  ['M32 7 57 21v28L32 62 7 49V21ZM32 19 18 27v16l14 8 14-8V27Z','M27 9h10v14H27zM9 31h11v10H9zM44 31h11v10H44z'],
+  ['M32 2 41 12 54 10 51 25 62 35 51 44 53 58 39 55 32 63 23 55 9 58 12 44 2 35 13 25 10 10 24 12ZM32 21 19 29v13l13 10 13-10V29Z','M23 11l9 7 9-7-3 14H26Z']
+ ],
+ necklace: [
+  ['M8 5h4q3 35 20 38Q49 40 52 5h4q-3 40-24 44Q11 45 8 5Z','M32 37l12 12-12 14-12-14Z'],
+  ['M4 5h6q4 30 22 32Q50 35 54 5h6Q56 41 32 45 8 41 4 5Z','M32 30l17 16-17 18-17-18ZM32 37l7 9-7 10-7-10Z'],
+  ['M5 3l8 2 4 22 15 9 15-9 4-22 8-2-4 30-23 15L9 33Z','M32 28l8 9 16-7-9 20-15 14-15-14-9-20 16 7Z']
+ ],
+ earrings: [
+  ['M17 7a8 8 0 1 1-.1 0ZM47 7a8 8 0 1 1-.1 0Z','M17 24l8 17-8 18-8-18ZM47 24l8 17-8 18-8-18Z'],
+  ['M17 3l10 10-10 11L7 13ZM47 3l10 10-10 11-10-11Z','M17 20l12 19-12 24L5 39ZM47 20l12 19-12 24-12-24Z'],
+  ['M17 2l6 11 9-4-7 19-8 7-8-7L2 9l9 4ZM47 2l6 11 9-4-7 19-8 7-8-7L32 9l9 4Z','M17 29l10 14-4 18-6-5-6 5-4-18ZM47 29l10 14-4 18-6-5-6 5-4-18Z']
+ ],
+ belt: [
+  ['M2 20h60v25H2Z','M22 17h22v31H22ZM28 24v17h10V24Z'],
+  ['M2 19l17 4 13-10 13 10 17-4v29l-17-4-13 9-13-9-17 4Z','M32 16l14 16-14 18-14-18ZM32 25l6 7-6 8-6-8Z'],
+  ['M1 16l14 6 17-15 17 15 14-6v34l-14-5-17 13-17-13-14 5Z','M14 24l10 3 8-13 8 13 10-3-6 16-12 9-12-9Z']
+ ],
+ talisman: [
+  ['M20 8q12-12 24 0L32 24ZM18 25h28v55L32 94 18 80Z','M25 34h14l-7 14 9 9-14 4 6 13-9 7Z'],
+  ['M32 2l16 10-16 15-16-15ZM12 29l20-8 20 8-4 48-16 18-16-18Z','M32 32l10 15-10 28-10-28ZM17 78l15 8 15-8-15 16Z'],
+  ['M32 1l10 8 13-4-8 16-15 9-15-9L9 5l13 4ZM32 23l24 13-9 43-15 17-15-17-9-43Z','M32 31l11 18-11 30-11-30ZM12 36l11 5-6 17ZM52 36l-11 5 6 17Z']
+ ]
+};
+for (const [slot,variants] of Object.entries(MODEL_SHAPES)) variants.forEach((shape,index)=>{
+  registerEquipmentModel(slot,slot+'-'+index,look=>[modelPath(shape[0],look.dark,look.trim,2),modelPath(shape[1],look.metal,look.trim,1)]);
+});
+for (let variant=0;variant<3;variant++) {
+  registerEquipmentModel('weapon','bow-'+variant,look=>[
+    modelPath(variant===0?'M19 7Q67 48 19 88L23 77Q50 48 23 18Z':variant===1?'M14 3 33 14Q61 47 33 82L14 94 24 73Q44 48 24 23Z':'M9 1l26 12 9 19 11 16-11 16-9 19L9 95 26 72l10-24-10-24Z',look.dark,look.trim,2),
+    modelPath('M19 7 19 88M7 48h43l-9-5 9 5-9 5','none',look.metal,2),modelGem(34,48,5,look.gem)]);
+  registerEquipmentModel('weapon','daggers-'+variant,look=>[
+    modelPath(variant===0?'M18 8l9 17-8 34H11l1-34ZM47 28l8 16-8 33h-8l2-33Z':variant===1?'M18 2Q40 21 19 58H9Q23 25 12 18ZM47 24Q66 40 47 77h-9q13-33 3-40Z':'M17 1l14 18-8 12 6 11-12 20L5 42l8-11-6-12ZM47 24l14 18-8 12 6 11-12 20-12-20 8-11-6-12Z',look.metal,look.trim,1.5),
+    modelPath('M4 59h26v5H4zM12 64h8v16h-8zM34 77h26v5H34zM43 82h7v12h-7Z',look.dark,look.trim),modelGem(17,57,4,look.gem)]);
+  registerEquipmentModel('weapon','fan-'+variant,look=>[
+    modelPath(variant===0?'M32 82 3 27Q30 3 61 27Z':variant===1?'M32 87 1 30 10 8 25 14 32 1 40 14 55 8 63 30Z':'M32 90 1 36 9 4 22 16 32 1 43 16 55 4 63 36Z',look.dark,look.trim,2),
+    modelPath('M32 82 9 26M32 82 20 17M32 82 32 12M32 82 44 17M32 82 55 26','none',look.metal,2),modelGem(32,42,10,look.gem)]);
+}
 
 
 // src/js/data/metins.js
@@ -664,6 +749,8 @@ function assertSafeCharacterJSON(value) {
 }
 function validateCharacterItem(item,slot=null) {
   assertCharacterObject(item,'predmet');
+  if(item.weaponKind!==undefined && (item.slot!=='weapon'||!['sword','bow','daggers','fan'].includes(item.weaponKind)))characterDataError('typ zbrane.');
+  if(item.modelId!==undefined && (typeof item.modelId!=='string'||!Object.hasOwn(EQUIPMENT_MODELS[item.slot]||{},item.modelId)))characterDataError('model predmetu.');
   if(!Object.hasOwn(EQUIPMENT,item.slot)||slot&&item.slot!==slot)characterDataError('neplatný slot predmetu.');
   if(typeof item.name!=='string'||!item.name.length||item.name.length>150)characterDataError('názov predmetu.');
   for(const key of ['bonus','value'])if(item[key]!==undefined)assertCharacterNumber(item[key],key);
@@ -956,7 +1043,8 @@ function makeItem(epic=false, source=null) {
   const tier = Math.min(99, source ? enemyLevel(source) : map().enemyLevel);
   const stats={};
   if(rarity>0){if(slot==='weapon')stats.crit=.005*rarity;else{const skin=source?.type==='stone'?(METIN_GUARDS.find(t=>source.level<=t.max)?.skin||'demon'):source?.skin;const type=skin?enemyDamageType({skin}):Object.keys(DAMAGE_TYPES)[Math.floor(rand()*Object.keys(DAMAGE_TYPES).length)];stats[type+'Resist']=Math.min(.2,.02+rarity*.02+tier*.001);}}
-  return { name: spec.names[rarity], slot, rarity, tier, requiredLevel: tier, enhance: 0, stats, bonus: spec.base + Math.floor(tier * spec.scale) + rarity * spec.rare, value: 12 + tier * 3 + rarity * 25 };
+  const weaponKind=slot==='weapon'?generatedWeaponKind():undefined;
+  return { name: equipmentItemName(slot,rarity,weaponKind), weaponKind, slot, rarity, tier, requiredLevel: tier, enhance: 0, stats, bonus: spec.base + Math.floor(tier * spec.scale) + rarity * spec.rare, value: 12 + tier * 3 + rarity * 25 };
 }
 
 function awardItem(epic=false,source=null){const item=makeItem(epic,source);if(!addGearItem(item)){p.gold+=item.value;float('Batoh plný · +'+item.value+' zlata',p.x,p.y-110,'#d6cb99');return item;}float(item.name+' → I',p.x,p.y-110,item.rarity===2?'#d3a3eb':item.rarity===1?'#a3ceec':'#d1dab7');return item;}
@@ -1818,6 +1906,95 @@ function sellItem(index) {
 }
 
 
+// src/js/systems/appearance.js
+const appearanceCache = new Map();
+const appearancePaths = new Map();
+function appearanceHash(value) { let n=2166136261; for(const c of value) {n^=c.codePointAt(0);n=Math.imul(n,16777619);}return n>>>0; }
+function equipmentAppearance(item) {
+  if(!item || !Object.hasOwn(EQUIPMENT,item.slot))return null;
+  const rarity=Math.max(0,Math.min(2,Math.floor(Number(item.rarity)||0)));
+  const tier=Math.max(1,Math.min(99,Math.floor(Number(item.tier)||Number(item.requiredLevel)||1)));
+  const enhance=Math.max(0,Math.min(9,Math.floor(Number(item.enhance)||0)));
+  const family=rarity,kind=['bow','daggers','fan'].includes(item.weaponKind)?item.weaponKind:item.slot;
+  const models=EQUIPMENT_MODELS[item.slot],fallback=kind+'-'+family;
+  const model=typeof item.modelId==='string' && Object.hasOwn(models,item.modelId)?item.modelId:fallback;
+  const seed=appearanceHash(String(item.name||EQUIPMENT[item.slot].names[family]));
+  const power=Math.max(0,Math.min(1000,Math.floor(Number(item.bonus)||0)));
+  const key=[item.slot,model,rarity,tier,enhance,seed,power].join(':');
+  if(appearanceCache.has(key))return appearanceCache.get(key);
+  const look={...EQUIPMENT_LOOKS[rarity]},height=['weapon','talisman'].includes(item.slot)?96:64;
+  const parts=models[model](look);
+  // Silhouette extension follows level, not inventory UID or slot coordinates.
+  const grade=Math.min(4,Math.floor((tier-1)/20)),crestY=item.slot==='weapon'?59:item.slot==='talisman'?49:32;
+  if(grade)parts.push(modelPath('M'+(32-grade*3)+' '+crestY+'l'+grade*3+'-'+(5+grade*2)+' '+grade*3+' '+(5+grade*2)+'-'+grade*3+' '+(5+grade*2)+'Z',look.metal,look.trim,1));
+  parts.push(modelGem(32,crestY,2+rarity+grade*.5,look.gem));
+  // A fixed name engraving distinguishes legacy/named gear without randomizing copies.
+  const emblem=seed%4;
+  parts.push(modelPath(emblem===0?'M29 '+crestY+'h6m-3-3v6':emblem===1?'M29 '+(crestY-2)+'l6 4m-6 0 6-4':emblem===2?'M29 '+crestY+'l3-3 3 3-3 3Z':'M29 '+(crestY+2)+'l3-5 3 5Z','none',look.trim,.8));
+  const marks=Math.min(5,Math.floor(power/15));
+  for(let i=0;i<marks;i++)parts.push(modelPath('M'+(25+i*3)+' '+(crestY+9)+'v3','none',look.trim,.8));
+  for(let i=0;i<enhance;i++)parts.push(modelGem(23+(i%5)*4,crestY-12-Math.floor(i/5)*4,1.3,enhance>=6?'#fff2ac':look.gem));
+  const result={key,model,slot:item.slot,height,parts,glow:enhance>=6?look.gem:null,grade,rarity,tier};
+  if(appearanceCache.size>=256)appearanceCache.delete(appearanceCache.keys().next().value);
+  appearanceCache.set(key,result);return result;
+}
+function equipmentModelSVG(item) {
+ const model=equipmentAppearance(item);if(!model)return '';
+ return '<g data-equipment-model="'+model.model+'">'+model.parts.map(part=>'<path d="'+part.d+'" fill="'+part.fill+'" stroke="'+part.stroke+'" stroke-width="'+part.width+'" stroke-linejoin="round" fill-rule="evenodd"/>').join('')+'</g>';
+}
+const WORN_EQUIPMENT = {
+ boots:{x:-13,y:-17,w:26,h:19},armor:{x:-19,y:-39,w:38,h:34},
+ helmet:{x:-12,y:-58,w:24,h:23},belt:{x:-13,y:-21,w:26,h:11},
+ bracelet:{x:-24,y:-29,w:10,h:10},necklace:{x:-7,y:-35,w:14,h:15},
+ earrings:{x:-12,y:-44,w:24,h:11},talisman:{x:10,y:-25,w:10,h:19},
+ shield:{x:-33,y:-37,w:24,h:32}
+};
+const PORTRAIT_EQUIPMENT = {
+ boots:{x:127,y:386,w:111,h:72},armor:{x:112,y:158,w:138,h:190},
+ helmet:{x:130,y:61,w:98,h:104},belt:{x:132,y:284,w:98,h:46},
+ bracelet:{x:103,y:252,w:35,h:35},necklace:{x:154,y:180,w:50,h:61},
+ earrings:{x:138,y:116,w:82,h:38},talisman:{x:204,y:295,w:31,h:74},
+ shield:{x:49,y:238,w:86,h:130}
+};
+function wornEquipmentSVG(gear,anchors=WORN_EQUIPMENT) {
+ return Object.entries(anchors).map(([slot,anchor])=>{
+  const item=gear?.[slot];if(!item)return '';
+  const model=equipmentAppearance(item);
+  return '<g data-worn-slot="'+slot+'" transform="translate('+anchor.x+' '+anchor.y+') scale('+anchor.w/64+' '+anchor.h/model.height+')">'+equipmentModelSVG(item)+'</g>';
+ }).join('');
+}
+function canvasEquipment(item,x,y,w,h) {
+ const model=equipmentAppearance(item);if(!model || typeof Path2D==='undefined')return false;
+ ctx.save();ctx.translate(x,y);ctx.scale(w/64,h/model.height);
+ for(let i=0;i<model.parts.length;i++){
+  const part=model.parts[i],key=model.key+':'+i;
+  if(!appearancePaths.has(key)){
+   if(appearancePaths.size>=4096)appearancePaths.delete(appearancePaths.keys().next().value);
+   appearancePaths.set(key,new Path2D(part.d));
+  }
+  const path=appearancePaths.get(key);ctx.fillStyle=part.fill;ctx.strokeStyle=part.stroke;ctx.lineWidth=part.width;ctx.lineJoin='round';
+  if(model.glow){ctx.shadowColor=model.glow;ctx.shadowBlur=2;}
+  if(part.fill!=='none')ctx.fill(path,'evenodd');ctx.stroke(path);
+ }
+ ctx.restore();return true;
+}
+function drawWornEquipment(gear,x,y,step=0) {
+ for(const [slot,a] of Object.entries(WORN_EQUIPMENT)){
+  if(slot==='boots'&&gear?.boots){
+   // Two independently moving boots keep the walking animation visible.
+   ctx.save();ctx.beginPath();ctx.rect(x-15,y-19+step,15,25);ctx.clip();canvasEquipment(gear.boots,x-13,y-17+step,26,19);ctx.restore();
+   ctx.save();ctx.beginPath();ctx.rect(x,y-19-step,15,25);ctx.clip();canvasEquipment(gear.boots,x-13,y-17-step,26,19);ctx.restore();
+  }else if(gear?.[slot])canvasEquipment(gear[slot],x+a.x,y+a.y,a.w,a.h);
+ }
+}
+function generatedWeaponKind() { return p.classId==='shaman'?'fan':p.classId==='ninja'?(p.schools.ninja==='archery'?'bow':'daggers'):'sword'; }
+function equipmentItemName(slot,rarity,weaponKind) {
+ const name=EQUIPMENT[slot].names[rarity];
+ if(slot==='weapon'&&weaponKind==='daggers')return ['Pútnické dvojdýky','Mesačné dvojdýky','Dračie dvojdýky'][rarity];
+ return slot==='weapon'?name.replace('meč',({bow:'luk',daggers:'dvojdýky',fan:'vejár'})[weaponKind]||'meč'):name;
+}
+
+
 // src/js/systems/loot.js
 const LOOT_RULES = { fallDuration: .65, pickupRange: 180, hoverDelay: .55, lifetime: 180, rareLifetime: 600 };
 const lootPointer = { inside: false, x: 0, y: 0, clientX: 0, clientY: 0 };
@@ -1895,7 +2072,7 @@ function groundDropView(drop) {
   }
   if (drop.kind === 'relic' && RELICS[drop.relicId]) {
     const relic = RELICS[drop.relicId];
-    return { name: relic.name, icon: 'shards', count: 1, rarity: 2, requiredLevel: 1, description: relic.text + (p.career.collection[drop.relicId] ? ' Ďalší exemplár sa po zdvihnutí premení na 10 prachov.' : 'Po zdvihnutí aktivuje trvalý bonus zbierky.') };
+    return { name: relic.name, icon: 'relic-'+drop.relicId, count: 1, rarity: 2, requiredLevel: 1, description: relic.text + (p.career.collection[drop.relicId] ? ' Ďalší exemplár sa po zdvihnutí premení na 10 prachov.' : 'Po zdvihnutí aktivuje trvalý bonus zbierky.') };
   }
   if (drop.kind === 'gold') return { name: drop.currencyName || 'Zlato', icon: 'gold', count: drop.count, rarity: 0, requiredLevel: 1, description: 'Mena pre obchodníka, kováča a rozvoj postavy.' };
   return null;
@@ -2141,7 +2318,7 @@ function dropMetinLoot(stone) {
   if (rand() < chance) dropMaterial(extra, metinLootAmount(min, max), stone);
   if (rand() < pool.gear) {
     const item = makeItem(rand() < pool.epic, stone), slot = pool.slots[Math.floor(rand() * pool.slots.length)], spec = EQUIPMENT[slot];
-    item.slot = slot; item.name = spec.names[item.rarity]; item.bonus = spec.base + Math.floor(item.tier * spec.scale) + item.rarity * spec.rare;
+    item.slot = slot; item.weaponKind=slot==='weapon'?(item.weaponKind||generatedWeaponKind()):undefined; item.name = equipmentItemName(slot,item.rarity,item.weaponKind); item.bonus = spec.base + Math.floor(item.tier * spec.scale) + item.rarity * spec.rare;
     spawnGroundDrop({ kind: 'gear', item }, stone);
   }
   if (rand() < pool.rare) spawnGroundDrop({ kind: 'relic', relicId: pool.relic, count: 1 }, stone);
@@ -2586,11 +2763,21 @@ function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&am
 
 // src/js/ui/item-icons.js
 function itemIcon(item, empty = false) {
+  if (!empty && Object.hasOwn(EQUIPMENT,item.slot)) { const model=equipmentAppearance(item);return `<svg class="item-icon" viewBox="0 0 64 ${model.height}" aria-hidden="true" focusable="false">${equipmentModelSVG(item)}</svg>`; }
   const id = item.icon || item.slot, rarity = item.rarity || 0;
   const metal = empty ? '#766c58' : ['#a5afae', '#9fcad5', '#d5b1e2'][rarity];
   const gold = empty ? '#766c58' : '#d8ad5c', dark = empty ? '#403d34' : '#444c52';
   const gem = empty ? '#4b463a' : ['#a24f3f', '#59b4c0', '#bc7bdb'][rarity];
   const shapes = {
+    ruby:'<path d="m18 7 28 0 15 19-29 35L3 26Z" fill="#b7364a" stroke="#f4b0a6" stroke-width="2"/><path d="M3 26h58M18 7l-4 19 18 35L25 7m21 0 4 19-18 35 7-54" fill="none" stroke="#ed7984" stroke-width="2"/>',
+    sapphire:'<path d="m22 3 20 0 15 18v25L42 62H22L7 46V21Z" fill="#3f6fb5" stroke="#b1d4f3" stroke-width="2"/><path d="m22 3 3 14-8 8v16l8 8-3 13m20-59-3 14 8 8v16l-8 8 3 13M25 17h14m-14 32h14" fill="none" stroke="#7eb9eb" stroke-width="2"/>',
+    jade:'<path d="M32 3a29 29 0 1 1-.1 0ZM32 21a11 11 0 1 0 .1 0Z" fill="#45996c" fill-rule="evenodd" stroke="#b3dfb5" stroke-width="2"/><path d="M15 15q-8 16-1 26m34-25q8 16 0 31M19 51q14 9 24-1" stroke="#93cfa1" fill="none" stroke-width="3"/>',
+
+    'relic-valley':'<path d="M19 6 47 9 46 30 24 61 13 55 27 27Z" fill="#e0d9b3" stroke="#9f8655" stroke-width="2"/><path d="m22 12 18 2-6 12-5 20" fill="none" stroke="#7e9e71" stroke-width="3"/><path d="M18 8h30v9H18Z" fill="#8f6846"/>',
+    'relic-desert':'<path d="M3 32Q32 1 61 32 32 63 3 32Z" fill="#c8994c" stroke="#f1d186" stroke-width="2"/><ellipse cx="32" cy="32" rx="14" ry="20" fill="#587e83"/><path d="M32 13l5 19-5 19-5-19Z" fill="#17252b"/><path d="m7 17 9 4m32 0 9-4M9 48l8-5m30 0 8 5" stroke="#e7c177" stroke-width="3"/>',
+    'relic-snow':'<path d="m32 2 13 15 14 7-8 27-19 12-19-12-8-27 14-7Z" fill="#96dce6" stroke="#e5ffff" stroke-width="2"/><path d="M32 3v57M8 25l46 24M56 25 10 49M21 17l11 8 11-8M21 48l11-8 11 8" stroke="#d8f7ff" stroke-width="2" fill="none"/>',
+    'relic-temple':'<path d="m32 3 21 10 8 21-12 24-17 5-17-5L3 34 11 13Z" fill="#743b42" stroke="#e7b268" stroke-width="3"/><path d="M33 11q-2 15 8 9l-1-8q21 25 7 37-20 17-29-2-9-15 5-26-2 15 8 13-8-12 2-23Z" fill="#e9a156"/><path d="m32 36 7 9-7 9-7-9Z" fill="#fff0b7"/>',
+
     upgradeStones: '<path d="m32 4 24 17-5 30-19 11-19-11-5-30Z" fill="#576779" stroke="#b2c8da" stroke-width="2"/><path d="m32 12 10 14-10 26-10-26Z" fill="#ad91cb" stroke="#e6c9ec"/><path d="m25 30 7-9 7 9-7 10Z" fill="#edd49a"/><path d="M15 21l6 4m28-4-6 4M18 47l6-4m22 4-6-4" stroke="#c2cba9" stroke-width="2"/>',
     gold: '<ellipse cx="32" cy="47" rx="25" ry="12" fill="#9d702f" stroke="#e5c96b" stroke-width="2"/><ellipse cx="28" cy="36" rx="22" ry="11" fill="#b98e39" stroke="#edce78" stroke-width="2"/><ellipse cx="35" cy="23" rx="23" ry="12" fill="#e2bd5c" stroke="#f3dd99" stroke-width="2"/><path d="M35 15v16m-6-13 8-2 6 4-11 5 8 4" stroke="#9a712c" fill="none" stroke-width="2"/>',
     weapon: `<path fill="${dark}" d="M34 6 41 20 31 65 24 67 27 20Z"/><path fill="${metal}" d="M34 6 36 23 27 64 23 62 29 19Z"/><path fill="#eff0dc" d="m34 6-3 22-6 32 3-37Z"/><path fill="${gold}" d="m14 62 28 4-1 6-29-4Z"/><path fill="#764a32" d="m23 69 9 1-3 17-9-1Z"/><path fill="${gold}" d="m18 85 14 2-1 5-14-2Z"/>`,
@@ -2623,7 +2810,7 @@ function itemIcon(item, empty = false) {
 }
 
 function equipmentFigure() {
-  return '<svg class="equipment-figure" viewBox="0 0 180 250" aria-hidden="true"><path d="M90 15q-22 0-22 25l8 19-28 16-20 65 20 7 14-43-3 69-12 60h28l15-55 15 55h28l-12-60-3-69 14 43 20-7-20-65-28-16 8-19q0-25-22-25Z" fill="#515048" stroke="#9c8a5d"/><path d="m63 78 27 16 27-16-8 68-19 19-19-19Z" fill="#696253"/><path d="M90 95v63m-23-39 23 10 23-10" stroke="#b6a16b" fill="none"/><circle cx="90" cy="41" r="16" fill="#82735b"/></svg>';
+  return characterAvatar({classId:p.classId,data:p}).replace('class="roster-avatar"','class="equipment-figure"');
 }
 
 
@@ -3090,10 +3277,11 @@ function careerPanel(tab = careerTab) {
 // src/js/ui/character-art.js
 function characterAvatar(record) {
   const cls=record.classId,gear=record.data?.equipped||{},school=record.data?.schools?.[cls]||DEFAULT_SCHOOLS[cls];
-  const color=CLASSES[cls].color,metal=gear.armor?['#9fada0','#90c7dc','#c3a0e0'][gear.armor.rarity||0]:'#56655e',gold='#d9b77c';
+  const color=CLASSES[cls].color,metal='#56655e',gold='#d9b77c';
   const robe=cls==='shaman',hood=cls==='ninja',sura=cls==='sura';
-  const weapon=(!hood||school==='archery'||gear.weapon)?school==='archery'?'<path d="M222 190Q307 284 229 385M226 194l3 184" fill="none" stroke="'+gold+'" stroke-width="10"/>':robe?'<path d="m230 260-18-97q59-9 82 40Z" fill="#d0b47b" stroke="#f7dd9f" stroke-width="4"/><path d="m230 260 7-92m-7 92 30-79m-30 79 52-62" stroke="#865c4a" stroke-width="3"/>':'<path d="m238 315 17-166 12-28 8 31-23 165Z" fill="#d3e2db" stroke="#eef7e9" stroke-width="2"/><path d="m220 312 47 5m-26-1-5 35" stroke="'+gold+'" stroke-width="9"/>':hood?'<path d="m233 290 8-99 11 35-9 65m-119 5-25-78-2 41 17 40" stroke="#acb6ac" stroke-width="6" fill="none"/>':'';
-  return '<svg class="roster-avatar" viewBox="0 0 360 490" role="img" aria-label="'+CLASSES[cls].name+' · aktuálna výbava"><ellipse cx="180" cy="451" rx="114" ry="22" fill="#071410" opacity=".65"/><ellipse class="avatar-halo" cx="180" cy="270" rx="132" ry="165" fill="none" stroke="'+color+'" opacity=".15"/><path d="M128 176 83 398 148 378 183 203 231 409 275 410 233 180Z" fill="'+(sura?'#352447':hood?'#153f36':'#513e34')+'" opacity=".9"/><path d="m151 332-12 112 30 1 15-99 10 99 31-1-13-112" fill="#273934" stroke="#637367" stroke-width="3"/><path d="m137 422-7 31 37-1 3-29m23 0 5 29 37 1-13-31" fill="'+(gear.boots?metal:'#3b3c32')+'" stroke="#b9a77a" stroke-width="3"/><path d="m132 179-23 94 28 7 21-78m58-22 31 94-27 7-26-80" fill="'+(robe?'#c0b496':metal)+'" stroke="'+gold+'" stroke-width="4"/>'+(robe?'<path d="m141 178-16 230 57-13 55 14-20-229-39-13Z" fill="#bcae8a" stroke="#e6d6aa" stroke-width="4"/><path d="m176 183-13 213 27-10 2-201" fill="#9a5650"/>':'<path d="m139 180-5 133 47 33 45-34-10-132-37-17Z" fill="'+metal+'" stroke="'+gold+'" stroke-width="4"/><path d="m145 192 34 17 31-17-4 84-28 27-29-29Z" fill="'+(sura?'#51405e':hood?'#2f5547':'#657d70')+'" stroke="'+color+'" stroke-width="3"/><path d="m144 295 67-1 4 18-73 2Z" fill="#493e2f" stroke="'+gold+'" stroke-width="3"/>')+'<path d="m164 157 0 26 29 0-2-27" fill="#b89979"/><ellipse cx="178" cy="127" rx="30" ry="40" fill="#c8af8c"/>'+(hood?'<path d="m145 132-3-43 35-22 34 22 3 45-22-19-33 0Z" fill="#244c40" stroke="#739986" stroke-width="3"/><path d="m148 134 59 0-13 27-33 0Z" fill="#193c32"/>':'<path d="m147 124-5-34 20-19 33 1 20 25-7 38-17-38-31 6Z" fill="'+(sura?'#30263b':'#303a32')+'"/><path d="m163 126 9 0m16 0 8 0" stroke="#4d4637" stroke-width="3"/>')+(gear.helmet?'<path d="m143 113 4-33 31-14 30 14 6 33-36-18Z" fill="'+metal+'" stroke="'+gold+'" stroke-width="4"/>':'')+(sura?'<path class="avatar-runes" d="m114 217-14 76 22 15 13-83" stroke="#c98cec" stroke-width="12" fill="none"/><path d="m110 255 15-3m-18 20 15-3" stroke="#f0c7ff" stroke-width="3"/>':'')+(gear.shield?'<path d="m96 236-42 17 6 78 42 41 31-49-8-71Z" fill="#405c52" stroke="'+gold+'" stroke-width="6"/><path d="m91 253 4 89m-28-56 52-7" stroke="'+metal+'" stroke-width="5"/>':'')+weapon+'<circle cx="179" cy="304" r="9" fill="'+gold+'"/><path d="m176 298 6 7-8 3Z" fill="#6a4a36"/></svg>';
+  const defaultWeapon=(!hood||school==='archery'||gear.weapon)?school==='archery'?'<path d="M222 190Q307 284 229 385M226 194l3 184" fill="none" stroke="'+gold+'" stroke-width="10"/>':robe?'<path d="m230 260-18-97q59-9 82 40Z" fill="#d0b47b" stroke="#f7dd9f" stroke-width="4"/><path d="m230 260 7-92m-7 92 30-79m-30 79 52-62" stroke="#865c4a" stroke-width="3"/>':'<path d="m238 315 17-166 12-28 8 31-23 165Z" fill="#d3e2db" stroke="#eef7e9" stroke-width="2"/><path d="m220 312 47 5m-26-1-5 35" stroke="'+gold+'" stroke-width="9"/>':hood?'<path d="m233 290 8-99 11 35-9 65m-119 5-25-78-2 41 17 40" stroke="#acb6ac" stroke-width="6" fill="none"/>':'';
+  const weapon=gear.weapon?'<g data-worn-slot="weapon" transform="translate(215 '+(gear.weapon.weaponKind==='bow'?176:gear.weapon.weaponKind==='fan'?105:119)+') rotate(7) scale(.85 2.1)">'+equipmentModelSVG(gear.weapon)+'</g>':defaultWeapon;
+  return '<svg class="roster-avatar" viewBox="0 0 360 490" role="img" aria-label="'+CLASSES[cls].name+' · aktuálna výbava"><ellipse cx="180" cy="451" rx="114" ry="22" fill="#071410" opacity=".65"/><ellipse class="avatar-halo" cx="180" cy="270" rx="132" ry="165" fill="none" stroke="'+color+'" opacity=".15"/><path d="M128 176 83 398 148 378 183 203 231 409 275 410 233 180Z" fill="'+(sura?'#352447':hood?'#153f36':'#513e34')+'" opacity=".9"/><path d="m151 332-12 112 30 1 15-99 10 99 31-1-13-112" fill="#273934" stroke="#637367" stroke-width="3"/><path d="m137 422-7 31 37-1 3-29m23 0 5 29 37 1-13-31" fill="'+('#3b3c32')+'" stroke="#b9a77a" stroke-width="3"/><path d="m132 179-23 94 28 7 21-78m58-22 31 94-27 7-26-80" fill="'+(robe?'#c0b496':metal)+'" stroke="'+gold+'" stroke-width="4"/>'+(robe?'<path d="m141 178-16 230 57-13 55 14-20-229-39-13Z" fill="#bcae8a" stroke="#e6d6aa" stroke-width="4"/><path d="m176 183-13 213 27-10 2-201" fill="#9a5650"/>':'<path d="m139 180-5 133 47 33 45-34-10-132-37-17Z" fill="'+metal+'" stroke="'+gold+'" stroke-width="4"/><path d="m145 192 34 17 31-17-4 84-28 27-29-29Z" fill="'+(sura?'#51405e':hood?'#2f5547':'#657d70')+'" stroke="'+color+'" stroke-width="3"/><path d="m144 295 67-1 4 18-73 2Z" fill="#493e2f" stroke="'+gold+'" stroke-width="3"/>')+'<path d="m164 157 0 26 29 0-2-27" fill="#b89979"/><ellipse cx="178" cy="127" rx="30" ry="40" fill="#c8af8c"/>'+(hood?'<path d="m145 132-3-43 35-22 34 22 3 45-22-19-33 0Z" fill="#244c40" stroke="#739986" stroke-width="3"/><path d="m148 134 59 0-13 27-33 0Z" fill="#193c32"/>':'<path d="m147 124-5-34 20-19 33 1 20 25-7 38-17-38-31 6Z" fill="'+(sura?'#30263b':'#303a32')+'"/><path d="m163 126 9 0m16 0 8 0" stroke="#4d4637" stroke-width="3"/>')+(sura?'<path class="avatar-runes" d="m114 217-14 76 22 15 13-83" stroke="#c98cec" stroke-width="12" fill="none"/><path d="m110 255 15-3m-18 20 15-3" stroke="#f0c7ff" stroke-width="3"/>':'') + wornEquipmentSVG(gear,PORTRAIT_EQUIPMENT)+weapon+'<circle cx="179" cy="304" r="9" fill="'+gold+'"/><path d="m176 298 6 7-8 3Z" fill="#6a4a36"/></svg>';
 }
 function characterBackdrop() { return '<svg class="character-scenery" viewBox="0 0 1300 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="realm-sky" x2="0" y2="1"><stop stop-color="#1e3939"/><stop offset="1" stop-color="#0a1b19"/></linearGradient><radialGradient id="realm-moon"><stop stop-color="#efd8a2" stop-opacity=".5"/><stop offset="1" stop-color="#d5e6c8" stop-opacity="0"/></radialGradient></defs><path fill="url(#realm-sky)" d="M0 0h1300v720H0Z"/><circle cx="740" cy="180" r="210" fill="url(#realm-moon)"/><circle cx="740" cy="160" r="55" fill="#aabfb0" opacity=".15"/><path d="m0 360 200-240 150 210 155-200 220 260 140-190 190 220 145-160 100 180v280H0Z" fill="#314a42" opacity=".4"/><path d="m0 410 190-100 130 150 160-140 210 150 160-120 190 120 160-130 100 70v310H0Z" fill="#0d2520"/><path d="M520 430v-170h30v-25h-58l127-35 80 35h-55v25h29v170m140 0v-170h30v-25h-58l127-35 80 35h-55v25h29v170" fill="#78917a" opacity=".17"/><path d="M450 510h550l150 210H180Z" fill="#31483a" opacity=".2"/><path d="M0 600q300-80 600-20t700-15v155H0" fill="#071410"/></svg>'; }
 
@@ -3208,8 +3396,8 @@ else if(cls==='ninja'){polygon([[x-10,y-32],[x-8,y-10],[x+8,y-10],[x+10,y-32],[x
 else if(cls==='sura'){polygon([[x-11,y-34],[x-12,y-9],[x+12,y-9],[x+10,y-34]],'#513e69','#a48ba9');polygon([[x-10,y-28],[x-8,y-14],[x+8,y-14],[x+8,y-28]],'#947998');line(x-13,y-29,x-19,y-14-cast*14,'#8a4eb0',7);ellipse(x-19,y-15-cast*14,10+Math.sin(clock*5)*2,9,'#bd7fe34a');for(let i=0;i<3;i++)line(x-21+i*3,y-15-cast*14,x-24+i*3,y-7-cast*14,'#c89ce9',1.5);}
 else{polygon([[x-11,y-33],[x-17,y+2],[x+17,y+2],[x+10,y-33],[x,y-39]],'#d1bd96','#eeddb3');polygon([[x-3,y-33],[x+1,y+1],[x+7,y],[x+3,y-32]],'#ab6e60');line(x-13,y-28,x-20,y-15-cast*15,'#edd7ac',6);}
 ellipse(x,y-42,7,9,'#d5bd97');if(cls==='ninja'){polygon([[x-8,y-45],[x-6,y-52],[x+7,y-51],[x+9,y-40],[x-8,y-39]],'#223e36');line(x-5,y-43,x+5,y-43,'#e3d2a2',2);polygon([[x+6,y-45],[x+24,y-47],[x+10,y-40]],'#456d53');}else{polygon([[x-8,y-45],[x-6,y-51],[x+7,y-51],[x+9,y-39],[x+2,y-44]],cls==='sura'?'#31263c':'#2f3630');if(cls==='shaman')line(x-7,y-48,x+7,y-48,'#d3a65d',2);}
-if(Math.sin(face)<-.3)ellipse(x,y-43,7,8,cls==='sura'?'#31263c':'#2f3630');ctx.restore();ctx.save();ctx.translate(x+Math.cos(face)*16,y-24+Math.sin(face)*10-cast*12);const swing=slash>0?(1-slash/.22)*Math.PI*1.2-1.3:Math.sin(clock*2)*.06;ctx.rotate(Math.atan2(Math.sin(face)*.62,Math.cos(face))+Math.PI/2+swing+(moving?.1:0));if(cls==='ninja'&&p.schools.ninja==='archery'){ctx.strokeStyle='#b7a577';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,-4,20,-1.4,1.4);ctx.stroke();line(3,-23,3,16,'#d1c6a6',1);}else if(cls==='shaman'){polygon([[0,0],[-8,-22],[0,-29],[10,-25],[20,-13]],'#d7c68c','#f4e3b4');for(let i=0;i<4;i++)line(0,0,-5+i*7,-23+i,'#ad7d64',1);}else{line(0,8,0,-30,'#e4e8d0',cls==='ninja'?3:4);line(-6,0,6,0,'#c7aa73',3);if(cls==='sura'||active('aura'))line(0,-5,0,-30,color,2);}
-ctx.restore();if(cls==='ninja'&&p.schools.ninja==='blade'){line(x-19,y-14,x-25,y-35,'#cad9bd',3);line(x-24,y-16,x-16,y-19,'#ac9766',2);}text(characterDisplayName(p),x,y-82,'#ead7ac',11);text(role().name+' · '+school().name,x,y-68,color,9);ctx.restore();}
+if(Math.sin(face)<-.3)ellipse(x,y-43,7,8,cls==='sura'?'#31263c':'#2f3630');drawWornEquipment(p.equipped,x,y,step);ctx.restore();ctx.save();ctx.translate(x+Math.cos(face)*16,y-24+Math.sin(face)*10-cast*12);const swing=slash>0?(1-slash/.22)*Math.PI*1.2-1.3:Math.sin(clock*2)*.06;ctx.rotate(Math.atan2(Math.sin(face)*.62,Math.cos(face))+Math.PI/2+swing+(moving?.1:0));if(p.equipped.weapon){canvasEquipment(p.equipped.weapon,-13,p.equipped.weapon.weaponKind==='bow'?-28:p.equipped.weapon.weaponKind==='fan'?-47:-43,26,55);}else if(cls==='ninja'&&p.schools.ninja==='archery'){ctx.strokeStyle='#b7a577';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,-4,20,-1.4,1.4);ctx.stroke();line(3,-23,3,16,'#d1c6a6',1);}else if(cls==='shaman'){polygon([[0,0],[-8,-22],[0,-29],[10,-25],[20,-13]],'#d7c68c','#f4e3b4');for(let i=0;i<4;i++)line(0,0,-5+i*7,-23+i,'#ad7d64',1);}else{line(0,8,0,-30,'#e4e8d0',cls==='ninja'?3:4);line(-6,0,6,0,'#c7aa73',3);if(cls==='sura'||active('aura'))line(0,-5,0,-30,color,2);}
+ctx.restore();if(!p.equipped.weapon&&cls==='ninja'&&p.schools.ninja==='blade'){line(x-19,y-14,x-25,y-35,'#cad9bd',3);line(x-24,y-16,x-16,y-19,'#ac9766',2);}text(characterDisplayName(p),x,y-82,'#ead7ac',11);text(role().name+' · '+school().name,x,y-68,color,9);ctx.restore();}
 
 
 // src/js/render/effects.js
@@ -3304,10 +3492,11 @@ const groundIconCache = new Map();
 
 function groundIcon(item) {
   if (typeof Image === 'undefined') return null;
-  const key = (item.icon || item.slot) + ':' + (item.rarity || 0);
+  const key = equipmentAppearance(item)?.key || (item.icon || item.slot) + ':' + (item.rarity || 0);
   if (!groundIconCache.has(key)) {
     const image = new Image();
     image.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(itemIcon(item).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" '));
+    if(groundIconCache.size>=256)groundIconCache.delete(groundIconCache.keys().next().value);
     groundIconCache.set(key, image);
   }
   const image = groundIconCache.get(key);

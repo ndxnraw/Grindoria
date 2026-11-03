@@ -48,3 +48,7 @@ Nová vzácna výbava môže obsahovať typovú odolnosť; zbrane aj kritický z
 ## Samostatné postavy od 0.13.0
 
 Batoh, desať slotov, rozmiestnenie a zásobníky patria konkrétnemu profilu. UID predmetov sú jedinečné v rámci postavy; pri importe ďalšej postavy sa neprečíslujú. Zmeny sa ukladajú výlučne pod aktívnym ID. Výber, ťahanie a otvorený detail predmetu sa pri prepnutí čistia.
+
+## Vzhľad výbavy
+
+Každý katalógový predmet má odlišnú siluetu podľa rodiny a typu. Nasadenie okamžite zmení náhľad aj postavu vo svete. Úroveň, rarita a vylepšenie menia kovanie a zdobenie. Pozri [APPEARANCE.md](APPEARANCE.md).

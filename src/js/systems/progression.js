@@ -19,7 +19,8 @@ function makeItem(epic=false, source=null) {
   const tier = Math.min(99, source ? enemyLevel(source) : map().enemyLevel);
   const stats={};
   if(rarity>0){if(slot==='weapon')stats.crit=.005*rarity;else{const skin=source?.type==='stone'?(METIN_GUARDS.find(t=>source.level<=t.max)?.skin||'demon'):source?.skin;const type=skin?enemyDamageType({skin}):Object.keys(DAMAGE_TYPES)[Math.floor(rand()*Object.keys(DAMAGE_TYPES).length)];stats[type+'Resist']=Math.min(.2,.02+rarity*.02+tier*.001);}}
-  return { name: spec.names[rarity], slot, rarity, tier, requiredLevel: tier, enhance: 0, stats, bonus: spec.base + Math.floor(tier * spec.scale) + rarity * spec.rare, value: 12 + tier * 3 + rarity * 25 };
+  const weaponKind=slot==='weapon'?generatedWeaponKind():undefined;
+  return { name: equipmentItemName(slot,rarity,weaponKind), weaponKind, slot, rarity, tier, requiredLevel: tier, enhance: 0, stats, bonus: spec.base + Math.floor(tier * spec.scale) + rarity * spec.rare, value: 12 + tier * 3 + rarity * 25 };
 }
 
 function awardItem(epic=false,source=null){const item=makeItem(epic,source);if(!addGearItem(item)){p.gold+=item.value;float('Batoh plný · +'+item.value+' zlata',p.x,p.y-110,'#d6cb99');return item;}float(item.name+' → I',p.x,p.y-110,item.rarity===2?'#d3a3eb':item.rarity===1?'#a3ceec':'#d1dab7');return item;}

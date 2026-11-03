@@ -14,6 +14,8 @@ function assertSafeCharacterJSON(value) {
 }
 function validateCharacterItem(item,slot=null) {
   assertCharacterObject(item,'predmet');
+  if(item.weaponKind!==undefined && (item.slot!=='weapon'||!['sword','bow','daggers','fan'].includes(item.weaponKind)))characterDataError('typ zbrane.');
+  if(item.modelId!==undefined && (typeof item.modelId!=='string'||!Object.hasOwn(EQUIPMENT_MODELS[item.slot]||{},item.modelId)))characterDataError('model predmetu.');
   if(!Object.hasOwn(EQUIPMENT,item.slot)||slot&&item.slot!==slot)characterDataError('neplatný slot predmetu.');
   if(typeof item.name!=='string'||!item.name.length||item.name.length>150)characterDataError('názov predmetu.');
   for(const key of ['bonus','value'])if(item[key]!==undefined)assertCharacterNumber(item[key],key);

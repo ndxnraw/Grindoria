@@ -94,3 +94,7 @@ Korisť nesie absolútny `expiresAt`. Čistenie aktívnych a uložených máp ne
 ## Výber postáv od 0.13.0
 
 data/characters.js centralizuje konfiguráciu. ui/characters.js riadi tvorbu, výber, potvrdené vymazanie, informácie a zálohy. ui/character-art.js kreslí 2D náhľad podľa povolania a výbavy. Import validuje profily pred úpravou kópie registra; finálny setItem je jeden. Export aktívneho progresu používa tú istú snímku bez požiadavky úspešného zápisu.
+
+## Modely výbavy
+
+Register data/equipment-models.js a resolver systems/appearance.js zdieľajú geometriu medzi SVG a Canvas Path2D. Výbava sa vrství na postave aj v portrétoch. Pozri [APPEARANCE.md](APPEARANCE.md).
