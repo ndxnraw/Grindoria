@@ -63,3 +63,8 @@ Zmeny patria do sekcie Unreleased v [changelogu](CHANGELOG.md). Postup vydania: 
 ## Pôvod a práva
 
 Hra nepoužíva originálne assety Metin2. Názvy klasických schopností vychádzajú z [Metin2 Wiki](https://en-wiki.metin2.gameforge.com/index.php/Category:Skills). Podrobnosti: [NOTICE.md](NOTICE.md). Licenciu na ďalšie šírenie zdrojov zatiaľ vlastník nezvolil.
+
+
+## Výroba a alchýmia
+
+V Progrese (P) otvor Výrobu pri kováčovi alebo Alchýmiu pri alchymistovi v Meste. Obe remeslá majú vlastnú prax, úrovne 1–10 a recepty z materiálov lovu, Metinov a trhlín. [Recepty a pravidlá](docs/CRAFTING.md).

@@ -87,7 +87,7 @@ test('enhancement follows the item across swaps and cannot be bought without ore
 
 test('alchemy consumes ingredients and fusion stones; all three bonuses can coexist', () => {
   const { run } = createGame();
-  run('p.gold=10000;Object.assign(p.career.materials,{essence:1000,ore:100,dust:100});');
+  run('running=true;loadMap("town",true);p.x=NPCS.alchemist.x;p.y=NPCS.alchemist.y;p.gold=10000;Object.assign(p.career.materials,{essence:1000,ore:100,dust:100});');
   const base = run('damage()');
   for (const id of ['ruby', 'sapphire', 'jade']) { assert.equal(run(`craftGem('${id}')`), true); assert.equal(run(`upgradeGem('${id}')`), true); }
   assert.equal(run('damage()'), base + 2); assert.equal(run('careerBonuses().defense'), 1); assert.equal(run('careerBonuses().mp'), 15);
@@ -172,3 +172,4 @@ test('every progression panel opens and the entire career persists in the save',
   const reload = createGame(readSavedProfile(saved));
   assert.equal(reload.run('p.career.materials.books'), 8); assert.equal(reload.run('careerBonuses().attack'), 8); assert.equal(reload.run('careerBonuses().hp'), 30);
 });
+

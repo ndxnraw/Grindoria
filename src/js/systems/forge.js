@@ -29,11 +29,11 @@ function enhanceEquipment(slot,options={}){
  save();updateHUD();return true;
 }
 function craftForgeSupport(id){
- if(!running||p.hp<=0||!nearNPC('smith')||!Object.hasOwn(FORGE_RULES.recipes,id)||!pay(FORGE_RULES.recipes[id]))return false;
- addMaterial(id);save();return true;
+ return Object.hasOwn(FORGE_RULES.recipes,id)&&craftRecipe(id);
 }
 function dropForgeSupplies(enemy){
  if(!rewardEligible(enemy)||enemy.metinParentId||enemyLevel(enemy)<35)return;
  const chance=enemy.type==='boss'?{forgeCore:.5,smithCharm:.15,protectionScroll:.06}:enemy.type==='stone'?{forgeCore:.08,smithCharm:.04,protectionScroll:.015}:enemy.variant==='rare'?{forgeCore:.15,smithCharm:.05,protectionScroll:.01}:null;
  if(chance)for(const [id,rate]of Object.entries(chance))if(rand()<rate)dropMaterial(id,1,enemy);
 }
+

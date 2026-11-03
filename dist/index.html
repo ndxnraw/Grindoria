@@ -162,9 +162,14 @@ body.character-select .game-shell:fullscreen,body.native-fullscreen.character-se
 #playerclass[hidden]{display:none}
 
 .weapon-upgrade-aura{animation:weapon-glow 1.5s ease-in-out infinite alternate;transform-origin:32px 40px}.upgrade-7{animation-duration:1.2s}.upgrade-8{animation-duration:.95s}.upgrade-9{animation-duration:.7s}@keyframes weapon-glow{from{opacity:.55}to{opacity:1}}@media(prefers-reduced-motion:reduce){.weapon-upgrade-aura{animation:none}}
+
+
+/* Crafting and alchemy */
+.craft-workshop select{max-width:100%;padding:8px;background:#24372e;color:#f0dfb5;border:1px solid #8d8059;border-radius:4px}.craft-recipes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:12px;margin-top:16px}.craft-recipes .career-card{margin:0}.craft-recipe h4{margin:0 0 8px}.craft-recipe ul{padding-left:20px;font-size:13px;line-height:1.6}.craft-recipe small{display:block;margin-top:8px}.craft-missing{color:#f0a899}.craft-products{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:10px;margin:16px 0}.craft-products>div{padding:12px;border:1px solid #8d805966;border-radius:6px}.craft-products small{display:block;margin:6px 0}.craft-workshop details{margin:12px 0}.craft-workshop summary{cursor:pointer}
+.overlay:has(.craft-workshop){grid-template-columns:minmax(0,1fr)}.modal-card:has(.craft-workshop){min-width:0}.modal-card:has(.craft-workshop) .career-tabs{min-width:0}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.18.0</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.19.0</b></span></header>
 <main><div class="world-title"><div><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Divoký vlk · Strážca pralesa</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
 <section id="game-shell" class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb iba WASD alebo šípkami, výber cieľa kliknutím, nasledovanie a útok druhým klikom na rovnaký cieľ, smerový útok medzerníkom, schopnosť Q, liečenie E, korisť ľavým kliknutím alebo Y v okolí, zlato a zásoby automaticky."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
 <div class="hud player"><div id="portrait" class="portrait">侍</div><div><div class="player-name"><b id="playername">Pútnik</b><small id="playerclass" hidden>Bojovník</small> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 60 skúseností</small></div></div>
@@ -270,12 +275,14 @@ const MAP_LOCATIONS={
  suterland:{safeZone:{x:280,y:1560,radius:85},entry:{x:280,y:1590},bossPosition:null,packCount:0}
 };
 for(const [id,location]of Object.entries(MAP_LOCATIONS)){Object.assign(MAPS[id],location,{size:WORLD_RULES.combatSize});MAPS[id].count=MAPS[id].packCount?MAPS[id].packCount*6+4:0;}
-MAPS.town={name:'Mesto',region:'MESTO',desc:'Obchodník · Kováč · Biológ',level:1,enemyLevel:1,scale:1,seed:153170,ground:'#667461',patch:'#8f9b8130',path:'#c7b89c77',accent:'#d5c697',water:'#648b96',mob:'Bez nepriateľov',boss:'NPC',skin:'wolf',count:0,packCount:0,metinCount:0,town:true,size:WORLD_RULES.townSize,safeZone:{x:600,y:600,radius:10000},entry:{x:600,y:720}};
+MAPS.town={name:'Mesto',region:'MESTO',desc:'Obchodník · Kováč · Biológ · Alchymista',level:1,enemyLevel:1,scale:1,seed:153170,ground:'#667461',patch:'#8f9b8130',path:'#c7b89c77',accent:'#d5c697',water:'#648b96',mob:'Bez nepriateľov',boss:'NPC',skin:'wolf',count:0,packCount:0,metinCount:0,town:true,size:WORLD_RULES.townSize,safeZone:{x:600,y:600,radius:10000},entry:{x:600,y:720}};
 const NPCS={
  merchant:{name:'Obchodník',mapId:'town',x:440,y:630,color:'#c8ae75',service:'shop'},
  smith:{name:'Kováč',mapId:'town',x:760,y:630,color:'#b78664',service:'forge'},
+ alchemist:{name:'Alchymista',mapId:'town',x:950,y:630,color:'#8979ae',service:'alchemy'},
  biologist:{name:'Biológ',mapId:'town',x:600,y:370,color:'#93b98a',service:'biology'}
 };
+
 
 
 // src/js/data/progression.js
@@ -337,8 +344,9 @@ Object.assign(MATERIALS,{forgeCore:'Kováčske jadro',smithCharm:'Talizman ková
 // Additive migration for profiles and backups written before forge supplies existed.
 function migrateForgeMaterials(account){
  if(!account?.profiles||typeof account.profiles!=='object')return;
- for(const record of Object.values(account.profiles)){const materials=record?.data?.career?.materials;if(!materials||typeof materials!=='object'||Array.isArray(materials))continue;for(const id of ['forgeCore','smithCharm','protectionScroll'])if(!Object.hasOwn(materials,id))materials[id]=0;}
+ for(const record of Object.values(account.profiles)){const materials=record?.data?.career?.materials;if(!materials||typeof materials!=='object'||Array.isArray(materials))continue;for(const id of ['forgeCore','smithCharm','protectionScroll',...Object.keys(CRAFT_MATERIALS)])if(!Object.hasOwn(materials,id))materials[id]=0;}
 }
+
 
 
 // src/js/data/farming.js
@@ -579,6 +587,45 @@ const DEFAULT_SCHOOLS = { warrior: 'body', ninja: 'blade', sura: 'weapon', shama
 const CHARACTER_ACHIEVEMENTS = { firstKill: 'Prvý protivník', firstMetin: 'Lámač kameňov', firstBoss: 'Víťaz nad strážcom', hunter100: 'Lovec stovky' };
 
 
+// src/js/data/crafting.js
+const CRAFT_RULES = { maxLevel: 10, maxXP: 4500, maxStock: 1e12 };
+const CRAFT_MATERIALS = { herb: 'Liečivá bylina', hide: 'Vyčinená koža', crystal: 'Surový kryštál', ingot: 'Oceľový ingot', extract: 'Bylinný extrakt', primal: 'Jadro trhliny' };
+Object.assign(MATERIALS, CRAFT_MATERIALS);
+const ALCHEMY_PRODUCTS = {
+  mana: { name: 'Elixír many', text: 'Obnoví 80 many. Spoločný cooldown elixírov 4 s.', mana: 80, icon: 'essence' },
+  might: { name: 'Odvar sily', text: '+4 útok na 120 s.', bonus: { attack: 4 }, duration: 120, icon: 'ember' },
+  guard: { name: 'Odvar odolnosti', text: '+4 obrana na 120 s.', bonus: { defense: 4 }, duration: 120, icon: 'jade' },
+  vitality: { name: 'Odvar vitality', text: '+60 max. zdravie na 120 s. Nedopĺňa zdravie.', bonus: { hp: 60 }, duration: 120, icon: 'potion' },
+  greaterMight: { name: 'Koncentrát sily', text: '+10 útok na 180 s.', bonus: { attack: 10 }, duration: 180, icon: 'ruby' }
+};
+const CRAFT_RECIPES = {
+  ingot: { name: 'Oceľový ingot', profession: 'crafting', level: 1, xp: 12, cost: { ore: 5, gold: 30 }, output: { material: 'ingot', count: 1 } },
+  potion: { name: 'Liečivé elixíry ×3', profession: 'alchemy', level: 1, xp: 15, cost: { herb: 3, gold: 15 }, output: { counter: 'potions', count: 3 } },
+  extract: { name: 'Bylinný extrakt', profession: 'alchemy', level: 1, xp: 12, cost: { herb: 4, essence: 2, gold: 20 }, output: { material: 'extract', count: 1 } },
+  mana: { name: 'Elixír many', profession: 'alchemy', level: 1, xp: 15, cost: { herb: 2, essence: 4, gold: 25 }, output: { product: 'mana', count: 1 } },
+  cape: { name: 'Plášť statočnosti', profession: 'crafting', level: 2, xp: 20, cost: { hide: 4, essence: 5, gold: 80 }, output: { counter: 'braveryCapes', count: 1 } },
+  might: { name: 'Odvar sily', profession: 'alchemy', level: 2, xp: 22, cost: { extract: 2, wolf: 2, gold: 80 }, output: { product: 'might', count: 1 } },
+  guard: { name: 'Odvar odolnosti', profession: 'alchemy', level: 3, xp: 30, cost: { extract: 2, crystal: 2, gold: 100 }, output: { product: 'guard', count: 1 } },
+  vitality: { name: 'Odvar vitality', profession: 'alchemy', level: 4, xp: 40, cost: { extract: 3, frost: 2, dust: 3, gold: 150 }, output: { product: 'vitality', count: 1 } },
+  upgradeStone: { name: 'Kameň vylepšenia', profession: 'crafting', level: 4, xp: 40, cost: { crystal: 4, ingot: 2, dust: 5, gold: 300 }, output: { material: 'upgradeStones', count: 1 } },
+  rareBlend: { name: 'Kováčske jadro', profession: 'alchemy', level: 6, xp: 65, cost: { crystal: 5, ember: 3, frost: 3, dust: 10, gold: 1000 }, output: { material: 'forgeCore', count: 1 } },
+  greaterMight: { name: 'Koncentrát sily', profession: 'alchemy', level: 7, xp: 80, cost: { extract: 4, crystal: 4, gold: 800 }, ingredients: { might: 3 }, output: { product: 'greaterMight', count: 1 } },
+  smithCharm: { name: 'Talizman kováča', profession: 'crafting', level: 6, xp: 65, cost: FORGE_RULES.recipes.smithCharm, output: { material: 'smithCharm', count: 1 } },
+  protectionScroll: { name: 'Ochranný zvitok', profession: 'crafting', level: 8, xp: 100, cost: FORGE_RULES.recipes.protectionScroll, output: { material: 'protectionScroll', count: 1 } },
+  riftKey: { name: 'Kľúč trhliny', profession: 'crafting', level: 10, xp: 120, cost: { primal: 2, crystal: 10, ingot: 5, gold: 3000 }, output: { material: 'keys', count: 1 } }
+};
+// Equipment uses the same generator, slot sizes and rarity identities as natural loot.
+for (const [suffix, level, tier, rarity, ingots] of [['basic', 1, 1, 0, 2], ['adept', 4, 20, 1, 6], ['master', 8, 50, 2, 12]]) {
+  for (const slot of Object.keys(EQUIPMENT)) CRAFT_RECIPES[slot + '-' + suffix] = {
+    name: EQUIPMENT[slot].name + ' · Lv.' + tier + ' · ' + rarityNameForRecipe(rarity), profession: 'crafting', level, playerLevel: tier, xp: 20 + level * 10,
+    cost: { ingot: ingots, hide: ingots, gold: tier * 100, ...(level >= 4 ? { crystal: ingots } : {}), ...(level >= 8 ? { primal: 1 } : {}) },
+    output: { slot, tier, rarity, count: 1 }
+  };
+}
+function rarityNameForRecipe(rarity) { return RARITIES.find(spec => spec.id === rarity).name; }
+for (const id of Object.keys(GEMS)) CRAFT_RECIPES['gem-' + id] = { name: GEMS[id].name, profession: 'alchemy', level: 1, xp: 20, cost: { essence: 30, ore: 3, gold: 100 }, output: { gem: id, count: 1 } };
+
+
 // src/js/core/persistence.js
 const pendingSaveImports = [];
 
@@ -737,6 +784,7 @@ function clearCharacterSession() {
   keysClear();resetCombatFlow();travelCombat.time=0;clearLootPointer();combatAim.inside=false;face=0;shots.length=0;effects.length=0;particles.length=0;
   for(const id of Object.keys(buffs))delete buffs[id];spellCD.fill(0);attackCD=0;skillCD=0;castPose=0;castStyle='';spiritTick=0;capeCooldown=0;saveTimer=0;slash=0;ring=0;
   for(const slot of Object.keys(forgeOptions))delete forgeOptions[slot];forgeResult=null;
+  craftingFilter='all';craftingMessage='';
   inventoryTab='gear';inventoryPage=0;inventorySelection=null;inventoryDrag=null;inventoryDeletePending=null;careerTab='overview';
   combatAssist.timer=0;combatAssist.nextSkill=0;combatAssist.fightTarget=null;combatAssist.fightTime=0;combatAssist.aimTime=0;combatAssist.focused=true;
 }
@@ -815,6 +863,7 @@ function recordCharacterKill(enemy) {
 }
 
 
+
 // src/js/core/character-validation.js
 function characterDataError(message) { throw new Error('Neplatná záloha: '+message); }
 function assertCharacterObject(value,label) { if(!value||typeof value!=='object'||Array.isArray(value))characterDataError(label); }
@@ -870,7 +919,7 @@ function validateCharacterWorld(state) {
     if(drop.id!==undefined){assertCharacterNumber(drop.id,'ID koristi',1,Number.MAX_SAFE_INTEGER,true);if(dropIds.has(drop.id))characterDataError('duplicitné ID koristi.');dropIds.add(drop.id);}
     if(drop.kind==='gear')validateCharacterItem(drop.item);
     else if(drop.kind==='supply'){
-      const id=drop.supplyId;if(typeof id!=='string'||!(['potions','braveryCapes'].includes(id)||id.startsWith('material:')&&Object.hasOwn(MATERIALS,id.slice(9))||id.startsWith('gem:')&&Object.hasOwn(GEMS,id.slice(4))))characterDataError('neznáma zásoba.');
+      const id=drop.supplyId;if(typeof id!=='string'||!(['potions','braveryCapes'].includes(id)||id.startsWith('material:')&&Object.hasOwn(MATERIALS,id.slice(9))||id.startsWith('gem:')&&Object.hasOwn(GEMS,id.slice(4))||id.startsWith('alchemy:')&&Object.hasOwn(ALCHEMY_PRODUCTS,id.slice(8))))characterDataError('neznáma zásoba.');
       assertCharacterNumber(drop.count,'počet zásob',1,1e12,true);
     }else if(drop.kind==='relic'){if(!Object.hasOwn(RELICS,drop.relicId))characterDataError('neznáma relikvia.');}
     else if(drop.kind==='gold'||drop.kind===undefined)assertCharacterNumber(drop.count??drop.value,'zlato na zemi',1,1e12,true);
@@ -894,7 +943,7 @@ function validateCharacterProfile(record) {
   assertCharacterObject(data.schools,'školy');for(const [id,school]of Object.entries(data.schools))if(SCHOOLS[school]?.classId!==id)characterDataError('neznáma škola.');
   if(SCHOOLS[data.schools[data.classId]]?.classId!==data.classId)characterDataError('chýbajúca škola povolania.');
   assertCharacterObject(data.inventory,'inventár');assertCharacterNumber(data.inventory.pages,'strany inventára',2,100,true);assertCharacterNumber(data.inventory.serial,'séria inventára',0,Number.MAX_SAFE_INTEGER,true);
-  assertCharacterObject(data.inventory.supplyCells,'umiestnenie zásob');for(const [key,cell]of Object.entries(data.inventory.supplyCells)){if(!(['potions','braveryCapes'].includes(key)||key.startsWith('material:')&&Object.hasOwn(MATERIALS,key.slice(9))||key.startsWith('gem:')&&Object.hasOwn(GEMS,key.slice(4))))characterDataError('referencia zásoby v inventári.');assertCharacterNumber(cell,'políčko zásoby',0,44,true);}
+  assertCharacterObject(data.inventory.supplyCells,'umiestnenie zásob');for(const [key,cell]of Object.entries(data.inventory.supplyCells)){if(!(['potions','braveryCapes'].includes(key)||key.startsWith('material:')&&Object.hasOwn(MATERIALS,key.slice(9))||key.startsWith('gem:')&&Object.hasOwn(GEMS,key.slice(4))||key.startsWith('alchemy:')&&Object.hasOwn(ALCHEMY_PRODUCTS,key.slice(8))))characterDataError('referencia zásoby v inventári.');assertCharacterNumber(cell,'políčko zásoby',0,44,true);}
   if(!Array.isArray(data.bag)||data.bag.length>data.inventory.pages*45)characterDataError('batoh.');assertCharacterObject(data.equipped,'výbava');
   const uids=new Set(),cells=new Set();
   for(const [slot,item]of Object.entries(data.equipped)){if(!Object.hasOwn(EQUIPMENT,slot))characterDataError('slot výbavy.');if(item)validateCharacterItem(item,slot);}
@@ -918,6 +967,7 @@ function validateCharacterProfile(record) {
   assertCharacterObject(c.endgame,'endgame');assertCharacterNumber(c.endgame.highest,'trhliny',0,PROGRESSION.maxRiftTier,true);assertCharacterNumber(c.endgame.paragon,'paragon',0,PROGRESSION.maxParagon,true);
   if(c.endgame.run){const run=c.endgame.run;assertCharacterObject(run,'výprava');assertCharacterNumber(run.id,'ID výpravy',1,Number.MAX_SAFE_INTEGER,true);assertCharacterNumber(run.tier,'stupeň výpravy',1,PROGRESSION.maxRiftTier,true);for(const key of ['kills','bosses'])assertCharacterNumber(run[key],'ciele výpravy',0,1e12,true);if(run.active!==true||data.mapId!=='temple')characterDataError('stav výpravy.');}
   assertCharacterObject(data.worldStates,'mapy');for(const [id,state]of Object.entries(data.worldStates)){if(!Object.hasOwn(MAPS,id))characterDataError('referencia mapy.');validateCharacterWorld(state);}if(c.normalTemple)validateCharacterWorld(c.normalTemple);
+  validateCraftingProfile(data);
   assertCharacterObject(data.bestiary,'bestiár');for(const [key,value]of Object.entries(data.bestiary)){if(!['wolf','scorpion','yeti','demon'].includes(key)&&!(key.startsWith('metin:')&&Object.hasOwn(METIN_TYPES,key.slice(6)))&&!(key.startsWith('boss:')&&Object.hasOwn(MAPS,key.slice(5))))characterDataError('záznam bestiára.');assertCharacterNumber(value,'počet v bestiári',0,1e12,true);}
   assertCharacterObject(data.achievements,'úspechy');for(const [key,value]of Object.entries(data.achievements))if(!Object.hasOwn(CHARACTER_ACHIEVEMENTS,key)||typeof value!=='boolean')characterDataError('úspech.');
   if(data.potionReadyAt!==undefined)assertCharacterNumber(data.potionReadyAt,'čas elixíru',0,Number.MAX_SAFE_INTEGER);
@@ -934,6 +984,7 @@ function validateCharacterAccount(account) {
   for(const record of Object.values(account.profiles))checkReferences(record.data,record.id);
   if(account.selectedId!==null&&!account.order.includes(account.selectedId))characterDataError('vybraná postava.');
 }
+
 
 
 // src/js/core/state.js
@@ -984,7 +1035,7 @@ function keysClear(){Object.keys(keys).forEach(k=>keys[k]=false);}
 
 function update(dt) {
   clock+=dt;if(!running||paused)return;travelCombat.time=Math.max(0,travelCombat.time-dt);
-  attackCD=Math.max(0,attackCD-dt);slash=Math.max(0,slash-dt);ring=Math.max(0,ring-dt);updateCombatAssistTimers(dt);updateCombat(dt);
+  attackCD=Math.max(0,attackCD-dt);slash=Math.max(0,slash-dt);ring=Math.max(0,ring-dt);updateCombatAssistTimers(dt);updateAlchemy(dt);updateCombat(dt);
   updatePlayerControl(dt);if(keys[' '])attack();updateAutoSpell(dt);
   const safe=isSanctuary(p);if(safe){p.hp=Math.min(maxHP(),p.hp+12*dt);p.mp=Math.min(maxMP(),p.mp+dt*10);}
   updateMetins(dt,safe);updateEnemySpawns(dt,safe);updateGroundLoot(dt);updateBoss(dt,safe);updateAutoPotion();
@@ -993,6 +1044,7 @@ function update(dt) {
   for(let i=particles.length-1;i>=0;i--){particles[i].age+=dt;if(particles[i].age>1.2)particles.splice(i,1);}
   toastTimer-=dt;if(toastTimer<0)$('toast').style.opacity='0';saveTimer+=dt;if(saveTimer>4){save();saveTimer=0;}updateHUD();
 }
+
 
 
 // src/js/systems/combat.js
@@ -1008,7 +1060,7 @@ function hit(m, amount, type='physical',penetrated=false) {
     m.windup = 0; m.dead = m.metinParentId ? 1 : m.respawnSeconds || (m.type === 'boss' ? 40 : m.type === 'stone' ? 18 : 8);
     if (m.type === 'boss') p.bossKills++; else p[m.type === 'stone' ? 'stones' : 'kills']++;
     recordCharacterKill(m);
-    const gained = enemyXP(m); careerKill(m);dropForgeSupplies(m);
+    const gained = enemyXP(m); careerKill(m);dropForgeSupplies(m);dropCraftMaterials(m);
     if (m.type === 'stone') { m.metinCombat = 0; m.metinWaveTimer = 0; dropMetinLoot(m);for(const guard of mobs.filter(guard=>guard.hp>0&&guard.metinParentId===m.spawnId&&guard.metinGeneration===m.metinGeneration))hit(guard,guard.hp,'arcane',true); }
     else {
       farmBonusLoot(m);
@@ -1106,6 +1158,7 @@ function updateCombat(dt) {
 }
 
 function updateBoss(dt,safe){const b=mobs.find(m=>m.type==='boss');if(!b||b.hp<=0||b.stun>0)return;const d=Math.hypot(b.x-p.x,b.y-p.y);if(safe||(!(b.taunt>0||b.engaged>0)&&d>500)||active('stealth')){b.windup=0;b.taunt=0;b.engaged=0;const home=Math.hypot(b.x-b.homeX,b.y-b.homeY);if(home>4)walkEnemy(b,b.homeX,b.homeY,90,dt);b.hp=Math.min(b.max,b.hp+10*dt);return;}const enraged=b.hp<b.max*.3&&!(b.suppressed>0);if(b.windup>0){b.windup-=dt;if(b.windup<=0){b.cd=enraged?2:3;if(d<120){takeDamage(Math.round(26*(b.attackScale||map().scale)*(enraged?1.3:1)),b);beep(90,.25);}else float('ÚHYB!',p.x,p.y-75,'#acd9b0');}return;}if(d<100&&b.cd<=0){b.windup=1;beep(100,.2);return;}if(d>65){const speed=(enraged?115:90)*(b.slow>0?.55:1)*(active('fear')?.65:1);walkEnemy(b,p.x,p.y,speed,dt);}}
+
 
 
 // src/js/systems/progression.js
@@ -1253,6 +1306,7 @@ function initializeCareer() {
     };
   }
   for (const id of Object.keys(MATERIALS)) p.career.materials[id] ??= 0;
+  initializeCrafting();
   p.level = Math.max(1, Math.min(PROGRESSION.maxLevel, p.level));
   if (p.level === PROGRESSION.maxLevel) p.xp = 0;
   // World difficulty changed; preserve death timers/positions while scaling HP proportionally.
@@ -1280,6 +1334,7 @@ function careerBonuses() {
   if (spec.focus === 'sentinel') add({ hp: 15 * spec.rank, defense: 2 * spec.rank });
   if (spec.focus === 'mystic') add({ magic: 4 * spec.rank, mp: 8 * spec.rank });
   add({ attack: p.career.endgame.paragon * 2, hp: p.career.endgame.paragon * 5 });
+  add(alchemyBonuses());
   return b;
 }
 
@@ -1369,8 +1424,7 @@ function completeBiology() {
 }
 
 function craftGem(id) {
-  if (!GEMS[id] || !pay({ essence: 30, ore: 3, gold: 100 })) return false;
-  p.career.alchemy.stock[id]++; save(); return true;
+  return Object.hasOwn(GEMS, id) && craftRecipe('gem-' + id);
 }
 
 function upgradeGem(id) {
@@ -1492,6 +1546,7 @@ function upgradeParagon() {
 }
 
 
+
 // src/js/systems/forge.js
 let forgeResult=null;
 function enhancementBonus(item){return FORGE_RULES.bonus[Math.max(0,Math.min(9,Math.floor(item?.enhance||0)))];}
@@ -1524,13 +1579,122 @@ function enhanceEquipment(slot,options={}){
  save();updateHUD();return true;
 }
 function craftForgeSupport(id){
- if(!running||p.hp<=0||!nearNPC('smith')||!Object.hasOwn(FORGE_RULES.recipes,id)||!pay(FORGE_RULES.recipes[id]))return false;
- addMaterial(id);save();return true;
+ return Object.hasOwn(FORGE_RULES.recipes,id)&&craftRecipe(id);
 }
 function dropForgeSupplies(enemy){
  if(!rewardEligible(enemy)||enemy.metinParentId||enemyLevel(enemy)<35)return;
  const chance=enemy.type==='boss'?{forgeCore:.5,smithCharm:.15,protectionScroll:.06}:enemy.type==='stone'?{forgeCore:.08,smithCharm:.04,protectionScroll:.015}:enemy.variant==='rare'?{forgeCore:.15,smithCharm:.05,protectionScroll:.01}:null;
  if(chance)for(const [id,rate]of Object.entries(chance))if(rand()<rate)dropMaterial(id,1,enemy);
+}
+
+
+
+// src/js/systems/crafting.js
+let craftingMessage = '';
+function initializeCrafting() {
+  p.career.crafting ??= { xp: 0, crafted: 0 };
+  const a = p.career.alchemy;
+  a.xp ??= 0; a.produced ??= 0;
+  a.products ??= Object.fromEntries(Object.keys(ALCHEMY_PRODUCTS).map(id => [id, 0]));
+  a.active ??= null;
+}
+function professionLevel(profession) {
+  const xp = profession === 'alchemy' ? p.career.alchemy.xp : p.career.crafting.xp;
+  return Math.min(CRAFT_RULES.maxLevel, 1 + Math.floor((Math.sqrt(1 + 8 * xp / 100) - 1) / 2));
+}
+function professionXPForLevel(level) { return 50 * level * (level - 1); }
+function canPayRecipe(cost) {
+  return Object.entries(cost).every(([id, n]) => Number.isSafeInteger(n) && n >= 0 && (id === 'gold' ? p.gold : p.career.materials[id]) >= n);
+}
+function recipeOutputStock(output) {
+  if (output.material) return p.career.materials[output.material];
+  if (output.product) return p.career.alchemy.products[output.product];
+  if (output.gem) return p.career.alchemy.stock[output.gem];
+  if (output.counter) return p[output.counter];
+  return 0;
+}
+function recipeBlockReason(id) {
+  if (!Object.hasOwn(CRAFT_RECIPES, id)) return 'Neznámy recept.';
+  const r = CRAFT_RECIPES[id], npc = r.profession === 'alchemy' ? 'alchemist' : 'smith';
+  if (!running || p.hp <= 0) return 'Najprv vstúp do hry so živou postavou.';
+  if (!nearNPC(npc)) return r.profession === 'alchemy' ? 'Priblíž sa k alchymistovi v Meste.' : 'Priblíž sa ku kováčovi v Meste.';
+  if (professionLevel(r.profession) < r.level) return 'Vyžaduje úroveň remesla ' + r.level + '.';
+  if (p.level < (r.playerLevel || 1)) return 'Vyžaduje úroveň postavy ' + r.playerLevel + '.';
+  if (!canPayRecipe(r.cost) || Object.entries(r.ingredients || {}).some(([key, n]) => p.career.alchemy.products[key] < n)) return 'Chýbajú materiály alebo Yang.';
+  if (!r.output.slot && recipeOutputStock(r.output) + r.output.count > CRAFT_RULES.maxStock) return 'Zásoba dosiahla maximum.';
+  if (r.output.slot && !gearLayout([...p.bag, { slot: r.output.slot }])) return 'V inventári nie je dosť súvislého miesta.';
+  return '';
+}
+function craftRecipe(id) {
+  craftingMessage = recipeBlockReason(id);
+  if (craftingMessage) return false;
+  const r = CRAFT_RECIPES[id], out = r.output;
+  // Validate every input and the output space before consuming resources or randomness.
+  const item = out.slot ? generateEquipmentItem(out.slot, out.rarity, out.tier) : null;
+  if (item && !addGearItem(item)) return false;
+  pay(r.cost);
+  for (const [key, n] of Object.entries(r.ingredients || {})) p.career.alchemy.products[key] -= n;
+  if (out.material) addMaterial(out.material, out.count);
+  if (out.product) p.career.alchemy.products[out.product] += out.count;
+  if (out.gem) p.career.alchemy.stock[out.gem] += out.count;
+  if (out.counter) p[out.counter] += out.count;
+  const progress = r.profession === 'alchemy' ? p.career.alchemy : p.career.crafting;
+  progress.xp = Math.min(CRAFT_RULES.maxXP, progress.xp + Math.max(1, Math.floor(r.xp / (professionLevel(r.profession) >= r.level + 3 ? 4 : 1))));
+  if (r.profession === 'alchemy') progress.produced++; else progress.crafted++;
+  craftingMessage = 'Vyrobené: ' + (item ? item.name : r.name) + '.';
+  updateHUD(); save(); return true;
+}
+function alchemyBonuses() {
+  const a = p.career?.alchemy, level = a?.xp === undefined ? 1 : professionLevel('alchemy');
+  const bonus = { attack: 0, defense: 0, hp: 0, mp: (level - 1) * 3 };
+  if (a?.active?.remaining > 0) for (const [stat, value] of Object.entries(ALCHEMY_PRODUCTS[a.active.id]?.bonus || {})) bonus[stat] += value;
+  return bonus;
+}
+function useAlchemyProduct(id, allowPaused = false) {
+  if (!Object.hasOwn(ALCHEMY_PRODUCTS, id) || !running || p.hp <= 0 || paused && !allowPaused || p.career.alchemy.products[id] < 1) return false;
+  const product = ALCHEMY_PRODUCTS[id], a = p.career.alchemy;
+  if (product.mana) {
+    if (p.mp >= maxMP() || potionCooldownRemaining() > 0) return false;
+    p.mp = Math.min(maxMP(), p.mp + product.mana); p.potionReadyAt = Date.now() + POTION_RULES.cooldown * 1000;
+  } else {
+    if (a.active) { toast('Už pôsobí odvar. Počkaj na skončenie účinku.'); return false; }
+    a.active = { id, remaining: product.duration };
+  }
+  a.products[id]--; updateHUD(); save(); return true;
+}
+function updateAlchemy(dt) {
+  const a = p.career.alchemy;
+  if (!a.active) return;
+  a.active.remaining = Math.max(0, a.active.remaining - dt);
+  if (!a.active.remaining) { a.active = null; p.hp = Math.min(p.hp, maxHP()); }
+}
+function dropCraftMaterials(enemy) {
+  if (!rewardEligible(enemy) || enemy.metinParentId) return;
+  if (enemy.type === 'stone') dropMaterial('crystal', 1 + Math.floor(enemyLevel(enemy) / 25), enemy);
+  else if (enemy.type === 'boss') { dropMaterial('herb', 3, enemy); dropMaterial('hide', 2, enemy); }
+  else if (p.career.eligibleKills % 3 === 0) dropMaterial(p.career.eligibleKills % 2 ? 'herb' : 'hide', 1, enemy);
+  const run = p.career.endgame.run;
+  if (enemy.type === 'boss' && run?.active && enemy.riftId === run.id) dropMaterial('primal', 1 + Math.floor(run.tier / 10), enemy);
+}
+function validateCraftingProfile(data) {
+  if (data.career.crafting !== undefined) {
+    assertCharacterObject(data.career.crafting, 'výroba');
+    assertCharacterNumber(data.career.crafting.xp, 'prax výroby', 0, CRAFT_RULES.maxXP, true);
+    assertCharacterNumber(data.career.crafting.crafted, 'počet výrobkov', 0, 1e12, true);
+  }
+  const a = data.career.alchemy;
+  if (a.xp !== undefined) assertCharacterNumber(a.xp, 'prax alchýmie', 0, CRAFT_RULES.maxXP, true);
+  if (a.produced !== undefined) assertCharacterNumber(a.produced, 'počet alchymistických výrobkov', 0, 1e12, true);
+  if (a.products !== undefined) {
+    assertCharacterObject(a.products, 'alchymistické výrobky');
+    for (const id of Object.keys(a.products)) if (!Object.hasOwn(ALCHEMY_PRODUCTS, id)) characterDataError('neznámy alchymistický výrobok.');
+    for (const id of Object.keys(ALCHEMY_PRODUCTS)) assertCharacterNumber(a.products[id], 'zásoba výrobku', 0, CRAFT_RULES.maxStock, true);
+  }
+  if (a.active != null) {
+    assertCharacterObject(a.active, 'účinok odvaru');
+    if (!Object.hasOwn(ALCHEMY_PRODUCTS, a.active.id) || !ALCHEMY_PRODUCTS[a.active.id].bonus) characterDataError('neznámy odvar.');
+    assertCharacterNumber(a.active.remaining, 'trvanie odvaru', 0, ALCHEMY_PRODUCTS[a.active.id].duration);
+  }
 }
 
 
@@ -1975,6 +2139,7 @@ function supplyDefinitions() {
     { id: 'potions', name: 'Liečivý elixír', count: p.potions, icon: 'potion', description: 'Obnoví 65 zdravia. Kláves E. Spoločný cooldown 4 s aj pre Autoelixíry.', action: 'drink' },
     { id: 'braveryCapes', name: 'Plášť statočnosti', count: p.braveryCapes, icon: 'cape', description: 'Privolá pohyblivých nepriateľov v dosahu 650 na 18 sekúnd. Kláves B.', action: 'cape' },
     ...Object.entries(MATERIALS).map(([id, name]) => ({ id: 'material:' + id, name, count: p.career.materials[id], icon: id, description: ['ore','upgradeStones','forgeCore','smithCharm','protectionScroll'].includes(id)?'Použitie: kováč.':'Materiál na progresiu.', action: 'material', material: id })),
+    ...Object.entries(ALCHEMY_PRODUCTS).map(([id, product]) => ({ id: 'alchemy:' + id, name: product.name, count: p.career.alchemy.products[id], icon: product.icon, description: product.text, action: 'product' })),
     ...Object.entries(GEMS).map(([id, gem]) => ({ id: 'gem:' + id, name: gem.name, count: p.career.alchemy.stock[id], icon: id, description: gem.text + ' Použitie otvorí alchýmiu.', action: 'alchemy' }))
   ];
 }
@@ -2020,6 +2185,7 @@ function consumeSupply(id, count) {
   if (!item || item.count < count) return false;
   if (id.startsWith('material:')) p.career.materials[id.slice(9)] -= count;
   else if (id.startsWith('gem:')) p.career.alchemy.stock[id.slice(4)] -= count;
+  else if (id.startsWith('alchemy:')) p.career.alchemy.products[id.slice(8)] -= count;
   else p[id] -= count;
   return true;
 }
@@ -2036,6 +2202,8 @@ function deleteInventoryItem(id, count = 1) {
 function useInventorySupply(id) {
   const item = supplyEntries().find(item => item.id === id);
   if (!item || !running || p.hp <= 0) return false;
+  if (item.action === 'product') return useAlchemyProduct(id.slice(8), true);
+  if (item.material && Object.hasOwn(CRAFT_MATERIALS, item.material)) { careerPanel(['herb','extract','crystal'].includes(item.material) ? 'alchemy' : 'crafting'); return true; }
   if (item.action === 'drink') return drinkPotion(true);
   if (item.action === 'cape') {
     if (isSanctuary(p) || capeCooldown > 0) return false;
@@ -2050,6 +2218,7 @@ function sellItem(index) {
   p.gold += itemSaleValue(p.bag.splice(index, 1)[0]);
   finishInventoryChange(); inventory(); return true;
 }
+
 
 
 // src/js/systems/appearance.js
@@ -2360,6 +2529,7 @@ function grantGroundSupply(id, count) {
   if (!Number.isSafeInteger(count) || count < 1) return false;
   let holder, key;
   if (id.startsWith('material:') && MATERIALS[id.slice(9)]) { holder = p.career.materials; key = id.slice(9); }
+  else if (id.startsWith('alchemy:') && Object.hasOwn(ALCHEMY_PRODUCTS,id.slice(8))) { holder = p.career.alchemy.products; key = id.slice(8); }
   else if (id.startsWith('gem:') && GEMS[id.slice(4)]) { holder = p.career.alchemy.stock; key = id.slice(4); }
   else if (id === 'potions' || id === 'braveryCapes') { holder = p; key = id; }
   else return false;
@@ -2424,6 +2594,7 @@ function updateGroundLoot(dt) {
   flushAutomaticLoot();
   updateLootHover(dt);
 }
+
 
 
 // src/js/systems/metins.js
@@ -3033,6 +3204,12 @@ function itemIcon(item, empty = false) {
   const gold = empty ? '#766c58' : '#d8ad5c', dark = empty ? '#403d34' : '#444c52';
   const gem = empty ? '#4b463a' : ['#a24f3f', '#59b4c0', '#bc7bdb'][rarity];
   const shapes = {
+    herb: '<path d="M30 60V13M30 42Q4 43 9 22q20-1 21 20M30 28Q55 29 55 7q-23 0-25 21" fill="#70a66c" stroke="#d0d9a0" stroke-width="3"/>',
+    hide: '<path d="m14 4 17 9L50 4l9 14-10 15 9 21-21-3-9 10-15-12-10 1 10-22-9-11Z" fill="#9d7954" stroke="#d4bc8e" stroke-width="2"/><path d="m22 22 18 20m-19-2 20-17" stroke="#67513c"/>',
+    crystal: '<path d="m7 42 11-30 14 8L43 3l15 35-26 24Z" fill="#8ca8d7" stroke="#e0d7f3" stroke-width="2"/><path d="m18 12 9 36L43 3m-11 17 15 27-15 15" fill="none" stroke="#dddaf0"/>',
+    ingot: '<path d="m7 44 8-26 33-5 12 26-10 14-34 4Z" fill="#8a9da0" stroke="#dbe0cb" stroke-width="2"/><path d="m15 18 7 22 38-1M22 40l-6 17" fill="none" stroke="#dbe0cb"/>',
+    extract: '<path d="M23 4h18v13l10 12v25q-19 12-38 0V29l10-12Z" fill="#4b7762" stroke="#dfc996" stroke-width="2"/><path d="M16 35h32v17q-16 8-32 0Z" fill="#a2bc68"/><path d="m23 7 18 0M27 42l11 5-9 3" stroke="#f6e5b2" stroke-width="3"/>',
+    primal: '<path d="m32 2 8 15 17 3-8 15 8 18-19-2-9 11-9-16L3 39l14-12V9Z" fill="#9d6db5" stroke="#efc4ec" stroke-width="2"/><circle cx="31" cy="32" r="9" fill="#f0bdf5"/><path d="m31 22-5 11 7 9 5-10Z" fill="#633b86"/>',
  forgeCore:'<path d="m32 3 23 14 2 31-25 14L7 48l2-31Z" fill="#585d62" stroke="#dfae6a" stroke-width="3"/><path d="M17 20h30v9H17zM24 29h16v19H24zM17 48h30v6H17z" fill="#edb35b"/><path d="m29 8 6 0 3 10-6 8-6-8Z" fill="#ffe4a3"/>',
  smithCharm:'<path d="m32 3 8 16 18 3-13 14 3 23-16-11-16 11 3-23L6 22l18-3Z" fill="#7c7440" stroke="#e1d18d" stroke-width="2"/><path d="m32 19 9 13-9 13-9-13Z" fill="#9ce3a2"/>',
  protectionScroll:'<path d="M16 6h33l-5 50-17 7-15-8Z" fill="#d7c695" stroke="#f7e7b5" stroke-width="2"/><path d="m31 17 13 5-3 20-10 10-10-10-3-20Z" fill="#6488b1"/><path d="M31 22v23m-7-13h14" stroke="#e5f0ea" stroke-width="3"/>',
@@ -3080,6 +3257,7 @@ function itemIcon(item, empty = false) {
 function equipmentFigure() {
   return characterAvatar({classId:p.classId,data:p}).replace('class="roster-avatar"','class="equipment-figure"');
 }
+
 
 
 // src/js/ui/inventory.js
@@ -3202,8 +3380,8 @@ function activateInventoryEntry(id) {
   if (entry.kind === 'gear') { if (!canEquipItem(entry.item)) { inventoryMessage(itemEquipReason(entry.item)); return false; } return equipItem(p.bag.findIndex(item => item.uid === entry.item.uid)); }
   if (entry.kind === 'equipped') { const ok = unequipItem(entry.item.slot); if (!ok) inventoryMessage('V inventári nie je dosť súvislého miesta.'); return ok; }
   const ok = useInventorySupply(id);
-  if (ok && entry.item.action === 'drink') inventory();
-  if (!ok) inventoryMessage(entry.item.action === 'drink' ? 'Zdravie je plné alebo elixír nemožno použiť.' : 'Plášť použi mimo bezpečnej zóny a počkaj na obnovenie.');
+  if (ok && ['drink','product'].includes(entry.item.action)) inventory();
+  if (!ok) inventoryMessage(entry.item.action === 'product' ? 'Účinok už pôsobí, mana je plná alebo ešte beží cooldown.' : entry.item.action === 'drink' ? 'Zdravie je plné alebo elixír nemožno použiť.' : 'Plášť použi mimo bezpečnej zóny a počkaj na obnovenie.');
   return ok;
 }
 
@@ -3234,6 +3412,7 @@ function positionItemTooltip(event) {
   tooltip.style.left = Math.max(8, Math.min(event.clientX + 14, width - rect.width - 12)) + 'px';
   tooltip.style.top = Math.max(8, Math.min(event.clientY + 14, height - rect.height - 12)) + 'px';
 }
+
 
 
 // src/js/ui/rarities.js
@@ -3382,7 +3561,8 @@ function renderClasses() {}
 
 function updateClassHUD(){$('portrait').textContent=({warrior:'侍',ninja:'影',sura:'魔',shaman:'龍'})[p.classId];$('playername').textContent=characterDisplayName(p);$('playerclass').textContent=role().name;school().skills.forEach((s,i)=>{$(i?'skill'+(i+1):'skill').querySelector('small').textContent=s[0];$(i?'skill'+(i+1):'skill').title=`${s[0]} · stupeň ${skillProgress(skillKey(i)).rank} · ${s[3]} many · ${s[2]} s\n${s[6]}`;});$('attack').querySelector('small').textContent=p.classId==='ninja'&&p.schools.ninja==='archery'?'Streľba':p.classId==='shaman'?'Úder vejárom':'Základný útok';}
 
-function updateHUD(){baseHUD();$('potion-cooldown').textContent=potionCooldownRemaining()>0?Math.ceil(potionCooldownRemaining()):'';$('potion').title='Elixír · +65 HP · spoločný cooldown 4 s';$('capes').textContent=p.braveryCapes;$('cape-cooldown').textContent=capeCooldown>0?Math.ceil(capeCooldown):'';p.mp=Math.max(0,Math.min(maxMP(),p.mp));$('mpbar').style.width=p.mp/maxMP()*100+'%';$('mptext').textContent=Math.ceil(p.mp)+' / '+maxMP();for(let i=0;i<6;i++)$(i?'cooldown'+(i+1):'cooldown').textContent=spellCD[i]>0?Math.ceil(spellCD[i]):'';$('coords').textContent=map().town?'Mesto · NPC F':isSanctuary(p)?'Bezpečná zóna':farmAreaAt().name+(map().metinsOnly?' · Metiny Lv.':' · Lv.')+farmAreaLevelRange(farmAreaAt()).join('–');$('buffs').textContent=Object.entries(buffs).map(([id,t])=>{const s=Object.values(SCHOOLS).flatMap(c=>c.skills).find(s=>s[1]===id);return(s?s[0]:id)+' '+Math.ceil(t)+'s';}).join(' · ');if(p.claimed)$('questnote').textContent='✓ Dokončené · ďalšie úlohy v denníku J';updateCombatHUD();updateCombatAssistHUD();}
+function updateHUD(){baseHUD();$('potion-cooldown').textContent=potionCooldownRemaining()>0?Math.ceil(potionCooldownRemaining()):'';$('potion').title='Elixír · +65 HP · spoločný cooldown 4 s';$('capes').textContent=p.braveryCapes;$('cape-cooldown').textContent=capeCooldown>0?Math.ceil(capeCooldown):'';p.mp=Math.max(0,Math.min(maxMP(),p.mp));$('mpbar').style.width=p.mp/maxMP()*100+'%';$('mptext').textContent=Math.ceil(p.mp)+' / '+maxMP();for(let i=0;i<6;i++)$(i?'cooldown'+(i+1):'cooldown').textContent=spellCD[i]>0?Math.ceil(spellCD[i]):'';$('coords').textContent=map().town?'Mesto · NPC F':isSanctuary(p)?'Bezpečná zóna':farmAreaAt().name+(map().metinsOnly?' · Metiny Lv.':' · Lv.')+farmAreaLevelRange(farmAreaAt()).join('–');$('buffs').textContent=(p.career.alchemy.active?ALCHEMY_PRODUCTS[p.career.alchemy.active.id].name+' '+Math.ceil(p.career.alchemy.active.remaining)+'s · ':'')+Object.entries(buffs).map(([id,t])=>{const s=Object.values(SCHOOLS).flatMap(c=>c.skills).find(s=>s[1]===id);return(s?s[0]:id)+' '+Math.ceil(t)+'s';}).join(' · ');if(p.claimed)$('questnote').textContent='✓ Dokončené · ďalšie úlohy v denníku J';updateCombatHUD();updateCombatAssistHUD();}
+
 
 
 // src/js/ui/fullscreen.js
@@ -3505,14 +3685,14 @@ function careerForge() {
   const item=p.equipped[slot];if(!item)return '<div class="career-card"><h3>'+EQUIPMENT[slot].name+'</h3><p>Bez nasadeného predmetu.</p></div>';
   const rank=item.enhance||0,options=forgeOptions[slot]||{},cost=enhancementCost(item,options);
   return '<div class="career-card"><h3>'+escapeHTML(item.name)+' +'+rank+'</h3><p>'+ITEM_STATS[EQUIPMENT[slot].stat]+' z vylepšenia: '+signedItemStat(EQUIPMENT[slot].stat,enhancementBonus(item)*(EQUIPMENT[slot].stat==='crit'?.01:1))+(rank<9?' → '+signedItemStat(EQUIPMENT[slot].stat,FORGE_RULES.bonus[rank+1]*(EQUIPMENT[slot].stat==='crit'?.01:1)):' · maximum')+'</p>'+(cost?'<p>Úspech '+Math.round(forgeChance(item,options)*100)+' % · '+costLabel(cost)+'<br>'+forgeFailureText(item,options)+'</p><label><input type="checkbox" data-forge-option="charm" data-slot="'+slot+'" '+(options.charm?'checked ':'')+(!p.career.materials.smithCharm||FORGE_RULES.success[rank+1]>=.95?'disabled':'')+'> Talizman kováča: +10 percentuálnych bodov · '+p.career.materials.smithCharm+' ks</label><br><label><input type="checkbox" data-forge-option="protect" data-slot="'+slot+'" '+(options.protect?'checked ':'')+(!p.career.materials.protectionScroll||rank<3?'disabled':'')+'> Ochranný zvitok: zachová predmet aj stupeň · '+p.career.materials.protectionScroll+' ks</label><br><button class="primary" data-action="enhance" data-id="'+slot+'" '+(!available?'disabled':'')+'>Vylepšiť na +'+(rank+1)+'</button>':'')+'</div>';
- }).join('')+'<h3>Pomôcky</h3>'+Object.entries(FORGE_RULES.recipes).map(([id,cost])=>'<div class="career-card"><h3>'+MATERIALS[id]+'</h3><p>'+costLabel(cost)+'</p><button class="primary" data-action="forgeSupport" data-id="'+id+'" '+(!available?'disabled':'')+'>Vyrobiť</button></div>').join('')+'<p>Kováčske jadro / talizman / zvitok: boss Lv.35+ 50 % / 15 % / 6 %, Metin Lv.35+ 8 % / 4 % / 1,5 %, vzácny nepriateľ Lv.35+ 15 % / 5 % / 1 %. Vyžaduje primeraný cieľ.</p>';
+ }).join('')+'<button data-career-tab="crafting">Výroba predmetov a pomôcok</button>'+'<p>Kováčske jadro / talizman / zvitok: boss Lv.35+ 50 % / 15 % / 6 %, Metin Lv.35+ 8 % / 4 % / 1,5 %, vzácny nepriateľ Lv.35+ 15 % / 5 % / 1 %. Vyžaduje primeraný cieľ.</p>';
 }
 
 function careerAlchemy() {
   const alchemy = p.career.alchemy;
   return `<p>Všetky 3 kamene môžu byť aktívne. Prvé nasadenie bez poplatku; fúzia spotrebuje uvedené kamene a materiály.</p>${Object.entries(GEMS).map(([id, gem]) => {
     const rank = alchemy.equipped[id], stones = rank ? 2 ** rank : 1;
-    return `<div class="career-card"><h3 style="color:${gem.color}">${gem.name} · stupeň ${rank} / ${PROGRESSION.maxGemRank}</h3><p>${gem.text}<br>Zásoba: ${alchemy.stock[id]}</p><button class="primary" data-action="craft" data-id="${id}">Vyrobiť · ${costLabel({ essence: 30, ore: 3, gold: 100 })}</button><p>${rank ? 'Fúzia' : 'Nasadenie'}: ${stones} kameňov${rank ? ' · ' + costLabel({ dust: 5 * rank, gold: 100 * rank * rank }) : ''}</p><button class="primary" data-action="gem" data-id="${id}" ${rank >= PROGRESSION.maxGemRank || alchemy.stock[id] < stones ? 'disabled' : ''}>${rank ? 'Zvýšiť stupeň' : 'Nasadiť kameň'}</button></div>`;
+    return `<div class="career-card"><h3 style="color:${gem.color}">${gem.name} · stupeň ${rank} / ${PROGRESSION.maxGemRank}</h3><p>${gem.text}<br>Zásoba: ${alchemy.stock[id]}</p><p>${rank ? 'Fúzia' : 'Nasadenie'}: ${stones} kameňov${rank ? ' · ' + costLabel({ dust: 5 * rank, gold: 100 * rank * rank }) : ''}</p><button class="primary" data-action="gem" data-id="${id}" ${rank >= PROGRESSION.maxGemRank || alchemy.stock[id] < stones ? 'disabled' : ''}>${rank ? 'Zvýšiť stupeň' : 'Nasadiť kameň'}</button></div>`;
   }).join('')}`;
 }
 
@@ -3537,16 +3717,18 @@ function careerPanel(tab = careerTab) {
   const tabs = {
     overview: ['Prehľad', careerOverview], training: ['Atribúty', careerTraining],
     skills: ['Schopnosti', careerSkills], biology: ['Biológ', careerBiology],
-    forge: ['Vybavenie', careerForge], alchemy: ['Alchýmia', careerAlchemy],
+    forge: ['Vylepšovanie', careerForge], crafting: ['Výroba', () => craftingRecipesPanel('crafting')], alchemy: ['Alchýmia', () => craftingRecipesPanel('alchemy') + careerAlchemy()],
     collection: ['Relikvie', careerCollection], specialization: ['Špecializácia', careerSpecialization],
     endgame: ['Endgame', careerEndgame]
   };
+  if(tab!==careerTab)craftingFilter='all';
   careerTab = tabs[tab] ? tab : 'overview';
   modal(`<span class="eyebrow">PROGRESIA · P</span><h2>Progresia</h2><nav class="career-tabs" aria-label="Systémy progresie">${Object.entries(tabs).map(([id, [name]]) => `<button data-career-tab="${id}" aria-pressed="${careerTab === id}">${name}</button>`).join('')}</nav><div class="career-body">${tabs[careerTab][1]()}</div><p id="career-message" role="status"></p>`);
   document.querySelectorAll('[data-career-tab]').forEach(button => button.onclick = () => careerPanel(button.dataset.careerTab));
+  if($('craft-filter')) $('craft-filter').onchange=event=>{craftingFilter=event.target.value;careerPanel(careerTab);};
   const actions = {
     train: id => trainAttribute(id), skill: id => upgradeSkill(id), bio: completeBiology,
-    enhance: id => enhanceEquipment(id,forgeOptions[id]||{}), forgeSupport: craftForgeSupport, craft: id => craftGem(id), gem: id => upgradeGem(id),
+    recipe: craftRecipe, product: id => useAlchemyProduct(id, true), enhance: id => enhanceEquipment(id,forgeOptions[id]||{}), forgeSupport: craftForgeSupport, craft: id => craftGem(id), gem: id => upgradeGem(id),
     spec: id => specialize(id), spectrain: trainSpecialization, enter: enterRift,
     claimRift: () => finishRift(true), abandon: () => finishRift(false), paragon: upgradeParagon
   };
@@ -3554,9 +3736,34 @@ function careerPanel(tab = careerTab) {
   document.querySelectorAll('[data-action]').forEach(button => button.onclick = () => {
     if (actions[button.dataset.action]?.(button.dataset.id)) {
       updateClassHUD(); updateHUD(); careerPanel(careerTab);
-      $('career-message').textContent = button.dataset.action==='enhance'?forgeResult.message:'Uložené.';
-    } else $('career-message').textContent = 'Nesplnené podmienky: skontroluj cenu, úroveň a prax. Vstup do trhliny vyžaduje ukončený boj.';
+      $('career-message').textContent = button.dataset.action==='enhance'?forgeResult.message:characterStore.writeError|| (button.dataset.action==='recipe'?craftingMessage:'Uložené.');
+    } else if(button.dataset.action==='recipe') $('career-message').textContent=craftingMessage;
+    else $('career-message').textContent = 'Nesplnené podmienky: skontroluj cenu, úroveň a prax. Vstup do trhliny vyžaduje ukončený boj.';
   });
+}
+
+
+
+// src/js/ui/crafting.js
+let craftingFilter = 'all';
+function craftingRecipesPanel(profession) {
+  const a = p.career.alchemy, progress = profession === 'alchemy' ? a : p.career.crafting, level = professionLevel(profession);
+  const categories = { all: 'Všetky recepty', weapon: 'Zbrane', armor: 'Brnenia', jewelry: 'Šperky', supplies: 'Spotrebné predmety', materials: 'Materiály', special: 'Špeciálne predmety' };
+  const category = recipe => recipe.output.slot ? recipe.output.slot === 'weapon' ? 'weapon' : ['bracelet','necklace','earrings'].includes(recipe.output.slot) ? 'jewelry' : recipe.output.slot === 'talisman' ? 'special' : 'armor' : recipe.output.product || recipe.output.counter ? 'supplies' : recipe.output.gem || ['keys','smithCharm','protectionScroll'].includes(recipe.output.material) ? 'special' : 'materials';
+  const recipes = Object.entries(CRAFT_RECIPES).filter(([, r]) => r.profession === profession);
+  const visible = recipes.filter(([, r]) => craftingFilter === 'all' || category(r) === craftingFilter);
+  const activeProduct = a.active && ALCHEMY_PRODUCTS[a.active.id];
+  return `<section class="craft-workshop"><h3>${profession === 'alchemy' ? 'Alchymista' : 'Výroba u kováča'} · úroveň ${level} / ${CRAFT_RULES.maxLevel}</h3>
+    <p>${level === CRAFT_RULES.maxLevel ? 'Majstrovská úroveň' : 'Prax ' + progress.xp + ' / ' + professionXPForLevel(level + 1)} · vyrobené ${profession === 'alchemy' ? a.produced : progress.crafted}</p>
+    <p>${profession === 'alchemy' ? 'Trvalý bonus majstrovstva: +' + ((level - 1) * 3) + ' max. mana. ' : ''}Výroba v Meste pri NPC. Úspech 100 %. Staršie recepty od rozdielu 3 úrovní dávajú štvrtinu praxe.</p>
+    <details><summary>Zdroje surovín</summary><p>Primerané bežné príšery: každé 3. primerané zabitie dá bylinu alebo kožu. Boss: 3 byliny a 2 kože. Metin: 1 + ⌊úroveň / 25⌋ kryštálov. Boss aktívnej trhliny: 1 + ⌊stupeň / 10⌋ jadier. Privolaní obrancovia tieto suroviny nedávajú.</p></details>
+    ${profession === 'alchemy' ? `<p>Odvary sa nekombinujú. Čas plynie iba počas hry.${activeProduct ? ' Aktívny: ' + activeProduct.name + ' · ' + Math.ceil(a.active.remaining) + ' s.' : ''}</p><div class="craft-products">${Object.entries(ALCHEMY_PRODUCTS).map(([id, product]) => `<div><b>${product.name} · ${a.products[id]} ks</b><small>${product.text}</small><button data-action="product" data-id="${id}" ${!a.products[id] || product.bonus && a.active ? 'disabled' : ''}>Použiť</button></div>`).join('')}</div>` : ''}
+    <label>Recepty <select id="craft-filter">${Object.entries(categories).filter(([id]) => id === 'all' || recipes.some(([, r]) => category(r) === id)).map(([id, label]) => `<option value="${id}" ${craftingFilter === id ? 'selected' : ''}>${label}</option>`).join('')}</select></label>
+    <div class="craft-recipes">${visible.map(([id, r]) => {
+      const reason = recipeBlockReason(id), out = r.output;
+      const outcome = out.slot ? `${EQUIPMENT[out.slot].name} · ${rarityName(out.rarity)} · požadovaná úroveň ${out.tier} · náhodné bonusy podľa rarity` : out.product ? ALCHEMY_PRODUCTS[out.product].text : out.gem ? GEMS[out.gem].text : out.counter === 'potions' ? 'Obnoví 65 zdravia za kus.' : '';
+      return `<article class="career-card craft-recipe"><h4>${r.name}</h4><p>Remeslo ${r.level}${r.playerLevel ? ' · postava ' + r.playerLevel : ''} · +${Math.max(1, Math.floor(r.xp / (level >= r.level + 3 ? 4 : 1)))} praxe${level === CRAFT_RULES.maxLevel ? ' (maximum)' : ''}</p><p>${outcome}</p><ul>${Object.entries(r.cost).map(([key, count]) => `<li class="${(key === 'gold' ? p.gold : p.career.materials[key]) < count ? 'craft-missing' : ''}">${key === 'gold' ? 'Yang' : MATERIALS[key]}: ${count.toLocaleString('sk-SK')} / máš ${(key === 'gold' ? p.gold : p.career.materials[key]).toLocaleString('sk-SK')}</li>`).join('')}${Object.entries(r.ingredients || {}).map(([key, count]) => `<li>${ALCHEMY_PRODUCTS[key].name}: ${count} / máš ${a.products[key]}</li>`).join('')}</ul><button class="primary" data-action="recipe" data-id="${id}" ${reason ? 'disabled' : ''}>Vyrobiť</button>${reason ? '<small>' + reason + '</small>' : ''}</article>`;
+    }).join('') || '<p>V tejto kategórii nie sú recepty.</p>'}</div></section>`;
 }
 
 
@@ -4056,4 +4263,5 @@ $('modal').addEventListener('click',event=>{if(event.target===$('modal')&&(event
 
 </script>
 </body></html>
+
 

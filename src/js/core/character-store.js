@@ -108,6 +108,7 @@ function clearCharacterSession() {
   keysClear();resetCombatFlow();travelCombat.time=0;clearLootPointer();combatAim.inside=false;face=0;shots.length=0;effects.length=0;particles.length=0;
   for(const id of Object.keys(buffs))delete buffs[id];spellCD.fill(0);attackCD=0;skillCD=0;castPose=0;castStyle='';spiritTick=0;capeCooldown=0;saveTimer=0;slash=0;ring=0;
   for(const slot of Object.keys(forgeOptions))delete forgeOptions[slot];forgeResult=null;
+  craftingFilter='all';craftingMessage='';
   inventoryTab='gear';inventoryPage=0;inventorySelection=null;inventoryDrag=null;inventoryDeletePending=null;careerTab='overview';
   combatAssist.timer=0;combatAssist.nextSkill=0;combatAssist.fightTarget=null;combatAssist.fightTime=0;combatAssist.aimTime=0;combatAssist.focused=true;
 }
@@ -184,3 +185,4 @@ function recordCharacterKill(enemy) {
   const key=enemy.type==='stone'?'metin:'+enemy.metinType:enemy.type==='boss'?'boss:'+p.mapId:enemy.skin||'wolf';p.bestiary[key]=(p.bestiary[key]||0)+1;
   if(enemy.type!=='stone')p.achievements.firstKill=true;if(enemy.type==='stone')p.achievements.firstMetin=true;if(enemy.type==='boss')p.achievements.firstBoss=true;if(p.kills>=100)p.achievements.hunter100=true;
 }
+

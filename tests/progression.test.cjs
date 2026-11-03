@@ -8,7 +8,7 @@ run('attackCD=0;attack(true);');assert.ok(run('skillCD>0'));assert.ok(run('p.kil
 run('p.hp=10;p.potions=2;potion();');assert.equal(run('p.hp'),75);assert.equal(run('p.potions'),1);
 run('experience(needXP());');assert.ok(run('p.level>1'));assert.equal(run('p.hp'),run('maxHP()'));
 run('p.kills=5;p.stones=3;updateHUD();');assert.equal(element('claim').hidden,false);run("$('claim').onclick();");assert.equal(run('p.claimed'),true);const gold=run('p.gold');run("$('claim').onclick();");assert.equal(run('p.gold'),gold);
-run('loadMap("town",true);p.x=NPCS.merchant.x;p.y=NPCS.merchant.y;p.gold=200;shop();');run("$('buyPotion').onclick();");assert.equal(run('p.gold'),175);run('p.x=NPCS.smith.x;p.y=NPCS.smith.y;interactNPC("smith");');assert.match(element('modalcontent').innerHTML,/Vybavenie/);run('p.equipped.weapon={name:"Test",slot:"weapon",bonus:0};p.career.materials.ore=3;p.gold=1000;rand=()=>0;enhanceEquipment("weapon");');assert.equal(run('p.equipped.weapon.enhance'),1);assert.equal(run('p.gold'),688);
+run('loadMap("town",true);p.x=NPCS.merchant.x;p.y=NPCS.merchant.y;p.gold=200;shop();');run("$('buyPotion').onclick();");assert.equal(run('p.gold'),175);run('p.x=NPCS.smith.x;p.y=NPCS.smith.y;interactNPC("smith");');assert.match(element('modalcontent').innerHTML,/Vylepšovanie/);run('p.equipped.weapon={name:"Test",slot:"weapon",bonus:0};p.career.materials.ore=3;p.gold=1000;rand=()=>0;enhanceEquipment("weapon");');assert.equal(run('p.equipped.weapon.enhance'),1);assert.equal(run('p.gold'),688);
 run('closeModal();p.hp=1;p.gold=100;death();');assert.equal(run('p.hp'),run('maxHP()'));assert.equal(run('p.gold'),90);assert.equal(run('p.x'),run('map().entry.x'));
 run('save();');assert.ok(saved.has('grindoria-characters-v1'));console.log('PASS: combat, cooldown, skill, loot, healing, levels, quest reward, shop, upgrade, respawn, save');
 assert.equal(run('p.points'),run('(p.level-1)*3'));
@@ -26,3 +26,4 @@ run('boss.windup=1;updateBoss(.05,true);');assert.equal(run('boss.windup'),0);
 run('paused=false;p.classId="shaman";p.schools.shaman="healing";p.hp=10;p.mp=maxMP();spellCD.fill(0);mobs.forEach(m=>m.hp=0);castSkill(3);');assert.ok(run('p.hp')>10);assert.equal(run('spellCD[3]'),8);
 run('snapshotMap();');const stored=run('copyCharacterData(p)');assert.equal(stored.classId,'shaman');assert.equal(stored.equipped.weapon.bonus,35);assert.equal(stored.bossClaimed,true);
 console.log('PASS: stat points, gear bonuses and swapping, selling, full bag, epic loot, repeatable rewards, boss reward guard, boss telegraph/dodge/safety, shaman healing, progression persistence');
+

@@ -28,6 +28,7 @@ function initializeCareer() {
     };
   }
   for (const id of Object.keys(MATERIALS)) p.career.materials[id] ??= 0;
+  initializeCrafting();
   p.level = Math.max(1, Math.min(PROGRESSION.maxLevel, p.level));
   if (p.level === PROGRESSION.maxLevel) p.xp = 0;
   // World difficulty changed; preserve death timers/positions while scaling HP proportionally.
@@ -55,6 +56,7 @@ function careerBonuses() {
   if (spec.focus === 'sentinel') add({ hp: 15 * spec.rank, defense: 2 * spec.rank });
   if (spec.focus === 'mystic') add({ magic: 4 * spec.rank, mp: 8 * spec.rank });
   add({ attack: p.career.endgame.paragon * 2, hp: p.career.endgame.paragon * 5 });
+  add(alchemyBonuses());
   return b;
 }
 
@@ -144,8 +146,7 @@ function completeBiology() {
 }
 
 function craftGem(id) {
-  if (!GEMS[id] || !pay({ essence: 30, ore: 3, gold: 100 })) return false;
-  p.career.alchemy.stock[id]++; save(); return true;
+  return Object.hasOwn(GEMS, id) && craftRecipe('gem-' + id);
 }
 
 function upgradeGem(id) {
@@ -265,3 +266,4 @@ function upgradeParagon() {
   if (p.level < 35 || end.paragon >= PROGRESSION.maxParagon || !pay({ shards: 25 * rank * rank })) return false;
   end.paragon++; save(); return true;
 }
+
