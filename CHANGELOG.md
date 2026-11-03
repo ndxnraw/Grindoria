@@ -23,6 +23,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 - Neúspešná výroba pri chýbajúcich zdrojoch, nesplnených podmienkach alebo plnom inventári nič nespotrebuje.
+- Panely výroby a alchýmie sa na úzkej obrazovke neorezávajú; overené v Chromium pri 1440 × 1080 a 390 × 844 vrátane výroby a použitia elixíra many.
 
 ## [0.18.0] - 2026-11-03
 
