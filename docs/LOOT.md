@@ -1,19 +1,22 @@
-# Korisť na zemi a ručné zbieranie
+# Korisť na zemi a zbieranie
 
-Od verzie 0.8.0 sa korisť z nepriateľov ani kameňov osudu nezbiera automaticky. Výbava, zlato, elixíry, plášte, materiály, biologické vzorky, kľúče aj relikvie fyzicky vyletia z porazeného cieľa a po 0,65 sekundy dopadnú na zem. Každý drop má vlastnú ikonu, pozíciu a identitu. Stack môže predstavovať viac kusov toho istého predmetu.
+Všetka korisť z nepriateľov a kameňov osudu najprv fyzicky vyletí z porazeného cieľa a po 0,65 sekundy dopadne na zem. Každý drop má vlastnú ikonu, pozíciu a identitu. Stack môže predstavovať viac kusov toho istého predmetu.
 
 ## Zbieranie
 
-1. Klikni **ľavým tlačidlom** priamo na predmet.
-2. Alebo ponechaj **kurzor nad predmetom a stlač Y**.
+Od verzie 0.8.1 platia tieto pravidlá:
 
-Postava musí byť živá, hra nesmie byť pozastavená a predmet musí byť dopadnutý v dosahu **180 herných jednotiek**. Zo vzdialenejšieho miesta hra vyzve na priblíženie; pohyb sám predmet nezdvihne. Prejdenie cez korisť, držanie Y či pravé tlačidlo nič nezbierajú. Jedna platná akcia vyzdvihne presne jeden drop. Dotyk na predmet funguje rovnako ako ľavé kliknutie.
+- **Zlato a zásoby** sa po dopade zbierajú **automaticky v dosahu 180 herných jednotiek**. Zahŕňa to elixíry, plášte, materiály, biologické vzorky, kľúče a vyrobené alchymistické kamene. Plná mriežka výbavy ich neblokuje.
+- **Y** jedným stlačením pozbiera **všetky dostupné dopadnuté predmety v rovnakom okolí**, vrátane výbavy a relikvií. Kurzor môže byť kdekoľvek alebo mimo hernej plochy; hover sa nevyžaduje.
+- **Ľavé kliknutie** na konkrétny predmet ho naďalej zdvihne samostatne. Dotyk funguje rovnako.
 
-Kláves **Y** je vyhradený zbieraniu; štvrtá schopnosť je teraz na **V**. Celá šestica je **Q R T V U O**. Označenie na lište, v návode a knihe schopností je zhodné.
+Postava musí byť živá a hra nesmie byť pozastavená. Padajúce a vzdialené predmety zostávajú na mieste. Hromadné zbieranie postupuje od najbližších predmetov. Ak sa časť výbavy nezmestí do inventára, zostane na zemi; zbieranie pritom pokračuje pri ďalších predmetoch, ktoré sa zmestia, a pri relikviách. Výbava ani relikvie sa samotnou blízkosťou nezdvihnú. Pravé tlačidlo predmety nezbiera.
 
-Výbava sa vloží do mriežky, zásoby sa pripočítajú k existujúcemu zásobníku, zlato k peňaženke a relikvia do zbierky. Pri plnom inventári zostane predmet na zemi. Nevykonáva sa jeho automatický predaj ani presun do iného úložiska. Zbieranie neznamená automatické nasadenie.
+Kláves **Y** je vyhradený zbieraniu; štvrtá schopnosť zostáva na **V**. Celá šestica je **Q R T V U O**. Označenie na lište, v návode a knihe schopností je zhodné.
 
-EXP, počítadlá úloh, prax schopností a body špecializácie sú postup postavy, preto sa započítajú pri zabití. Odmeny ručne vyzdvihnutých úloh a ručne dokončených výprav či výroby zostávajú priamou odmenou za túto výslovnú akciu.
+Výbava sa vloží do mriežky, zásoby sa pripočítajú k existujúcemu zásobníku, zlato k peňaženke a relikvia do zbierky. Pri plnom inventári zostane výbava na zemi bez automatického predaja. Zbieranie neznamená automatické nasadenie. Hromadná akcia aktualizuje HUD a uloží stav iba raz za celú dávku.
+
+EXP, počítadlá úloh, prax schopností a body špecializácie sa započítajú pri zabití. Odmeny ručne vyzdvihnutých úloh a ručne dokončených výprav či výroby zostávajú priamou odmenou za túto výslovnú akciu.
 
 ## Náhľad a porovnanie
 
@@ -27,9 +30,9 @@ Tooltip sa prepočítava pri pohybe kurzora, kamery, postavy, zmene výbavy aj v
 
 ## Uloženie
 
-Drop sa ukladá do snímky mapy vrátane celého predmetu, počtu, polohy a jedinečného `id`. Neaktívna mapa korisť zachová. Pri načítaní sú uložené predmety už dopadnuté; nedostanú novú náhodnú pozíciu ani sa automaticky nezdvihnú.
+Drop sa ukladá do snímky mapy vrátane celého predmetu, počtu, polohy a jedinečného `id`. Neaktívna mapa korisť zachová. Pri načítaní sú uložené predmety už dopadnuté; nedostanú novú náhodnú pozíciu. Po aktivácii mapy sa na zlato a zásoby uplatní automatické zbieranie v dosahu.
 
-Staršie nepozbierané zlaté kôpky sa premenia na ručne zbierateľné dropy pri zachovaní hodnoty. Obsah inventára sa spätne nemení. Zdvihnutý drop sa zo snímky odstráni a opakovaný pokus s rovnakou identitou nepridá ďalšiu odmenu.
+Staršie nepozbierané zlaté kôpky sa premenia na dropy zbierateľné podľa aktuálnych pravidiel pri zachovaní hodnoty. Obsah inventára sa spätne nemení. Zdvihnutý drop sa zo snímky odstráni a opakovaný pokus s rovnakou identitou nepridá ďalšiu odmenu.
 
 Trhlina má samostatnú korisť. Nepozbierané predmety sa pri jej ukončení prenesú späť do bežného chrámu popri jeho pôvodnej koristi, bez duplikovania. Korisť nemá časovač automatického zmiznutia.
 

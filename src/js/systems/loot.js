@@ -102,7 +102,7 @@ function grantGroundSupply(id, count) {
   holder[key] = (holder[key] || 0) + count; return true;
 }
 
-function pickUpGroundDrop(id) {
+function pickUpGroundDrop(id, batch = false) {
   if (!running || paused || p.hp <= 0) return false;
   const index = drops.findIndex(drop => drop.id === id);
   if (index < 0) return false;
@@ -110,7 +110,7 @@ function pickUpGroundDrop(id) {
   if (!view || drop.fallAge < LOOT_RULES.fallDuration) return false;
   if (Math.hypot(drop.x - p.x, drop.y - p.y) > LOOT_RULES.pickupRange) { toast('Priblíž sa ku koristi a znova klikni alebo stlač Y.'); return false; }
   if (drop.kind === 'gear') {
-    if (!addGearItem(cloneGroundDrop(drop).item)) { toast('V inventári nie je dosť miesta. Predmet zostáva na zemi.'); return false; }
+    if (!addGearItem(cloneGroundDrop(drop).item)) { if (!batch) toast('V inventári nie je dosť miesta. Predmet zostáva na zemi.'); return false; }
   } else if (drop.kind === 'supply') {
     if (!grantGroundSupply(drop.supplyId, drop.count)) return false;
   } else if (drop.kind === 'relic') collectRelic(drop.relicId);
@@ -119,19 +119,39 @@ function pickUpGroundDrop(id) {
     p.gold += drop.count;
   } else return false;
   drops.splice(index, 1);
-  float('+' + (view.count > 1 ? view.count + ' ' : '') + view.name, p.x, p.y - 75, '#dec799');
-  beep(750, .05); updateHUD(); save(); updateLootHover(); return true;
+  if (!batch) finishGroundPickup([view]);
+  return true;
 }
 
-function pickHoveredGroundDrop() {
-  if (!lootPointer.inside) return false;
-  updateLootHover();
-  const drop = drops.find(drop => drop.id === hoveredLootId);
-  return drop ? pickUpGroundDrop(drop.id) : false;
+function finishGroundPickup(items) {
+  const message = items.length > 2 ? 'Pozbierané predmety: ' + items.length : items.map(item => '+' + (item.count > 1 ? item.count + ' ' : '') + item.name).join(' · ');
+  float(message, p.x, p.y - 75, '#dec799');
+  beep(750, .05); updateHUD(); save(); updateLootHover();
+}
+
+function collectNearbyGroundDrops(automaticOnly = false) {
+  if (!running || paused || p.hp <= 0) return 0;
+  const candidates = drops.filter(drop => (!automaticOnly || drop.kind === 'gold' || drop.kind === 'supply') && drop.fallAge >= LOOT_RULES.fallDuration && Math.hypot(drop.x - p.x, drop.y - p.y) <= LOOT_RULES.pickupRange);
+  candidates.sort((a, b) => Math.hypot(a.x - p.x, a.y - p.y) - Math.hypot(b.x - p.x, b.y - p.y) || a.id - b.id);
+  const collected = [];
+  let blockedGear = false;
+  for (const drop of candidates) {
+    const view = groundDropView(drop);
+    if (pickUpGroundDrop(drop.id, true)) collected.push(view);
+    else if (drop.kind === 'gear') blockedGear = true;
+  }
+  if (collected.length) finishGroundPickup(collected);
+  if (blockedGear && !automaticOnly) toast('Časť výbavy sa do inventára nezmestí a zostáva na zemi.');
+  return collected.length;
+}
+
+function pickNearbyGroundDrops() {
+  return collectNearbyGroundDrops(false);
 }
 
 function updateGroundLoot(dt) {
+  if (!running || paused || p.hp <= 0) { updateLootHover(); return; }
   for (const drop of drops) drop.fallAge = Math.min(LOOT_RULES.fallDuration, (drop.fallAge || 0) + dt);
-  // No attraction, proximity collection, timers that erase loot, or implicit inventory transfer.
+  collectNearbyGroundDrops(true);
   updateLootHover();
 }

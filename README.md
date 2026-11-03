@@ -31,7 +31,7 @@ Otvor `dist/Grindoria.html` dvojklikom v prehliadači. Celá hra je v jednom sú
 | WASD / šípky | Pohyb |
 | Medzerník | Základný útok; možno držať |
 | Q R T V U O | Šesť schopností školy |
-| Y | Zdvihnúť predmet pod kurzorom |
+| Y | Pozbierať predmety v okolí bez kurzora |
 | E | Liečivý elixír |
 | B | Plášť statočnosti — prilákanie príšer |
 | I | Výbava a vlastnosti |
@@ -42,7 +42,7 @@ Otvor `dist/Grindoria.html` dvojklikom v prehliadači. Celá hra je v jednom sú
 | F | Obchodník |
 | Esc | Zavrieť okno |
 
-Kliknutie v teréne presúva postavu, kliknutie na blízku príšeru útočí. Ľavé kliknutie na korisť ju zdvihne; rovnako funguje Y s kurzorom nad predmetom. Dostupné je aj dotykové ovládanie.
+Kliknutie v teréne presúva postavu, kliknutie na blízku príšeru útočí. Ľavé kliknutie na korisť ju zdvihne; Y pozbiera predmety v okolí bez potreby kurzora. Dostupné je aj dotykové ovládanie.
 
 ## Obsah
 
@@ -62,7 +62,7 @@ Postup sa ukladá v `localStorage` pod kľúčom `grindoria-save-v1`. Závisí o
 
 ## Korisť na zemi
 
-Predmety z nepriateľov a kameňov vrátane zlata a materiálov sa zbierajú **iba ručne**. Po dopade klikni na ikonu alebo stlač **Y** nad predmetom; potrebuješ byť do 180 jednotiek. Plný inventár ponechá predmet na zemi. Tooltip ukáže požadovanú úroveň a farebné porovnanie s nasadenou výbavou. Štvrtá schopnosť sa presunula na **V**. Podrobnosti: [LOOT.md](docs/LOOT.md).
+Zlato a zásoby sa po dopade zbierajú **automaticky do 180 jednotiek**. **Y** pozbiera všetku dostupnú korisť v rovnakom okolí bez kurzora; konkrétny predmet možno zdvihnúť aj kliknutím. Výbava a relikvie vyžadujú Y alebo kliknutie. Plný inventár ponechá výbavu na zemi. Tooltip ukáže požadovanú úroveň a farebné porovnanie s nasadenou výbavou. Štvrtá schopnosť sa presunula na **V**. Podrobnosti: [LOOT.md](docs/LOOT.md).
 
 ## Inventár a výbava
 
@@ -108,7 +108,7 @@ npm run check:dist
 
 Testy pokrývajú všetkých 48 schopností, postup, ukladanie, mapy, respawn a prípravu vydania. Nenahrádzajú vizuálnu kontrolu v prehliadači. Rovnaké príkazy používa GitHub Actions na Windows a Linuxe.
 
-Zmeny zapisuj pod `[Unreleased]` v [CHANGELOG.md](CHANGELOG.md). Príkaz `npm run release -- 0.8.1` presunie poznámky do novej verzie, pridá dátum a odkazy, zosúladí verziu hry a vytvorí offline súbor. Sám necommituje ani neposiela zmeny na GitHub.
+Zmeny zapisuj pod `[Unreleased]` v [CHANGELOG.md](CHANGELOG.md). Príkaz `npm run release -- 0.8.2` presunie poznámky do novej verzie, pridá dátum a odkazy, zosúladí verziu hry a vytvorí offline súbor. Sám necommituje ani neposiela zmeny na GitHub.
 
 Podrobnosti: [vydávanie](docs/RELEASING.md), [architektúra](docs/ARCHITECTURE.md), [prispievanie](CONTRIBUTING.md).
 

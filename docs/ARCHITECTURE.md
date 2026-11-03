@@ -27,7 +27,7 @@ Funkcie môžu medzi súbormi volať zdieľané pomenované funkcie. Načítanie
 | `systems/career.js` | EXP ekonomika, migrácia, tréning, schopnosti, biológia, alchýmia, relikvie, špecializácia a expedície |
 | `systems/farming.js` | Skupinové body, varianty, trvalé spawn sloty, respawn, potulovanie, pomoc skupiny, aggro, priestorová mriežka a Plášť statočnosti |
 | `systems/inventory.js` | Rozloženie mriežky, migrácia, presun, nasadenie, bonusy a zásobníky |
-| `systems/loot.js` | Fyzické dropy, migrácia starých zlatých kôpok a výslovné zbieranie |
+| `systems/loot.js` | Fyzické dropy, migrácia starých zlatých kôpok a automatické zásoby a hromadné zbieranie |
 | `ui/` | Rozhranie, obchod, výbava, úlohy a kniha schopností |
 | `render/` | Vektorové kreslenie prostredia, postáv, príšer a efektov |
 
@@ -53,7 +53,7 @@ Plášť je uložený ako stoh `p.braveryCapes`, podobne ako elixíry. Výzva na
 
 `initializeInventory()` beží po migrácii kariéry a pred prvým načítaním mapy. Sloty definuje `data/items.js`; model pracuje s pôvodným batohom a číta množstvá zásob priamo z existujúcich počítadiel. `gearLayout()` najprv overí navrhnuté rozmiestnenie, až potom sa vykoná presun či výmena. `equipmentBonuses()` agreguje všetkých desať slotov do živých výpočtov štatistík. Vlastné SVG ikony sú v `ui/item-icons.js`, rozhranie v `ui/inventory.js`. Podrobnosti: [INVENTORY.md](INVENTORY.md).
 
-Korisť z nepriateľov vytvára `spawnGroundDrop()`. Materiály, predmety a relikvie sa nepridávajú pri smrti nepriateľa do inventára; pridá ich až úspešný `pickUpGroundDrop()`. Aktualizácia sveta iba posúva animáciu dopadu a aktualizuje náhľad. `render/loot.js` zdieľa SVG ikony inventára cez obrazovú cache. `ui/loot.js` vypočíta rozdiely voči rovnakému slotu a bezpečnú polohu tooltipu. `main.js` smeruje primárny klik a Y na aktuálny hit test; schopnosti používajú Q R T V U O. Pozri [LOOT.md](LOOT.md).
+Korisť z nepriateľov vytvára `spawnGroundDrop()`. Materiály, predmety a relikvie sa nepridávajú pri smrti nepriateľa do inventára; pridá ich až úspešný `pickUpGroundDrop()`. Aktualizácia sveta posúva animáciu dopadu, automaticky zbiera dopadnuté zlato a zásoby v dosahu a aktualizuje náhľad. `render/loot.js` zdieľa SVG ikony inventára cez obrazovú cache. `ui/loot.js` vypočíta rozdiely voči rovnakému slotu a bezpečnú polohu tooltipu. `main.js` smeruje primárny klik na aktuálny hit test, ale Y na hromadné zbieranie v okolí postavy bez kurzora; schopnosti používajú Q R T V U O. Pozri [LOOT.md](LOOT.md).
 
 ## Overovanie
 

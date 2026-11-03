@@ -12,27 +12,27 @@ test('enemy and stone kills put all item rewards on the ground and never in the 
   assert(run('drops.every(d=>d.id>0&&d.fallAge===0&&Number.isFinite(d.x)&&Number.isFinite(d.y))'));
 });
 
-test('loot falls once and stays fixed without attraction or proximity pickup, even under the player', () => {
+test('equipment falls once and stays on the ground until explicitly picked up', () => {
   const { run } = createGame();
-  run('running=true;p.x=400;p.y=400;let drop=spawnGroundDrop({kind:"gold",count:50},p);let x=drop.x,y=drop.y;');
+  run('running=true;p.x=400;p.y=400;let drop=spawnGroundDrop({kind:"gear",item:{name:"Meč",slot:"weapon",bonus:10}},p);let x=drop.x,y=drop.y;');
   assert.equal(run('pickUpGroundDrop(drop.id)'), false);
   run('for(let i=0;i<100;i++)updateGroundLoot(.05);p.x=drop.x;p.y=drop.y;for(let i=0;i<50;i++)update(.05);');
   assert.equal(run('drop.x'), run('x')); assert.equal(run('drop.y'), run('y'));
-  assert.equal(run('p.gold'), 0); assert.equal(run('drops.length'), 1);
-  assert.equal(run('pickUpGroundDrop(drop.id)'), true); assert.equal(run('p.gold'), 50);
-  assert.equal(run('pickUpGroundDrop(drop.id)'), false); assert.equal(run('p.gold'), 50);
+  assert.equal(run('p.bag.length'), 0); assert.equal(run('drops.length'), 1);
+  assert.equal(run('pickUpGroundDrop(drop.id)'), true); assert.equal(run('p.bag.length'), 1);
+  assert.equal(run('pickUpGroundDrop(drop.id)'), false); assert.equal(run('p.bag.length'), 1);
 });
 
-test('left click and Y under the cursor pick exactly the hovered drop; right click, repeats and empty cursor do nothing', () => {
+test('left click collects its target while Y gathers all landed nearby items without any cursor', () => {
   const { run, listeners } = createGame();
-  run('running=true;p.x=400;p.y=400;cam.x=p.x;cam.y=p.y;let a=spawnGroundDrop({kind:"gold",count:12},p),b=spawnGroundDrop({kind:"supply",supplyId:"potions",count:3},p);Object.assign(a,{x:400,y:400,launchX:400,launchY:400,fallAge:.65});Object.assign(b,{x:480,y:400,launchX:480,launchY:400,fallAge:.65});');
-  const pointer = { clientX: 600, clientY: 333, button: 2 };
-  listeners.get('game:pointerdown')(pointer); assert.equal(run('p.gold'), 0);
-  listeners.get('game:pointermove')(pointer);
-  listeners.get('keydown')({ key: 'Y', repeat: true, preventDefault() {} }); assert.equal(run('p.gold'), 0);
-  listeners.get('keydown')({ key: 'Y', repeat: false, preventDefault() {} }); assert.equal(run('p.gold'), 12); assert.equal(run('p.potions'), 5);
-  listeners.get('game:pointerdown')({ clientX: 680, clientY: 333, button: 0 }); assert.equal(run('p.potions'), 8); assert.equal(run('drops.length'), 0);
-  listeners.get('game:pointerleave')(); assert.equal(run('pickHoveredGroundDrop()'), false);
+  run('running=true;p.x=400;p.y=400;cam.x=p.x;cam.y=p.y;let a=spawnGroundDrop({kind:"gear",item:{name:"Prvý",slot:"weapon",bonus:1}},p),b=spawnGroundDrop({kind:"gear",item:{name:"Druhý",slot:"bracelet",bonus:1}},p);Object.assign(a,{x:400,y:400,launchX:400,launchY:400,fallAge:.65});Object.assign(b,{x:480,y:400,launchX:480,launchY:400,fallAge:.65});');
+  listeners.get('game:pointerdown')({ clientX: 600, clientY: 333, button: 2 }); assert.equal(run('p.bag.length'), 0);
+  listeners.get('game:pointerdown')({ clientX: 600, clientY: 333, button: 0 }); assert.equal(run('p.bag.length'), 1);
+  run('let near=spawnGroundDrop({kind:"gear",item:{name:"Tretí",slot:"necklace",bonus:1}},p),far=spawnGroundDrop({kind:"gear",item:{name:"Ďaleký",slot:"bracelet",bonus:1}},p),falling=spawnGroundDrop({kind:"gear",item:{name:"Padajúci",slot:"bracelet",bonus:1}},p);near.fallAge=.65;Object.assign(far,{x:581,y:400,fallAge:.65});clearLootPointer();');
+  listeners.get('keydown')({ key: 'Y', repeat: true, preventDefault() {} }); assert.equal(run('p.bag.length'), 1);
+  listeners.get('keydown')({ key: 'Y', repeat: false, preventDefault() {} }); assert.equal(run('p.bag.length'), 3);
+  assert.equal(run('drops.length'), 2); assert(run('drops.includes(far)&&drops.includes(falling)'));
+  assert.equal(run('pickNearbyGroundDrops()'), 0);
   assert.equal(run('spellKeys[3]'), 'v'); assert.equal(run('spellCD[3]'), 0);
 });
 
@@ -46,12 +46,46 @@ test('full inventory, distance, pause and death leave the item on the ground wit
   run('p.hp=100;'); assert.equal(run('pickUpGroundDrop(drop.id)'), true); assert.equal(run('p.bag.length'), 1);
 });
 
-test('supplies and relics enter progression only after manual pickup, including biological samples and keys', () => {
+test('gold and every supply type auto-collect only after landing and inside the exact range, even with a full bag', () => {
+  const { run, saved } = createGame();
+  run('running=true;p.x=400;p.y=400;for(let i=0;i<90;i++)addGearItem({slot:"bracelet",name:"Plný batoh",bonus:1});let payloads=[{kind:"gold",count:50},{kind:"supply",supplyId:"potions",count:3},{kind:"supply",supplyId:"braveryCapes",count:2},{kind:"supply",supplyId:"material:ore",count:7},{kind:"supply",supplyId:"gem:ruby",count:1}];for(const payload of payloads)spawnGroundDrop(payload,p);let edge=spawnGroundDrop({kind:"gold",count:10},p),outside=spawnGroundDrop({kind:"gold",count:100},p);Object.assign(edge,{x:580,y:400});Object.assign(outside,{x:580.01,y:400});let relic=spawnGroundDrop({kind:"relic",relicId:"valley",count:1},p),gear=spawnGroundDrop({kind:"gear",item:{name:"Meč",slot:"weapon",bonus:1}},p);');
+  run('updateGroundLoot(.64);'); assert.equal(run('p.gold'), 0); assert.equal(run('p.potions'), 5);
+  run('updateGroundLoot(.02);');
+  assert.equal(run('p.gold'), 60); assert.equal(run('p.potions'), 8); assert.equal(run('p.braveryCapes'), 12);
+  assert.equal(run('p.career.materials.ore'), 7); assert.equal(run('p.career.alchemy.stock.ruby'), 1);
+  assert.equal(run('p.bag.length'), 90); assert.equal(run('p.career.collection.valley'), undefined);
+  assert.equal(run('drops.length'), 3); assert(run('drops.includes(outside)&&drops.includes(gear)&&drops.includes(relic)'));
+  run('updateGroundLoot(1);'); assert.equal(run('p.gold'), 60);
+  const reloaded = createGame(JSON.parse(saved.get('grindoria-save-v1')));
+  assert.equal(reloaded.run('p.gold'), 60); assert.equal(reloaded.run('p.potions'), 8); assert.equal(reloaded.run('drops.length'), 3);
+});
+
+test('automatic collection and nearby Y are disabled before start, during pause and while dead', () => {
+  const { run } = createGame();
+  run('p.x=400;p.y=400;let drop=spawnGroundDrop({kind:"gold",count:50},p);drop.fallAge=.65;');
+  run('updateGroundLoot(1);'); assert.equal(run('p.gold'), 0); assert.equal(run('pickNearbyGroundDrops()'), 0);
+  run('running=true;paused=true;updateGroundLoot(1);'); assert.equal(run('p.gold'), 0); assert.equal(run('pickNearbyGroundDrops()'), 0);
+  run('paused=false;p.hp=0;updateGroundLoot(1);'); assert.equal(run('p.gold'), 0); assert.equal(run('pickNearbyGroundDrops()'), 0);
+  run('p.hp=100;updateGroundLoot(.05);'); assert.equal(run('p.gold'), 50);
+});
+
+test('nearby Y skips gear that cannot fit and continues picking smaller items and relics', () => {
+  const { run } = createGame();
+  run('running=true;p.x=400;p.y=400;for(let i=0;i<89;i++)addGearItem({slot:"bracelet",name:"Batoh",bonus:1});let large=spawnGroundDrop({kind:"gear",item:{name:"Brnenie",slot:"armor",bonus:1}},p),small=spawnGroundDrop({kind:"gear",item:{name:"Náušnice",slot:"earrings",bonus:1}},p),relic=spawnGroundDrop({kind:"relic",relicId:"valley",count:1},p);Object.assign(large,{x:400,y:400,fallAge:.65});Object.assign(small,{x:410,y:400,fallAge:.65});relic.fallAge=.65;clearLootPointer();');
+  assert.equal(run('pickNearbyGroundDrops()'), 2); assert.equal(run('p.bag.length'), 90);
+  assert.equal(run('p.career.collection.valley'), true); assert.equal(run('drops.length'), 1);
+  assert.equal(run('drops[0]===large'), true); assert.equal(run('pickNearbyGroundDrops()'), 0);
+});
+
+test('supplies are automatically collected after landing while relics wait for Y', () => {
   const { run } = createGame();
   run('running=true;p.level=10;p.x=400;p.y=400;rand=()=>0;for(let i=0;i<4;i++)careerKill({type:"wolf",level:10,x:400,y:400});for(let i=0;i<3;i++)careerKill({type:"boss",level:12,x:400,y:400});');
   assert.equal(run('p.career.materials.wolf'), 0); assert.equal(run('p.career.materials.keys'), 0); assert.equal(run('p.career.collection.valley'), undefined);
   assert(run('drops.some(d=>d.supplyId==="material:wolf")')); assert(run('drops.some(d=>d.supplyId==="material:keys")')); assert(run('drops.some(d=>d.kind==="relic")'));
-  run('for(const d of [...drops]){d.fallAge=.65;p.x=d.x;p.y=d.y;pickUpGroundDrop(d.id);}');
+  run('updateGroundLoot(.65);');
+  assert.equal(run('p.career.collection.valley'), undefined);
+  assert(run('drops.every(d=>d.kind==="relic")'));
+  run('pickNearbyGroundDrops();');
   assert.equal(run('p.career.materials.wolf'), 1); assert.equal(run('p.career.materials.keys'), 1); assert.equal(run('p.career.collection.valley'), true);
 });
 
@@ -106,5 +140,5 @@ test('hover is recalculated after canvas scrolling and equipment changes, rather
   assert.match(elements.get('loot-tooltip').innerHTML, /stat-loss/);
   run('canvas.getBoundingClientRect=()=>({left:0,top:150,width:W,height:H});updateLootHover();');
   assert.equal(elements.get('loot-tooltip').hidden, true);
-  assert.equal(run('pickHoveredGroundDrop()'), false); assert.equal(run('drops.length'), 1);
+  assert.equal(run('hoveredLootId'), null); assert.equal(run('pickNearbyGroundDrops()'), 1); assert.equal(run('drops.length'), 0);
 });

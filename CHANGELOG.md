@@ -10,6 +10,21 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.8.1] - 2026-11-03
+
+### Added
+
+### Changed
+
+- Zlato a všetky zásoby sa po dopade zbierajú automaticky v dosahu 180 jednotiek.
+- Y pozbiera všetky dostupné predmety v okolí postavy bez kurzora; ľavé kliknutie na konkrétny predmet zostáva dostupné.
+- Hromadné zbieranie uloží stav a aktualizuje HUD raz za celú dávku.
+
+### Fixed
+
+- Plná mriežka neblokuje automatické zlato a zásoby. Predmet, ktorý sa nezmestí, zostáva na zemi a nebráni zbieraniu ďalšej koristi.
+- Testy pokrývajú hranice dosahu, dopad, pauzu, smrť, zbieranie bez hoveru a pokračovanie pri plnom inventári.
+
 ## [0.8.0] - 2026-11-03
 
 ### Added
@@ -181,7 +196,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.8.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.8.1...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -192,3 +207,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.6.1]: https://github.com/ndxnraw/Grindoria/compare/v0.6.0...v0.6.1
 [0.7.0]: https://github.com/ndxnraw/Grindoria/compare/v0.6.1...v0.7.0
 [0.8.0]: https://github.com/ndxnraw/Grindoria/compare/v0.7.0...v0.8.0
+[0.8.1]: https://github.com/ndxnraw/Grindoria/compare/v0.8.0...v0.8.1

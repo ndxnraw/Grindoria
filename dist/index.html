@@ -70,9 +70,9 @@ nav{gap:18px}.player{min-height:92px}.mana{height:7px;margin-top:4px;background:
 .item-description .inventory-usable{color:#9bce85!important}.item-description .inventory-unusable{color:#e58f7f!important}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b>ALPHA 0.8.0</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b>ALPHA 0.8.1</b></span></header>
 <main><div class="world-title"><div><span class="eyebrow">KAPITOLA I · PREBUDENIE</span><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Pod pokojnými korunami sa prebúdza stará temnota.</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
-<section class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb WASD, útok medzerník, schopnosť Q, liečenie E, korisť ľavým kliknutím alebo Y nad predmetom."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
+<section class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb WASD, útok medzerník, schopnosť Q, liečenie E, korisť ľavým kliknutím alebo Y v okolí, zlato a zásoby automaticky."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
 <div class="hud player"><div class="portrait">侍</div><div><div class="player-name"><b id="playerclass">Bojovník</b> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 60 skúseností</small></div></div>
 <div class="hud map"><canvas id="minimap" width="138" height="118"></canvas><span id="minimaplabel">ÚDOLIE TICHÉHO VETRA</span></div>
 <div class="hud quest"><span class="eyebrow">AKTÍVNA ÚLOHA</span><h3>Praskliny v pokoji</h3><p>Osloboď údolie od temnoty.</p><div id="q-wolves">◇ Poraz príšery <b>0 / 5</b></div><div id="q-stones">◇ Znič kamene osudu <b>0 / 3</b></div><button id="claim" hidden>Vyzdvihnúť odmenu · 150 zlata</button><small id="questnote">Odmena: 150 zlata + 60 skúseností</small></div>
@@ -1358,7 +1358,7 @@ function grantGroundSupply(id, count) {
   holder[key] = (holder[key] || 0) + count; return true;
 }
 
-function pickUpGroundDrop(id) {
+function pickUpGroundDrop(id, batch = false) {
   if (!running || paused || p.hp <= 0) return false;
   const index = drops.findIndex(drop => drop.id === id);
   if (index < 0) return false;
@@ -1366,7 +1366,7 @@ function pickUpGroundDrop(id) {
   if (!view || drop.fallAge < LOOT_RULES.fallDuration) return false;
   if (Math.hypot(drop.x - p.x, drop.y - p.y) > LOOT_RULES.pickupRange) { toast('Priblíž sa ku koristi a znova klikni alebo stlač Y.'); return false; }
   if (drop.kind === 'gear') {
-    if (!addGearItem(cloneGroundDrop(drop).item)) { toast('V inventári nie je dosť miesta. Predmet zostáva na zemi.'); return false; }
+    if (!addGearItem(cloneGroundDrop(drop).item)) { if (!batch) toast('V inventári nie je dosť miesta. Predmet zostáva na zemi.'); return false; }
   } else if (drop.kind === 'supply') {
     if (!grantGroundSupply(drop.supplyId, drop.count)) return false;
   } else if (drop.kind === 'relic') collectRelic(drop.relicId);
@@ -1375,20 +1375,40 @@ function pickUpGroundDrop(id) {
     p.gold += drop.count;
   } else return false;
   drops.splice(index, 1);
-  float('+' + (view.count > 1 ? view.count + ' ' : '') + view.name, p.x, p.y - 75, '#dec799');
-  beep(750, .05); updateHUD(); save(); updateLootHover(); return true;
+  if (!batch) finishGroundPickup([view]);
+  return true;
 }
 
-function pickHoveredGroundDrop() {
-  if (!lootPointer.inside) return false;
-  updateLootHover();
-  const drop = drops.find(drop => drop.id === hoveredLootId);
-  return drop ? pickUpGroundDrop(drop.id) : false;
+function finishGroundPickup(items) {
+  const message = items.length > 2 ? 'Pozbierané predmety: ' + items.length : items.map(item => '+' + (item.count > 1 ? item.count + ' ' : '') + item.name).join(' · ');
+  float(message, p.x, p.y - 75, '#dec799');
+  beep(750, .05); updateHUD(); save(); updateLootHover();
+}
+
+function collectNearbyGroundDrops(automaticOnly = false) {
+  if (!running || paused || p.hp <= 0) return 0;
+  const candidates = drops.filter(drop => (!automaticOnly || drop.kind === 'gold' || drop.kind === 'supply') && drop.fallAge >= LOOT_RULES.fallDuration && Math.hypot(drop.x - p.x, drop.y - p.y) <= LOOT_RULES.pickupRange);
+  candidates.sort((a, b) => Math.hypot(a.x - p.x, a.y - p.y) - Math.hypot(b.x - p.x, b.y - p.y) || a.id - b.id);
+  const collected = [];
+  let blockedGear = false;
+  for (const drop of candidates) {
+    const view = groundDropView(drop);
+    if (pickUpGroundDrop(drop.id, true)) collected.push(view);
+    else if (drop.kind === 'gear') blockedGear = true;
+  }
+  if (collected.length) finishGroundPickup(collected);
+  if (blockedGear && !automaticOnly) toast('Časť výbavy sa do inventára nezmestí a zostáva na zemi.');
+  return collected.length;
+}
+
+function pickNearbyGroundDrops() {
+  return collectNearbyGroundDrops(false);
 }
 
 function updateGroundLoot(dt) {
+  if (!running || paused || p.hp <= 0) { updateLootHover(); return; }
   for (const drop of drops) drop.fallAge = Math.min(LOOT_RULES.fallDuration, (drop.fallAge || 0) + dt);
-  // No attraction, proximity collection, timers that erase loot, or implicit inventory transfer.
+  collectNearbyGroundDrops(true);
   updateLootHover();
 }
 
@@ -1407,7 +1427,7 @@ function travelMenu(){if(!running)return;if(p.career.endgame.run){careerPanel('e
 
 function spellbook(){if(!running)return;modal(`<span class="eyebrow">${role().name} · ${school().name}</span><h2>Kniha schopností</h2><p>Šesť klasických schopností školy podľa Metin2. Popisy uvádzajú základné hodnoty na stupni 1. Vyššie stupne zlepšujú silu kúzla alebo trvanie aury a skracujú obnovu. Vlastné 2D animácie sú prispôsobené tomuto prototypu.</p><div class="spell-list">${school().skills.map((s,i)=>`<div><kbd>${spellKeys[i].toUpperCase()}</kbd><span><b>${s[0]} · stupeň ${skillProgress(skillKey(i)).rank}</b><small>${s[6]}<br>${s[3]} many · obnova ${s[2]} s</small></span></div>`).join('')}</div><p>Manu obnovuješ priebežne, rýchlejšie v útočisku. Inteligencia zvyšuje manu aj poškodenie kúziel. Školu si vyber pred vstupom do hry. Prax a knihy pre zvyšovanie schopností nájdeš v Progrese (P).</p>`);}
 
-function help(){modal('<span class="eyebrow">SPRIEVODCA</span><h2>Cesta bojovníka</h2><p><b>WASD / šípky</b> — pohyb<br><b>Medzerník</b> — základný útok (možno držať)<br><b>Q R T V U O</b> — šesť schopností školy<br><b>P</b> — dlhodobá progresia<br><b>K</b> — kniha schopností a ich účinky<br><b>Y</b> — zdvihnúť predmet pod kurzorom (aj ľavým kliknutím)<br><b>E</b> — elixír zdravia<br><b>B</b> — Plášť statočnosti (650 jednotiek, 18 s)<br><b>I</b> — výbava a vlastnosti<br><b>J</b> — denník úloh<br><b>M</b> — cestovanie medzi mapami z útočiska<br><b>F</b> — obchodník<br><b>Esc</b> — zavrieť okno</p><p>Vyber si povolanie a školu pred vstupom do hry. Kúzla spotrebúvajú manu, ktorá sa automaticky obnovuje. Modré, zelené a fialové efekty označujú rôzne schopnosti, jedy a ochranné aury.</p><p>Príšery sa voľne potulujú po okolí. Zásah vyprovokuje ich skupinu, spolu najviac päť príšer; plášť pritiahne všetky pohyblivé ciele v dosahu. Bossovia napádajú automaticky. Fialové označenie znamená elitu, zlaté vzácnu príšeru. Respawn: bežné príšery 5 s, elity 8 s, vzácne varianty 20 s, vzácne hliadky 75 s, kamene 18 s a bossovia 40 s. Plášť spotrebuje 1 kus aj bez cieľov; ďalšie kúpiš u obchodníka alebo získaš z koristi. Útočisko je chránené: plášť ani útočné kúzla v ňom nefungujú. Každá mapa má vlastných protivníkov a silnejšie odmeny. Boss pod 30 % zdravia zúri; Sura ho dokáže potlačiť Zrušením kúzla.</p><p>Vlastná 2D adaptácia šiestich klasických schopností každej školy, nie pôvodné animácie ani presná simulácia hodnôt Metin2. Postup sa ukladá v tomto prehliadači.</p>');}
+function help(){modal('<span class="eyebrow">SPRIEVODCA</span><h2>Cesta bojovníka</h2><p><b>WASD / šípky</b> — pohyb<br><b>Medzerník</b> — základný útok (možno držať)<br><b>Q R T V U O</b> — šesť schopností školy<br><b>P</b> — dlhodobá progresia<br><b>K</b> — kniha schopností a ich účinky<br><b>Y</b> — pozbierať predmety v okolí bez kurzora; zlato a zásoby sa zbierajú automaticky<br><b>E</b> — elixír zdravia<br><b>B</b> — Plášť statočnosti (650 jednotiek, 18 s)<br><b>I</b> — výbava a vlastnosti<br><b>J</b> — denník úloh<br><b>M</b> — cestovanie medzi mapami z útočiska<br><b>F</b> — obchodník<br><b>Esc</b> — zavrieť okno</p><p>Vyber si povolanie a školu pred vstupom do hry. Kúzla spotrebúvajú manu, ktorá sa automaticky obnovuje. Modré, zelené a fialové efekty označujú rôzne schopnosti, jedy a ochranné aury.</p><p>Príšery sa voľne potulujú po okolí. Zásah vyprovokuje ich skupinu, spolu najviac päť príšer; plášť pritiahne všetky pohyblivé ciele v dosahu. Bossovia napádajú automaticky. Fialové označenie znamená elitu, zlaté vzácnu príšeru. Respawn: bežné príšery 5 s, elity 8 s, vzácne varianty 20 s, vzácne hliadky 75 s, kamene 18 s a bossovia 40 s. Plášť spotrebuje 1 kus aj bez cieľov; ďalšie kúpiš u obchodníka alebo získaš z koristi. Útočisko je chránené: plášť ani útočné kúzla v ňom nefungujú. Každá mapa má vlastných protivníkov a silnejšie odmeny. Boss pod 30 % zdravia zúri; Sura ho dokáže potlačiť Zrušením kúzla.</p><p>Vlastná 2D adaptácia šiestich klasických schopností každej školy, nie pôvodné animácie ani presná simulácia hodnôt Metin2. Postup sa ukladá v tomto prehliadači.</p>');}
 
 function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
@@ -1633,7 +1653,7 @@ function groundDropTooltip(drop) {
     const specials = Array.isArray(item.special) ? item.special : [];
     details = `<h4>Základné atribúty</h4><div class="loot-stat"><span>${ITEM_STATS[spec.stat]}</span><b>${signedItemStat(spec.stat, base)}</b></div><div class="loot-stat"><span>Vylepšenie +${item.enhance || 0}</span><b>${signedItemStat(spec.stat, (item.enhance || 0) * 3 * (spec.stat === 'crit' ? .01 : 1))}</b></div><h4>Bonusy</h4>${extras.length ? extras.map(([stat, value]) => `<div class="loot-stat"><span>${ITEM_STATS[stat]}</span><b>${signedItemStat(stat, value)}</b></div>`).join('') : '<p>Bez dodatočných bonusov.</p>'}<h4>Špeciálne vlastnosti</h4><p>${specials.length ? specials.map(value => escapeHTML(value)).join('<br>') : 'Žiadne.'}</p><p class="${usable ? 'stat-gain' : 'stat-loss'}">${usable ? 'Možno vybaviť · ' + spec.name : escapeHTML(itemEquipReason(item))}</p>${usable ? groundItemComparison(item) : ''}`;
   } else details = `<p>${escapeHTML(item.description)}</p><div class="loot-stat"><span>Množstvo</span><b>${item.count.toLocaleString('sk-SK')}</b></div><h4>Vybavenie</h4><p>${drop.kind === 'relic' ? 'Relikvia zbierky · nezaberá slot výbavy.' : 'Nie je výbava postavy.'}</p>`;
-  return `<div class="loot-heading rarity-${item.rarity || 0}"><div class="loot-item-icon">${itemIcon(item)}</div><div><small>${gear ? EQUIPMENT[item.slot].name : drop.kind === 'gold' ? 'MENA' : drop.kind === 'relic' ? 'RELIKVIA' : 'ZÁSOBY'} · ${rarityName(item.rarity)}</small><h3>${escapeHTML(item.name)}${gear ? ' +' + (item.enhance || 0) : ''}</h3></div></div><div class="loot-stat ${p.level < required ? 'stat-loss' : ''}"><span>Požadovaná úroveň</span><b>${required}</b></div>${details}<p class="loot-controls">${drop.fallAge < LOOT_RULES.fallDuration ? 'Predmet dopadá na zem…' : Math.hypot(drop.x - p.x, drop.y - p.y) > LOOT_RULES.pickupRange ? 'Priblíž sa · dosah zbierania 180' : 'Ľavé tlačidlo alebo Y · zdvihnúť'}</p>`;
+  return `<div class="loot-heading rarity-${item.rarity || 0}"><div class="loot-item-icon">${itemIcon(item)}</div><div><small>${gear ? EQUIPMENT[item.slot].name : drop.kind === 'gold' ? 'MENA' : drop.kind === 'relic' ? 'RELIKVIA' : 'ZÁSOBY'} · ${rarityName(item.rarity)}</small><h3>${escapeHTML(item.name)}${gear ? ' +' + (item.enhance || 0) : ''}</h3></div></div><div class="loot-stat ${p.level < required ? 'stat-loss' : ''}"><span>Požadovaná úroveň</span><b>${required}</b></div>${details}<p class="loot-controls">${drop.fallAge < LOOT_RULES.fallDuration ? 'Predmet dopadá na zem…' : Math.hypot(drop.x - p.x, drop.y - p.y) > LOOT_RULES.pickupRange ? 'Priblíž sa · dosah zbierania 180' : drop.kind === 'gold' || drop.kind === 'supply' ? 'Zbiera sa automaticky v okolí postavy' : 'Ľavé tlačidlo · predmet / Y · korisť v okolí'}</p>`;
 }
 
 function floatingTooltipPosition(x, y, width, height, viewportWidth, viewportHeight) {
@@ -1968,7 +1988,7 @@ window.addEventListener('resize',resize);resize();
 
 requestAnimationFrame(frame);
 window.addEventListener('blur',keysClear);document.addEventListener('visibilitychange',()=>{keysClear();save();});
-window.addEventListener('keydown',e=>{if([' ','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))e.preventDefault();let key=e.key.length===1?e.key.toLowerCase():e.key;if(key==='Escape'){closeModal();return;}if(!running||paused)return;if(e.target&&['BUTTON','INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)&&key===' ')return;keys[key]=true;if(e.repeat)return;if(key==='y'){e.preventDefault();pickHoveredGroundDrop();return;}if(spellKeys.includes(key))castSkill(spellKeys.indexOf(key));if(key==='b')useBraveryCape();if(key==='p')careerPanel();if(key==='k')spellbook();if(key==='m')travelMenu();if(key==='e')potion();if(key==='i')inventory();if(key==='f')shop();if(key==='j')journal();if(key==='?')help();});window.addEventListener('keyup',e=>keys[e.key.length===1?e.key.toLowerCase():e.key]=false);
+window.addEventListener('keydown',e=>{if([' ','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))e.preventDefault();let key=e.key.length===1?e.key.toLowerCase():e.key;if(key==='Escape'){closeModal();return;}if(!running||paused)return;if(e.target&&['BUTTON','INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)&&key===' ')return;keys[key]=true;if(e.repeat)return;if(key==='y'){e.preventDefault();pickNearbyGroundDrops();return;}if(spellKeys.includes(key))castSkill(spellKeys.indexOf(key));if(key==='b')useBraveryCape();if(key==='p')careerPanel();if(key==='k')spellbook();if(key==='m')travelMenu();if(key==='e')potion();if(key==='i')inventory();if(key==='f')shop();if(key==='j')journal();if(key==='?')help();});window.addEventListener('keyup',e=>keys[e.key.length===1?e.key.toLowerCase():e.key]=false);
 canvas.addEventListener('pointermove',setLootPointer);canvas.addEventListener('pointerleave',clearLootPointer);window.addEventListener('blur',clearLootPointer);
 canvas.addEventListener('pointerdown',e=>{if(e.button!==undefined&&e.button!==0)return;if(!running||paused)return;setLootPointer(e);const loot=groundDropAt(lootPointer.x,lootPointer.y);if(loot){pickUpGroundDrop(loot.id);canvas.focus();return;}const r=canvas.getBoundingClientRect(),a=world(e.clientX-r.left,e.clientY-r.top);const m=mobs.find(m=>m.hp>0&&Math.hypot(m.x-a.x,(m.y-a.y)*.7)<45);if(m){if(Math.hypot(m.x-p.x,m.y-p.y)<100){attack();target=null;}else target={x:m.x,y:m.y};}else if(Math.hypot(a.x-870,a.y-1160)<50)travelMenu();else if(Math.hypot(a.x-1110,a.y-1110)<45)shop();else target=a;canvas.focus();});
 $('start').onclick=startGame;$('attack').onclick=()=>attack();$('skill').onclick=()=>attack(true);$('potion').onclick=potion;$('inventory').onclick=()=>{if(running)inventory();};$('close').onclick=closeModal;$('claim').onclick=()=>{if(p.claimed||p.kills<5||p.stones<3)return;p.claimed=true;p.gold+=150;experience(60);toast('Údolie je zachránené!\n+150 zlata · +60 skúseností');updateHUD();save();};
