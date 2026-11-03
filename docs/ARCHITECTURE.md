@@ -19,7 +19,7 @@ Funkcie môžu medzi súbormi volať zdieľané pomenované funkcie. Načítanie
 
 | Priečinok | Obsah |
 | --- | --- |
-| `data/` | `CLASSES`, `SCHOOLS`, `MAPS`, `EQUIPMENT`, rozmery predmetov a herné hodnoty |
+| `data/` | `CLASSES`, `SCHOOLS`, `MAPS`, `EQUIPMENT`, `METIN_TYPES`, rozmery predmetov a herné hodnoty |
 | `core/` | Stav, náhodný generátor, kamera, časovanie a aktualizácia sveta |
 | `systems/combat.js` | Útoky, kúzla, mana, stavy, strely a AI bossa |
 | `systems/progression.js` | Skúsenosti, výbava, vlastnosti a odmeny |
@@ -28,6 +28,7 @@ Funkcie môžu medzi súbormi volať zdieľané pomenované funkcie. Načítanie
 | `systems/farming.js` | Skupinové body, varianty, trvalé spawn sloty, respawn, potulovanie, pomoc skupiny, aggro, priestorová mriežka a Plášť statočnosti |
 | `systems/inventory.js` | Rozloženie mriežky, migrácia, presun, nasadenie, bonusy a zásobníky |
 | `systems/loot.js` | Fyzické dropy, migrácia starých zlatých kôpok a automatické zásoby a hromadné zbieranie |
+| `systems/metins.js` | 99 úrovní Šuterlandu, typy, obrana, vlny posíl, migrácia a loot pooly Metinov |
 | `ui/` | Rozhranie, obchod, výbava, úlohy a kniha schopností |
 | `render/` | Vektorové kreslenie prostredia, postáv, príšer a efektov |
 
@@ -54,6 +55,10 @@ Plášť je uložený ako stoh `p.braveryCapes`, podobne ako elixíry. Výzva na
 `initializeInventory()` beží po migrácii kariéry a pred prvým načítaním mapy. Sloty definuje `data/items.js`; model pracuje s pôvodným batohom a číta množstvá zásob priamo z existujúcich počítadiel. `gearLayout()` najprv overí navrhnuté rozmiestnenie, až potom sa vykoná presun či výmena. `equipmentBonuses()` agreguje všetkých desať slotov do živých výpočtov štatistík. Vlastné SVG ikony sú v `ui/item-icons.js`, rozhranie v `ui/inventory.js`. Podrobnosti: [INVENTORY.md](INVENTORY.md).
 
 Korisť z nepriateľov vytvára `spawnGroundDrop()`. Materiály, predmety a relikvie sa nepridávajú pri smrti nepriateľa do inventára; pridá ich až úspešný `pickUpGroundDrop()`. Aktualizácia sveta posúva animáciu dopadu, automaticky zbiera dopadnuté zlato a zásoby v dosahu a aktualizuje náhľad. `render/loot.js` zdieľa SVG ikony inventára cez obrazovú cache. `ui/loot.js` vypočíta rozdiely voči rovnakému slotu a bezpečnú polohu tooltipu. `main.js` smeruje primárny klik na aktuálny hit test, ale Y na hromadné zbieranie v okolí postavy bez kurzora; schopnosti používajú Q R T V U O. Pozri [LOOT.md](LOOT.md).
+
+`configureMetin()` nahradí generické kamene typovanými Metinmi. `restoreMetin()` migruje staré zdravie pomerne a ponechá časovače smrti. `updateMetins()` spravuje časy boja, vlny aj konečnú životnosť posíl; `restoreMetinGuards()` obnoví uložené posily bez nových identít. Posily neprechádzajú bežným respawnom. `metinDamage()` sa uplatní v skutočnom zásahu pred odpočtom zdravia a liečením Sury. `dropMetinLoot()` je jediný predmetový loot pool pri smrti kameňa; všeobecný materiálový drop z kariéry sa preň nepoužíva.
+
+Šuterland generuje iba 99 pevných identít kameňov v štyroch úrovňových oblastiach. Pôvodné mapy ponechávajú svoje populácie. Modely má `render/metins.js`; Atlas `ui/metins.js`. Detailné pravidlá: [METINS.md](METINS.md).
 
 ## Overovanie
 

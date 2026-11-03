@@ -12,7 +12,7 @@ const PROGRESSION = {
 
 const MATERIALS = {
   essence: 'Esencia', ore: 'Ruda', training: 'Tréningové pečate',
-  books: 'Knihy schopností', dust: 'Alchymistický prach',
+  books: 'Knihy schopností', dust: 'Alchymistický prach', upgradeStones: 'Kamene vylepšenia',
   wolf: 'Vlčie tkanivo', venom: 'Vak jedu', frost: 'Ľadové jadro',
   ember: 'Démonický popol', keys: 'Kľúče trhliny', shards: 'Úlomky relikvie'
 };

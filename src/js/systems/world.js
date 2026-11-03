@@ -23,7 +23,7 @@ function loadMap(id, initial=false) {
   cfg.mobSpeed=75+(cfg.scale-1)*14; seed=cfg.seed; decor.length=0;
   for(let i=0;i<250;i++) {
     const x=rand()*SIZE,y=rand()*SIZE;
-    if(Math.hypot(x-1000,y-1050)>190) decor.push({x,y,type:rand()<(id==='valley'?.67:id==='snow'?.45:id==='desert'?.2:.12)?'tree':'rock',s:.6+rand()*.8,t:rand()});
+    if(Math.hypot(x-1000,y-1050)>190) decor.push({x,y,type:rand()<(cfg.metinsOnly?0:id==='valley'?.67:id==='snow'?.45:id==='desert'?.2:.12)?'tree':'rock',s:.6+rand()*.8,t:rand()});
   }
   legacyRiftLayout=false; spawnPoints.length=0;
   spawnPoints.push(...buildSpawnPoints(id));

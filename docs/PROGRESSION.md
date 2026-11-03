@@ -36,7 +36,7 @@ Maximum je 99. Nový level dáva 3 body vlastností, vyššie maximálne zdravie
 | Tréning atribútov | Pečate z každého piateho primeraného zabitia, zlato | Až 20 dodatočných bodov každého atribútu bez zvýšenia levelu |
 | Schopnosti | Zabitia po zásahu kúzlom alebo pri aktívnej aure, knihy z kameňov/bossov | Stupne 1–20, silnejšie útoky/liečenie alebo dlhšie aury a kratšia obnova |
 | Biológ | Vzorky konkrétnych máp a primerané zabitia medzi odovzdaniami | Štyri trvalé bonusy za dokončený výskum |
-| Vybavenie | Predmety zo silnejších nepriateľov, rudu a zlato | Bonus podľa sily zdroja a vylepšenie konkrétneho predmetu až na +9 |
+| Vybavenie | Predmety zo silnejších nepriateľov, rudu, zlato a od +4 kamene vylepšenia | Bonus podľa sily zdroja a vylepšenie konkrétneho predmetu až na +9 |
 | Alchýmia | Esenciu, rudu, prach a zlato | Tri súčasne aktívne kamene, výrobu a fúziu až na stupeň 5 |
 | Relikvie | Bossov štyroch oblastí | Unikátne bonusy a setové odmeny; duplikáty sú prach |
 | Špecializácia | Body za primeraných bossov a každé tri vylepšenia schopností | Trvalú voľbu z troch smerov, každý do stupňa 10 |

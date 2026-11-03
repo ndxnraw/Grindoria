@@ -2,7 +2,7 @@
 
 ## Hustota a spawnovacie body
 
-Každá mapa má štyri priestorovo oddelené oblasti. Skupinový bod obsahuje šesť pohyblivých príšer. Okrem nich sú v každej oblasti dve miesta pre kamene a jedna vzácna hliadka; samostatný bod patrí bossovi.
+Štyri pôvodné bojové mapy majú štyri priestorovo oddelené oblasti. Skupinový bod obsahuje šesť pohyblivých príšer. Okrem nich sú v každej oblasti dve miesta pre kamene a jedna vzácna hliadka; samostatný bod patrí bossovi.
 
 | Mapa | Skupinové body | Pohyblivé príšery vrátane hliadok | Kamene | Boss | Všetky body | Všetci nepriatelia |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -47,6 +47,12 @@ Bežné, elitné aj vzácne pohyblivé príšery sú neutrálne. Samotná blízk
 Zásah vyprovokuje obeť a najbližších živých členov tej istej skupiny do vzdialenosti **300 jednotiek**, spolu najviac **päť príšer vrátane obete**. Pomoc sa ďalej nereťazí na susedné skupiny, mŕtvi ani vzdialení členovia sa nepridajú. Opakované zásahy do rovnakej obete nedopĺňajú šiesteho člena k už aktívnej pätici. Aj smrteľný zásah zalarmuje spojencov. Priame plošné zasiahnutie ďalších cieľov a plášť môžu úmyselne vyprovokovať viac než päť nepriateľov; limit sa vzťahuje na automatickú pomoc skupiny.
 
 Vyprovokované príšery sa bránia a prenasledujú hráča; každý ich útok predĺži bojové vyprovokovanie na 8 sekúnd. Pri úteku čas vyprší a vrátia sa domov, po návrate opäť pokračujú v potulovaní. Bežné prenasledovanie má hranicu 700 jednotiek od domova. Bossovia sú výnimka: hráča automaticky napádajú v dosahu 500 jednotiek.
+
+## Metiny a výnimka Šuterlandu
+
+Metiny majú vlastné typy, modely, obranu a dropy. Po zásahu privolávajú agresívne posily podľa svojej úrovne; na príslušnú generáciu kameňa môže byť najviac 8 živých obrancov, na mape spolu 60. Posily sa po smrti samostatne neobnovujú a po 45 sekundách bez zabitia zmiznú bez odmeny. Ich EXP je 35 % bežnej odmeny.
+
+Šuterland má namiesto stálych skupín a bossa presne 99 Metinov úrovní 1–99. Bežné príšery sa tam objavia iba ako posily privolané bojom s kameňom. Podrobné modely, výpočty a individuálne loot pooly opisuje [METINS.md](METINS.md).
 
 ## Plášť statočnosti
 

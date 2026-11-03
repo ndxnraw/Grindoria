@@ -29,7 +29,7 @@ Elixír možno vypiť aj v otvorenom inventári. Plášť uzavrie inventár a po
 | Opasok | 2 × 1 | Obrana |
 | Talizman | 1 × 2 | Kritický zásah |
 
-Každý typ padá z bežných zdrojov výbavy v troch vzácnostiach. Nové predmety uvádzajú a kontrolujú požadovanú úroveň; stará výbava bez tejto požiadavky zostáva použiteľná. Všetkých desať slotov možno vylepšovať u kováča. Rozmery a číselné bonusy predstavujú vlastné nastavenie Grindorie.
+Každý typ padá z bežných zdrojov výbavy v troch vzácnostiach. Nové predmety uvádzajú a kontrolujú požadovanú úroveň; stará výbava bez tejto požiadavky zostáva použiteľná. Všetkých desať slotov možno vylepšovať u kováča. Od cieľového stupňa +4 spotrebuje okrem rudy a zlata aj kamene vylepšenia z Metinov. Rozmery a číselné bonusy predstavujú vlastné nastavenie Grindorie.
 
 Bonusy sa počítajú zo skutočne nasadených predmetov pri útoku, kúzlení, prijatom poškodení aj pohybe. Zloženie predmetu zníži maximá zdravia a many a oreže aktuálne hodnoty na nový limit; opakované nasadzovanie neposkytuje bezplatné liečenie.
 

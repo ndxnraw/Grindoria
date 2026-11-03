@@ -27,6 +27,7 @@ function initializeCareer() {
       endgame: { highest: 0, paragon: 0, run: null }
     };
   }
+  for (const id of Object.keys(MATERIALS)) p.career.materials[id] ??= 0;
   p.level = Math.max(1, Math.min(PROGRESSION.maxLevel, p.level));
   if (p.level === PROGRESSION.maxLevel) p.xp = 0;
   // World difficulty changed; preserve death timers/positions while scaling HP proportionally.
@@ -69,7 +70,7 @@ function enemyXP(m) {
   const factor = delta >= 0 ? Math.min(1.5, 1 + delta * .05) : delta <= -8 ? 0 : [1, .85, .7, .55, .4, .25, .1, .05][-delta];
   const type = m.type === 'boss' ? 12 : m.type === 'stone' ? 3 : 1;
   const cap = m.type === 'boss' ? .35 : m.type === 'stone' ? .12 : .03;
-  return Math.max(0, Math.floor(Math.min(6 * enemyLevel(m) ** 1.15 * type * factor * (ENEMY_VARIANTS[m.variant]?.xp||1), needXP() * cap)));
+  return Math.max(0, Math.floor(Math.min(6 * enemyLevel(m) ** 1.15 * type * factor * (ENEMY_VARIANTS[m.variant]?.xp||1) * (m.metinParentId ? .35 : 1), needXP() * cap)));
 }
 
 function addMaterial(id, count = 1) {
@@ -142,7 +143,7 @@ function completeBiology() {
   save(); return true;
 }
 
-function enhancementCost(item) { const rank = (item?.enhance || 0) + 1; return { ore: 2 * rank * rank, gold: 100 * rank * rank }; }
+function enhancementCost(item) { const rank = (item?.enhance || 0) + 1; return { ore: 2 * rank * rank, gold: 100 * rank * rank, ...(rank >= 4 ? { upgradeStones: Math.ceil((rank - 3) / 2) } : {}) }; }
 
 function enhanceEquipment(slot) {
   const item = p.equipped[slot];
@@ -190,7 +191,7 @@ function collectRelic(id) {
 }
 
 function careerKill(m) {
-  const giveMaterial = (id, count = 1) => dropMaterial(id, count, m);
+  const giveMaterial = (id, count = 1) => { if (m.type !== 'stone') dropMaterial(id, count, m); };
   const eligible = rewardEligible(m), c = p.career;
   // Biological specimens stay available when revisiting lower-level maps.
   const bio = BIOLOGY.find(b => b.map === p.mapId);

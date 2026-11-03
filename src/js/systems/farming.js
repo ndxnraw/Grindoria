@@ -21,6 +21,7 @@ function spawnJitter(id, axis) {
 }
 
 function buildSpawnPoints(id) {
+  if (MAPS[id].metinsOnly) return buildSuterlandPoints();
   const cfg = MAPS[id], points = [], perArea = cfg.packCount / 4;
   for (const area of FARM_AREAS) {
     const rows = Math.ceil(perArea / 2);
@@ -58,7 +59,7 @@ function createSpawnEnemy(point, slot = 0) {
   const level = normalLevel + (type === 'wolf' ? v.level : 0);
   const hp = Math.round((type === 'boss' ? 620 : type === 'stone' ? 160 : 55) * cfg.scale * (1 + (level - cfg.enemyLevel) * .08) * (type === 'wolf' ? v.hp : 1));
   const attack = cfg.scale * (1 + (level - cfg.enemyLevel) * .06) * (type === 'wolf' ? v.damage : 1);
-  return {
+  const enemy = {
     spawnId: point.id + ':' + slot, spawnPointId: point.id, spawnSlot: slot,
     type, skin: cfg.skin, area: point.area, variant, rareSlot: point.kind === 'rare',
     x, y, homeX: x, homeY: y, level, baseLevel: level, hp, max: hp, baseMax: hp,
@@ -67,6 +68,7 @@ function createSpawnEnemy(point, slot = 0) {
     dead: 0, cd: 1, hit: 0, windup: 0, taunt: 0, engaged: 0,
     roamTarget: null, roamWait: rand() * 4, returning: false, skillContributors: []
   };
+  return type === 'stone' ? configureMetin(enemy, point) : enemy;
 }
 
 function applyRiftScaling(m, tier, runId) {
@@ -75,6 +77,7 @@ function applyRiftScaling(m, tier, runId) {
   m.max = Math.round(m.baseMax * (1 + tier * .12)); m.hp = m.max;
   m.level = Math.min(105, m.baseLevel + tier * 2);
   m.attackScale = m.baseAttack * (1 + tier * .12);
+  if (m.type === 'stone') { const stats = metinStats(m.level, m.metinType); m.metinArmor = stats.armor; m.metinResistance = stats.resistance; }
 }
 
 function hydrateSpawnPopulation(old) {
@@ -89,14 +92,15 @@ function hydrateSpawnPopulation(old) {
   if (!old?.mobs?.length) return generated;
   if (old.spawnSchema === SPAWN_RULES.schema) {
     const saved = new Map(old.mobs.map(m => [m.spawnId, m]));
-    return generated.map(m => {
+    return restoreMetinGuards(generated.map(m => {
       const prior = saved.get(m.spawnId);
+      if (m.type === 'stone') return restoreMetin(m, prior);
       return prior ? { ...m, ...prior, dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0, roamTarget: null, roamWait: rand() * 4, returning: false } : m;
-    });
+    }), old.mobs);
   }
   // Upgrade old sparse populations into distinct new slots without reviving their dead.
   const used = new Set();
-  for (const prior of old.mobs) {
+  for (const prior of old.mobs.filter(m => !m.metinParentId)) {
     let best = -1, distance = Infinity;
     for (let i = 0; i < generated.length; i++) {
       if (used.has(i) || generated[i].type !== prior.type) continue;
@@ -111,7 +115,7 @@ function hydrateSpawnPopulation(old) {
     m.skillContributors = [...(prior.skillContributors || [])];
     if (prior.dot) m.dot = { ...prior.dot };
   }
-  return generated;
+  return restoreMetinGuards(generated, old.mobs);
 }
 
 function loadLegacyRift(old) {
@@ -119,7 +123,7 @@ function loadLegacyRift(old) {
   return old.mobs.map((prior, index) => {
     const id = 'legacy-rift:' + index, x = prior.homeX ?? prior.x, y = prior.homeY ?? prior.y;
     spawnPoints.push({ id, kind: prior.type === 'wolf' ? 'pack' : prior.type, x, y, area: farmAreaAt(prior).id, offset: 0 });
-    return { ...prior, spawnId: id + ':0', spawnPointId: id, spawnSlot: 0, variant: 'normal', respawnSeconds: prior.type === 'boss' ? 40 : prior.type === 'stone' ? 18 : 5, taunt: 0, engaged: 0, stun: 0, windup: 0 };
+    return upgradeLegacyMetin({ ...prior, spawnId: id + ':0', spawnPointId: id, spawnSlot: 0, variant: 'normal', respawnSeconds: prior.type === 'boss' ? 40 : prior.type === 'stone' ? 18 : 5, taunt: 0, engaged: 0, stun: 0, windup: 0 }, spawnPoints.at(-1));
   });
 }
 
@@ -129,9 +133,11 @@ function respawnEnemy(m) {
     m.hp = m.max; m.x = m.homeX ?? m.x; m.y = m.homeY ?? m.y;
     m.dead = 0; m.cd = 1; m.taunt = 0; m.engaged = 0; m.stun = 0; m.slow = 0; m.dot = null; m.windup = 0; m.skillContributors = [];
     m.roamTarget = null; m.roamWait = rand() * 4; m.returning = false;
+    if (m.type === 'stone') { m.metinCombat = 0; m.metinWaveTimer = 0; m.metinGeneration = (m.metinGeneration || 0) + 1; }
     return;
   }
   const fresh = createSpawnEnemy(point, m.spawnSlot);
+  if (m.type === 'stone') fresh.metinGeneration = (m.metinGeneration || 0) + 1;
   const run = p.career.endgame.run;
   if (run && p.mapId === 'temple') applyRiftScaling(fresh, run.tier, run.id);
   // Keep object identity: projectiles and skills may still reference this slot.
@@ -223,7 +229,7 @@ function updateEnemySpawns(dt, safe) {
     m.hit = Math.max(0, (m.hit || 0) - dt); m.cd = (m.cd || 0) - dt;
     m.taunt = Math.max(0, (m.taunt || 0) - dt); m.engaged = Math.max(0, (m.engaged || 0) - dt);
     if (safe || active('stealth')) { m.taunt = 0; m.engaged = 0; }
-    if (m.hp <= 0) { m.dead -= dt; if (m.dead <= 0) respawnEnemy(m); continue; }
+    if (m.hp <= 0) { if (m.metinParentId) continue; m.dead -= dt; if (m.dead <= 0) respawnEnemy(m); continue; }
     if (m.type !== 'wolf' || m.stun > 0) continue;
     const d = Math.hypot(m.x - p.x, m.y - p.y), home = Math.hypot(m.x - m.homeX, m.y - m.homeY);
     const forced = m.taunt > 0 || m.engaged > 0;

@@ -3,7 +3,7 @@ function drawFarmRegions() {
     const a = screen((area.x1 + area.x2) / 2, area.y1 - 35);
     if (a.x < -160 || a.x > W + 160 || a.y < -40 || a.y > H + 40) continue;
     text(area.name, a.x, a.y, map().accent, 12);
-    text('Lv.' + (map().enemyLevel + area.offset) + '–' + (map().enemyLevel + area.offset + 2), a.x, a.y + 15, '#ccd1b8', 9);
+    text((map().metinsOnly ? 'Metiny Lv.' : 'Lv.') + farmAreaLevelRange(area).join('–'), a.x, a.y + 15, '#ccd1b8', 9);
   }
   for (const point of spawnPoints) {
     if (point.kind !== 'pack' && point.kind !== 'rare') continue;
@@ -60,7 +60,7 @@ function drawFarmMinimap() {
   mini.font = '7px Segoe UI'; mini.textAlign = 'left'; mini.fillStyle = '#fff1c6';
   for (const area of FARM_AREAS) {
     const x = area.x1 / SIZE * 138, y = area.y1 / SIZE * 118;
-    mini.fillText('L' + (map().enemyLevel + area.offset), x, y + 8);
+    mini.fillText('L' + (map().metinsOnly ? farmAreaLevelRange(area).join('–') : map().enemyLevel + area.offset), x, y + 8);
   }
   for (const point of spawnPoints) if (point.kind === 'pack' || point.kind === 'rare') {
     mini.strokeStyle = point.kind === 'rare' ? '#edd183aa' : '#f2deb54a'; mini.beginPath();

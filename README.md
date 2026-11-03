@@ -4,7 +4,7 @@
 
 Hrateľné fantasy akčné RPG v prehliadači. Projekt vlastní a spravuje [@ndxnraw](https://github.com/ndxnraw).
 
-Sólo 2D hra inšpirovaná klasickými MMORPG: štyri povolania, osem škôl so 48 schopnosťami, štyri mapy, bossovia, výbava a úlohy. Grafika a animácie sú vlastné; nejde o oficiálny klient Metin2 ani presnú reprodukciu jeho mechaník.
+Sólo 2D hra inšpirovaná klasickými MMORPG: štyri povolania, osem škôl so 48 schopnosťami, päť máp, bossovia, výbava a úlohy. Grafika a animácie sú vlastné; nejde o oficiálny klient Metin2 ani presnú reprodukciu jeho mechaník.
 
 ## Spustenie
 
@@ -47,7 +47,7 @@ Kliknutie v teréne presúva postavu, kliknutie na blízku príšeru útočí. �
 ## Obsah
 
 - Bojovník, nindža, Sura a šaman; každé povolanie má dve školy.
-- Údolie tichého vetra, Púšť zapadnutých chrámov, Hory večného mrazu a Chrám červeného plameňa.
+- Údolie tichého vetra, Púšť zapadnutých chrámov, Hory večného mrazu, Chrám červeného plameňa a Šuterland.
 - Úrovne, skúsenosti, zlato, mana, sila, vitalita, obratnosť a inteligencia.
 - Mriežkový inventár 5 × 9 na dvoch stranách, viacpolíčkové predmety, presúvanie, tooltipy, triedenie a zásobníky.
 - Desať slotov výbavy s okamžitými bonusmi, vlastné ikony, nasadzovanie, predaj, potvrdené odstraňovanie a vylepšovanie.
@@ -59,6 +59,12 @@ Kliknutie v teréne presúva postavu, kliknutie na blízku príšeru útočí. �
 - Respawn: bežné príšery 5 s, elity 8 s, vzácne varianty 20 s, hliadky 75 s, kamene 18 s a bossovia 40 s aktívneho času mapy.
 
 Postup sa ukladá v `localStorage` pod kľúčom `grindoria-save-v1`. Závisí od prehliadača a umiestnenia súboru; medzi zariadeniami a adresami sa automaticky neprenáša. Stav neaktívnej mapy vrátane časovačov je pozastavený.
+
+## Metiny a Šuterland
+
+Osem typov Metinov má vlastné modely, úrovne, obtiažnosť, životy, odolnosť a loot pooly. Počas útoku pravidelne privolávajú agresívnych obrancov podľa úrovne. **M → Šuterland** vedie na mapu s 99 Metinmi, po jednom pre každú úroveň 1–99; bez boja sa tam bežné príšery nevyskytujú.
+
+**M → Atlas Metinov** ukazuje konkrétne šance na Yang, rudu, knihy, alchymistické materiály, kamene vylepšenia, výbavu a relikvie. Kamene vylepšenia používa kováč od +4. Všetky dropy najprv dopadnú na zem a používajú aktuálne pravidlá zbierania. Pozri [METINS.md](docs/METINS.md).
 
 ## Korisť na zemi
 
@@ -72,9 +78,9 @@ Zlato a zásoby sa po dopade zbierajú **automaticky do 180 jednotiek**. **Y** p
 
 Panel **P** sprístupňuje všetky cesty rozvoja a ich náklady. Prvá úroveň vyžaduje 600 EXP, úroveň 10 už vyše 100 000 EXP na ďalší level. Príliš slabé ciele neposkytujú EXP a opakovateľné úlohy tento limit neobchádzajú. Starší postup sa migruje pri zachovaní levelu a pomernej EXP pozície.
 
-Materiály, knihy a prax umožňujú zlepšovať postavu aj bez zvýšenia levelu. Mapy sú odporúčané pre úrovne 1, 8, 18 a 35; od úrovne 35 sa otvárajú silnejúce trhliny. Podrobné vzorce, príklady, zdroje materiálov a limity opisuje [PROGRESSION.md](docs/PROGRESSION.md).
+Materiály, knihy a prax umožňujú zlepšovať postavu aj bez zvýšenia levelu. Štyri pôvodné bojové mapy sú odporúčané pre úrovne 1, 8, 18 a 35; Šuterland ponúka Metiny všetkých úrovní 1–99; od úrovne 35 sa otvárajú silnejúce trhliny. Podrobné vzorce, príklady, zdroje materiálov a limity opisuje [PROGRESSION.md](docs/PROGRESSION.md).
 
-Mapy teraz obsahujú 148–196 pohyblivých príšer, osem kameňov a bossa. Každá má 24–32 skupinových bodov a štyri vzácne hliadky. **B** použije jeden Plášť statočnosti a pritiahne živé pohyblivé ciele v okolí. Počet kusov nájdeš na lište a vo výbave, ďalšie predáva obchodník. Oblasti, dropy a presné pravidlá vysvetľuje [FARMING.md](docs/FARMING.md).
+Štyri pôvodné mapy obsahujú 148–196 pohyblivých príšer, osem Metinov a bossa. Každá má 24–32 skupinových bodov a štyri vzácne hliadky. **B** použije jeden Plášť statočnosti a pritiahne živé pohyblivé ciele v okolí. Počet kusov nájdeš na lište a vo výbave, ďalšie predáva obchodník. Oblasti, dropy a presné pravidlá vysvetľuje [FARMING.md](docs/FARMING.md).
 
 ## Štruktúra
 
@@ -108,7 +114,7 @@ npm run check:dist
 
 Testy pokrývajú všetkých 48 schopností, postup, ukladanie, mapy, respawn a prípravu vydania. Nenahrádzajú vizuálnu kontrolu v prehliadači. Rovnaké príkazy používa GitHub Actions na Windows a Linuxe.
 
-Zmeny zapisuj pod `[Unreleased]` v [CHANGELOG.md](CHANGELOG.md). Príkaz `npm run release -- 0.8.2` presunie poznámky do novej verzie, pridá dátum a odkazy, zosúladí verziu hry a vytvorí offline súbor. Sám necommituje ani neposiela zmeny na GitHub.
+Zmeny zapisuj pod `[Unreleased]` v [CHANGELOG.md](CHANGELOG.md). Príkaz `npm run release -- 0.9.1` presunie poznámky do novej verzie, pridá dátum a odkazy, zosúladí verziu hry a vytvorí offline súbor. Sám necommituje ani neposiela zmeny na GitHub.
 
 Podrobnosti: [vydávanie](docs/RELEASING.md), [architektúra](docs/ARCHITECTURE.md), [prispievanie](CONTRIBUTING.md).
 
