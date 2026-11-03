@@ -189,7 +189,6 @@ const CLASSES={warrior:{name:'Bojovník',desc:'Meč, sila a odolnosť. Telesná 
 // Mechanics and vector animations are adaptations for this standalone 2D game.
 
 
-
 // src/js/data/skills.js
 const SCHOOLS={
 body:{name:'Telesná sila',classId:'warrior',skills:[
@@ -256,7 +255,6 @@ healing:{name:'Liečenie',classId:'shaman',skills:[
 ['Rýchlosť','speed',16,20,0,0,'Na 12 s zrýchli pohyb a obnovovanie many.'],
 ['Zvýšenie útoku','attackUp',17,22,0,0,'Na 12 s zvýši silu útokov o 35 %.']
 ]}};
-
 
 
 // src/js/data/maps.js
@@ -334,7 +332,6 @@ const SPECIALIZATIONS = {
 };
 
 
-
 // src/js/data/forge.js
 const FORGE_RULES={
  success:[0,.95,.9,.8,.65,.5,.35,.23,.14,.08],
@@ -376,7 +373,6 @@ const FARM_AREAS = [
 
 
 
-
 // src/js/data/items.js
 const INVENTORY = { schema: 1, columns: 5, rows: 9, pageSize: 45, pages: 2 };
 const EQUIPMENT = {
@@ -392,7 +388,6 @@ const EQUIPMENT = {
   talisman: { name: 'Talizman', size: [1, 2], stat: 'crit', base: 1, scale: .025, rare: 1, names: ['Pečať pútnika', 'Mesačná pečať', 'Dračia pečať'] }
 };
 const ITEM_STATS = { attack: 'Útok', defense: 'Obrana', hp: 'Max. zdravie', mp: 'Max. mana', magic: 'Sila kúziel', speed: 'Rýchlosť pohybu', crit: 'Kritický zásah' };
-
 
 
 // src/js/data/rarities.js
@@ -427,7 +422,6 @@ const ITEM_AFFIXES = {
  metinDamage:{base:.025,scale:.0005,percent:true},bossDamage:{base:.025,scale:.0005,percent:true}
 };
 Object.assign(ITEM_STATS,{penetration:'Prenikavý zásah',attackSpeed:'Rýchlosť útoku',wolfDamage:'Poškodenie · vlci',scorpionDamage:'Poškodenie · škorpióny',yetiDamage:'Poškodenie · yeti',demonDamage:'Poškodenie · démoni',metinDamage:'Poškodenie · Metiny',bossDamage:'Poškodenie · bossovia'});
-
 
 
 // src/js/data/equipment-models.js
@@ -515,7 +509,6 @@ for (let variant=0;variant<3;variant++) {
 }
 
 
-
 // src/js/data/metins.js
 const METIN_RULES = { schema: 1, combatWindow: 6, firstWave: .1, maxGuards: 8, globalGuards: 60, guardLifetime: 45 };
 // Loot material entries are [chance, minimum amount, maximum amount].
@@ -538,7 +531,6 @@ const METIN_GUARDS = [
 ];
 
 for(const type of Object.values(METIN_TYPES))type.interval=Math.round(type.interval*.55*100)/100;
-
 
 
 // src/js/data/battle.js
@@ -589,12 +581,10 @@ for (const [type, spec] of Object.entries(DAMAGE_TYPES)) ITEM_STATS[type+'Resist
 const POTION_RULES = { heal: 65, cooldown: 4, autoThreshold: .45 };
 
 
-
 // src/js/data/characters.js
 const CHARACTER_RULES = { maxCharacters: 8, nameMin: 3, nameMax: 16, backupVersion: 2, maxBackupCharacters: 128, maxBackupBytes: 16 * 1024 * 1024, storageKey: 'grindoria-characters-v1' };
 const DEFAULT_SCHOOLS = { warrior: 'body', ninja: 'blade', sura: 'weapon', shaman: 'dragon' };
 const CHARACTER_ACHIEVEMENTS = { firstKill: 'Prvý protivník', firstMetin: 'Lámač kameňov', firstBoss: 'Víťaz nad strážcom', hunter100: 'Lovec stovky' };
-
 
 
 // src/js/data/crafting.js
@@ -681,7 +671,6 @@ function loadLegacyPlayerSave() {
   } catch {}
   return null;
 }
-
 
 
 // src/js/core/character-store.js
@@ -1027,7 +1016,6 @@ let capeCooldown=0,legacyRiftLayout=false,lastMiniMapPaint=-Infinity;
 
 
 
-
 // src/js/core/runtime.js
 function rand(){seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;}
 
@@ -1205,7 +1193,6 @@ function claimBoss(){if(p.bossClaimed||p.bossKills<1)return;p.bossClaimed=true;p
 function claimHunt(){if(p.career.eligibleKills<(p.huntClaimed+1)*10)return;p.huntClaimed++;p.gold+=60;addMaterial('training');save();updateHUD();journal();}
 
 
-
 // src/js/systems/locations.js
 const travelCombat={time:0};
 function safeZone(id=p.mapId){return MAPS[id]?.safeZone||MAPS.valley.safeZone;}
@@ -1237,7 +1224,6 @@ function migrateMapSize(state,id){
  }
  return next;
 }
-
 
 
 // src/js/systems/world.js
@@ -1287,7 +1273,6 @@ function loadMap(id, initial=false) {
   if(!initial){closeModal();save();toast(cfg.name+'\nOdporúčaná úroveň '+cfg.level+'+');}
   return true;
 }
-
 
 
 // src/js/systems/career.js
@@ -1742,7 +1727,6 @@ function restoreSpawnLocation(enemy, fresh, state) {
 }
 
 
-
 // src/js/systems/farming.js
 function isSanctuary(entity) {
   const zone=safeZone();return map().town||Math.hypot(entity.x-zone.x,entity.y-zone.y)<zone.radius;
@@ -2029,7 +2013,6 @@ function dropFarmEquipment(m) {
   if (m.type === 'boss') return spawnGroundDrop({ kind: 'gear', item: makeItem(false, m) }, m);
   if (m.type === 'stone' || rare || rand() < (elite ? .2 : .03)) return spawnGroundDrop({ kind: 'gear', item: makeItem(false, m) }, m);
 }
-
 
 
 
@@ -2330,7 +2313,6 @@ function equipmentItemName(slot,rarity,weaponKind) {
 }
 
 
-
 // src/js/systems/item-generation.js
 function raritySpec(id) {return RARITIES.find(spec=>spec.id===id)||RARITIES[0];}
 function rarityRank(id) {return raritySpec(id).rank;}
@@ -2402,7 +2384,6 @@ function enemyGearBonus(enemy) {
  const kind=enemy.type==='stone'?'metin':enemy.type==='boss'?'boss':enemy.skin||'wolf';
  return Math.max(0,Math.min(ITEM_GENERATION.maxEnemyBonus,equipmentBonuses()[kind+'Damage']||0));
 }
-
 
 
 // src/js/systems/loot.js
@@ -2759,7 +2740,6 @@ function dropMetinLoot(stone) {
 }
 
 
-
 // src/js/systems/targeting.js
 const combatAim = { inside: false, clientX: 0, clientY: 0 };
 let playerMoving = false;
@@ -2880,7 +2860,6 @@ function updatePlayerControl(dt) {
   }
   updateFacing();
 }
-
 
 
 // src/js/systems/battle.js
@@ -3021,7 +3000,6 @@ function updateShots(dt) {
 }
 
 
-
 // src/js/systems/abilities.js
 function dashDestination(point) {
   const desired={x:Math.max(45,Math.min(SIZE-45,point.x)),y:Math.max(45,Math.min(SIZE-45,point.y))};
@@ -3107,7 +3085,6 @@ function attack(skill=false) {
   }
   delete buffs.stealth;beep(230);return true;
 }
-
 
 
 // src/js/systems/combat-assist.js
@@ -3200,7 +3177,6 @@ function updateAutoSpell(dt) {
 }
 
 
-
 // src/js/ui/panels.js
 function modal(html){setCharacterScreenMode(true);$('intro').inert=true;clearLootPointer();$('modal').className='overlay';paused=true;keysClear();$('modalcontent').innerHTML=html;$('modal').hidden=false;$('modalcard').scrollTop=0;$('close').focus({preventScroll:true});}
 
@@ -3216,7 +3192,6 @@ function travelMenu(){if(!running)return;if(p.career.endgame.run){careerPanel('e
 function help(){modal('<h2>Ako hrať</h2><p><b>WASD / šípky</b> — pohyb, zrušenie nasledovania<br><b>Kurzor</b> — smer útoku bez cieľa<br><b>SPACE</b> — útok; zásah označí nepriateľa<br><b>Klik na nepriateľa / Metin</b> — označiť a zobraziť údaje<br><b>Druhý klik na rovnaký cieľ</b> — nasledovať a automaticky útočiť<br><b>Klik do prázdna</b> — zrušiť cieľ<br><b>Q R T V U O</b> — schopnosti<br><b>E</b> — elixír<br><b>B</b> — Plášť statočnosti<br><b>Y / klik na korisť</b> — zbieranie; zlato a zásoby priamo do inventára<br><b>I</b> — inventár<br><b>K</b> — kniha schopností<br><b>P</b> — progresia<br><b>J</b> — úlohy<br><b>M</b> — mapy<br><b>F</b> — blízke NPC v Meste<br><b>C</b> — bojový manuál<br><b>F10 / ⛶</b> — celá obrazovka<br><b>Esc</b> — zavrieť okno; v hre zrušiť cieľ a automatiku</p><p>Okná zatvoríš aj kliknutím mimo nich.</p>');}
 
 function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-
 
 
 
@@ -3452,7 +3427,6 @@ function rarityGuide() {
 }
 
 
-
 // src/js/ui/loot.js
 function signedItemStat(stat, value) {
   const amount = percentItemStat(stat) ? Number((Math.abs(value) * 100).toFixed(2)) + ' %' : Number(Math.abs(value).toFixed(2));
@@ -3518,7 +3492,6 @@ function updateLootHover(dt = 0) {
 }
 
 
-
 // src/js/ui/metins.js
 function metinPercent(value) { return Number((value * 100).toFixed(2)).toLocaleString('sk-SK') + ' %'; }
 
@@ -3529,7 +3502,6 @@ function metinCodex() {
     return `<section class="career-card metin-card" style="border-left-color:${type.glow}"><h3>${type.name}</h3><p>Úroveň ${type.levels.join('–')} · ${type.difficulty}<br>Vlny: ${type.wave} / ${type.interval.toLocaleString('sk-SK')} s<br>Na Lv.${type.levels[0]}: HP ${example.hp} · pancier ${example.armor} · odolnosť ${Math.round(example.resistance * 100)} %<br>Typy: ${Object.entries(METIN_RESISTS[id]||{}).map(([kind,value])=>DAMAGE_TYPES[kind].name+' '+resistanceText(value)).join(', ')}</p><h4>Dropy</h4><p>Yang: 100 % · ${pool.yang.join('–')} × (1 + úroveň × 0,12)<br>${['ore', 'books', 'essence', 'dust', 'upgradeStones'].map(key => MATERIALS[key] + ': ' + metinPercent(pool[key][0]) + ' · ' + pool[key][1] + '–' + pool[key][2] + ' ks').join('<br>')}<br>Výbava: ${metinPercent(pool.gear)} · ${pool.slots.map(slot => EQUIPMENT[slot].name).join(', ')}<br>Rarity výbavy na Lv.${type.levels[0]}: ${itemRarityChances({type:'stone',metinType:id,level:type.levels[0]}).map(entry=>rarityName(entry.id)+' '+Number((entry.chance*100).toFixed(4)).toLocaleString('sk-SK')+' %').join(', ')}<br>Relikvia: ${metinPercent(pool.rare)} · ${RELICS[pool.relic].name}<br>${MATERIALS[pool.extra[0]]}: ${metinPercent(pool.extra[1])}</p></section>`;
   }).join('')}<p>Drop materiálov, výbavy a relikvií: kameň najviac o 5 úrovní slabší. Kamene vylepšenia: kováč od +4. Limit obrancov: 8 na kameň, 60 na mapu; po 45 s zmiznú bez odmeny.</p>`);
 }
-
 
 
 // src/js/ui/battle.js
@@ -3573,7 +3545,6 @@ function combatManual() {
   const resist=playerResistances();
   modal(`<span class="eyebrow">ŠKOLA BOJA · C</span><h2>Bojový manuál</h2><h3>Automatická pomoc</h3><p><b>Automierenie</b> pri útoku mieri na najbližší cieľ do 500; označený má prednosť. <b>Autospell</b> čaruje iba v boji s označeným cieľom, so spotrebou many a cooldownmi. Výpady môžu premiestniť postavu. Automatika čaká pri pauze, neaktívnom okne a v bezpečnej zóne. <b>Autoelixíry:</b> pod 45 % HP, +65 HP, spotreba 1 kusu. Spoločný cooldown s ručným použitím: 4 s.</p><h3>Typy poškodenia a tvoje odolnosti</h3><div class="battle-type-grid">${Object.entries(DAMAGE_TYPES).map(([id,spec])=>`<div style="border-left-color:${spec.color}"><b>${spec.name}</b><span>${resistanceText(resist[id])}</span></div>`).join('')}</div><p>Obrana: fyzické zásahy 100 %, prierazné 60 %, ostatné 25 %. Kladná odolnosť znižuje poškodenie, záporná zvyšuje. Limity: +75 % / −50 %. Metiny navyše používajú vlastný pancier a základnú odolnosť. Oslabenie Zrušením kúzla znižuje kladné typové odolnosti o 15 percentuálnych bodov a potláča zúrivosť bossa.</p><p>Kritický zásah: 1,8× poškodenie. Prenikavý zásah ignoruje kladné odolnosti a ochranu Metinu, strop šance 50 %. Bonus rýchlosti útoku: najviac 60 %, odstup aspoň 0,16 s. Bonus proti skupine: najviac +100 %. Jed a oheň pôsobia súčasne; rovnaký efekt obnoví trvanie a zachová silnejšiu hodnotu. Útok zblízka zasahuje čelný výsek, kruhové schopnosti celé okolie. Šípy letia priamo; vybrané magické strely sledujú cieľ.</p><p>Zásah vyprovokuje najviac 5 členov skupiny. Plášť pritiahne pohyblivé ciele do 650 na 18 s, spotreba 1 kusu. Bossovia útočia bez vyprovokovania; pod 30 % HP zúria.</p><h3>Kombá</h3>${Object.entries(SCHOOL_COMBOS).map(([id,combo])=>`<div class="career-card"><h3>${combo.name}</h3><p>${SCHOOLS[id].name}: ${combo.sequence.map(i=>SCHOOLS[id].skills[i][0]).join(' → ')}<br>Do 4 s · druhá schopnosť +${Math.round(combo.bonus*100)} % poškodenia/liečenia.</p></div>`).join('')}`);
 }
-
 
 
 // src/js/ui/hud.js
@@ -3652,7 +3623,6 @@ function initializeFullscreen() {
 }
 
 
-
 // src/js/ui/combat-assist.js
 function updateCombatAssistHUD() {
   for (const [id, setting, label] of [['auto-aim','autoAim','Automierenie'],['auto-spell','autoSpell','Autospell'],['auto-potion','autoPotion','Autoelixíry']]) {
@@ -3669,7 +3639,6 @@ function hotbarAction(action) {
   if (!paused) canvas.focus({preventScroll:true});
   return result;
 }
-
 
 
 // src/js/ui/career.js
@@ -3810,7 +3779,6 @@ function characterAvatar(record) {
 function characterBackdrop() { return '<svg class="character-scenery" viewBox="0 0 1300 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="realm-sky" x2="0" y2="1"><stop stop-color="#1e3939"/><stop offset="1" stop-color="#0a1b19"/></linearGradient><radialGradient id="realm-moon"><stop stop-color="#efd8a2" stop-opacity=".5"/><stop offset="1" stop-color="#d5e6c8" stop-opacity="0"/></radialGradient></defs><path fill="url(#realm-sky)" d="M0 0h1300v720H0Z"/><circle cx="740" cy="180" r="210" fill="url(#realm-moon)"/><circle cx="740" cy="160" r="55" fill="#aabfb0" opacity=".15"/><path d="m0 360 200-240 150 210 155-200 220 260 140-190 190 220 145-160 100 180v280H0Z" fill="#314a42" opacity=".4"/><path d="m0 410 190-100 130 150 160-140 210 150 160-120 190 120 160-130 100 70v310H0Z" fill="#0d2520"/><path d="M520 430v-170h30v-25h-58l127-35 80 35h-55v25h29v170m140 0v-170h30v-25h-58l127-35 80 35h-55v25h29v170" fill="#78917a" opacity=".17"/><path d="M450 510h550l150 210H180Z" fill="#31483a" opacity=".2"/><path d="M0 600q300-80 600-20t700-15v155H0" fill="#071410"/></svg>'; }
 
 
-
 // src/js/ui/characters.js
 function setCharacterScreenMode(selecting) {
   for(const child of Array.from($('game-shell').children||[]))if(!['intro','modal'].includes(child.id))child.inert=selecting;
@@ -3875,7 +3843,6 @@ function showCharacterSaveFailure() {
 }
 
 
-
 // src/js/render/primitives.js
 function polygon(points,fill,stroke){ctx.beginPath();points.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();}}
 
@@ -3886,7 +3853,6 @@ function line(x,y,x2,y2,color,width=1){ctx.strokeStyle=color;ctx.lineWidth=width
 function text(t,x,y,color='#d4dec2',size=10){ctx.font=`${size}px Segoe UI,sans-serif`;ctx.textAlign='center';ctx.fillStyle='#0c1c16bb';ctx.fillText(t,x+1,y+1);ctx.fillStyle=color;ctx.fillText(t,x,y);}
 
 function shadow(x,y,s=1){ellipse(x+4,y+3,20*s,8*s,'#0a201c40');}
-
 
 
 // src/js/render/world.js
@@ -3909,7 +3875,6 @@ function tree(d){if(p.mapId==='desert'){const{x,y}=screen(d.x,d.y),s=d.s;shadow(
 function rock(d){baseRock(d);const{x,y}=screen(d.x,d.y),s=d.s;if(p.mapId==='snow')polygon([[x-18*s,y-12*s],[x-6*s,y-24*s],[x+11*s,y-21*s],[x+3*s,y-12*s]],'#dae5d8');else if(p.mapId==='desert')polygon([[x-18*s,y-12*s],[x-6*s,y-24*s],[x+11*s,y-21*s],[x+3*s,y-12*s]],'#c4a06a');else if(p.mapId==='temple')line(x-4*s,y-20*s,x+4*s,y-3*s,'#cf804d',2*s);}
 
 function drawMini(){if(clock-lastMiniMapPaint<.1)return;lastMiniMapPaint=clock;mini.fillStyle=map().ground;mini.fillRect(0,0,138,118);mini.globalAlpha=.4;mini.fillStyle=map().water;mini.beginPath();mini.ellipse(18,28,13,9,0,0,7);mini.fill();for(const d of decor){mini.fillStyle=map().accent;mini.fillRect(d.x/SIZE*138,d.y/SIZE*118,2,2);}mini.globalAlpha=1;drawFarmMinimap();for(const m of mobs)if(m.hp>0){mini.fillStyle=m.type==='boss'?'#ff695c':m.type==='stone'?(METIN_TYPES[m.metinType]?.glow||'#dfb3f0'):m.variant==='rare'?ENEMY_VARIANTS.rare.color:m.variant==='elite'?ENEMY_VARIANTS.elite.color:'#f4cb84';const size=m.type==='wolf'?2:4;mini.fillRect(m.x/SIZE*138-1,m.y/SIZE*118-1,size,size);}mini.fillStyle='#f7edbc';const zone=safeZone();if(!map().town)mini.fillRect(zone.x/SIZE*138,zone.y/SIZE*118,3,3);else for(const npc of Object.values(NPCS)){mini.fillStyle='#cfb97c';mini.fillRect(npc.x/SIZE*138,npc.y/SIZE*118,4,4);}mini.beginPath();mini.arc(p.x/SIZE*138,p.y/SIZE*118,3,0,7);mini.fill();}
-
 
 
 
@@ -3943,7 +3908,6 @@ function drawWeaponUpgrade(item,model){
 }
 
 
-
 // src/js/render/character.js
 function hero(){const{x,y}=screen(p.x,p.y),moving=playerMoving,step=moving?Math.sin(clock*12)*4:0,cls=p.classId,color=role().color;ctx.save();if(active('stealth'))ctx.globalAlpha=.35;shadow(x,y);if(active('aura')||active('enchanted')||active('guard')||active('armor')||active('darkGuard')||active('bless')||active('reflect')){ellipse(x,y+2,30+Math.sin(clock*4)*3,13,color+'35');ctx.strokeStyle=color+'99';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(x,y-23,25,38,0,0,Math.PI*2);ctx.stroke();}if(active('spirit')){const a=clock*3;ellipse(x+Math.cos(a)*35,y-30+Math.sin(a)*18,6,9,'#f3b565');ellipse(x+Math.cos(a)*35,y-30+Math.sin(a)*18,3,5,'#ffe0a8');}ctx.save();if(Math.cos(face)<0){ctx.translate(x*2,0);ctx.scale(-1,1);}line(x-5,y-12,x-7,y+step,'#293634',cls==='ninja'?4:6);line(x+5,y-12,x+7,y-step,'#293634',cls==='ninja'?4:6);const cast=castPose>0?Math.sin(castPose/.6*Math.PI):0;
 if(cls==='warrior'){polygon([[x-12,y-33],[x-18,y+2],[x+3,y-8],[x+6,y-29]],'#9b5241');polygon([[x-12,y-32],[x-10,y-11],[x+11,y-11],[x+13,y-32],[x,y-37]],'#a2ad9b','#d3d3ad');line(x-10,y-23,x+10,y-23,'#c8b889',3);ellipse(x-14,y-30,7,6,'#889581');ellipse(x+14,y-30,7,6,'#889581');}
@@ -3955,7 +3919,6 @@ if(Math.sin(face)<-.3)ellipse(x,y-43,7,8,cls==='sura'?'#31263c':'#2f3630');drawW
 ctx.restore();if(!p.equipped.weapon&&cls==='ninja'&&p.schools.ninja==='blade'){line(x-19,y-14,x-25,y-35,'#cad9bd',3);line(x-24,y-16,x-16,y-19,'#ac9766',2);}text(characterDisplayName(p),x,y-82,'#ead7ac',11);ctx.restore();}
 
 
-
 // src/js/render/effects.js
 function fx(style,x=p.x,y=p.y,color=role().color,life=.65,angle=face){effects.push({style,x,y,color,life,total:life,angle});}
 
@@ -3965,7 +3928,6 @@ else if(e.style==='lightning'){ctx.lineWidth=4;ctx.shadowColor=color;ctx.shadowB
 else if(['slash','cross','fan'].includes(e.style)){const r=35+t*45;ctx.lineWidth=5;ctx.beginPath();for(let i=0;i<=18;i++){const angle=e.angle-.95+i/18*1.9,px=Math.cos(angle)*r,py=Math.sin(angle)*r*.62-16;i?ctx.lineTo(px,py):ctx.moveTo(px,py);}ctx.stroke();if(e.style==='cross'){const ux=Math.cos(e.angle),uy=Math.sin(e.angle)*.62;line(ux*25-uy*15,uy*25-16+ux*15,ux*65+uy*15,uy*65-16-ux*15,color,3);}}
 else if(['beam','finger','dragon','dash'].includes(e.style)){const length=e.style==='dragon'?260:e.style==='beam'?280:e.style==='dash'?180:120,ux=Math.cos(e.angle),uy=Math.sin(e.angle)*.62;line(0,-20,ux*length*t,uy*length*t-20,color,e.style==='finger'?20:8);for(let j=0;j<8;j++){const d=(j/8+t*.15)*length,off=Math.sin(j+t*13)*18;ellipse(ux*d+off,uy*d-20+Math.cos(j+t*8)*14,15+(e.style==='dragon'?10:0),9,color+'88');}if(e.style==='dragon'){const x=ux*length*t,y=uy*length*t-20;polygon([[x-18,y],[x+ux*30,y+uy*30-8],[x+10,y+12],[x,y+20]],'#e8bc81');line(x-5,y-10,x-16,y-35,color,4);line(x+6,y-10,x+18,y-30,color,4);}}
 ctx.restore();}for(const b of shots){if(b.opts.delay>0)continue;const a=screen(b.x,b.y),target=b.target?screen(b.target.x,b.target.y-15):screen(b.x+b.vx*40,b.y+b.vy*40),angle=Math.atan2(target.y-a.y,target.x-a.x);ctx.save();ctx.translate(a.x,a.y);ctx.rotate(angle);if(b.style==='arrow'||b.style.includes('Arrow')){line(-20,0,6,0,b.style==='fireArrow'?'#f6b06a':b.style==='poisonArrow'?'#a6d77b':'#e7d7aa',2);polygon([[10,0],[1,-4],[1,4]],'#e8dfc0');}else if(b.style==='talisman'){polygon([[-8,-11],[7,-11],[8,10],[-7,10]],'#f1d6a1');line(-3,-6,3,5,'#a25043',2);}else{ellipse(0,0,b.style==='darkOrb'?16:8,b.style==='darkOrb'?13:6,b.color+'66');ellipse(0,0,b.style==='darkOrb'?9:5,b.style==='darkOrb'?8:4,b.color);line(-30,0,-5,0,b.color+'66',4);}ctx.restore();}}
-
 
 
 // src/js/render/locations.js
@@ -4002,10 +3964,8 @@ function drawTownNPC(id){
 }
 
 
-
 // src/js/render/scene.js
 function draw(){ctx.setTransform(dpr,0,0,dpr,0,0);ground();drawFarmRegions();const objects=[...decor.map(d=>({y:d.y,draw:()=>d.type==='tree'?tree(d):rock(d)})),...worldObjects(),...mobs.filter(m=>m.hp>0).map(m=>({y:m.y,draw:()=>mobDraw(m)})),{y:p.y,draw:hero}];objects.sort((a,b)=>a.y-b.y).forEach(o=>o.draw());drawCombatTarget();for(const f of particles){const a=screen(f.x,f.y);text(f.t,a.x,a.y-f.age*36,f.color, f.big?22:f.small?11:14);}const glow=ctx.createRadialGradient(W*.3,H*.1,0,W*.3,H*.1,W*.7);glow.addColorStop(0,'#e4e5ad0e');glow.addColorStop(1,'#091b1a25');ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);drawEffects();drawFarmingEffects();drawBattleEffects();drawGroundLoot();drawMini();}
-
 
 
 // src/js/render/farming.js
@@ -4082,7 +4042,6 @@ function drawFarmMinimap() {
 }
 
 
-
 // src/js/render/loot.js
 const groundIconCache = new Map();
 
@@ -4121,7 +4080,6 @@ function drawGroundLoot() {
     }
   }
 }
-
 
 
 // src/js/render/metins.js
@@ -4202,7 +4160,6 @@ function suterlandGround() {
 }
 
 
-
 // src/js/render/battle.js
 function drawCombatTarget() {
   if(!running)return;
@@ -4242,7 +4199,6 @@ function drawBattleEffects() {
     ctx.restore();
   }
 }
-
 
 
 // src/js/main.js
@@ -4304,7 +4260,6 @@ $('characters').onclick=returnToCharacters;$('character-menu').onclick=returnToC
 renderCharacterScreen();
 
 $('modal').addEventListener('click',event=>{if(event.target===$('modal')&&(event.button===undefined||event.button===0)){event.preventDefault();event.stopPropagation();closeModal();}});
-
 
 </script>
 </body></html>

@@ -22,6 +22,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Pôvodná výroba kameňov a pomôcok používa spoločný receptový systém a príslušné NPC; kováčske pomôcky vyžadujú remeselnú úroveň. Nasadené kamene a ich fúzie sa zachovávajú.
 
 ### Fixed
+- Offline HTML zostavy obnovené z presných zdrojov repozitára; odstránený nesúlad oddeľovacích prázdnych riadkov zachytený v CI.
 - Neúspešná výroba pri chýbajúcich zdrojoch, nesplnených podmienkach alebo plnom inventári nič nespotrebuje.
 - Panely výroby a alchýmie sa na úzkej obrazovke neorezávajú; overené v Chromium pri 1440 × 1080 a 390 × 844 vrátane výroby a použitia elixíra many.
 
