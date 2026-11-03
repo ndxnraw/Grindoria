@@ -54,3 +54,5 @@ function startGame() { return playCharacter(); }
 $('backup-characters').onclick=()=>{try{downloadCharacterJSON(exportCharacters());toast('Záloha všetkých postáv bola pripravená.');}catch(error){toast(error.message);}};
 $('characters').onclick=returnToCharacters;$('character-menu').onclick=returnToCharacters;
 renderCharacterScreen();
+
+$('modal').addEventListener('click',event=>{if(event.target===$('modal')&&(event.button===undefined||event.button===0)){event.preventDefault();event.stopPropagation();closeModal();}});

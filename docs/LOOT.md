@@ -46,4 +46,4 @@ Logiku spravuje `systems/loot.js`, vykreslenie `render/loot.js` a tooltipy `ui/l
 
 ## Boj od 0.10.0
 
-Ľavé kliknutie dáva prednosť predmetu na zemi pred označením nepriateľa alebo smerovým útokom. Automatické zbieranie zlata a zásob aj hromadné Y do 180 jednotiek ostáva zachované. Pozri [COMBAT.md](COMBAT.md).
+Ľavé kliknutie dáva prednosť predmetu na zemi pred označením nepriateľa alebo zrušením cieľa. Automatické zbieranie zlata a zásob aj hromadné Y do 180 jednotiek ostáva zachované. Pozri [COMBAT.md](COMBAT.md).

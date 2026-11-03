@@ -73,7 +73,7 @@ Zostavenie vytvorí `dist/Grindoria.html` a totožné `dist/index.html`; oba sa 
 
 ## Ovládanie a boj
 
-`target` je referencia na živého nepriateľa z aktuálneho poľa `mobs`, nikdy bod na mape. Klávesnicový pohyb označenie zruší; prenasledovanie číta polohu cieľa každý krok. Klik najprv skúša korisť, potom nepriateľa, inak len útočí. Smrť, zmena mapy a strata zamerania okna čistia dočasné zameranie. Žiadny bod kliknutia sa neukladá.
+`target` je referencia na živého nepriateľa z aktuálneho poľa `mobs`, nikdy bod na mape. Klávesnicový pohyb označenie zruší; prenasledovanie číta polohu cieľa každý krok. Klik najprv skúša korisť, potom nepriateľa, inak zruší označenie bez útoku. Smrť, zmena mapy a strata zamerania okna čistia dočasné zameranie. Žiadny bod kliknutia sa neukladá.
 
 `data/battle.js` definuje sedem typov, profily odolností, metadáta schopností, osem pasívnych bonusov a osem komb. Animácie 48 aktivácií odlišuje `render/battle.js`; panel cieľa, knihu a manuál spravuje `ui/battle.js`. HUD prekresľuje detail cieľa iba pri zmene údajov.
 

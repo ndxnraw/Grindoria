@@ -3,10 +3,10 @@ const { createGame, readSavedProfile }=require('./helpers/game.cjs');
 
 function arena(run){run('running=true;paused=false;p.x=400;p.y=1400;cam.x=p.x;cam.y=p.y;p.hp=100000;face=0;attackCD=0;castPose=0;combatAim.inside=false;resetCombatFlow();mobs.forEach(m=>{m.hp=0;m.dead=1000;m.dot=null;m.dots=[];});let foe=mobs.find(m=>m.type==="wolf");Object.assign(foe,{x:700,y:1400,homeX:700,homeY:1400,hp:10000,max:10000,skin:"wolf",resistances:{physical:0,piercing:0,fire:0,poison:0,dark:0,lightning:0,arcane:0},engaged:0,taunt:0,cd:2});');}
 
-test('empty terrain clicks attack without creating a waypoint or moving the character',()=>{
+test('empty terrain clicks cancel selection without attacking or moving',()=>{
   const {run,listeners}=createGame();arena(run);run('foe.hp=0;let x=p.x,y=p.y;');
   listeners.get('game:pointerdown')({clientX:850,clientY:350,button:0});
-  assert.equal(run('target'),null);assert(run('attackCD>0'));assert(run('effects.some(e=>e.style==="slash")'));
+  assert.equal(run('target'),null);assert.equal(run('attackCD'),0);assert.equal(run('effects.length'),0);
   run('for(let i=0;i<30;i++)update(.05);');assert.equal(run('p.x'),run('x'));assert.equal(run('p.y'),run('y'));
 });
 
@@ -49,7 +49,7 @@ test('archers fire aimed ballistic arrows without a marked target and do not see
   const {run,listeners}=createGame();arena(run);
   run('p.classId="ninja";p.schools.ninja="archery";foe.x=600;foe.homeX=600;let back=mobs.filter(m=>m.type==="wolf")[1];Object.assign(back,{hp:1000,max:1000,x:350,y:1400,skin:"wolf"});');
   listeners.get('game:pointerdown')({clientX:1050,clientY:350,button:0});
-  assert.equal(run('target'),null);assert.equal(run('shots[0].target'),null);assert(run('shots[0].vx>.99'));
+  listeners.get('keydown')({key:' ',preventDefault(){}});run('update(.01);');assert.equal(run('target'),null);assert.equal(run('shots[0].target'),null);assert(run('shots[0].vx>.99'));
   run('for(let i=0;i<10;i++){updateCombat(.05);drawEffects();}');assert(run('foe.hp<10000'));assert.equal(run('back.hp'),1000);
 });
 

@@ -1,5 +1,5 @@
 function updateCombatAssistHUD() {
-  for (const [id, setting, label] of [['auto-aim','autoAim','Automierenie'],['auto-spell','autoSpell','Autospell']]) {
+  for (const [id, setting, label] of [['auto-aim','autoAim','Automierenie'],['auto-spell','autoSpell','Autospell'],['auto-potion','autoPotion','Autoelixíry']]) {
     const enabled = p.combatAssist?.[setting] === true, button = $(id);
     button.setAttribute('aria-pressed', String(enabled));
     button.textContent = label + ': ' + (enabled ? 'ZAP' : 'VYP');

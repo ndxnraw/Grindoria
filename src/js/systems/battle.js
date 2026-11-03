@@ -45,6 +45,7 @@ function skillDamageType(key) { return ACTIVE_SKILLS[key]?.type||'arcane'; }
 function percentItemStat(stat) { return stat==='crit'||stat.endsWith('Resist'); }
 
 function resetCombatFlow() {
+  combatAssist.aimTime = 0;
   clearCombatTarget();Object.assign(combatFlow,{lastKey:null,time:0,name:'',flash:0,basicTarget:null,basicHits:0,basicTime:0,rhythm:0});castingMultiplier=1;playerMoving=false;
 }
 

@@ -117,7 +117,7 @@ function moveGearItem(uid, cell) {
 
 function supplyDefinitions() {
   return [
-    { id: 'potions', name: 'Liečivý elixír', count: p.potions, icon: 'potion', description: 'Obnoví 65 zdravia. Kláves E.', action: 'drink' },
+    { id: 'potions', name: 'Liečivý elixír', count: p.potions, icon: 'potion', description: 'Obnoví 65 zdravia. Kláves E. Spoločný cooldown 4 s aj pre Autoelixíry.', action: 'drink' },
     { id: 'braveryCapes', name: 'Plášť statočnosti', count: p.braveryCapes, icon: 'cape', description: 'Privolá pohyblivých nepriateľov v dosahu 650 na 18 sekúnd. Kláves B.', action: 'cape' },
     ...Object.entries(MATERIALS).map(([id, name]) => ({ id: 'material:' + id, name, count: p.career.materials[id], icon: id, description: 'Rozvojový materiál. Použitie otvorí príslušnú cestu progresie.', action: 'material', material: id })),
     ...Object.entries(GEMS).map(([id, gem]) => ({ id: 'gem:' + id, name: gem.name, count: p.career.alchemy.stock[id], icon: id, description: gem.text + ' Použitie otvorí alchýmiu.', action: 'alchemy' }))

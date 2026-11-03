@@ -10,6 +10,20 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.14.0] - 2026-11-03
+
+### Added
+- Autoelixíry pod 45 % HP: 65 HP zo zásob, spoločný 4-sekundový cooldown s ručným použitím, uložený samostatne pre každú postavu.
+- Sedem regresných testov automatického boja, elixírov a zatvárania panelov.
+
+### Changed
+- Voľný útok pomocou SPACE; kliknutie do prázdna iba zruší cieľ. Prenasledovanie kliknutého nepriateľa zostáva zachované.
+
+### Fixed
+- Autospell vyžaduje boj s označenou príšerou alebo Metinom; nečaruje v pokoji.
+- Automierenie sa uplatňuje iba pri útočení, v pokoji ostáva orientácia podľa kurzora.
+- Všetky panely možno zavrieť primárnym kliknutím mimo karty bez útoku cez pozadie.
+
 ## [0.13.0] - 2026-11-03
 
 ### Added
@@ -289,7 +303,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.13.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.14.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -306,3 +320,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.11.0]: https://github.com/ndxnraw/Grindoria/compare/v0.10.0...v0.11.0
 [0.12.0]: https://github.com/ndxnraw/Grindoria/compare/v0.11.0...v0.12.0
 [0.13.0]: https://github.com/ndxnraw/Grindoria/compare/v0.12.0...v0.13.0
+[0.14.0]: https://github.com/ndxnraw/Grindoria/compare/v0.13.0...v0.14.0

@@ -4,7 +4,7 @@ const SIZE=2000,SAVE='grindoria-save-v1';
 let W=1200,H=700,dpr=1,running=false,paused=false,last=0,clock=0,target=null,face=0,attackCD=0,skillCD=0,slash=0,ring=0,toastTimer=0,saveTimer=0,sound=false,audio=null;
 const keys={},mouse={x:0,y:0},cam={x:1000,y:1050};
 function createPlayerState(profile = {}) {
-  const fresh={x:1000,y:1160,hp:100,level:1,xp:0,gold:0,potions:5,kills:0,stones:0,claimed:false,weapon:0,strength:0,vitality:0,dexterity:0,intelligence:0,bossKills:0,bossClaimed:false,huntClaimed:0};
+  const fresh={x:1000,y:1160,hp:100,level:1,xp:0,gold:0,potions:5,kills:0,stones:0,claimed:false,weapon:0,strength:0,vitality:0,dexterity:0,intelligence:0,bossKills:0,bossClaimed:false,huntClaimed:0,potionReadyAt:0};
   const player={...fresh,...JSON.parse(JSON.stringify(profile))};
   player.classId=Object.hasOwn(CLASSES,player.classId)?player.classId:'warrior';
   player.points??=Math.max(0,(player.level-1)*3);player.bag??=[];player.equipped??={weapon:null,armor:null};

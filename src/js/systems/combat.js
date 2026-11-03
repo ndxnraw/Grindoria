@@ -1,6 +1,7 @@
 function hit(m, amount, type='physical') {
   if (m.hp <= 0 || !Number.isFinite(amount) || amount <= 0) return 0;
   const damage = m.type === 'stone' ? metinDamage(m, amount, type) : resolveEnemyDamage(m, amount, type), actual = Math.min(m.hp, damage);
+  registerPlayerCombat(m);
   if (m.type === 'stone') registerMetinAttack(m); else provokeEnemyGroup(m);
   m.hp = Math.max(0, m.hp - damage); m.hit = .15;
   float('-' + actual, m.x, m.y - 65); beep(170);
@@ -27,7 +28,17 @@ function hit(m, amount, type='physical') {
 
 function potion(){return drinkPotion(false);}
 
-function drinkPotion(allowPaused=false){if(!running||(paused&&!allowPaused)||p.hp<=0)return false;if(p.potions<=0){toast('Nemáš elixíry. Navštív obchodníka (F).');return;}if(p.hp>=maxHP()){toast('Zdravie máš plné.');return;}p.potions--;p.hp=Math.min(maxHP(),p.hp+65);float('+65 zdravia',p.x,p.y-65,'#a9e0ac');beep(520,.2);updateHUD();save();return true;}
+function potionCooldownRemaining(now = Date.now()) { return Math.max(0, ((p.potionReadyAt || 0)-now)/1000); }
+
+function drinkPotion(allowPaused=false) {
+  if(!running||(paused&&!allowPaused)||p.hp<=0)return false;
+  if(potionCooldownRemaining()>0){toast('Elixír bude pripravený o '+Math.ceil(potionCooldownRemaining())+' s.');return false;}
+  if(p.potions<=0){toast('Nemáš elixíry. Navštív obchodníka (F).');return false;}
+  if(p.hp>=maxHP()){toast('Zdravie máš plné.');return false;}
+  const healed=Math.min(POTION_RULES.heal,maxHP()-p.hp);
+  p.potions--;p.hp+=healed;p.potionReadyAt=Date.now()+POTION_RULES.cooldown*1000;
+  float('+'+Math.round(healed)+' zdravia',p.x,p.y-65,'#a9e0ac');beep(520,.2);updateHUD();save();return true;
+}
 
 function death(){resetCombatFlow();p.mp=maxMP();shots.length=0;Object.keys(buffs).forEach(k=>delete buffs[k]);p.gold=Math.floor(p.gold*.9);p.x=1000;p.y=1160;p.hp=maxHP();target=null;mobs.forEach(m=>m.cd=2);toast('Záchrana v útočisku\nStratil si 10 % zlata.');save();}
 
@@ -77,6 +88,7 @@ function takeDamage(amount,source,type=enemyDamageType(source)) {
   if(active('berserk'))factor*=1.2;if(active('fear')&&source&&Math.hypot(source.x-p.x,source.y-p.y)<300)factor*=.65;
   const armorFactor=type==='physical'?1:type==='piercing'?.6:.25;
   const n=Math.max(1,Math.round((amount-defense()*armorFactor)*factor*(1-(playerResistances()[type]||0))));
+  if(source)registerPlayerCombat(source);
   p.hp-=n;float('-'+n,p.x,p.y-70,DAMAGE_TYPES[type]?.color||'#eda28d');
   if(source&&(active('reflect')||active('armor'))&&source.hp>0)hit(source,Math.max(1,Math.round(n*(active('reflect')?.35:.2))),'arcane');
   return n;

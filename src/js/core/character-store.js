@@ -61,7 +61,7 @@ function normalizeCharacterProfile(record) {
   const previous=p;
   try {
     p=createPlayerState(profileIdentity(record,record.data));initializeCareer();initializeInventory();initializeFarming();
-    p.combatAssist={autoAim:p.combatAssist?.autoAim===true,autoSpell:p.combatAssist?.autoSpell===true};p.lootSerial??=0;
+    p.combatAssist={autoAim:p.combatAssist?.autoAim===true,autoSpell:p.combatAssist?.autoSpell===true,autoPotion:p.combatAssist?.autoPotion===true};p.lootSerial??=0;
     return copyCharacterData(p);
   } finally {p=previous;}
 }
@@ -108,7 +108,7 @@ function clearCharacterSession() {
   keysClear();resetCombatFlow();clearLootPointer();combatAim.inside=false;face=0;shots.length=0;effects.length=0;particles.length=0;
   for(const id of Object.keys(buffs))delete buffs[id];spellCD.fill(0);attackCD=0;skillCD=0;castPose=0;castStyle='';spiritTick=0;capeCooldown=0;saveTimer=0;slash=0;ring=0;
   inventoryTab='gear';inventoryPage=0;inventorySelection=null;inventoryDrag=null;inventoryDeletePending=null;careerTab='overview';
-  combatAssist.timer=0;combatAssist.nextSkill=0;combatAssist.focused=true;
+  combatAssist.timer=0;combatAssist.nextSkill=0;combatAssist.fightTarget=null;combatAssist.fightTime=0;combatAssist.aimTime=0;combatAssist.focused=true;
 }
 function playCharacter(id = characterStore.account.selectedId) {
   if(!Object.hasOwn(characterStore.account.profiles,id)||characterStore.error)return false;

@@ -5,7 +5,7 @@ function selectedEnemy() {
   return target && mobs.includes(target) && target.hp > 0 ? target : null;
 }
 
-function clearCombatTarget() { target = null; $('target-panel').hidden = true; }
+function clearCombatTarget() { target = null; combatAssist.fightTarget = null; combatAssist.fightTime = 0; $('target-panel').hidden = true; }
 
 function setCombatPointer(event) {
   combatAim.inside = true; combatAim.clientX = event.clientX; combatAim.clientY = event.clientY;
@@ -14,15 +14,15 @@ function setCombatPointer(event) {
 
 function leaveCombatPointer() { combatAim.inside = false; clearLootPointer(); }
 
-function combatBlur() { combatAssist.focused = false; keysClear(); leaveCombatPointer(); clearCombatTarget(); }
+function combatBlur() { combatAssist.focused = false; combatAssist.aimTime = 0; keysClear(); leaveCombatPointer(); clearCombatTarget(); }
 
 function cursorWorld() {
   const rect = canvas.getBoundingClientRect();
   return world(combatAim.clientX - (rect.left || 0), combatAim.clientY - (rect.top || 0));
 }
 
-function updateFacing() {
-  const enemy = selectedEnemy() || assistedAimEnemy();
+function updateFacing(attacking = false) {
+  const enemy = selectedEnemy() || assistedAimEnemy(COMBAT_ASSIST.range, attacking || Boolean(keys[' ']) || combatAssist.aimTime > 0);
   if (enemy) face = Math.atan2(enemy.y - p.y, enemy.x - p.x);
   else if (combatAim.inside) { const aim = cursorWorld(); if (Math.hypot(aim.x-p.x,aim.y-p.y)>3) face=Math.atan2(aim.y-p.y,aim.x-p.x); }
 }
@@ -33,10 +33,10 @@ function enemyInArc(m, range, angle = face, halfArc = BATTLE.halfArc) {
   return d <= range && (d < 3 || (dx*Math.cos(angle)+dy*Math.sin(angle))/d >= Math.cos(halfArc));
 }
 
-function aimEnemy(range) {
+function aimEnemy(range, attacking = false) {
   const selected = selectedEnemy();
   if (selected) return Math.hypot(selected.x-p.x,selected.y-p.y)<=range ? selected : null;
-  const assisted = assistedAimEnemy(range);
+  const assisted = assistedAimEnemy(range, attacking);
   if (assisted) return assisted;
   return mobs.filter(m=>enemyInArc(m,range)).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0] || null;
 }
@@ -74,7 +74,7 @@ function handleCombatClick(event) {
   if(loot){pickUpGroundDrop(loot.id);canvas.focus();return;}
   const enemy=enemyAtPointer(lootPointer.x,lootPointer.y);
   if(enemy)selectCombatTarget(enemy);
-  else{clearCombatTarget();updateFacing();attack();}
+  else{clearCombatTarget();combatAssist.aimTime=0;updateFacing();}
   canvas.focus();
 }
 

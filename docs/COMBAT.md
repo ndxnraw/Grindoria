@@ -2,7 +2,7 @@
 
 ## Pohyb a zameranie
 
-WASD a šípky ovládajú pohyb. Klik do voľného priestoru iba zaútočí; nevytvára bod presunu. Bez cieľa sa orientácia a čelný výsek útoku priebežne riadia kurzorom. Medzerník opakuje základný útok.
+WASD a šípky ovládajú pohyb. Klik do voľného priestoru zruší označenie; neútočí ani nevytvára bod presunu. Bez cieľa sa orientácia a čelný výsek útoku priebežne riadia kurzorom. Medzerník opakuje základný útok.
 
 Klik na živého nepriateľa alebo Metin uloží jeho referenciu. Postava sleduje aktuálnu polohu, zastaví vo vzdialenosti 76 jednotiek (luk 420) a útočí v dosahu 95 (luk 500). Prsteň aj panel so zdravím označujú cieľ. WASD, šípky, Esc, smrť cieľa, jeho odstránenie, zmena mapy alebo strata zamerania okna zastavia nasledovanie. Respawn rovnakého objektu ho znovu neoznačí. V otvorenom paneli je simulácia pozastavená.
 
@@ -162,10 +162,12 @@ Smerová šípka pri postave sa nevykresľuje; orientáciu určuje kurzor a smer
 
 ## Automatická pomoc od 0.12.0
 
-Dva prepínače nad hotbarom sú nezávislé a ukladajú sa do p.combatAssist; starý postup ich má predvolene vypnuté. Automierenie vyberá najbližší živý cieľ do 500 jednotiek bez čelného obmedzenia. Nevyberá ciele v útočisku. Ručne označený cieľ má prednosť; asistencia nevytvára cieľ nasledovania ani sama nespúšťa základný útok. Pri smrti automaticky mieri na ďalší najbližší cieľ.
+Tri prepínače nad hotbarom sú nezávislé a ukladajú sa do p.combatAssist; starý postup ich má predvolene vypnuté. Automierenie iba pri útoku vyberá najbližší živý cieľ do 500 jednotiek bez čelného obmedzenia. Nevyberá ciele v útočisku. Ručne označený cieľ má prednosť; asistencia nevytvára cieľ nasledovania ani sama nespúšťa základný útok. V pokoji sa postava otáča podľa kurzora.
 
-Autospell používa existujúce castSkill, skutočné cooldowny, dosah a cenu many. Bez Automierenia používa ručné označenie alebo čelný smer. Rotuje šesť schopností s odstupom 0,8 s, čaká na dokončenie animácie a uprednostní dostupné dokončenie komba. Aktívne aury neopakuje. Vyliečenie uprednostní pod 65 % maximálneho zdravia; Životnú silu nespustí pri 35 % alebo menej. Výpady a kotúľanie môžu premiestniť postavu rovnako ako pri ručnom použití. Nedostupné schopnosti preskočí bez opakovaných hlášok o mane.
+Autospell používa existujúce castSkill, skutočné cooldowny, dosah a cenu many. Vyžaduje živý ručne označený cieľ do 500 jednotiek a skutočný boj s ním v posledných 8 sekundách. Samotné približovanie sa k vzdialenému cieľu nestačí; neoznačené ciele, pokojové liečenie a buffovanie automatiku nespúšťajú. Rotuje šesť schopností s odstupom 0,8 s, čaká na dokončenie animácie a uprednostní dostupné dokončenie komba. Aktívne aury neopakuje. Vyliečenie uprednostní pod 65 % maximálneho zdravia; Životnú silu nespustí pri 35 % alebo menej. Výpady a kotúľanie môžu premiestniť postavu rovnako ako pri ručnom použití. Nedostupné schopnosti preskočí bez opakovaných hlášok o mane.
 
 Pred začatím hry, pri pauze, smrti, v útočisku, pri strate zamerania okna alebo skrytom tabe asistencia nič nové nezosiela. Po návrate do aktívneho okna pokračuje. Esc pri zavretom paneli zruší cieľ aj oba prepínače a uloží vypnutý stav. Esc v natívnom fullscreene navyše ukončí celú obrazovku. Pri browserovom fullscreene môže prvý Esc spracovať sám prehliadač.
 
 Hotbar po použití schopnosti, elixíru či plášťa vráti fokus Canvasu bez posunu stránky. Medzerník počas hry funguje aj pri zameranom tlačidle; bežné písanie v textovom poli a klávesy dialógu pri pauze zostávajú natívne.
+
+Autoelixíry pod 45 % HP spotrebujú jeden elixír a doplnia najviac 65 HP. Spoločný cooldown 4 sekundy platí pre E, hotbar, inventár aj automatiku a ukladá sa s postavou. Automatika čaká pri pauze, neaktívnom okne a v útočisku; neoživuje. Každý panel sa zatvára aj primárnym kliknutím na pozadie mimo jeho karty.
