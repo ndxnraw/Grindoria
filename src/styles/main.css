@@ -90,3 +90,59 @@ body.native-fullscreen .game-shell{position:fixed;inset:0;width:100vw;height:100
 .combat-assist button:focus-visible{outline:2px solid #f2d49b;outline-offset:2px}
 @media(max-width:850px){.combat-assist{bottom:162px}}
 @media(max-width:450px){.combat-assist{bottom:204px}.combat-assist button{padding:6px 9px;font-size:10px}}
+
+/* Character hall: one isolated profile per hero. */
+body.character-select header nav,body.character-select .world-title,body.character-select main>footer{display:none}
+body.character-select main{padding:16px 3% 24px;max-width:1600px;margin:auto}
+body.character-select .game-shell{height:calc(100dvh - 126px);min-height:650px;border-color:#bda57150}
+.character-screen{position:absolute;inset:0;z-index:12;background:#0b1b18;overflow:auto;color:#d7ddcc}
+.character-scenery{position:absolute;inset:0;width:100%;height:100%;min-height:680px;opacity:.8;pointer-events:none}
+.roster-shell{position:relative;padding:28px 30px 22px;min-height:100%;box-sizing:border-box;background:linear-gradient(90deg,#071511b5,transparent 45%,#071511b0)}
+.roster-heading{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:12px}
+.roster-heading h2{font:500 clamp(28px,3.3vw,46px) Georgia,serif;color:#ead8ad;margin:7px 0 8px;letter-spacing:-1px}
+.roster-heading p{font-size:11px;color:#9eaf9e;margin:0}.roster-count{font:10px Segoe UI,sans-serif;letter-spacing:2px;color:#b5a77e;white-space:nowrap}
+.roster-layout{display:grid;grid-template-columns:minmax(210px,1fr) minmax(250px,1.35fr) minmax(220px,1fr);gap:24px;min-height:495px}
+.roster-sidebar{display:flex;flex-direction:column;min-width:0;padding-top:14px}.character-list{display:flex;flex-direction:column;gap:8px;max-height:360px;overflow:auto;margin:14px 0 18px;scrollbar-width:thin}
+.character-card{display:flex;align-items:center;gap:14px;text-align:left;width:100%;padding:14px 12px;border:1px solid #c9af7228;background:#0a1a18b8;color:#d2d3bc;cursor:pointer;border-radius:3px}
+.character-card.selected{border-color:#d6bc7e;background:linear-gradient(110deg,#69593465,#162b25bd);box-shadow:inset 3px 0 #d6bc7e}
+.character-card b{display:block;font:17px Georgia,serif;overflow-wrap:anywhere}.character-card small,.character-card em{display:block;font:10px Segoe UI,sans-serif;color:#a8b7a0;margin-top:5px}.character-card em{font-size:9px;color:#7f9888}
+.class-crest{font:32px Georgia,serif;border:1px solid #b5a57440;width:42px;height:48px;display:grid;place-items:center;flex-shrink:0}
+.roster-primary,.roster-secondary,.roster-delete{display:block;width:100%;padding:13px 15px;cursor:pointer;border:1px solid #d8bd80;border-radius:2px;font:600 11px Segoe UI,sans-serif}
+.roster-primary{color:#16261c;background:linear-gradient(#dec58d,#b99a5d);box-shadow:0 5px 20px #0003}.roster-primary span{float:right}.roster-primary:hover{filter:brightness(1.13)}
+.roster-secondary{background:#142820dd;color:#d7c597;border-color:#c9ad6f60}.roster-delete{background:#2f201bc0;border-color:#a77a6560;color:#d1aa95;margin-top:8px}
+.roster-backups{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.roster-backups button,.roster-safety{padding:9px 5px;border:1px solid #b19e7340;background:#0a1814c0;color:#a9b8a4;font:10px Segoe UI,sans-serif;cursor:pointer}.roster-safety{margin-top:8px}.roster-safety[hidden]{display:none}
+.roster-stage{position:relative;display:flex;align-items:center;justify-content:center;min-height:430px;isolation:isolate}
+.roster-stage:before{content:'';position:absolute;width:100%;height:70%;background:radial-gradient(ellipse,#7d93612a,transparent 70%);z-index:-1}
+.roster-avatar{width:min(100%,375px);height:440px;filter:drop-shadow(0 18px 15px #0007);animation:character-idle 5s ease-in-out infinite}
+.stage-runes{position:absolute;bottom:83px;left:50%;width:250px;height:66px;border:1px solid #b8ae6660;border-radius:50%;transform:translateX(-50%);box-shadow:0 0 36px #b9b66816,inset 0 0 35px #d4b76b12}
+.stage-runes:after{content:'◇  ·  ◈  ·  ◇';display:block;text-align:center;line-height:62px;color:#d4b66b60;letter-spacing:17px}
+.stage-caption{position:absolute;bottom:0;left:0;right:0;text-align:center}.stage-caption h2{font:30px Georgia,serif;color:#efdbab;margin:7px 0;overflow-wrap:anywhere}.stage-caption p{font:10px Segoe UI,sans-serif;letter-spacing:3px;color:#a6b69e}
+.roster-detail{padding-top:12px;min-width:0}.roster-detail h3,.creation-form h3{font:26px Georgia,serif;color:#e5cfa0;margin:10px 0}.roster-detail>p,.creation-form>p{font:11px/1.8 Segoe UI,sans-serif;color:#a9b8a2}.roster-detail h4{font:10px Segoe UI,sans-serif;text-transform:uppercase;letter-spacing:1px;color:#c8b78b;margin:17px 0 9px}
+.roster-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#b0a46e26;border:1px solid #b0a46e26;margin:16px 0}.roster-stats>div{padding:10px;background:#14251ee8}.roster-stats span{display:block;font:9px Segoe UI,sans-serif;color:#90a58f}.roster-stats b{display:block;font:14px Segoe UI,sans-serif;color:#dec99a;margin-top:4px}
+.roster-equipment{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.roster-equipment>div{height:48px;position:relative;display:grid;place-items:center;background:#071713a6;border:1px solid #7d856140;border-radius:2px}.roster-equipment .item-icon{width:29px;height:33px;opacity:.25}.roster-equipment .has-gear .item-icon{opacity:1}.roster-equipment span{position:absolute;bottom:1px;font:6px Segoe UI,sans-serif;color:#8a9b7f}.roster-detail .roster-dates{font-size:9px;line-height:1.8;margin:12px 0}.roster-play{margin-top:16px}
+.roster-message{font:11px/1.6 Segoe UI,sans-serif;color:#dfbc8d;margin:3px 0 8px;min-height:18px;max-width:900px;overflow-wrap:anywhere}
+.roster-empty{padding:32px 13px;border:1px dashed #b29d6745;text-align:center;color:#99ab94}.roster-empty>span{font-size:35px;color:#bca871}.roster-empty h3{font:18px Georgia,serif}.roster-empty p{font:11px/1.8 Segoe UI,sans-serif}.empty-stage{color:#bdad7844;text-align:center}.empty-stage>span{font-size:170px;display:block;line-height:1.4}.empty-stage p{font:14px Georgia,serif;color:#9ca993}
+.creation-layout{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:25px}.creation-layout>section{padding-top:16px}.creation-classes{display:flex;flex-direction:column;gap:7px;margin:12px 0 24px}.creation-classes button{padding:14px;border:1px solid #c5aa7040;background:#10251fe0;text-align:left;cursor:pointer;color:#bec8b3}.creation-classes b{font:18px Georgia,serif;display:block}.creation-classes small{font:10px/1.5 Segoe UI,sans-serif;display:block;margin-top:5px;color:#8da48f}.creation-classes button[aria-pressed=true],.creation-schools button[aria-pressed=true]{border-color:#d3b575;background:#665b354d;color:#eddaad}.creation-schools{display:flex;gap:6px;margin:12px 0}.creation-schools button{flex:1;padding:10px 5px;border:1px solid #a9956140;background:#14271fcf;color:#bdc6ae;font:10px Segoe UI,sans-serif;cursor:pointer}
+.creation-form{padding-top:16px}.creation-form label,.modal-card label{display:block;color:#d5c394;font:12px Segoe UI,sans-serif;margin:15px 0 7px}.creation-form input,.modal-card input[type=text]{box-sizing:border-box;width:100%;padding:13px;border:1px solid #baa16d70;background:#091b17;color:#f0ddaa;font:16px Georgia,serif;border-radius:2px}.creation-form input:focus,.modal-card input[type=text]:focus{outline:2px solid #d3b775}.creation-form>small,.creation-note{display:block;font:10px/1.8 Segoe UI,sans-serif;color:#8aa18d;margin:9px 0}.form-error{font:11px/1.7 Segoe UI,sans-serif;color:#edac94;min-height:18px}.creation-shell .roster-heading>.roster-secondary{width:auto;max-width:190px}
+.import-summary{max-height:310px;overflow:auto;margin:18px 0}.import-summary>div{padding:13px;border:1px solid #c7b17435;margin-bottom:9px;background:#0e211c}.import-summary b,.import-summary span,.import-summary small{display:block}.import-summary span,.import-summary small{font:11px/1.7 Segoe UI,sans-serif;color:#9cb19a}.import-summary .form-error{color:#edac94}.import-mode input,.import-warning input{accent-color:#d2b77b;margin-right:8px}.import-warning{border:1px solid #be856b;padding:12px;background:#482c2540;line-height:1.8!important}.import-warning[hidden]{display:none}
+.player-name #playername{display:block;font-size:11px;max-width:155px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.player-name #playerclass{font-size:8px;color:#c1b58b}.player-name #level{margin-left:12px}
+#modal{z-index:20}body.started #intro{display:none}
+@keyframes character-idle{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@media(prefers-reduced-motion:reduce){.roster-avatar{animation:none}}
+@media(max-width:1050px){.roster-shell{padding:22px 18px}.roster-layout{gap:14px;grid-template-columns:210px 1fr 220px}.creation-layout{gap:15px;grid-template-columns:1fr 1fr}.creation-layout .roster-stage{order:3;grid-column:1/-1;min-height:300px}.creation-layout .roster-avatar{height:300px}.creation-layout .stage-caption{bottom:4px}.roster-count{letter-spacing:1px}.roster-stage .roster-avatar{max-width:300px}}
+@media(max-width:760px){body.character-select main{padding:8px 2% 16px}body.character-select .game-shell{height:calc(100dvh - 100px);min-height:600px}.roster-layout{grid-template-columns:1fr 1fr;gap:18px}.roster-sidebar{grid-column:1/-1}.character-list{flex-direction:row;max-height:none;overflow:auto;margin:10px 0}.character-card{min-width:200px}.roster-backups{margin-top:8px}.roster-detail{padding-top:0}.roster-stage{min-height:410px}.roster-avatar{height:370px}.roster-heading{align-items:flex-start}.roster-heading p{font-size:10px}.roster-count{font-size:8px}.roster-stats>div{padding:8px}}
+@media(max-width:480px){.roster-shell{padding:20px 14px}.roster-heading h2{font-size:29px}.roster-layout,.creation-layout{grid-template-columns:1fr}.roster-stage{grid-row:2;min-height:350px}.roster-stage .roster-avatar{height:330px}.roster-detail{grid-row:3}.stage-caption h2{font-size:26px}.roster-sidebar{grid-row:1}.creation-layout .roster-stage{grid-row:2;grid-column:auto;order:initial}.creation-form{grid-row:3}.roster-equipment>div{height:52px}.roster-heading .roster-secondary{font-size:9px;padding:9px;max-width:105px}.roster-count{max-width:60px;line-height:1.7}.roster-backups button{padding:10px}}
+
+/* Keep the chosen hero and primary actions visible on shorter desktop screens. */
+body.character-select .game-shell{min-height:580px}
+.roster-layout{min-height:430px}.roster-stage{align-self:start;min-height:420px;height:440px}.roster-avatar{height:380px}
+.roster-detail{display:flex;flex-direction:column}.roster-play{order:-1;margin:0 0 18px}.roster-detail .roster-stats{margin:10px 0}.roster-detail .roster-stats>div{padding:8px 10px}
+@media(max-width:760px){.roster-stage{height:400px;min-height:400px}.roster-play{margin:0 0 16px}}
+@media(max-width:480px){.roster-stage{height:360px;min-height:360px}.roster-avatar{height:320px}}
+
+.roster-detail>.roster-stats{order:2}.roster-detail>.roster-dates{order:3}#character-details{order:4}
+.character-return-control{left:5px;right:auto;font-size:21px}
+body.character-select .game-shell:fullscreen,body.native-fullscreen.character-select .game-shell{height:100vh;height:100dvh;min-height:0;width:100vw}
+
+.game-shell:fullscreen .roster-stage,body.native-fullscreen .roster-stage{height:calc(100dvh - 260px);min-height:440px}
+.game-shell:fullscreen .roster-avatar,body.native-fullscreen .roster-avatar{height:min(650px,65dvh);width:min(100%,500px);max-width:500px}

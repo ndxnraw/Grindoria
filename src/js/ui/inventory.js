@@ -30,7 +30,7 @@ function inventory() {
   const page = inventoryTab === 'supplies' ? 0 : inventoryPage, offset = page * INVENTORY.pageSize;
   const entries = inventoryTab === 'supplies' ? supplyEntries().map(item => ({ id: item.id, item, kind: 'supply' })) : p.bag.filter(item => Math.floor(item.cell / INVENTORY.pageSize) === page).map(item => ({ id: 'gear:' + item.uid, item, kind: 'gear' }));
   const occupied = p.bag.reduce((n, item) => n + itemSize(item)[0] * itemSize(item)[1], 0);
-  modal(`<section class="inventory-window"><header class="inventory-title"><span class="window-sigil">G</span><div><small>GRINDORIA · ${role().name}</small><h2>Výbava a inventár</h2></div><span class="inv-level">ÚR. ${p.level}</span></header>
+  modal(`<section class="inventory-window"><header class="inventory-title"><span class="window-sigil">G</span><div><small>${escapeHTML(characterDisplayName(p))} · ${role().name}</small><h2>Výbava a inventár</h2></div><span class="inv-level">ÚR. ${p.level}</span></header>
     <div class="inventory-columns"><section class="character-panel"><h3>Vybavenie postavy</h3><div class="equipment-board">${equipmentFigure()}${Object.entries(EQUIPMENT).map(([id, spec]) => {
       const item = p.equipped[id];
       return `<button class="equipment-slot slot-${id} ${item ? 'filled rarity-' + item.rarity : ''}" data-equip-slot="${id}" ${item ? `data-entry="equipped:${id}" draggable="true"` : ''} aria-label="${spec.name}${item ? ': ' + escapeHTML(item.name) : ': prázdny slot'}"><span>${itemIcon(item || { slot: id }, !item)}</span><small>${spec.name}</small>${item ? '<i>✓</i>' : ''}</button>`;

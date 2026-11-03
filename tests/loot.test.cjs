@@ -1,5 +1,5 @@
 const test = require('node:test'), assert = require('node:assert/strict');
-const { createGame } = require('./helpers/game.cjs');
+const { createGame, readSavedProfile } = require('./helpers/game.cjs');
 
 test('enemy and stone kills put all item rewards on the ground and never in the backpack', () => {
   const { run } = createGame();
@@ -56,7 +56,7 @@ test('gold and every supply type auto-collect only after landing and inside the 
   assert.equal(run('p.bag.length'), 90); assert.equal(run('p.career.collection.valley'), undefined);
   assert.equal(run('drops.length'), 3); assert(run('drops.includes(outside)&&drops.includes(gear)&&drops.includes(relic)'));
   run('updateGroundLoot(1);'); assert.equal(run('p.gold'), 60);
-  const reloaded = createGame(JSON.parse(saved.get('grindoria-save-v1')));
+  const reloaded = createGame(readSavedProfile(saved));
   assert.equal(reloaded.run('p.gold'), 60); assert.equal(reloaded.run('p.potions'), 8); assert.equal(reloaded.run('drops.length'), 3);
 });
 
@@ -94,10 +94,10 @@ test('ground items and old gold saves survive reload and map travel without dupl
   const { run, saved } = game;
   assert.equal(run('drops[0].kind'), 'gold'); assert.equal(run('drops[0].count'), 37);
   run('running=true;let item=spawnGroundDrop({kind:"gear",item:{name:"Starý meč",slot:"weapon",bonus:12,rarity:2,requiredLevel:8,stats:{hp:20},special:["Pamiatka strážcu"]}},p);save();');
-  const reloaded = createGame(JSON.parse(saved.get('grindoria-save-v1')));
+  const reloaded = createGame(readSavedProfile(saved));
   assert.equal(reloaded.run('drops.length'), 2); assert.equal(reloaded.run('drops[1].item.stats.hp'), 20);
   reloaded.run('running=true;let gold=drops.find(d=>d.kind==="gold");p.x=gold.x;p.y=gold.y;pickUpGroundDrop(gold.id);save();');
-  const again = createGame(JSON.parse(reloaded.saved.get('grindoria-save-v1')));
+  const again = createGame(readSavedProfile(reloaded.saved));
   assert.equal(again.run('p.gold'), 37); assert.equal(again.run('drops.length'), 1);
   again.run('running=true;loadMap("desert");loadMap("valley");'); assert.equal(again.run('drops.length'), 1);
   assert.equal(again.run('drops[0].item.name'), 'Starý meč');

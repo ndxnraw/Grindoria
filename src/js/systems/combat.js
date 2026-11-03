@@ -8,6 +8,7 @@ function hit(m, amount, type='physical') {
     if(target===m)clearCombatTarget();m.dot=null;m.dots=[];
     m.windup = 0; m.dead = m.metinParentId ? 1 : m.respawnSeconds || (m.type === 'boss' ? 40 : m.type === 'stone' ? 18 : 5);
     if (m.type === 'boss') p.bossKills++; else p[m.type === 'stone' ? 'stones' : 'kills']++;
+    recordCharacterKill(m);
     const gained = enemyXP(m); careerKill(m);
     if (m.type === 'stone') { m.metinCombat = 0; m.metinWaveTimer = 0; dropMetinLoot(m); }
     else {

@@ -1,9 +1,7 @@
 const vm=require('node:vm'),fs=require('node:fs'),assert=require('node:assert/strict');
-const elements=new Map(),saved=new Map();
-const element=id=>{if(!elements.has(id))elements.set(id,{style:{},setAttribute(){},textContent:'',innerHTML:'',hidden:true,querySelector:s=>element(id+s),getContext:()=>({setTransform(){}}),getBoundingClientRect:()=>({width:1200,height:700}),addEventListener(){},focus(){}});return elements.get(id);};
-const c=vm.createContext({document:{getElementById:element,querySelectorAll:()=>[],addEventListener(){},body:{classList:{add(){},toggle(){}}}},window:{addEventListener(){}},devicePixelRatio:1,localStorage:{getItem:k=>saved.get(k),setItem:(k,v)=>saved.set(k,v)},requestAnimationFrame(){},console});
-vm.runInContext(require('./helpers/source.cjs').runtimeSource(),c);
-const run=code=>vm.runInContext(code,c);
+const { createGame, readSavedProfile }=require('./helpers/game.cjs');
+const {run,saved,elements}=createGame();
+const element=id=>elements.get(id);
 run('running=true; mobs.forEach(m=>m.hp=0);p.x=400;p.y=400;mobs[0].hp=55;mobs[0].x=420;mobs[0].y=400;');
 run('attack();');assert.ok(run('mobs[0].hp<55'));const hp=run('mobs[0].hp');run('attack();');assert.equal(run('mobs[0].hp'),hp);
 run('attackCD=0;attack(true);');assert.ok(run('skillCD>0'));assert.ok(run('p.kills===1'));run('update(.05);');assert.equal(run('p.gold'),0);run('let coin=drops.find(d=>d.kind==="gold");coin.fallAge=LOOT_RULES.fallDuration;p.x=coin.x;p.y=coin.y;pickUpGroundDrop(coin.id);');assert.ok(run('p.gold>0'));
@@ -12,7 +10,7 @@ run('experience(needXP());');assert.ok(run('p.level>1'));assert.equal(run('p.hp'
 run('p.kills=5;p.stones=3;updateHUD();');assert.equal(element('claim').hidden,false);run("$('claim').onclick();");assert.equal(run('p.claimed'),true);const gold=run('p.gold');run("$('claim').onclick();");assert.equal(run('p.gold'),gold);
 run('p.x=1110;p.y=1110;p.gold=200;shop();');run("$('buyPotion').onclick();");assert.equal(run('p.gold'),175);run("$('upgrade').onclick();");assert.match(element('modalcontent').innerHTML,/Vybavenie/);run('p.equipped.weapon={name:"Test",slot:"weapon",bonus:0};p.career.materials.ore=2;enhanceEquipment("weapon");');assert.equal(run('p.equipped.weapon.enhance'),1);assert.equal(run('p.gold'),75);
 run('closeModal();p.hp=1;p.gold=100;death();');assert.equal(run('p.hp'),run('maxHP()'));assert.equal(run('p.gold'),90);assert.equal(run('p.x'),1000);
-run('save();');assert.ok(saved.has('grindoria-save-v1'));console.log('PASS: combat, cooldown, skill, loot, healing, levels, quest reward, shop, upgrade, respawn, save');
+run('save();');assert.ok(saved.has('grindoria-characters-v1'));console.log('PASS: combat, cooldown, skill, loot, healing, levels, quest reward, shop, upgrade, respawn, save');
 assert.equal(run('p.points'),run('(p.level-1)*3'));
 const oldDamage=run('damage()');run('allocate("strength");');assert.equal(run('damage()'),oldDamage+3);assert.equal(run('p.points'),run('(p.level-1)*3-1'));
 run('p.points=0;allocate("vitality");');assert.equal(run('p.vitality'),0);run('closeModal();p.bag=[];p.equipped={weapon:null,armor:null};p.bag.push({name:"Test meč",slot:"weapon",rarity:1,bonus:20,value:30});');
@@ -26,5 +24,5 @@ run('closeModal();p.x=1690;p.y=330;p.hp=maxHP();let boss=mobs.find(m=>m.type==="
 run('boss.cd=0;updateBoss(.05,false);p.x=1850;');const beforeDodge=run('p.hp');run('updateBoss(1.1,false);');assert.equal(run('p.hp'),beforeDodge);
 run('boss.windup=1;updateBoss(.05,true);');assert.equal(run('boss.windup'),0);
 run('paused=false;p.classId="shaman";p.schools.shaman="healing";p.hp=10;p.mp=maxMP();spellCD.fill(0);mobs.forEach(m=>m.hp=0);castSkill(3);');assert.ok(run('p.hp')>10);assert.equal(run('spellCD[3]'),8);
-run('save();');const stored=JSON.parse(saved.get('grindoria-save-v1'));assert.equal(stored.classId,'shaman');assert.equal(stored.equipped.weapon.bonus,35);assert.equal(stored.bossClaimed,true);
+run('snapshotMap();');const stored=run('copyCharacterData(p)');assert.equal(stored.classId,'shaman');assert.equal(stored.equipped.weapon.bonus,35);assert.equal(stored.bossClaimed,true);
 console.log('PASS: stat points, gear bonuses and swapping, selling, full bag, epic loot, repeatable rewards, boss reward guard, boss telegraph/dodge/safety, shaman healing, progression persistence');

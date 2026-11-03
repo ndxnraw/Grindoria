@@ -44,3 +44,7 @@ Presun aj výmena výbavy najprv overia rozloženie. Neplatná operácia ponech�
 ## Boj od 0.10.0
 
 Nová vzácna výbava môže obsahovať typovú odolnosť; zbrane aj kritický zásah. Hodnoty sú percentá, sčítavajú sa zo všetkých slotov a okamžite sa používajú v boji. Staršie predmety si zachovávajú vlastné atribúty. Pozri [COMBAT.md](COMBAT.md).
+
+## Samostatné postavy od 0.13.0
+
+Batoh, desať slotov, rozmiestnenie a zásobníky patria konkrétnemu profilu. UID predmetov sú jedinečné v rámci postavy; pri importe ďalšej postavy sa neprečíslujú. Zmeny sa ukladajú výlučne pod aktívnym ID. Výber, ťahanie a otvorený detail predmetu sa pri prepnutí čistia.

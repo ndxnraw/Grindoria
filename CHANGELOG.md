@@ -10,6 +10,26 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.13.0] - 2026-11-03
+
+### Added
+- Sieň hrdinov s výberom samostatných postáv, tvorbou mena a povolania, animovaným 2D náhľadom výbavy a informáciami o progrese.
+- Register podľa stabilných ID, globálne nastavenia a izolované relácie s vlastným inventárom, mapami, úlohami, schopnosťami, biológiou, bestiárom a úspechmi.
+- Kompletný export všetkých postáv a validovaný transakčný import s pridaním alebo nahradením, riešením mien, premapovaním ID a bezpečnostnou zálohou.
+- Vymazanie vyžadujúce celé meno, validácia mien a lokálna predpona [GM] pri zadaní *.
+- Export neuloženého progresu aj pri plnom úložisku a ochrana pred zastaranými zápismi.
+- Testy tvorby, izolácie, mazania, importov, chýb úložiska, migrácií a obnovy postáv.
+
+### Changed
+- Jeden charakter má jedno nemenné povolanie; zobrazovaný názov Ninja používa stabilný identifikátor ninja.
+- Existujúci spoločný postup sa prevedie na pomenovaný profil; obnovenie hry začína výberom postavy.
+- Hrať obnoví vlastnú mapu a pozíciu; Postavy a ♙ v minimape bezpečne ukončia reláciu aj vo fullscreene.
+
+### Fixed
+- Medzi postavami sa neprenášajú strely, aury, dočasné cooldowny ani presúvanie predmetov.
+- Povolanie existujúceho ID nemožno zmeniť ani nahradením importovanou zálohou.
+- Pri zmene rozloženia sa znovu vypočíta veľkosť Canvasu a mierenie.
+
 ## [0.12.0] - 2026-11-03
 
 ### Added
@@ -253,7 +273,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Added
 
-- Výber bojovníka, nindžu a šamana.
+- Povolania: Bojovník, Ninja a Šaman.
 - Body vlastností, kritické zásahy a odlišné schopnosti povolaní.
 - Batoh, tri vzácnosti výbavy, nasadzovanie a predaj.
 - Lesný boss s varovaním pred úderom a možnosťou úhybu.
@@ -269,7 +289,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.12.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.13.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -285,3 +305,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.10.0]: https://github.com/ndxnraw/Grindoria/compare/v0.9.0...v0.10.0
 [0.11.0]: https://github.com/ndxnraw/Grindoria/compare/v0.10.0...v0.11.0
 [0.12.0]: https://github.com/ndxnraw/Grindoria/compare/v0.11.0...v0.12.0
+[0.13.0]: https://github.com/ndxnraw/Grindoria/compare/v0.12.0...v0.13.0

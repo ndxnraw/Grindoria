@@ -1,5 +1,5 @@
 const test = require('node:test'), assert = require('node:assert/strict');
-const { createGame } = require('./helpers/game.cjs');
+const { createGame, readSavedProfile } = require('./helpers/game.cjs');
 function arena(run) { run('running=true;paused=false;p.x=400;p.y=1400;cam.x=p.x;cam.y=p.y;p.hp=maxHP();p.mp=maxMP();attackCD=0;castPose=0;spellCD.fill(0);keysClear();face=0;resetCombatFlow();combatAssist.focused=true;combatAssist.timer=0;combatAssist.nextSkill=0;mobs.forEach(m=>{m.hp=0;m.dead=1000;});var foe=mobs.find(m=>m.type==="wolf");Object.assign(foe,{x:450,y:1400,homeX:450,homeY:1400,hp:10000,max:10000,engaged:0,taunt:0});'); }
 
 test('all six hotbar skills restore canvas focus and Space attacks even if a game button remains focused',()=>{
@@ -63,7 +63,7 @@ test('assistance pauses before start, in sanctuary, during dialogs, death, blur 
 
 test('toggle preferences persist independently, and Escape stops automatic combat immediately',()=>{
   const {run,elements,saved,listeners}=createGame();arena(run);elements.get('auto-aim').onclick();
-  const restored=createGame(JSON.parse(saved.get('grindoria-save-v1')));assert.equal(restored.run('p.combatAssist.autoAim'),true);assert.equal(restored.run('p.combatAssist.autoSpell'),false);
+  const restored=createGame(readSavedProfile(saved));assert.equal(restored.run('p.combatAssist.autoAim'),true);assert.equal(restored.run('p.combatAssist.autoSpell'),false);
   elements.get('auto-spell').onclick();listeners.get('keydown')({key:'Escape',preventDefault(){}});assert.equal(run('p.combatAssist.autoAim'),false);assert.equal(run('p.combatAssist.autoSpell'),false);
   run('updateAutoSpell(1);');assert.equal(run('spellCD[0]'),0);assert.equal(elements.get('auto-spell').attributes['aria-pressed'],'false');
   assert.equal(run('toggleCombatAssist("invalid")'),false);

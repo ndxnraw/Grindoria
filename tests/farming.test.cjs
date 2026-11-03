@@ -1,5 +1,5 @@
 const test = require('node:test'), assert = require('node:assert/strict');
-const { createGame } = require('./helpers/game.cjs');
+const { createGame, readSavedProfile } = require('./helpers/game.cjs');
 
 test('each map has dense packs, four level regions and unique protected spawn slots', () => {
   const { run } = createGame(); run('running=true;');
@@ -50,7 +50,7 @@ test('cape consumes one inventory unit and only attracts alive mobile enemies wi
   assert.equal(run('effects.at(-1).style'), 'bravery');
   run('draw();');
   assert.equal(run('useBraveryCape()'), false); assert.equal(run('p.braveryCapes'), 1);
-  assert.equal(JSON.parse(saved.get('grindoria-save-v1')).braveryCapes, 1);
+  assert.equal(readSavedProfile(saved).braveryCapes, 1);
 });
 
 test('a cape pulls whole packs together rather than marking only the nearest monster', () => {
@@ -76,7 +76,7 @@ test('cape cannot be used while paused, dead, before starting or inside sanctuar
   run('paused=false;p.hp=0;'); assert.equal(run('useBraveryCape()'), false);
   run('p.hp=100;p.braveryCapes=1;mobs.forEach(m=>m.hp=0);'); assert.equal(run('useBraveryCape()'), true);
   assert.equal(run('p.braveryCapes'), 0); run('capeCooldown=0;'); assert.equal(run('useBraveryCape()'), false);
-  run('save();'); const reload = createGame(JSON.parse(saved.get('grindoria-save-v1'))); assert.equal(reload.run('p.braveryCapes'), 0);
+  run('save();'); const reload = createGame(readSavedProfile(saved)); assert.equal(reload.run('p.braveryCapes'), 0);
 });
 
 test('B and the action button use the same cape logic and the shop restocks finite stacks', () => {
@@ -110,14 +110,14 @@ test('migration fills new slots without duplicating old dead enemies, loot or ti
   assert.equal(run('mobs.find(m=>m.hp<=0&&m.type==="wolf").dead'), 3);
   assert.equal(run('mobs.find(m=>m.hp<=0&&m.type==="stone").dead'), 12);
   assert.equal(run('drops.length'), 1); assert.equal(run('drops[0].value'), 91); assert.equal(run('p.gold'), 777);
-  run('save();'); const reload = createGame(JSON.parse(saved.get('grindoria-save-v1')));
+  run('save();'); const reload = createGame(readSavedProfile(saved));
   assert.equal(reload.run('mobs.length'), 157); assert.equal(reload.run('mobs.filter(m=>m.hp<=0).length'), 2); assert.equal(reload.run('drops.length'), 1);
 });
 
 test('new spawn layouts and variant identities persist while transient taunts reset on reload', () => {
   const { run, saved } = createGame();
   run('let rare=mobs.find(m=>m.rareSlot);rare.hp=rare.max/2;rare.taunt=15;rare.engaged=15;let id=rare.spawnId,health=rare.hp;save();');
-  const reload = createGame(JSON.parse(saved.get('grindoria-save-v1')));
+  const reload = createGame(readSavedProfile(saved));
   assert.equal(reload.run(`mobs.find(m=>m.spawnId==='${run('id')}').hp`), run('health'));
   assert.equal(reload.run(`mobs.find(m=>m.spawnId==='${run('id')}').variant`), 'rare');
   assert.equal(reload.run(`mobs.find(m=>m.spawnId==='${run('id')}').taunt`), 0);
@@ -136,14 +136,14 @@ test('large packs can be simulated without unbounded spawning or breaking the ri
   run('running=true;p.level=35;p.career.materials.keys=3;loadMap("temple");let normal=mobs[0].max;enterRift();let count=mobs.length;for(const m of mobs){m.hp=0;m.dead=0;}for(let i=0;i<100;i++)update(.05);save();');
   assert.equal(run('mobs.length'), run('count')); assert.equal(run('mobs.length'), 205);
   assert(run('mobs.every(m=>m.riftId===p.career.endgame.run.id)'));
-  const reload = createGame(JSON.parse(saved.get('grindoria-save-v1')));
+  const reload = createGame(readSavedProfile(saved));
   reload.run('running=true;finishRift(false);loadMap("temple");'); assert.equal(reload.run('mobs[0].max'), run('normal'));
 });
 
 test('an already active sparse 0.4 expedition remains intact until its normal map is upgraded on exit', () => {
   const { run, saved } = createGame();
   run('running=true;p.level=35;p.career.materials.keys=3;loadMap("temple");enterRift();p.career.endgame.run.kills=7;save();');
-  const old = JSON.parse(saved.get('grindoria-save-v1'));
+  const old = readSavedProfile(saved);
   function sparse(state) {
     delete state.spawnSchema;
     state.mobs = [...state.mobs.filter(m => m.type === 'wolf').slice(0, 24), ...state.mobs.filter(m => m.type === 'stone').slice(0, 3), state.mobs.find(m => m.type === 'boss')];

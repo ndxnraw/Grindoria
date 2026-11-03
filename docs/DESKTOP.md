@@ -43,3 +43,7 @@ Automatické testy pokrývajú browserové prepnutie a jeho odmietnutie, stav tl
 Fullscreen bol ručne overený v prehliadači pri 1920 × 1080 aj návrate pomocou F10. Samostatný Electron runtime ani inštalačný balík zatiaľ neboli spustené; pred distribúciou treba v cieľovom OS overiť jeho celé okno, DPI, Esc a ukončenie aplikácie.
 
 Implementácia vychádza z oficiálnej dokumentácie [BrowserWindow](https://www.electronjs.org/docs/latest/api/browser-window), [contextBridge](https://www.electronjs.org/docs/latest/api/context-bridge) a [Context Isolation](https://www.electronjs.org/docs/latest/tutorial/context-isolation).
+
+## Profily postáv od 0.13.0
+
+Rovnaké offline HTML obsahuje register postáv aj výber. Electron host neudržiava paralelný model hráča. Prenos medzi prehliadačom a aplikáciou používa export/import všetkých postáv. Návrat cez ♙ v minimape funguje aj v celom okne.

@@ -1,5 +1,5 @@
 const test = require('node:test'), assert = require('node:assert/strict');
-const { createGame } = require('./helpers/game.cjs');
+const { createGame, readSavedProfile } = require('./helpers/game.cjs');
 
 test('moving across loot never opens details; only resting on one item for 550 ms shows its tooltip', () => {
   const { run, elements } = createGame();
@@ -24,10 +24,10 @@ test('all unpicked loot expires, with extra time for epic gear and relics, witho
 test('expiry survives save, travel and reload; legacy loot gets one finite lifetime and expired gear cannot be clicked', () => {
   const { run, saved } = createGame();
   run('running=true;let drop=spawnGroundDrop({kind:"gear",item:{slot:"weapon",name:"Meč"}},p);drop.expiresAt=Date.now()+60000;save();');
-  const stamp=run('drop.expiresAt'), reloaded=createGame(JSON.parse(saved.get('grindoria-save-v1')));
+  const stamp=run('drop.expiresAt'), reloaded=createGame(readSavedProfile(saved));
   assert.equal(reloaded.run('drops[0].expiresAt'),stamp);
   reloaded.run('running=true;loadMap("desert");loadMap("valley");'); assert.equal(reloaded.run('drops[0].expiresAt'),stamp);
-  const profile=JSON.parse(saved.get('grindoria-save-v1'));profile.worldStates.valley.drops[0].expiresAt=1;
+  const profile=readSavedProfile(saved);profile.worldStates.valley.drops[0].expiresAt=1;
   assert.equal(createGame(profile).run('drops.length'),0);
   run('drop.expiresAt=1;drop.fallAge=.65;');assert.equal(run('pickUpGroundDrop(drop.id)'),false);assert.equal(run('p.bag.length'),0);
   run('let migrated=hydrateGroundDrops([{x:400,y:400,value:20}]);let again=hydrateGroundDrops(migrated);');

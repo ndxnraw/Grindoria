@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict');
-const {createGame}=require('./helpers/game.cjs');
+const { createGame, readSavedProfile }=require('./helpers/game.cjs');
 
 test('all maps use irregular separated spawn points instead of repeated rows and columns',()=>{
   const {run}=createGame();
@@ -20,12 +20,12 @@ test('Metin respawns relocate inside their level region with separation, preserv
 
 test('layout migration preserves damage, dead timers, loot and guards; migrated locations then persist',()=>{
   const {run,saved}=createGame();run('running=true;let stone=mobs.find(m=>m.type==="stone");stone.hp=Math.floor(stone.max/2);spawnMetinGuards(stone);let guard=mobs.find(m=>m.metinParentId);guard.hp=20;let dead=mobs[0];dead.hp=0;dead.dead=3;spawnGroundDrop({kind:"gold",count:20},{x:400,y:400});save();');
-  const profile=JSON.parse(saved.get('grindoria-save-v1')),state=profile.worldStates.valley;delete state.layoutSchema;
+  const profile=readSavedProfile(saved),state=profile.worldStates.valley;delete state.layoutSchema;
   const old=state.mobs.find(m=>m.type==='stone');old.x=old.homeX=200;old.y=old.homeY=1300;
   const migrated=createGame(profile);assert.equal(migrated.run('mobs[0].hp'),0);assert.equal(migrated.run('mobs[0].dead'),3);
   assert.equal(migrated.run('mobs.find(m=>m.type==="stone").hp'),old.hp);assert.notEqual(migrated.run('mobs.find(m=>m.type==="stone").x'),200);
   assert.equal(migrated.run('mobs.find(m=>m.metinParentId).hp'),20);assert.equal(migrated.run('drops.length'),1);
-  migrated.run('save();');const again=createGame(JSON.parse(migrated.saved.get('grindoria-save-v1')));
+  migrated.run('save();');const again=createGame(readSavedProfile(migrated.saved));
   assert.equal(again.run('mobs.find(m=>m.type==="stone").x'),migrated.run('mobs.find(m=>m.type==="stone").x'));
   assert.equal(again.run('p.worldStates.valley.layoutSchema'),2);
 });

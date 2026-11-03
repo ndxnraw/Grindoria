@@ -6,6 +6,14 @@ Hrateľné fantasy akčné RPG v prehliadači. Projekt vlastní a spravuje [@ndx
 
 Sólo 2D hra inšpirovaná klasickými MMORPG: štyri povolania, osem škôl so 48 schopnosťami, päť máp, bossovia, výbava a úlohy. Grafika a animácie sú vlastné; nejde o oficiálny klient Metin2 ani presnú reprodukciu jeho mechaník.
 
+## Výber postáv
+
+Hra sa otvára v **Sieni hrdinov**. Vytvor si pomenovanú postavu, vyber povolanie a školu, potom stlač **Hrať**. Povolanie sa už nemení. Predvolene môžeš mať osem samostatných postáv, aj viac rovnakého povolania; limit nastavuje CHARACTER_RULES.maxCharacters v src/js/data/characters.js. Meno má 3–16 znakov, začína písmenom a podporuje písmená, čísla, `_` a `-`. Predpona `*` pridá lokálne označenie `[GM]`.
+
+Každá postava má vlastné úrovne, inventár, výbavu, Yang, úlohy, schopnosti a mapy. **Postavy** v hlavičke alebo **♙ v minimape** bezpečne uložia reláciu a vrátia výber. Výber zobrazuje animovaný 2D model s nasadenou výbavou; engine nepoužíva 3D.
+
+**Exportovať postavy** stiahne jeden JSON so všetkými profilmi. **Importovať postavy** najprv ukáže obsah a konflikty: možno postavy pridať s vyriešením mien alebo celý zoznam nahradiť po potvrdení. Pred nahradením vznikne stiahnuteľná bezpečnostná záloha. Vymazanie vyžaduje napísanie celého mena. Podrobnosti: [CHARACTERS.md](docs/CHARACTERS.md).
+
 ## Spustenie
 
 Potrebuješ Node.js 22 alebo novší (odporúčané 24). Projekt nemá externé balíčky; netreba `npm install`.
@@ -57,7 +65,7 @@ Nastavenie sa zapamätá. V útočisku, otvorenom paneli a neaktívnom okne auto
 
 ## Obsah
 
-- Bojovník, nindža, Sura a šaman; každé povolanie má dve školy.
+- Bojovník, Ninja, Sura a šaman; každé povolanie má dve školy.
 - Údolie tichého vetra, Púšť zapadnutých chrámov, Hory večného mrazu, Chrám červeného plameňa a Šuterland.
 - Úrovne, skúsenosti, zlato, mana, sila, vitalita, obratnosť a inteligencia.
 - Mriežkový inventár 5 × 9 na dvoch stranách, viacpolíčkové predmety, presúvanie, tooltipy, triedenie a zásobníky.
@@ -69,7 +77,7 @@ Nastavenie sa zapamätá. V útočisku, otvorenom paneli a neaktívnom okne auto
 - Plášť statočnosti v konečnej zásobe: dosah 650, priťahovanie na 18 s, nákup a dopĺňanie z koristi.
 - Respawn: bežné príšery 5 s, elity 8 s, vzácne varianty 20 s, hliadky 75 s, kamene 18 s a bossovia 40 s aktívneho času mapy.
 
-Postup sa ukladá v `localStorage` pod kľúčom `grindoria-save-v1`. Závisí od prehliadača a umiestnenia súboru; medzi zariadeniami a adresami sa automaticky neprenáša. Stav neaktívnej mapy vrátane časovačov je pozastavený.
+Postavy sa automaticky ukladajú do jedného atomického registra v localStorage pod kľúčom grindoria-characters-v1, pričom každý profil má vlastné stabilné ID a samostatné dáta. Starý spoločný postup sa jednorazovo prevedie na pomenovanú postavu; pôvodný zdroj zostane zálohou. Pri obnovení stránky sa najprv zobrazí výber a po Hrať sa obnoví vlastná mapa aj pozícia postavy. Prenos medzi zariadeniami, súbormi alebo Electron aplikáciou používa export a import. Respawn neaktívnej mapy je pozastavený, expirácia koristi plynie podľa skutočného času.
 
 ## Metiny a Šuterland
 
@@ -134,7 +142,7 @@ npm run check:dist
 
 Testy pokrývajú všetkých 48 schopností, postup, ukladanie, mapy, respawn a prípravu vydania. Nenahrádzajú vizuálnu kontrolu v prehliadači. Rovnaké príkazy používa GitHub Actions na Windows a Linuxe.
 
-Zmeny zapisuj pod `[Unreleased]` v [CHANGELOG.md](CHANGELOG.md). Príkaz `npm run release -- 0.12.1` presunie poznámky do novej verzie, pridá dátum a odkazy, zosúladí verziu hry a vytvorí offline súbor. Sám necommituje ani neposiela zmeny na GitHub.
+Zmeny zapisuj pod `[Unreleased]` v [CHANGELOG.md](CHANGELOG.md). Príkaz `npm run release -- 0.13.1` presunie poznámky do novej verzie, pridá dátum a odkazy, zosúladí verziu hry a vytvorí offline súbor. Sám necommituje ani neposiela zmeny na GitHub.
 
 Podrobnosti: [vydávanie](docs/RELEASING.md), [architektúra](docs/ARCHITECTURE.md), [prispievanie](CONTRIBUTING.md).
 

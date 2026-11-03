@@ -4,6 +4,13 @@ function parsePlayerSave(raw, compatible = false) {
   try {
     const profile = JSON.parse(raw);
     if (!profile || !Number.isInteger(profile.level) || profile.level < 1 || profile.level > 99) return null;
+    if(profile.bag!==undefined&&!Array.isArray(profile.bag))return null;
+    if(profile.equipped!==undefined&&(!profile.equipped||typeof profile.equipped!=='object'||Array.isArray(profile.equipped)))return null;
+    if(profile.worldStates!==undefined){if(!profile.worldStates||typeof profile.worldStates!=='object'||Array.isArray(profile.worldStates))return null;for(const state of Object.values(profile.worldStates))if(!state||!Array.isArray(state.mobs)||!Array.isArray(state.drops))return null;}
+    if(profile.career?.schema===PROGRESSION.schema){
+      for(const key of ['materials','training','skills','biology','alchemy','collection','relicPity','samplePity','specialization','endgame'])if(!profile.career[key]||typeof profile.career[key]!=='object')return null;
+      if(!profile.career.alchemy.stock||!profile.career.alchemy.equipped)return null;
+    }
     if (!compatible) return profile;
     // Identify the existing save format by its structure, independently of project names.
     if (!CLASSES[profile.classId] || !MAPS[profile.mapId] || !Array.isArray(profile.bag) || !profile.equipped || !profile.worldStates) return null;
@@ -14,7 +21,7 @@ function parsePlayerSave(raw, compatible = false) {
   } catch { return null; }
 }
 
-function loadPlayerSave() {
+function loadLegacyPlayerSave() {
   try {
     const current = localStorage.getItem(SAVE), primary = parsePlayerSave(current);
     if (primary) return primary;
@@ -34,21 +41,4 @@ function loadPlayerSave() {
     if (candidates.length > 1) pendingSaveImports.push(...candidates);
   } catch {}
   return null;
-}
-
-function chooseSaveImport(index) {
-  if (!Number.isInteger(index) || index < -1 || index >= pendingSaveImports.length) return false;
-  if (index >= 0) {
-    p = { ...p, ...pendingSaveImports[index] };
-    initializeCareer(); initializeInventory(); initializeFarming(); initializeLoot(); loadMap(p.mapId, true);
-    renderClasses(); updateClassHUD(); updateHUD();
-  }
-  pendingSaveImports.length = 0;
-  save(); closeModal(); startGame();
-  return true;
-}
-
-function openSaveImport() {
-  modal(`<span class="eyebrow">VITAJ V GRINDORII</span><h2>Pokračovať v príbehu</h2><p>Na tomto zariadení je viac kompatibilných postáv. Vyber si, s ktorou chceš pokračovať.</p>${pendingSaveImports.map((profile, i) => `<button class="primary" data-save-import="${i}">Postava ${i + 1} · ${CLASSES[profile.classId].name} · úroveň ${profile.level}</button>`).join('')}<button class="secondary" data-save-import="-1">Začať novú postavu</button>`);
-  document.querySelectorAll('[data-save-import]').forEach(button => button.onclick = () => chooseSaveImport(Number(button.dataset.saveImport)));
 }

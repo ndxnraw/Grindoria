@@ -1,5 +1,5 @@
 const test = require('node:test'), assert = require('node:assert/strict');
-const { createGame } = require('./helpers/game.cjs');
+const { createGame, readSavedProfile } = require('./helpers/game.cjs');
 
 test('neutral creatures wander independently, pause, and remain inside their home radius on every map', () => {
   const { run } = createGame();
@@ -55,7 +55,7 @@ test('escaping returns allies home, then roaming resumes; respawn and reload cle
   run('foe.roamTarget={x:1950,y:1950};foe.returning=true;hit(foe,99999);updateEnemySpawns(foe.dead+.1,true);');
   assert.equal(run('foe.returning'), false); assert.equal(run('foe.roamTarget'), null);
   run('foe.roamTarget={x:1950,y:1950};foe.returning=true;save();');
-  const reload = createGame(JSON.parse(saved.get('grindoria-save-v1')));
+  const reload = createGame(readSavedProfile(saved));
   assert.equal(reload.run('mobs[0].roamTarget'), null); assert.equal(reload.run('mobs[0].returning'), false);
   assert.equal(reload.run('mobs[0].hp'), run('foe.hp'));
 });

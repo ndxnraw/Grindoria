@@ -9,7 +9,7 @@ function snapshotMap() {
   };
 }
 
-function save(){if(pendingSaveImports.length)return;expireGroundDrops();pruneStoredGroundDrops();snapshotMap();try{localStorage.setItem(SAVE,JSON.stringify(p));}catch{}}
+function save(){return saveActiveCharacter();}
 
 function loadMap(id, initial=false) {
   if (!MAPS[id]) return false;
@@ -18,6 +18,7 @@ function loadMap(id, initial=false) {
     if (!running || !isSanctuary(p)) { toast('Cestovať môžeš z útočiska (M).'); return false; }
     snapshotMap();
   }
+  const resumePosition={x:p.x,y:p.y};
   resetCombatFlow();
   p.mapId=id;
   const cfg=map(), old=p.worldStates[id];
@@ -33,7 +34,9 @@ function loadMap(id, initial=false) {
   mobs.length=0; mobs.push(...population); drops.length=0;
   drops.push(...hydrateGroundDrops(old?.drops||[]));
   clearLootPointer();
-  p.x=1000; p.y=1160; cam.x=p.x; cam.y=p.y; target=null;
+  p.x=initial&&Number.isFinite(resumePosition.x)&&resumePosition.x>=45&&resumePosition.x<=SIZE-45?resumePosition.x:1000;
+  p.y=initial&&Number.isFinite(resumePosition.y)&&resumePosition.y>=45&&resumePosition.y<=SIZE-45?resumePosition.y:1160;
+  cam.x=p.x;cam.y=p.y;target=null;
   shots.length=0; effects.length=0; particles.length=0; lastMiniMapPaint=-Infinity;
   Object.keys(buffs).forEach(k=>delete buffs[k]);
   updateMapHUD();

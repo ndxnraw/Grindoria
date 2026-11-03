@@ -1,5 +1,5 @@
 const test = require('node:test'), assert = require('node:assert/strict');
-const { createGame } = require('./helpers/game.cjs');
+const { createGame, readSavedProfile } = require('./helpers/game.cjs');
 
 function gear(run, slot, bonus = 10) {
   return run(`addGearItem({name:EQUIPMENT['${slot}'].names[1],slot:'${slot}',rarity:1,tier:1,bonus:${bonus},enhance:0,value:25});`);
@@ -63,7 +63,7 @@ test('legacy large bags migrate without losses, duplicates or changes to enhance
   assert.equal(run('p.bag.length'), 24); assert(run('p.inventory.pages>=4'));
   assert.equal(run('new Set(p.bag.map(i=>i.uid)).size'), 24);
   assert(run('p.bag.every(i=>i.enhance===3)')); assert.equal(run('equippedBonus("weapon")'), 31);
-  run('let cell=p.bag[3].cell;save();'); const reload = createGame(JSON.parse(saved.get('grindoria-save-v1')));
+  run('let cell=p.bag[3].cell;save();'); const reload = createGame(readSavedProfile(saved));
   assert.equal(reload.run('p.bag[3].cell'), run('cell')); assert.equal(reload.run('p.bag.length'), 24);
   assert.equal(reload.run('p.potions'), 123); assert.equal(reload.run('p.braveryCapes'), 321);
 });
@@ -75,7 +75,7 @@ test('supply stacks use the existing counters, merge new drops, move and sort wi
   assert.equal(run('moveSupplyItem("material:ore",40)'), true);
   assert.equal(run('supplyEntries().find(i=>i.id==="material:ore").cell'), 40);
   run('sortInventory("supplies");sortInventory("gear");save();');
-  const reload = createGame(JSON.parse(saved.get('grindoria-save-v1')));
+  const reload = createGame(readSavedProfile(saved));
   assert.equal(reload.run('p.potions'), 200); assert.equal(reload.run('p.career.materials.ore'), 255);
   assert.equal(reload.run('consumeSupply("material:ore",256)'), false);
   assert.equal(reload.run('consumeSupply("material:ore",-1)'), false);

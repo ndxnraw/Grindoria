@@ -1,7 +1,7 @@
 const vm = require('node:vm');
 const { runtimeSource } = require('./source.cjs');
 
-exports.createGame = function (oldSave, storageKey = 'grindoria-save-v1', additionalStorage = {}) {
+exports.createGame = function (oldSave, storageKey = 'grindoria-save-v1', additionalStorage = {}, options = {}) {
   const elements = new Map(), saved = new Map(), listeners = new Map();
   if (oldSave) saved.set(storageKey, JSON.stringify(oldSave));
   for (const [key, value] of Object.entries(additionalStorage)) saved.set(key, typeof value === 'string' ? value : JSON.stringify(value));
@@ -11,11 +11,16 @@ exports.createGame = function (oldSave, storageKey = 'grindoria-save-v1', additi
     return elements.get(id);
   };
   const context = vm.createContext({
-    document: { getElementById: element, querySelectorAll: () => [], addEventListener: (name, fn) => listeners.set("document:" + name, fn), body: { classList: { add() {}, toggle() {} } } },
+    document: { getElementById: element, querySelectorAll: () => [], addEventListener: (name, fn) => listeners.set("document:" + name, fn), body: { classList: { add() {}, remove() {}, toggle() {} } } },
     window: { addEventListener: (name, fn) => listeners.set(name, fn) }, devicePixelRatio: 1,
-    localStorage: { getItem: key => saved.get(key), setItem: (key, value) => saved.set(key, value), key: index => [...saved.keys()][index] ?? null, get length() { return saved.size; } },
-    requestAnimationFrame() {}, console
+    localStorage: { getItem: key => saved.get(key), setItem: (key, value) => { if(options.failWrites)throw new Error("quota");saved.set(key, value); }, key: index => [...saved.keys()][index] ?? null, get length() { return saved.size; } },
+    requestAnimationFrame() {}, TextEncoder, console
   });
   vm.runInContext(runtimeSource(), context);
+  if (!options.emptyRoster && !vm.runInContext("characterStore.error",context)) vm.runInContext('if(!characterStore.account.order.length)createCharacter("Testovnik","warrior");playCharacter();running=false;document.body.classList.remove("started");',context);
   return { run: code => vm.runInContext(code, context), elements, saved, listeners };
 };
+
+exports.readSavedAccount = saved => JSON.parse(saved.get('grindoria-characters-v1'));
+exports.readSavedProfile = (saved,id) => { const account=exports.readSavedAccount(saved);return account.profiles[id||account.selectedId].data; };
+exports.createEmptyGame = (additionalStorage={}) => exports.createGame(null,'grindoria-save-v1',additionalStorage,{emptyRoster:true});

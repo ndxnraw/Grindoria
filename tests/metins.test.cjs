@@ -1,5 +1,5 @@
 const test = require('node:test'), assert = require('node:assert/strict');
-const { createGame } = require('./helpers/game.cjs');
+const { createGame, readSavedProfile } = require('./helpers/game.cjs');
 
 test('Šuterland contains exactly one protected Metin for every level 1–99 and no ambient enemies', () => {
   const { run } = createGame();
@@ -113,14 +113,14 @@ test('new upgrade stones have a real forge cost from +4 and old material balance
   assert.equal(run('enhanceEquipment("weapon")'),false); assert.equal(run('p.gold'),10000); assert.equal(run('p.career.materials.ore'),1000);
   run('addMaterial("upgradeStones",1);'); assert.equal(run('enhanceEquipment("weapon")'),true);
   assert.equal(run('p.equipped.weapon.enhance'),4); assert.equal(run('p.career.materials.upgradeStones'),0);
-  run('save();'); const profile=JSON.parse(saved.get('grindoria-save-v1')); delete profile.career.materials.upgradeStones;
+  run('save();'); const profile=readSavedProfile(saved); delete profile.career.materials.upgradeStones;
   const reload=createGame(profile); assert.equal(reload.run('p.career.materials.upgradeStones'),0); assert.equal(reload.run('p.career.materials.ore'),run('p.career.materials.ore'));
 });
 
 test('active Metins, guards and ground loot persist without multiplying their identities', () => {
   const { run, saved } = createGame();
   run('running=true;loadMap("suterland",true);let stone=mobs.find(m=>m.level===35);p.x=stone.x-70;p.y=stone.y;hit(stone,100);updateMetins(.21,false);let id=stone.spawnId,health=stone.hp,cooldown=stone.metinWaveTimer;spawnGroundDrop({kind:"gold",count:50},stone);save();');
-  const reload=createGame(JSON.parse(saved.get('grindoria-save-v1')));
+  const reload=createGame(readSavedProfile(saved));
   assert.equal(reload.run('p.mapId'),'suterland'); assert.equal(reload.run('mobs.filter(m=>m.type==="stone").length'),99);
   assert.equal(reload.run(`mobs.find(m=>m.spawnId==='${run('id')}').hp`),run('health'));
   assert.equal(reload.run(`mobs.find(m=>m.spawnId==='${run('id')}').metinWaveTimer`),run('cooldown'));
@@ -130,7 +130,7 @@ test('active Metins, guards and ground loot persist without multiplying their id
 });
 
 test('old stones retain HP percentage, death timers and loot while gaining new types and defenses', () => {
-  const { run, saved } = createGame(); run('save();'); const old=JSON.parse(saved.get('grindoria-save-v1'));
+  const { run, saved } = createGame(); run('save();'); const old=readSavedProfile(saved);
   const stones=old.worldStates.valley.mobs.filter(m=>m.type==='stone');
   for(const s of stones)for(const key of Object.keys(s))if(key.startsWith('metin'))delete s[key];
   Object.assign(stones[0],{max:160,hp:80}); Object.assign(stones[1],{max:160,hp:0,dead:7});

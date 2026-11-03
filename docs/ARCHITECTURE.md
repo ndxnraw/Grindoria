@@ -9,7 +9,7 @@ Hra používa HTML, CSS, Canvas 2D a klasické JavaScript skripty. Nevyžaduje k
 Poradie načítania je:
 
 1. `data/`: povolania, šesť schopností každej školy a mapy.
-2. `core/persistence.js`: rozpoznanie kompatibilného uloženého postupu, potom `core/state.js`: pripojenie k rozhraniu, herné premenné, načítanie a doplnenie uloženého hráča.
+2. core/persistence.js rozpozná starý postup; core/character-store.js a core/character-validation.js spravujú register, migráciu, transakcie a validáciu. Potom core/state.js pripraví existujúci model aktuálneho hráča a herné premenné.
 3. Funkcie `core/`, `systems/`, `ui/` a `render/`.
 4. `main.js`: prvé načítanie mapy, nastavenie ovládania, HUD a animovanej slučky.
 
@@ -39,11 +39,11 @@ Funkcie môžu medzi súbormi volať zdieľané pomenované funkcie. Načítanie
 
 ## Uložený stav
 
-`localStorage['grindoria-save-v1']` obsahuje hráča, výbavu, splnené úlohy, školy a snímky navštívených máp. Chýbajúce polia starších verzií dostávajú predvolené hodnoty v `state.js`. `snapshotMap()` uchováva aj životy, zostávajúci čas respawnu a korisť; `loadMap()` snímku obnoví.
+Register localStorage[grindoria-characters-v1] oddeľuje globálne nastavenia, poradie, vybrané ID a profily podľa ID. Aktívne ID je v pamäti. Pôvodný hráč p je hlboká kópia aktivovaného profilu; herné systémy zostávajú zachované. save() deleguje na overený zápis aktívneho ID, identity a povolania. Každý profil obsahuje vlastné svety, inventár aj kariéru.
 
-`core/persistence.js` najprv uprednostní platný aktuálny kľúč. Ak chýba, vyhľadá kompatibilné profily podľa formátu dát medzi kľúčmi končiacimi na `-save-v1`. Jediný profil skopíruje pod nový kľúč; pri viacerých hráč vyberá pred spustením hry. Pôvodné dáta ponechá nedotknuté. Prenos funguje iba v rovnakom úložisku prehliadača.
+core/persistence.js je migračná čítačka starého postupu. Platný aktuálny starý profil má prednosť; inak sa kompatibilné staršie profily prevedú na samostatné postavy. Register sa uloží naraz a zdroje ostanú zálohou. Existujúci register, aj prázdny, má vždy prednosť.
 
-Pri načítaní sa postava presunie do útočiska aktuálnej mapy. Aktívne aury a rozletené strely sa cez cestovanie neprenášajú. Lokálny postup nie je zabezpečený proti úprave hráčom a hra zatiaľ nemá server, multiplayer ani cloudové účty.
+playCharacter() obnoví vlastnú mapu a pozíciu; returnToCharacters() najprv uloží reláciu. Strely, aury, dočasné cooldowny, výber inventára a ciele sa medzi reláciami čistia. Zvuk je globálne nastavenie. Offline hra nemá cloudové účty ani serverové vynucovanie identity. Pozri [CHARACTERS.md](CHARACTERS.md).
 
 `initializeCareer()` vykoná jednorazovú migráciu pred prvým načítaním mapy. Paralelné cesty sú uložené v `p.career`; ich bonusy agreguje `careerBonuses()`, ktorú používajú skutočné výpočty útoku, obrany, zdravia, many a kritických zásahov. Rozhranie sa nachádza v `ui/career.js`. Podrobnosti balansu a zdrojov sú v [PROGRESSION.md](PROGRESSION.md).
 
@@ -90,3 +90,7 @@ Korisť nesie absolútny `expiresAt`. Čistenie aktívnych a uložených máp ne
 ## Pomoc v boji a fokus od 0.12.0
 
 `systems/combat-assist.js` vyberá najbližší vhodný cieľ a plánuje automatické volania existujúceho `castSkill`; nevytvára body pohybu ani ďalší výpočet poškodenia. `ui/combat-assist.js` aktualizuje nezávislé prepínače a vracia fokus po akcii hotbaru. Uložené sú iba booleany v `p.combatAssist`, časovač a rotácia ostávajú dočasné. `main.js` spravuje jednotný handler klávesnice, odlišuje textové polia od herných tlačidiel a pozastavuje asistenciu pri strate zamerania.
+
+## Výber postáv od 0.13.0
+
+data/characters.js centralizuje konfiguráciu. ui/characters.js riadi tvorbu, výber, potvrdené vymazanie, informácie a zálohy. ui/character-art.js kreslí 2D náhľad podľa povolania a výbavy. Import validuje profily pred úpravou kópie registra; finálny setItem je jeden. Export aktívneho progresu používa tú istú snímku bez požiadavky úspešného zápisu.

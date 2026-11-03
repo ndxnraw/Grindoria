@@ -1,5 +1,5 @@
 const test = require('node:test'), assert = require('node:assert/strict');
-const { createGame } = require('./helpers/game.cjs');
+const { createGame, readSavedProfile } = require('./helpers/game.cjs');
 
 test('EXP curve demands long farming, scales with enemy level, and suppresses weak targets', () => {
   const { run } = createGame();
@@ -22,7 +22,7 @@ test('legacy saves keep level, EXP percentage, equipment power and their schema 
   assert.equal(run('p.xp'), run('Math.floor(.5*xpForLevel(8))'));
   assert.equal(run('equippedBonus("weapon")'), 24);
   assert.equal(run('p.career.materials.ore'), 0);
-  run('save();'); const next = createGame(JSON.parse(saved.get('grindoria-save-v1')));
+  run('save();'); const next = createGame(readSavedProfile(saved));
   assert.equal(next.run('p.xp'), run('p.xp')); assert.equal(next.run('equippedBonus("weapon")'), 24);
 });
 
@@ -154,7 +154,7 @@ test('an active expedition survives reload and abandoning restores the ordinary 
   const { run, saved } = createGame();
   run('running=true;p.level=35;p.career.materials.keys=3;loadMap("temple");let normalHP=mobs[0].max,normalBossHP=mobs.find(m=>m.type==="boss").max;enterRift();hit(mobs[0],999999);save();');
   assert(run('mobs.find(m=>m.type==="boss").max > normalBossHP'));
-  const reload = createGame(JSON.parse(saved.get('grindoria-save-v1')));
+  const reload = createGame(readSavedProfile(saved));
   assert.equal(reload.run('p.career.endgame.run.kills'), 1);
   assert.equal(reload.run('mobs[0].hp'), 0);
   reload.run('running=true;'); assert.equal(reload.run('finishRift(false)'), true);
@@ -169,6 +169,6 @@ test('every progression panel opens and the entire career persists in the save',
     run(`careerPanel('${tab}');`); assert.equal(elements.get('modal').hidden, false); assert.match(elements.get('modalcontent').innerHTML, /Progresia/);
   }
   run('p.career.materials.books=8;p.career.alchemy.equipped.ruby=2;p.career.biology.stage=1;save();');
-  const reload = createGame(JSON.parse(saved.get('grindoria-save-v1')));
+  const reload = createGame(readSavedProfile(saved));
   assert.equal(reload.run('p.career.materials.books'), 8); assert.equal(reload.run('careerBonuses().attack'), 8); assert.equal(reload.run('careerBonuses().hp'), 30);
 });

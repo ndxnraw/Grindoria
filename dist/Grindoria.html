@@ -92,24 +92,80 @@ body.native-fullscreen .game-shell{position:fixed;inset:0;width:100vw;height:100
 .combat-assist button:focus-visible{outline:2px solid #f2d49b;outline-offset:2px}
 @media(max-width:850px){.combat-assist{bottom:162px}}
 @media(max-width:450px){.combat-assist{bottom:204px}.combat-assist button{padding:6px 9px;font-size:10px}}
+
+/* Character hall: one isolated profile per hero. */
+body.character-select header nav,body.character-select .world-title,body.character-select main>footer{display:none}
+body.character-select main{padding:16px 3% 24px;max-width:1600px;margin:auto}
+body.character-select .game-shell{height:calc(100dvh - 126px);min-height:650px;border-color:#bda57150}
+.character-screen{position:absolute;inset:0;z-index:12;background:#0b1b18;overflow:auto;color:#d7ddcc}
+.character-scenery{position:absolute;inset:0;width:100%;height:100%;min-height:680px;opacity:.8;pointer-events:none}
+.roster-shell{position:relative;padding:28px 30px 22px;min-height:100%;box-sizing:border-box;background:linear-gradient(90deg,#071511b5,transparent 45%,#071511b0)}
+.roster-heading{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:12px}
+.roster-heading h2{font:500 clamp(28px,3.3vw,46px) Georgia,serif;color:#ead8ad;margin:7px 0 8px;letter-spacing:-1px}
+.roster-heading p{font-size:11px;color:#9eaf9e;margin:0}.roster-count{font:10px Segoe UI,sans-serif;letter-spacing:2px;color:#b5a77e;white-space:nowrap}
+.roster-layout{display:grid;grid-template-columns:minmax(210px,1fr) minmax(250px,1.35fr) minmax(220px,1fr);gap:24px;min-height:495px}
+.roster-sidebar{display:flex;flex-direction:column;min-width:0;padding-top:14px}.character-list{display:flex;flex-direction:column;gap:8px;max-height:360px;overflow:auto;margin:14px 0 18px;scrollbar-width:thin}
+.character-card{display:flex;align-items:center;gap:14px;text-align:left;width:100%;padding:14px 12px;border:1px solid #c9af7228;background:#0a1a18b8;color:#d2d3bc;cursor:pointer;border-radius:3px}
+.character-card.selected{border-color:#d6bc7e;background:linear-gradient(110deg,#69593465,#162b25bd);box-shadow:inset 3px 0 #d6bc7e}
+.character-card b{display:block;font:17px Georgia,serif;overflow-wrap:anywhere}.character-card small,.character-card em{display:block;font:10px Segoe UI,sans-serif;color:#a8b7a0;margin-top:5px}.character-card em{font-size:9px;color:#7f9888}
+.class-crest{font:32px Georgia,serif;border:1px solid #b5a57440;width:42px;height:48px;display:grid;place-items:center;flex-shrink:0}
+.roster-primary,.roster-secondary,.roster-delete{display:block;width:100%;padding:13px 15px;cursor:pointer;border:1px solid #d8bd80;border-radius:2px;font:600 11px Segoe UI,sans-serif}
+.roster-primary{color:#16261c;background:linear-gradient(#dec58d,#b99a5d);box-shadow:0 5px 20px #0003}.roster-primary span{float:right}.roster-primary:hover{filter:brightness(1.13)}
+.roster-secondary{background:#142820dd;color:#d7c597;border-color:#c9ad6f60}.roster-delete{background:#2f201bc0;border-color:#a77a6560;color:#d1aa95;margin-top:8px}
+.roster-backups{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.roster-backups button,.roster-safety{padding:9px 5px;border:1px solid #b19e7340;background:#0a1814c0;color:#a9b8a4;font:10px Segoe UI,sans-serif;cursor:pointer}.roster-safety{margin-top:8px}.roster-safety[hidden]{display:none}
+.roster-stage{position:relative;display:flex;align-items:center;justify-content:center;min-height:430px;isolation:isolate}
+.roster-stage:before{content:'';position:absolute;width:100%;height:70%;background:radial-gradient(ellipse,#7d93612a,transparent 70%);z-index:-1}
+.roster-avatar{width:min(100%,375px);height:440px;filter:drop-shadow(0 18px 15px #0007);animation:character-idle 5s ease-in-out infinite}
+.stage-runes{position:absolute;bottom:83px;left:50%;width:250px;height:66px;border:1px solid #b8ae6660;border-radius:50%;transform:translateX(-50%);box-shadow:0 0 36px #b9b66816,inset 0 0 35px #d4b76b12}
+.stage-runes:after{content:'◇  ·  ◈  ·  ◇';display:block;text-align:center;line-height:62px;color:#d4b66b60;letter-spacing:17px}
+.stage-caption{position:absolute;bottom:0;left:0;right:0;text-align:center}.stage-caption h2{font:30px Georgia,serif;color:#efdbab;margin:7px 0;overflow-wrap:anywhere}.stage-caption p{font:10px Segoe UI,sans-serif;letter-spacing:3px;color:#a6b69e}
+.roster-detail{padding-top:12px;min-width:0}.roster-detail h3,.creation-form h3{font:26px Georgia,serif;color:#e5cfa0;margin:10px 0}.roster-detail>p,.creation-form>p{font:11px/1.8 Segoe UI,sans-serif;color:#a9b8a2}.roster-detail h4{font:10px Segoe UI,sans-serif;text-transform:uppercase;letter-spacing:1px;color:#c8b78b;margin:17px 0 9px}
+.roster-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:#b0a46e26;border:1px solid #b0a46e26;margin:16px 0}.roster-stats>div{padding:10px;background:#14251ee8}.roster-stats span{display:block;font:9px Segoe UI,sans-serif;color:#90a58f}.roster-stats b{display:block;font:14px Segoe UI,sans-serif;color:#dec99a;margin-top:4px}
+.roster-equipment{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.roster-equipment>div{height:48px;position:relative;display:grid;place-items:center;background:#071713a6;border:1px solid #7d856140;border-radius:2px}.roster-equipment .item-icon{width:29px;height:33px;opacity:.25}.roster-equipment .has-gear .item-icon{opacity:1}.roster-equipment span{position:absolute;bottom:1px;font:6px Segoe UI,sans-serif;color:#8a9b7f}.roster-detail .roster-dates{font-size:9px;line-height:1.8;margin:12px 0}.roster-play{margin-top:16px}
+.roster-message{font:11px/1.6 Segoe UI,sans-serif;color:#dfbc8d;margin:3px 0 8px;min-height:18px;max-width:900px;overflow-wrap:anywhere}
+.roster-empty{padding:32px 13px;border:1px dashed #b29d6745;text-align:center;color:#99ab94}.roster-empty>span{font-size:35px;color:#bca871}.roster-empty h3{font:18px Georgia,serif}.roster-empty p{font:11px/1.8 Segoe UI,sans-serif}.empty-stage{color:#bdad7844;text-align:center}.empty-stage>span{font-size:170px;display:block;line-height:1.4}.empty-stage p{font:14px Georgia,serif;color:#9ca993}
+.creation-layout{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:25px}.creation-layout>section{padding-top:16px}.creation-classes{display:flex;flex-direction:column;gap:7px;margin:12px 0 24px}.creation-classes button{padding:14px;border:1px solid #c5aa7040;background:#10251fe0;text-align:left;cursor:pointer;color:#bec8b3}.creation-classes b{font:18px Georgia,serif;display:block}.creation-classes small{font:10px/1.5 Segoe UI,sans-serif;display:block;margin-top:5px;color:#8da48f}.creation-classes button[aria-pressed=true],.creation-schools button[aria-pressed=true]{border-color:#d3b575;background:#665b354d;color:#eddaad}.creation-schools{display:flex;gap:6px;margin:12px 0}.creation-schools button{flex:1;padding:10px 5px;border:1px solid #a9956140;background:#14271fcf;color:#bdc6ae;font:10px Segoe UI,sans-serif;cursor:pointer}
+.creation-form{padding-top:16px}.creation-form label,.modal-card label{display:block;color:#d5c394;font:12px Segoe UI,sans-serif;margin:15px 0 7px}.creation-form input,.modal-card input[type=text]{box-sizing:border-box;width:100%;padding:13px;border:1px solid #baa16d70;background:#091b17;color:#f0ddaa;font:16px Georgia,serif;border-radius:2px}.creation-form input:focus,.modal-card input[type=text]:focus{outline:2px solid #d3b775}.creation-form>small,.creation-note{display:block;font:10px/1.8 Segoe UI,sans-serif;color:#8aa18d;margin:9px 0}.form-error{font:11px/1.7 Segoe UI,sans-serif;color:#edac94;min-height:18px}.creation-shell .roster-heading>.roster-secondary{width:auto;max-width:190px}
+.import-summary{max-height:310px;overflow:auto;margin:18px 0}.import-summary>div{padding:13px;border:1px solid #c7b17435;margin-bottom:9px;background:#0e211c}.import-summary b,.import-summary span,.import-summary small{display:block}.import-summary span,.import-summary small{font:11px/1.7 Segoe UI,sans-serif;color:#9cb19a}.import-summary .form-error{color:#edac94}.import-mode input,.import-warning input{accent-color:#d2b77b;margin-right:8px}.import-warning{border:1px solid #be856b;padding:12px;background:#482c2540;line-height:1.8!important}.import-warning[hidden]{display:none}
+.player-name #playername{display:block;font-size:11px;max-width:155px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.player-name #playerclass{font-size:8px;color:#c1b58b}.player-name #level{margin-left:12px}
+#modal{z-index:20}body.started #intro{display:none}
+@keyframes character-idle{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@media(prefers-reduced-motion:reduce){.roster-avatar{animation:none}}
+@media(max-width:1050px){.roster-shell{padding:22px 18px}.roster-layout{gap:14px;grid-template-columns:210px 1fr 220px}.creation-layout{gap:15px;grid-template-columns:1fr 1fr}.creation-layout .roster-stage{order:3;grid-column:1/-1;min-height:300px}.creation-layout .roster-avatar{height:300px}.creation-layout .stage-caption{bottom:4px}.roster-count{letter-spacing:1px}.roster-stage .roster-avatar{max-width:300px}}
+@media(max-width:760px){body.character-select main{padding:8px 2% 16px}body.character-select .game-shell{height:calc(100dvh - 100px);min-height:600px}.roster-layout{grid-template-columns:1fr 1fr;gap:18px}.roster-sidebar{grid-column:1/-1}.character-list{flex-direction:row;max-height:none;overflow:auto;margin:10px 0}.character-card{min-width:200px}.roster-backups{margin-top:8px}.roster-detail{padding-top:0}.roster-stage{min-height:410px}.roster-avatar{height:370px}.roster-heading{align-items:flex-start}.roster-heading p{font-size:10px}.roster-count{font-size:8px}.roster-stats>div{padding:8px}}
+@media(max-width:480px){.roster-shell{padding:20px 14px}.roster-heading h2{font-size:29px}.roster-layout,.creation-layout{grid-template-columns:1fr}.roster-stage{grid-row:2;min-height:350px}.roster-stage .roster-avatar{height:330px}.roster-detail{grid-row:3}.stage-caption h2{font-size:26px}.roster-sidebar{grid-row:1}.creation-layout .roster-stage{grid-row:2;grid-column:auto;order:initial}.creation-form{grid-row:3}.roster-equipment>div{height:52px}.roster-heading .roster-secondary{font-size:9px;padding:9px;max-width:105px}.roster-count{max-width:60px;line-height:1.7}.roster-backups button{padding:10px}}
+
+/* Keep the chosen hero and primary actions visible on shorter desktop screens. */
+body.character-select .game-shell{min-height:580px}
+.roster-layout{min-height:430px}.roster-stage{align-self:start;min-height:420px;height:440px}.roster-avatar{height:380px}
+.roster-detail{display:flex;flex-direction:column}.roster-play{order:-1;margin:0 0 18px}.roster-detail .roster-stats{margin:10px 0}.roster-detail .roster-stats>div{padding:8px 10px}
+@media(max-width:760px){.roster-stage{height:400px;min-height:400px}.roster-play{margin:0 0 16px}}
+@media(max-width:480px){.roster-stage{height:360px;min-height:360px}.roster-avatar{height:320px}}
+
+.roster-detail>.roster-stats{order:2}.roster-detail>.roster-dates{order:3}#character-details{order:4}
+.character-return-control{left:5px;right:auto;font-size:21px}
+body.character-select .game-shell:fullscreen,body.native-fullscreen.character-select .game-shell{height:100vh;height:100dvh;min-height:0;width:100vw}
+
+.game-shell:fullscreen .roster-stage,body.native-fullscreen .roster-stage{height:calc(100dvh - 260px);min-height:440px}
+.game-shell:fullscreen .roster-avatar,body.native-fullscreen .roster-avatar{height:min(650px,65dvh);width:min(100%,500px);max-width:500px}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b>ALPHA 0.12.0</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b id="game-version">ALPHA 0.13.0</b></span></header>
 <main><div class="world-title"><div><span class="eyebrow">KAPITOLA I · PREBUDENIE</span><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Pod pokojnými korunami sa prebúdza stará temnota.</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
 <section id="game-shell" class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb iba WASD alebo šípkami, cieľ kliknutím, smerový útok myšou alebo medzerníkom, schopnosť Q, liečenie E, korisť ľavým kliknutím alebo Y v okolí, zlato a zásoby automaticky."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
-<div class="hud player"><div class="portrait">侍</div><div><div class="player-name"><b id="playerclass">Bojovník</b> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 60 skúseností</small></div></div>
-<div class="hud map"><button id="fullscreen" class="fullscreen-control" type="button" aria-label="Celá obrazovka" aria-pressed="false" title="Celá obrazovka · F10">⛶</button><canvas id="minimap" width="138" height="118"></canvas><span id="minimaplabel">ÚDOLIE TICHÉHO VETRA</span></div>
+<div class="hud player"><div id="portrait" class="portrait">侍</div><div><div class="player-name"><b id="playername">Pútnik</b><small id="playerclass">Bojovník</small> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 60 skúseností</small></div></div>
+<div class="hud map"><button id="character-menu" class="fullscreen-control character-return-control" type="button" aria-label="Výber postáv" title="Uložiť a vrátiť sa na výber postáv">♙</button><button id="fullscreen" class="fullscreen-control" type="button" aria-label="Celá obrazovka" aria-pressed="false" title="Celá obrazovka · F10">⛶</button><canvas id="minimap" width="138" height="118"></canvas><span id="minimaplabel">ÚDOLIE TICHÉHO VETRA</span></div>
 <div class="hud quest"><span class="eyebrow">AKTÍVNA ÚLOHA</span><h3>Praskliny v pokoji</h3><p>Osloboď údolie od temnoty.</p><div id="q-wolves">◇ Poraz príšery <b>0 / 5</b></div><div id="q-stones">◇ Znič kamene osudu <b>0 / 3</b></div><button id="claim" hidden>Vyzdvihnúť odmenu · 150 zlata</button><small id="questnote">Odmena: 150 zlata + 60 skúseností</small></div>
 <div id="toast" role="status"></div><div id="target-panel" class="hud target-panel" aria-live="off" hidden></div><div id="combat-flow" class="hud combat-flow" aria-live="polite" hidden></div><div id="buffs" class="buffs" aria-live="off"></div><div class="hud location">⌖ &nbsp; <span id="coords">Útočisko pútnikov</span></div>
 <div class="combat-assist" role="group" aria-label="Automatická pomoc v boji"><button id="auto-aim" type="button" aria-pressed="false" title="Mieri na najbližšieho nepriateľa do 500 jednotiek. Označený cieľ má prednosť; bez automatickej chôdze.">Automierenie: VYP</button><button id="auto-spell" type="button" aria-pressed="false" title="Používa dostupné schopnosti vrátane výpadov; rešpektuje manu a cooldowny. Esc vypne pomocníkov.">Autospell: VYP</button></div>
 <div class="hotbar"><button id="attack"><kbd>SPACE</kbd><span>⚔</span><small>Sek mečom</small></button><button id="skill"><kbd>Q</kbd><span>✺</span><small>Veterný kruh</small><em id="cooldown"></em></button><button id="skill2"><kbd>R</kbd><span>✧</span><small>Schopnosť</small><em id="cooldown2"></em></button><button id="skill3"><kbd>T</kbd><span>☄</span><small>Schopnosť</small><em id="cooldown3"></em></button><button id="skill4"><kbd>V</kbd><span>◈</span><small>Schopnosť</small><em id="cooldown4"></em></button><button id="skill5"><kbd>U</kbd><span>❖</span><small>Schopnosť</small><em id="cooldown5"></em></button><button id="skill6"><kbd>O</kbd><span>✥</span><small>Schopnosť</small><em id="cooldown6"></em></button><button id="potion"><kbd>E</kbd><span>⚱</span><small>Elixír <b id="pots">5</b></small></button><button id="bravery" title="Plášť statočnosti · B · dosah 650 · priťahovanie 18 s"><kbd>B</kbd><span>⚑</span><small>Plášť <b id="capes">10</b></small><em id="cape-cooldown"></em></button><div class="divider"></div><button id="inventory"><kbd>I</kbd><span>▣</span><small>Výbava</small></button></div>
 <div class="hud wallet"><span>◉</span> <b id="gold">0</b> <small>ZLATO</small></div>
-<div id="intro" class="overlay"><div class="intro-card"><span class="eyebrow">TVOJ PRÍBEH SA ZAČÍNA</span><h2>Temnota padá.<br><em>Ty povstaň.</em></h2><p>Štyri povolania, osem škôl a päť máp. Vyber si cestu, ovládni svoje schopnosti a poraz strážcov kráľovstva.</p><div class="intro-controls"><span><kbd>W A S D</kbd> Pohyb</span><span><kbd>SPACE</kbd> Útok</span><span><kbd>Q R T V U O</kbd> Kúzla</span><span><kbd>E</kbd> Liečenie</span></div><div class="class-select" id="classes"></div><div class="school-select" id="schools"></div><p id="classhint" class="class-hint"></p><button class="primary" id="start">Vstúpiť do údolia <span>→</span></button><small>Vlastná 2D adaptácia schopností; animácie sa líšia od Metin2.</small></div></div>
-<div id="modal" class="overlay" hidden><div id="modalcard" class="modal-card"><button id="close" class="close" aria-label="Zavrieť">×</button><div id="modalcontent"></div></div></div>
+<div id="intro" class="character-screen"></div>
+<div id="modal" class="overlay" role="dialog" aria-modal="true" hidden><div id="modalcard" class="modal-card"><button id="close" class="close" aria-label="Zavrieť">×</button><div id="modalcontent"></div></div></div>
 <div class="touch"><button data-key="w">↑</button><div><button data-key="a">←</button><button data-key="s">↓</button><button data-key="d">→</button></div></div>
 </section><footer><span><i></i> Postup sa ukladá automaticky</span><span><kbd>WASD</kbd> pohyb <i>·</i> kliknutie: cieľ / útok <i>·</i> <kbd>M</kbd> mapy <i>·</i> <kbd>K</kbd> kúzla</span><button id="sound">Zvuk: vypnutý</button></footer></main><script>
 // src/js/data/classes.js
-const CLASSES={warrior:{name:'Bojovník',desc:'Meč, sila a odolnosť. Telesná alebo mentálna škola.',health:20,speed:185,crit:.06,color:'#d8b176'},ninja:{name:'Nindža',desc:'Dýky a luk. Prepad, jedy a rýchlosť.',health:0,speed:225,crit:.22,color:'#8bcead'},sura:{name:'Sura',desc:'Prekliata ruka, očarovaná čepeľ a čierna mágia.',health:10,speed:195,crit:.1,color:'#bf8dec'},shaman:{name:'Šaman',desc:'Dračia sila alebo liečenie, blesky a podporné kúzla.',health:0,speed:190,crit:.08,color:'#f2c289'}};
+const CLASSES={warrior:{name:'Bojovník',desc:'Meč, sila a odolnosť. Telesná alebo mentálna škola.',health:20,speed:185,crit:.06,color:'#d8b176'},ninja:{name:'Ninja',desc:'Dýky a luk. Prepad, jedy a rýchlosť.',health:0,speed:225,crit:.22,color:'#8bcead'},sura:{name:'Sura',desc:'Prekliata ruka, očarovaná čepeľ a čierna mágia.',health:10,speed:195,crit:.1,color:'#bf8dec'},shaman:{name:'Šaman',desc:'Dračia sila alebo liečenie, blesky a podporné kúzla.',health:0,speed:190,crit:.08,color:'#f2c289'}};
 // Names and school structure follow the six classic skills per school.
 // Mechanics and vector animations are adaptations for this standalone 2D game.
 
@@ -348,6 +404,12 @@ const METIN_RESISTS = {
 for (const [type, spec] of Object.entries(DAMAGE_TYPES)) ITEM_STATS[type+'Resist']='Odolnosť · '+spec.name;
 
 
+// src/js/data/characters.js
+const CHARACTER_RULES = { maxCharacters: 8, nameMin: 3, nameMax: 16, backupVersion: 2, maxBackupCharacters: 128, maxBackupBytes: 16 * 1024 * 1024, storageKey: 'grindoria-characters-v1' };
+const DEFAULT_SCHOOLS = { warrior: 'body', ninja: 'blade', sura: 'weapon', shaman: 'dragon' };
+const CHARACTER_ACHIEVEMENTS = { firstKill: 'Prvý protivník', firstMetin: 'Lámač kameňov', firstBoss: 'Víťaz nad strážcom', hunter100: 'Lovec stovky' };
+
+
 // src/js/core/persistence.js
 const pendingSaveImports = [];
 
@@ -355,6 +417,13 @@ function parsePlayerSave(raw, compatible = false) {
   try {
     const profile = JSON.parse(raw);
     if (!profile || !Number.isInteger(profile.level) || profile.level < 1 || profile.level > 99) return null;
+    if(profile.bag!==undefined&&!Array.isArray(profile.bag))return null;
+    if(profile.equipped!==undefined&&(!profile.equipped||typeof profile.equipped!=='object'||Array.isArray(profile.equipped)))return null;
+    if(profile.worldStates!==undefined){if(!profile.worldStates||typeof profile.worldStates!=='object'||Array.isArray(profile.worldStates))return null;for(const state of Object.values(profile.worldStates))if(!state||!Array.isArray(state.mobs)||!Array.isArray(state.drops))return null;}
+    if(profile.career?.schema===PROGRESSION.schema){
+      for(const key of ['materials','training','skills','biology','alchemy','collection','relicPity','samplePity','specialization','endgame'])if(!profile.career[key]||typeof profile.career[key]!=='object')return null;
+      if(!profile.career.alchemy.stock||!profile.career.alchemy.equipped)return null;
+    }
     if (!compatible) return profile;
     // Identify the existing save format by its structure, independently of project names.
     if (!CLASSES[profile.classId] || !MAPS[profile.mapId] || !Array.isArray(profile.bag) || !profile.equipped || !profile.worldStates) return null;
@@ -365,7 +434,7 @@ function parsePlayerSave(raw, compatible = false) {
   } catch { return null; }
 }
 
-function loadPlayerSave() {
+function loadLegacyPlayerSave() {
   try {
     const current = localStorage.getItem(SAVE), primary = parsePlayerSave(current);
     if (primary) return primary;
@@ -387,21 +456,308 @@ function loadPlayerSave() {
   return null;
 }
 
-function chooseSaveImport(index) {
-  if (!Number.isInteger(index) || index < -1 || index >= pendingSaveImports.length) return false;
-  if (index >= 0) {
-    p = { ...p, ...pendingSaveImports[index] };
-    initializeCareer(); initializeInventory(); initializeFarming(); initializeLoot(); loadMap(p.mapId, true);
-    renderClasses(); updateClassHUD(); updateHUD();
+
+// src/js/core/character-store.js
+const characterStore = { account: null, raw: null, activeId: null, needsMigration: false, error: '', writeError: '', serial: 0 };
+const copyCharacterData = value => JSON.parse(JSON.stringify(value));
+const characterNameKey = name => name.normalize('NFKC').toLocaleLowerCase('sk-SK');
+function characterDisplayName(character) { return (character?.isGM?'[GM] ':'') + (character?.name || 'Pútnik'); }
+function characterInputName(character) { return (character.isGM?'*':'')+character.name; }
+function validateCharacterName(input, profiles = [], ignoreId = null) {
+  if(typeof input!=='string')throw new Error('Zadaj meno postavy.');
+  let name=input.trim().normalize('NFKC'),isGM=name.startsWith('*');if(isGM)name=name.slice(1);
+  const length=[...name].length;
+  if(length<CHARACTER_RULES.nameMin||length>CHARACTER_RULES.nameMax)throw new Error('Meno musí mať '+CHARACTER_RULES.nameMin+'–'+CHARACTER_RULES.nameMax+' znakov.');
+  if(!/^[\p{L}][\p{L}\p{M}\p{N}_-]*$/u.test(name))throw new Error('Začni písmenom. Povolené sú písmená, čísla, podčiarkovník a pomlčka; bez medzier.');
+  if(profiles.some(c=>c.id!==ignoreId&&characterNameKey(c.name)===characterNameKey(name)))throw new Error('Postava s týmto menom už existuje.');
+  return {name,isGM};
+}
+function newCharacterId(profiles = {}) {
+  let id;
+  do { id='chr-'+(typeof crypto!=='undefined'&&typeof crypto.randomUUID==='function'?crypto.randomUUID():Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,12)+'-'+(++characterStore.serial)); } while(Object.hasOwn(profiles,id));
+  return id;
+}
+function emptyCharacterAccount() { return { format:'grindoria-account',version:1,revision:0,settings:{sound:false},selectedId:null,order:[],profiles:{}}; }
+function listCharacters(account = characterStore.account) { return account.order.map(id=>account.profiles[id]); }
+function profileIdentity(record,data) { return {...data,characterId:record.id,name:record.name,isGM:record.isGM,classId:record.classId,createdAt:record.createdAt,lastPlayedAt:record.lastPlayedAt}; }
+function loadPlayerSave() {
+  const account=emptyCharacterAccount();characterStore.account=account;
+  try {
+    const raw=(localStorage.getItem(CHARACTER_RULES.storageKey)??null);characterStore.raw=raw;
+    if(raw!==null){
+      const stored=JSON.parse(raw);validateCharacterAccount(stored);characterStore.account=stored;
+      return stored.selectedId?copyCharacterData(profileIdentity(stored.profiles[stored.selectedId],stored.profiles[stored.selectedId].data)):null;
+    }
+    const legacy=loadLegacyPlayerSave(),candidates=legacy?[legacy]:[...pendingSaveImports];pendingSaveImports.length=0;
+    if(!candidates.length&&localStorage.getItem(SAVE))throw new Error('Pôvodný postup je poškodený. Ostal zachovaný; obnov ho z platnej zálohy.');
+    for(const [index,data] of candidates.entries()){
+      const id=newCharacterId(account.profiles),now=Date.now();let identity;
+      try{identity=validateCharacterName((data.isGM?'*':'')+(data.name||('Pútnik_'+(index+1))),listCharacters(account));}catch{let suffix=index+1;do{try{identity=validateCharacterName('Pútnik_'+suffix,listCharacters(account));break;}catch{suffix++;}}while(suffix<10000);}
+      const record={id,...identity,classId:Object.hasOwn(CLASSES,data.classId)?data.classId:'warrior',createdAt:now,lastPlayedAt:now,data:copyCharacterData(data)};
+      record.data=profileIdentity(record,record.data);account.order.push(id);account.profiles[id]=record;
+    }
+    account.selectedId=account.order[0]||null;characterStore.needsMigration=true;
+    return account.selectedId?copyCharacterData(account.profiles[account.selectedId].data):null;
+  } catch(error) { characterStore.error='Uložené postavy sa nepodarilo bezpečne načítať: '+error.message;return null; }
+}
+function commitCharacterAccount(next, {safetyBackup=false, allowRecovery=false} = {}) {
+  if(characterStore.error&&!allowRecovery)throw new Error(characterStore.error);
+  const previous=localStorage.getItem(CHARACTER_RULES.storageKey)??null;
+  if(previous!==characterStore.raw)throw new Error('Postavy zmenilo iné okno. Obnov túto stránku pred ďalším ukladaním.');
+  next.revision=(characterStore.account.revision||0)+1;
+  const serialized=JSON.stringify(next);
+  try {
+  if(safetyBackup){
+    const backup=characterStore.error?previous:JSON.stringify(characterBackupDocument(characterStore.account));
+    localStorage.setItem(CHARACTER_RULES.storageKey+'.safety',backup);
   }
-  pendingSaveImports.length = 0;
-  save(); closeModal(); startGame();
+  // A single atomic localStorage write publishes the entire new profile set.
+  localStorage.setItem(CHARACTER_RULES.storageKey,serialized);
+  }catch(error){if(error.name==='QuotaExceededError'||/quota/i.test(error.message))throw new Error('Úložisko je plné. Exportuj postavy a uvoľni miesto v prehliadači.');if(error.name==='SecurityError')throw new Error('Prehliadač zablokoval lokálne ukladanie. Povoľ úložisko alebo exportuj postavy.');throw error;}
+  characterStore.account=next;characterStore.raw=serialized;characterStore.error='';characterStore.writeError='';characterStore.needsMigration=false;
   return true;
 }
+function normalizeCharacterProfile(record) {
+  const previous=p;
+  try {
+    p=createPlayerState(profileIdentity(record,record.data));initializeCareer();initializeInventory();initializeFarming();
+    p.combatAssist={autoAim:p.combatAssist?.autoAim===true,autoSpell:p.combatAssist?.autoSpell===true};p.lootSerial??=0;
+    return copyCharacterData(p);
+  } finally {p=previous;}
+}
+function initializeCharacterAccount() {
+  if(characterStore.error)return;
+  if(characterStore.needsMigration){
+    const next=copyCharacterData(characterStore.account);
+    for(const record of listCharacters(next))record.data=normalizeCharacterProfile(record);
+    try{commitCharacterAccount(next);}catch(error){characterStore.account=next;characterStore.writeError=error.message;characterStore.error='Migráciu sa nepodarilo uložiť. Pôvodné údaje zostali zachované. Exportuj postavy a uvoľni miesto v úložisku.';}
+  }
+  sound=characterStore.account.settings.sound===true;
+}
+function createCharacter(input,classId,schoolId=DEFAULT_SCHOOLS[classId]) {
+  if(running||characterStore.activeId)throw new Error('Najprv sa vráť na výber postáv.');
+  if(!CLASSES[classId]||SCHOOLS[schoolId]?.classId!==classId)throw new Error('Vyber platné povolanie a školu.');
+  const next=copyCharacterData(characterStore.account);
+  if(next.order.length>=CHARACTER_RULES.maxCharacters)throw new Error('Dosiahnutý limit '+CHARACTER_RULES.maxCharacters+' postáv.');
+  const identity=validateCharacterName(input,listCharacters(next)),id=newCharacterId(next.profiles),now=Date.now();
+  const record={id,...identity,classId,createdAt:now,lastPlayedAt:null,data:{classId,schools:{[classId]:schoolId}}};
+  record.data=normalizeCharacterProfile(record);
+  const previous=p;try{p=record.data;p.hp=maxHP();p.mp=maxMP();}finally{p=previous;}
+  next.profiles[id]=record;next.order.push(id);next.selectedId=id;commitCharacterAccount(next);return id;
+}
+function accountWithActiveSnapshot() {
+  const id=characterStore.activeId;
+  if(!id)return copyCharacterData(characterStore.account);
+  const record=characterStore.account.profiles[id];
+  if(!record||p.characterId!==id||p.classId!==record.classId)throw new Error('Identita postavy nesúhlasí. Uloženie bolo zastavené.');
+  expireGroundDrops();pruneStoredGroundDrops();snapshotMap();
+  const next=copyCharacterData(characterStore.account),saved=next.profiles[id];saved.lastPlayedAt=Date.now();p.lastPlayedAt=saved.lastPlayedAt;
+  saved.data=copyCharacterData(profileIdentity(saved,p));next.selectedId=id;next.settings.sound=sound;return next;
+}
+function saveActiveCharacter() {
+  if(!characterStore.activeId)return true;
+  try {return commitCharacterAccount(accountWithActiveSnapshot());}
+  catch(error){characterStore.writeError=error.message;if(typeof toast==='function')toast('Postavu sa nepodarilo uložiť. '+error.message);return false;}
+}
 
-function openSaveImport() {
-  modal(`<span class="eyebrow">VITAJ V GRINDORII</span><h2>Pokračovať v príbehu</h2><p>Na tomto zariadení je viac kompatibilných postáv. Vyber si, s ktorou chceš pokračovať.</p>${pendingSaveImports.map((profile, i) => `<button class="primary" data-save-import="${i}">Postava ${i + 1} · ${CLASSES[profile.classId].name} · úroveň ${profile.level}</button>`).join('')}<button class="secondary" data-save-import="-1">Začať novú postavu</button>`);
-  document.querySelectorAll('[data-save-import]').forEach(button => button.onclick = () => chooseSaveImport(Number(button.dataset.saveImport)));
+function selectCharacter(id) {
+  if(running||!Object.hasOwn(characterStore.account.profiles,id))return false;
+  const next=copyCharacterData(characterStore.account);next.selectedId=id;commitCharacterAccount(next);renderCharacterScreen();return true;
+}
+function clearCharacterSession() {
+  keysClear();resetCombatFlow();clearLootPointer();combatAim.inside=false;face=0;shots.length=0;effects.length=0;particles.length=0;
+  for(const id of Object.keys(buffs))delete buffs[id];spellCD.fill(0);attackCD=0;skillCD=0;castPose=0;castStyle='';spiritTick=0;capeCooldown=0;saveTimer=0;slash=0;ring=0;
+  inventoryTab='gear';inventoryPage=0;inventorySelection=null;inventoryDrag=null;inventoryDeletePending=null;careerTab='overview';
+  combatAssist.timer=0;combatAssist.nextSkill=0;combatAssist.focused=true;
+}
+function playCharacter(id = characterStore.account.selectedId) {
+  if(!Object.hasOwn(characterStore.account.profiles,id)||characterStore.error)return false;
+  if(characterStore.activeId&&!saveActiveCharacter())return false;
+  const record=characterStore.account.profiles[id];
+  running=false;paused=false;characterStore.activeId=null;clearCharacterSession();
+  p=createPlayerState(copyCharacterData(profileIdentity(record,record.data)));
+  initializeCareer();initializeInventory();initializeFarming();initializeLoot();initializeCombatAssist();
+  if(p.hp<=0){p.x=1000;p.y=1160;p.hp=maxHP();}
+  p.hp=Math.max(1,Math.min(p.hp,maxHP()));p.mp=Math.max(0,Math.min(p.mp,maxMP()));loadMap(p.mapId,true);
+  characterStore.activeId=id;
+  if(!saveActiveCharacter()){characterStore.activeId=null;renderCharacterScreen();return false;}
+  running=true;setCharacterScreenMode(false);document.body.classList.add('started');document.body.classList.remove('character-select');$('modal').hidden=true;
+  resize();requestAnimationFrame(resize);updateClassHUD();updateHUD();canvas.focus({preventScroll:true});toast('Vitaj späť, '+characterDisplayName(p)+'.');return true;
+}
+function returnToCharacters() {
+  if(characterStore.activeId&&!saveActiveCharacter()){showCharacterSaveFailure();return false;}
+  running=false;paused=false;characterStore.activeId=null;clearCharacterSession();$('modal').hidden=true;
+  document.body.classList.remove('started');document.body.classList.add('character-select');renderCharacterScreen();return true;
+}
+function deleteCharacter(id,confirmation) {
+  const record=characterStore.account.profiles[id];if(!record)throw new Error('Postava už neexistuje.');
+  const supplied=String(confirmation).trim().normalize('NFKC');
+  if(characterNameKey(supplied)!==characterNameKey(characterDisplayName(record)))throw new Error('Zadaj presné meno '+characterDisplayName(record)+'.');
+  if(characterStore.activeId===id&&!saveActiveCharacter())throw new Error('Aktívnu postavu sa nepodarilo uložiť.');
+  const next=copyCharacterData(characterStore.account);delete next.profiles[id];next.order=next.order.filter(value=>value!==id);if(next.selectedId===id)next.selectedId=next.order[0]||null;
+  commitCharacterAccount(next);
+  if(characterStore.activeId===id){characterStore.activeId=null;running=false;paused=false;clearCharacterSession();document.body.classList.remove('started');document.body.classList.add('character-select');}
+  return true;
+}
+function characterBackupDocument(account=characterStore.account) {return {gameVersion:$('game-version').textContent.replace(/^ALPHA\s*/,'' )||'unknown',format:'grindoria-characters',version:CHARACTER_RULES.backupVersion,exportedAt:new Date().toISOString(),account:copyCharacterData(account)};}
+function exportCharacters() {const account=accountWithActiveSnapshot();validateCharacterAccount(account);return JSON.stringify(characterBackupDocument(account),null,2);}
+function prepareCharacterImport(text) {
+  if(typeof text!=='string'||text.length>CHARACTER_RULES.maxBackupBytes||new TextEncoder().encode(text).length>CHARACTER_RULES.maxBackupBytes)throw new Error('Súbor je príliš veľký.');
+  let data;try{data=JSON.parse(text);}catch{throw new Error('Súbor nie je platný JSON.');}
+  assertSafeCharacterJSON(data);assertCharacterObject(data,'formát zálohy');
+  if(data.format!=='grindoria-characters'||![1,CHARACTER_RULES.backupVersion].includes(data.version))throw new Error('Nepodporovaný formát alebo verzia zálohy.');
+  if(data.version===1){
+    const account=emptyCharacterAccount();if(!Array.isArray(data.characters))throw new Error('Chýba zoznam postáv.');
+    for(const source of data.characters){assertCharacterObject(source,'profil starej zálohy');assertCharacterObject(source.data,'údaje starej zálohy');const record=copyCharacterData(source);record.isGM??=false;record.lastPlayedAt??=null;record.data.characterId=record.id;record.data.name=record.name;record.data.isGM=record.isGM;record.data.bestiary??={};record.data.achievements??={};if(Object.hasOwn(account.profiles,record.id))throw new Error('Duplicitné ID v zálohe.');account.order.push(record.id);account.profiles[record.id]=record;}
+    account.selectedId=account.order[0]||null;data={...data,version:CHARACTER_RULES.backupVersion,account};
+  }
+  validateCharacterAccount(data.account);return {account:copyCharacterData(data.account),baseRaw:characterStore.raw};
+}
+function remapImportedCharacterReferences(value,idMap) {
+  if(!value||typeof value!=='object')return;
+  for(const [key,item]of Object.entries(value)){
+    if(['characterId','ownerCharacterId','selectedCharacterId'].includes(key)&&typeof item==='string'&&Object.hasOwn(idMap,item))value[key]=idMap[item];
+    else if(item&&typeof item==='object')remapImportedCharacterReferences(item,idMap);
+  }
+}
+function importCharacterBackup(prepared,mode,{renames={},confirmReplace=false}={}) {
+  if(running||characterStore.activeId)throw new Error('Importuj postavy z úvodnej obrazovky.');
+  if(!['add','replace'].includes(mode))throw new Error('Vyber spôsob importu.');
+  if(prepared.baseRaw!==characterStore.raw)throw new Error('Zoznam postáv sa medzitým zmenil. Otvor zálohu znova.');
+  validateCharacterAccount(prepared.account);
+  if(mode==='replace'&&!confirmReplace)throw new Error('Potvrď nahradenie aktuálnych postáv.');
+  if(mode==='replace')for(const record of listCharacters(prepared.account)){const existing=characterStore.account.profiles[record.id];if(existing&&existing.classId!==record.classId)throw new Error('Povolanie existujúcej postavy s rovnakým ID sa nesmie zmeniť. Použi pridanie s novým ID.');}
+  const next=mode==='replace'?emptyCharacterAccount():copyCharacterData(characterStore.account);next.settings=copyCharacterData(characterStore.account.settings);
+  if(next.order.length+prepared.account.order.length>CHARACTER_RULES.maxCharacters)throw new Error('Import by prekročil limit '+CHARACTER_RULES.maxCharacters+' postáv.');
+  const idMap={},reserved={...next.profiles};for(const record of listCharacters(prepared.account)){const id=Object.hasOwn(reserved,record.id)?newCharacterId(reserved):record.id;idMap[record.id]=id;reserved[id]=true;}
+  for(const source of listCharacters(prepared.account)){
+    const record=copyCharacterData(source),identity=validateCharacterName(renames[source.id]||characterInputName(record),listCharacters(next));
+    record.id=idMap[source.id];record.name=identity.name;record.isGM=identity.isGM;remapImportedCharacterReferences(record.data,idMap);
+    record.data=profileIdentity(record,record.data);next.profiles[record.id]=record;next.order.push(record.id);
+  }
+  if(mode==='replace'||!next.selectedId)next.selectedId=idMap[prepared.account.selectedId]||next.order[0]||null;
+  validateCharacterAccount(next);commitCharacterAccount(next,{safetyBackup:mode==='replace',allowRecovery:mode==='replace'});return next.order.length;
+}
+function saveGlobalSettings() {if(characterStore.activeId)return saveActiveCharacter();const next=copyCharacterData(characterStore.account);next.settings.sound=sound;try{return commitCharacterAccount(next);}catch(error){characterStore.writeError=error.message;return false;}}
+function recordCharacterKill(enemy) {
+  const key=enemy.type==='stone'?'metin:'+enemy.metinType:enemy.type==='boss'?'boss:'+p.mapId:enemy.skin||'wolf';p.bestiary[key]=(p.bestiary[key]||0)+1;
+  if(enemy.type!=='stone')p.achievements.firstKill=true;if(enemy.type==='stone')p.achievements.firstMetin=true;if(enemy.type==='boss')p.achievements.firstBoss=true;if(p.kills>=100)p.achievements.hunter100=true;
+}
+
+
+// src/js/core/character-validation.js
+function characterDataError(message) { throw new Error('Neplatná záloha: '+message); }
+function assertCharacterObject(value,label) { if(!value||typeof value!=='object'||Array.isArray(value))characterDataError(label); }
+function assertCharacterNumber(value,label,min=0,max=1e12,integer=false) { if(!Number.isFinite(value)||value<min||value>max||integer&&!Number.isSafeInteger(value))characterDataError(label); }
+function assertSafeCharacterJSON(value) {
+  let nodes=0;
+  const visit=(node,depth)=>{
+    if(++nodes>600000||depth>40)characterDataError('dáta sú príliš zložité.');
+    if(typeof node==='number'&&!Number.isFinite(node))characterDataError('neplatné číslo.');
+    if(typeof node==='string'&&node.length>20000)characterDataError('príliš dlhý text.');
+    if(node&&typeof node==='object')for(const [key,item] of Object.entries(node)){
+      if(['__proto__','prototype','constructor'].includes(key))characterDataError('zakázaný dátový kľúč.');visit(item,depth+1);
+    }
+  };visit(value,0);
+}
+function validateCharacterItem(item,slot=null) {
+  assertCharacterObject(item,'predmet');
+  if(!Object.hasOwn(EQUIPMENT,item.slot)||slot&&item.slot!==slot)characterDataError('neplatný slot predmetu.');
+  if(typeof item.name!=='string'||!item.name.length||item.name.length>150)characterDataError('názov predmetu.');
+  for(const key of ['bonus','value'])if(item[key]!==undefined)assertCharacterNumber(item[key],key);
+  if(item.rarity!==undefined)assertCharacterNumber(item.rarity,'rarita',0,2,true);
+  if(item.enhance!==undefined)assertCharacterNumber(item.enhance,'vylepšenie',0,PROGRESSION.maxEnhancement,true);
+  if(item.requiredLevel!==undefined)assertCharacterNumber(item.requiredLevel,'úroveň predmetu',1,105,true);
+  if(item.tier!==undefined)assertCharacterNumber(item.tier,'stupeň predmetu',0,105,true);
+  if(item.uid!==undefined)assertCharacterNumber(item.uid,'ID predmetu',1,Number.MAX_SAFE_INTEGER,true);
+  if(item.cell!==undefined)assertCharacterNumber(item.cell,'políčko',0,4499,true);
+  if(item.icon!==undefined&&!Object.hasOwn(EQUIPMENT,item.icon))characterDataError('ikona výbavy.');
+  if(item.classes!==undefined&&(!Array.isArray(item.classes)||item.classes.some(id=>!Object.hasOwn(CLASSES,id))))characterDataError('povolanie predmetu.');
+  if(item.stats!==undefined){assertCharacterObject(item.stats,'bonusy predmetu');for(const [key,value]of Object.entries(item.stats)){if(!Object.hasOwn(ITEM_STATS,key))characterDataError('neznámy bonus predmetu.');assertCharacterNumber(value,'hodnota bonusu',-.5,1e9);}}
+  if(item.special!==undefined&&(!Array.isArray(item.special)||item.special.length>20||item.special.some(value=>typeof value!=='string'||value.length>500)))characterDataError('vlastnosti predmetu.');
+}
+function validateCharacterWorld(state) {
+  assertCharacterObject(state,'snímka mapy');
+  if(!Array.isArray(state.mobs)||state.mobs.length>1000||!Array.isArray(state.drops)||state.drops.length>5000)characterDataError('populácia alebo korisť mapy.');
+  const ids=new Set();
+  for(const mob of state.mobs){
+    assertCharacterObject(mob,'nepriateľ');if(!['wolf','stone','boss'].includes(mob.type))characterDataError('typ nepriateľa.');
+    for(const key of ['x','y','hp','max'])assertCharacterNumber(mob[key],'údaj nepriateľa '+key,key==='max'?1:0);
+    if(mob.skin&&!['wolf','scorpion','yeti','demon'].includes(mob.skin))characterDataError('model nepriateľa.');
+    if(mob.damageType&&!Object.hasOwn(DAMAGE_TYPES,mob.damageType))characterDataError('typ poškodenia.');
+    if(mob.hp>mob.max)characterDataError('zdravie nepriateľa.');
+    if(mob.spawnId){if(typeof mob.spawnId!=='string'||ids.has(mob.spawnId))characterDataError('duplicitná identita nepriateľa.');ids.add(mob.spawnId);}
+    if(mob.metinType&&!Object.hasOwn(METIN_TYPES,mob.metinType))characterDataError('typ Metinu.');
+    if(mob.skillContributors&&(!Array.isArray(mob.skillContributors)||mob.skillContributors.some(key=>!Object.hasOwn(ACTIVE_SKILLS,key))))characterDataError('referencia schopnosti.');
+    if(mob.dots&&(!Array.isArray(mob.dots)||mob.dots.length>2||mob.dots.some(dot=>!['poison','fire'].includes(dot.kind)||!Number.isFinite(dot.power)||dot.power<0||!Number.isFinite(dot.time)||!Number.isFinite(dot.tick)||dot.key&&!Object.hasOwn(ACTIVE_SKILLS,dot.key))))characterDataError('stav poškodenia.');
+  }
+  const dropIds=new Set();
+  for(const drop of state.drops){
+    assertCharacterObject(drop,'korisť');for(const key of ['x','y'])assertCharacterNumber(drop[key],'poloha koristi',0,2000);
+    if(drop.id!==undefined){assertCharacterNumber(drop.id,'ID koristi',1,Number.MAX_SAFE_INTEGER,true);if(dropIds.has(drop.id))characterDataError('duplicitné ID koristi.');dropIds.add(drop.id);}
+    if(drop.kind==='gear')validateCharacterItem(drop.item);
+    else if(drop.kind==='supply'){
+      const id=drop.supplyId;if(typeof id!=='string'||!(['potions','braveryCapes'].includes(id)||id.startsWith('material:')&&Object.hasOwn(MATERIALS,id.slice(9))||id.startsWith('gem:')&&Object.hasOwn(GEMS,id.slice(4))))characterDataError('neznáma zásoba.');
+      assertCharacterNumber(drop.count,'počet zásob',1,1e12,true);
+    }else if(drop.kind==='relic'){if(!Object.hasOwn(RELICS,drop.relicId))characterDataError('neznáma relikvia.');}
+    else if(drop.kind==='gold'||drop.kind===undefined)assertCharacterNumber(drop.count??drop.value,'zlato na zemi',1,1e12,true);
+    else characterDataError('typ koristi.');
+    if(drop.expiresAt!==undefined)assertCharacterNumber(drop.expiresAt,'expirácia',0,Number.MAX_SAFE_INTEGER);
+  }
+}
+function validateCharacterProfile(record) {
+  assertCharacterObject(record,'profil');
+  if(typeof record.id!=='string'||!/^[-a-zA-Z0-9_]{1,80}$/.test(record.id))characterDataError('ID postavy.');
+  const identity=validateCharacterName((record.isGM?'*':'')+record.name);
+  if(identity.name!==record.name||typeof record.isGM!=='boolean'||!Object.hasOwn(CLASSES,record.classId))characterDataError('identita postavy.');
+  assertCharacterNumber(record.createdAt,'dátum vytvorenia',0,Number.MAX_SAFE_INTEGER);
+  if(record.lastPlayedAt!==null)assertCharacterNumber(record.lastPlayedAt,'posledné hranie',0,Number.MAX_SAFE_INTEGER);
+  const data=record.data;assertCharacterObject(data,'herné údaje');
+  if(data.characterId!==record.id||data.classId!==record.classId||data.name!==record.name||data.isGM!==record.isGM)characterDataError('nesúlad identity a povolania.');
+  for(const key of ['level','xp','gold','potions','strength','vitality','dexterity','intelligence','points','kills','stones','bossKills','huntClaimed','braveryCapes'])assertCharacterNumber(data[key],key,key==='level'?1:0,key==='level'?99:1e12,true);
+  for(const key of ['hp','mp'])assertCharacterNumber(data[key],key);for(const key of ['x','y'])assertCharacterNumber(data[key],key,45,1955);
+  if(!Object.hasOwn(MAPS,data.mapId))characterDataError('neznáma mapa.');
+  for(const key of ['claimed','bossClaimed'])if(typeof data[key]!=='boolean')characterDataError('stav úlohy.');
+  assertCharacterObject(data.schools,'školy');for(const [id,school]of Object.entries(data.schools))if(SCHOOLS[school]?.classId!==id)characterDataError('neznáma škola.');
+  if(SCHOOLS[data.schools[data.classId]]?.classId!==data.classId)characterDataError('chýbajúca škola povolania.');
+  assertCharacterObject(data.inventory,'inventár');assertCharacterNumber(data.inventory.pages,'strany inventára',2,100,true);assertCharacterNumber(data.inventory.serial,'séria inventára',0,Number.MAX_SAFE_INTEGER,true);
+  assertCharacterObject(data.inventory.supplyCells,'umiestnenie zásob');for(const [key,cell]of Object.entries(data.inventory.supplyCells)){if(!(['potions','braveryCapes'].includes(key)||key.startsWith('material:')&&Object.hasOwn(MATERIALS,key.slice(9))||key.startsWith('gem:')&&Object.hasOwn(GEMS,key.slice(4))))characterDataError('referencia zásoby v inventári.');assertCharacterNumber(cell,'políčko zásoby',0,44,true);}
+  if(!Array.isArray(data.bag)||data.bag.length>data.inventory.pages*45)characterDataError('batoh.');assertCharacterObject(data.equipped,'výbava');
+  const uids=new Set(),cells=new Set();
+  for(const [slot,item]of Object.entries(data.equipped)){if(!Object.hasOwn(EQUIPMENT,slot))characterDataError('slot výbavy.');if(item)validateCharacterItem(item,slot);}
+  for(const item of [...data.bag,...Object.values(data.equipped).filter(Boolean)]){validateCharacterItem(item);if(!Number.isSafeInteger(item.uid)||uids.has(item.uid))characterDataError('ID vybavenia.');uids.add(item.uid);}
+  if([...uids].some(uid=>uid>data.inventory.serial))characterDataError('séria ID výbavy.');
+  for(const item of data.bag){
+    if(!Number.isInteger(item.cell))characterDataError('umiestnenie predmetu.');
+    const [w,h]=EQUIPMENT[item.slot].size,local=item.cell%45;if(local%5+w>5||Math.floor(local/5)+h>9)characterDataError('predmet presahuje inventár.');
+    for(let y=0;y<h;y++)for(let x=0;x<w;x++){const cell=item.cell+y*5+x;if(cell>=data.inventory.pages*45||cells.has(cell))characterDataError('prekrývajúce sa predmety.');cells.add(cell);}
+  }
+  const c=data.career;assertCharacterObject(c,'progres');if(c.schema!==PROGRESSION.schema)characterDataError('nepodporovaná verzia progresu.');
+  assertCharacterObject(c.materials,'materiály');for(const [key,value]of Object.entries(c.materials)){if(!Object.hasOwn(MATERIALS,key))characterDataError('materiál.');assertCharacterNumber(value,'množstvo materiálu',0,1e12,true);}for(const key of Object.keys(MATERIALS))if(c.materials[key]===undefined)characterDataError('chýbajúci materiál.');
+  for(const key of ['eligibleKills','skillUpgrades','keyPity'])assertCharacterNumber(c[key],'progres '+key,0,1e12,true);
+  for(const key of ['relicPity','samplePity']){assertCharacterObject(c[key],key);for(const [id,value]of Object.entries(c[key])){if(!Object.hasOwn(MAPS,id))characterDataError('mapa progresu.');assertCharacterNumber(value,key,0,1e12,true);}}
+  assertCharacterObject(c.skills,'schopnosti');for(const [key,skill]of Object.entries(c.skills)){if(!Object.hasOwn(ACTIVE_SKILLS,key))characterDataError('schopnosť.');assertCharacterNumber(skill.rank,'stupeň schopnosti',1,PROGRESSION.maxSkillRank,true);assertCharacterNumber(skill.practice,'prax schopnosti');}
+  assertCharacterObject(c.training,'tréning');for(const key of ['strength','vitality','dexterity','intelligence'])assertCharacterNumber(c.training[key],'tréning '+key,0,PROGRESSION.maxTraining,true);
+  assertCharacterObject(c.biology,'biológia');assertCharacterNumber(c.biology.stage,'stupeň biológie',0,BIOLOGY.length,true);for(const key of ['delivered','nextKill'])assertCharacterNumber(c.biology[key],'biológia '+key,0,1e12,true);
+  assertCharacterObject(c.alchemy,'alchýmia');for(const key of ['stock','equipped']){assertCharacterObject(c.alchemy[key],'alchýmia '+key);for(const [id,value]of Object.entries(c.alchemy[key])){if(!Object.hasOwn(GEMS,id))characterDataError('alchymistický kameň.');assertCharacterNumber(value,'alchýmia',0,key==='equipped'?PROGRESSION.maxGemRank:1e12,true);}for(const id of Object.keys(GEMS))if(c.alchemy[key][id]===undefined)characterDataError('chýbajúca alchýmia.');}
+  assertCharacterObject(c.collection,'zbierka');for(const [id,value]of Object.entries(c.collection))if(!Object.hasOwn(RELICS,id)||typeof value!=='boolean')characterDataError('relikvia zbierky.');
+  assertCharacterObject(c.specialization,'špecializácia');if(c.specialization.focus!==null&&!Object.hasOwn(SPECIALIZATIONS,c.specialization.focus))characterDataError('typ špecializácie.');assertCharacterNumber(c.specialization.rank,'stupeň špecializácie',0,PROGRESSION.maxSpecialization,true);assertCharacterNumber(c.specialization.points,'body špecializácie',0,1e12,true);
+  assertCharacterObject(c.endgame,'endgame');assertCharacterNumber(c.endgame.highest,'trhliny',0,PROGRESSION.maxRiftTier,true);assertCharacterNumber(c.endgame.paragon,'paragon',0,PROGRESSION.maxParagon,true);
+  if(c.endgame.run){const run=c.endgame.run;assertCharacterObject(run,'výprava');assertCharacterNumber(run.id,'ID výpravy',1,Number.MAX_SAFE_INTEGER,true);assertCharacterNumber(run.tier,'stupeň výpravy',1,PROGRESSION.maxRiftTier,true);for(const key of ['kills','bosses'])assertCharacterNumber(run[key],'ciele výpravy',0,1e12,true);if(run.active!==true||data.mapId!=='temple')characterDataError('stav výpravy.');}
+  assertCharacterObject(data.worldStates,'mapy');for(const [id,state]of Object.entries(data.worldStates)){if(!Object.hasOwn(MAPS,id))characterDataError('referencia mapy.');validateCharacterWorld(state);}if(c.normalTemple)validateCharacterWorld(c.normalTemple);
+  assertCharacterObject(data.bestiary,'bestiár');for(const [key,value]of Object.entries(data.bestiary)){if(!['wolf','scorpion','yeti','demon'].includes(key)&&!(key.startsWith('metin:')&&Object.hasOwn(METIN_TYPES,key.slice(6)))&&!(key.startsWith('boss:')&&Object.hasOwn(MAPS,key.slice(5))))characterDataError('záznam bestiára.');assertCharacterNumber(value,'počet v bestiári',0,1e12,true);}
+  assertCharacterObject(data.achievements,'úspechy');for(const [key,value]of Object.entries(data.achievements))if(!Object.hasOwn(CHARACTER_ACHIEVEMENTS,key)||typeof value!=='boolean')characterDataError('úspech.');
+  if(data.combatAssist){for(const key of ['autoAim','autoSpell'])if(typeof data.combatAssist[key]!=='boolean')characterDataError('nastavenia postavy.');}
+}
+function validateCharacterAccount(account) {
+  assertSafeCharacterJSON(account);assertCharacterObject(account,'zoznam postáv');
+  if(account.format!=='grindoria-account'||account.version!==1||!Array.isArray(account.order)||account.order.length>CHARACTER_RULES.maxBackupCharacters)characterDataError('formát zoznamu postáv.');
+  assertCharacterNumber(account.revision,'revízia',0,Number.MAX_SAFE_INTEGER,true);assertCharacterObject(account.settings,'globálne nastavenia');if(typeof account.settings.sound!=='boolean')characterDataError('nastavenie zvuku.');
+  assertCharacterObject(account.profiles,'profily');if(new Set(account.order).size!==account.order.length||Object.keys(account.profiles).length!==account.order.length)characterDataError('duplicitné alebo chýbajúce profily.');
+  const names=new Set();for(const id of account.order){if(typeof id!=='string'||!Object.hasOwn(account.profiles,id))characterDataError('referencia postavy.');const record=account.profiles[id];validateCharacterProfile(record);if(id!==record.id||names.has(characterNameKey(record.name)))characterDataError('duplicitné meno alebo ID.');names.add(characterNameKey(record.name));}
+  const checkReferences=(value,ownerId)=>{if(!value||typeof value!=='object')return;for(const [key,item]of Object.entries(value)){if(['characterId','ownerCharacterId','selectedCharacterId'].includes(key)&&item!==null&&(typeof item!=='string'||!account.order.includes(item)))characterDataError('referencia na neexistujúcu postavu.');if(item&&typeof item==='object')checkReferences(item,ownerId);}};
+  for(const record of Object.values(account.profiles))checkReferences(record.data,record.id);
+  if(account.selectedId!==null&&!account.order.includes(account.selectedId))characterDataError('vybraná postava.');
 }
 
 
@@ -411,12 +767,18 @@ const $=id=>document.getElementById(id),canvas=$('game'),ctx=canvas.getContext('
 const SIZE=2000,SAVE='grindoria-save-v1';
 let W=1200,H=700,dpr=1,running=false,paused=false,last=0,clock=0,target=null,face=0,attackCD=0,skillCD=0,slash=0,ring=0,toastTimer=0,saveTimer=0,sound=false,audio=null;
 const keys={},mouse={x:0,y:0},cam={x:1000,y:1050};
-let p={x:1000,y:1050,hp:100,level:1,xp:0,gold:0,potions:5,kills:0,stones:0,claimed:false,weapon:0};
-try{const s=loadPlayerSave();if(s&&Number.isFinite(s.level)&&s.level>=1&&s.level<=99)p={...p,...s,x:1000,y:1050};}catch{}
+function createPlayerState(profile = {}) {
+  const fresh={x:1000,y:1160,hp:100,level:1,xp:0,gold:0,potions:5,kills:0,stones:0,claimed:false,weapon:0,strength:0,vitality:0,dexterity:0,intelligence:0,bossKills:0,bossClaimed:false,huntClaimed:0};
+  const player={...fresh,...JSON.parse(JSON.stringify(profile))};
+  player.classId=Object.hasOwn(CLASSES,player.classId)?player.classId:'warrior';
+  player.points??=Math.max(0,(player.level-1)*3);player.bag??=[];player.equipped??={weapon:null,armor:null};
+  player.mp??=100+player.level*8;player.worldStates??={};player.mapId=MAPS[player.mapId]?player.mapId:'valley';
+  player.schools??={};for(const [id,school] of Object.entries(DEFAULT_SCHOOLS))if(SCHOOLS[player.schools[id]]?.classId!==id)player.schools[id]=school;
+  player.bestiary??={};player.achievements??={};return player;
+}
+let p=createPlayerState(loadPlayerSave()||{});
 const spellKeys=['q','r','t','v','u','o'],buffs={},effects=[],shots=[];
 let spellCD=[0,0,0,0,0,0],castPose=0,castStyle='',spiritTick=0;
-p.classId=CLASSES[p.classId]?p.classId:'warrior';p.strength??=0;p.vitality??=0;p.dexterity??=0;p.points??=Math.max(0,(p.level-1)*3);p.bag??=[];p.equipped??={weapon:null,armor:null};p.bossKills??=0;p.bossClaimed??=false;p.huntClaimed??=0;
-p.intelligence??=0;p.mp??=100+p.level*8;p.worldStates??={};p.mapId=MAPS[p.mapId]?p.mapId:'valley';p.schools??={};for(const [classId,id] of Object.entries({warrior:'body',ninja:'blade',sura:'weapon',shaman:'dragon'})){if(SCHOOLS[p.schools[classId]]?.classId!==classId)p.schools[classId]=id;}
 const role=()=>CLASSES[p.classId],equippedBonus=slot=>(p.equipped[slot]?.bonus||0)+(p.equipped[slot]?.enhance||0)*3;
 const maxHP=()=>100+(p.level-1)*22+p.vitality*10+role().health+careerBonuses().hp+equipmentBonuses().hp,damage=()=>Math.round((18+(p.level-1)*2+p.strength*3+equipmentBonuses().attack+careerBonuses().attack)*attackPower()*(1+careerBonuses().attackPercent)),defense=()=>equipmentBonuses().defense+Math.floor(p.vitality/3)+armorBonus()+careerBonuses().defense,needXP=()=>xpForLevel(p.level);
 const mobs=[],particles=[],drops=[],decor=[];let seed=78231;
@@ -469,6 +831,7 @@ function hit(m, amount, type='physical') {
     if(target===m)clearCombatTarget();m.dot=null;m.dots=[];
     m.windup = 0; m.dead = m.metinParentId ? 1 : m.respawnSeconds || (m.type === 'boss' ? 40 : m.type === 'stone' ? 18 : 5);
     if (m.type === 'boss') p.bossKills++; else p[m.type === 'stone' ? 'stones' : 'kills']++;
+    recordCharacterKill(m);
     const gained = enemyXP(m); careerKill(m);
     if (m.type === 'stone') { m.metinCombat = 0; m.metinWaveTimer = 0; dropMetinLoot(m); }
     else {
@@ -603,7 +966,7 @@ function snapshotMap() {
   };
 }
 
-function save(){if(pendingSaveImports.length)return;expireGroundDrops();pruneStoredGroundDrops();snapshotMap();try{localStorage.setItem(SAVE,JSON.stringify(p));}catch{}}
+function save(){return saveActiveCharacter();}
 
 function loadMap(id, initial=false) {
   if (!MAPS[id]) return false;
@@ -612,6 +975,7 @@ function loadMap(id, initial=false) {
     if (!running || !isSanctuary(p)) { toast('Cestovať môžeš z útočiska (M).'); return false; }
     snapshotMap();
   }
+  const resumePosition={x:p.x,y:p.y};
   resetCombatFlow();
   p.mapId=id;
   const cfg=map(), old=p.worldStates[id];
@@ -627,7 +991,9 @@ function loadMap(id, initial=false) {
   mobs.length=0; mobs.push(...population); drops.length=0;
   drops.push(...hydrateGroundDrops(old?.drops||[]));
   clearLootPointer();
-  p.x=1000; p.y=1160; cam.x=p.x; cam.y=p.y; target=null;
+  p.x=initial&&Number.isFinite(resumePosition.x)&&resumePosition.x>=45&&resumePosition.x<=SIZE-45?resumePosition.x:1000;
+  p.y=initial&&Number.isFinite(resumePosition.y)&&resumePosition.y>=45&&resumePosition.y<=SIZE-45?resumePosition.y:1160;
+  cam.x=p.x;cam.y=p.y;target=null;
   shots.length=0; effects.length=0; particles.length=0; lastMiniMapPaint=-Infinity;
   Object.keys(buffs).forEach(k=>delete buffs[k]);
   updateMapHUD();
@@ -2161,9 +2527,9 @@ function updateAutoSpell(dt) {
 
 
 // src/js/ui/panels.js
-function modal(html){clearLootPointer();$('modal').className='overlay';paused=true;keysClear();$('modalcontent').innerHTML=html;$('modal').hidden=false;$('modalcard').scrollTop=0;}
+function modal(html){setCharacterScreenMode(true);$('intro').inert=true;clearLootPointer();$('modal').className='overlay';paused=true;keysClear();$('modalcontent').innerHTML=html;$('modal').hidden=false;$('modalcard').scrollTop=0;$('close').focus({preventScroll:true});}
 
-function closeModal(){$('modal').className='overlay';$('modal').hidden=true;paused=false;canvas.focus();}
+function closeModal(){$('modal').className='overlay';$('modal').hidden=true;paused=false;$('intro').inert=false;setCharacterScreenMode(!running);if(running)canvas.focus({preventScroll:true});else $('create-character').focus({preventScroll:true});}
 
 
 function shop(){if(Math.hypot(p.x-1110,p.y-1110)>160){toast('Obchodník ťa čaká v útočisku.');return;}modal('<span class="eyebrow">ÚTOČISKO PÚTNIKOV</span><h2>Obchodník a kováč</h2><p id="balance">Zlato: '+p.gold+'</p><button class="primary" id="buyPotion">Kúpiť 3 elixíry · 25 zlata</button><button class="primary" id="buyCapes">Kúpiť 10 Plášťov statočnosti · 100 zlata</button><button class="primary" id="upgrade">Kováč · vylepšenie nasadenej výbavy</button><p id="shopmsg" role="status"></p>');$('buyPotion').onclick=()=>{if(!pay({gold:25})){$('shopmsg').textContent='Potrebuješ 25 zlata.';return;}p.potions+=3;$('balance').textContent='Zlato: '+p.gold;$('shopmsg').textContent='Získal si 3 elixíry.';save();updateHUD();};$('buyCapes').onclick=()=>{if(buyBraveryCapes()){$('balance').textContent='Zlato: '+p.gold;$('shopmsg').textContent='Získal si 10 Plášťov statočnosti.';}else $('shopmsg').textContent='Potrebuješ 100 zlata.';};$('upgrade').onclick=()=>careerPanel('forge');}
@@ -2255,7 +2621,7 @@ function inventory() {
   const page = inventoryTab === 'supplies' ? 0 : inventoryPage, offset = page * INVENTORY.pageSize;
   const entries = inventoryTab === 'supplies' ? supplyEntries().map(item => ({ id: item.id, item, kind: 'supply' })) : p.bag.filter(item => Math.floor(item.cell / INVENTORY.pageSize) === page).map(item => ({ id: 'gear:' + item.uid, item, kind: 'gear' }));
   const occupied = p.bag.reduce((n, item) => n + itemSize(item)[0] * itemSize(item)[1], 0);
-  modal(`<section class="inventory-window"><header class="inventory-title"><span class="window-sigil">G</span><div><small>GRINDORIA · ${role().name}</small><h2>Výbava a inventár</h2></div><span class="inv-level">ÚR. ${p.level}</span></header>
+  modal(`<section class="inventory-window"><header class="inventory-title"><span class="window-sigil">G</span><div><small>${escapeHTML(characterDisplayName(p))} · ${role().name}</small><h2>Výbava a inventár</h2></div><span class="inv-level">ÚR. ${p.level}</span></header>
     <div class="inventory-columns"><section class="character-panel"><h3>Vybavenie postavy</h3><div class="equipment-board">${equipmentFigure()}${Object.entries(EQUIPMENT).map(([id, spec]) => {
       const item = p.equipped[id];
       return `<button class="equipment-slot slot-${id} ${item ? 'filled rarity-' + item.rarity : ''}" data-equip-slot="${id}" ${item ? `data-entry="equipped:${id}" draggable="true"` : ''} aria-label="${spec.name}${item ? ': ' + escapeHTML(item.name) : ': prázdny slot'}"><span>${itemIcon(item || { slot: id }, !item)}</span><small>${spec.name}</small>${item ? '<i>✓</i>' : ''}</button>`;
@@ -2501,13 +2867,12 @@ function baseHUD(){$('level').textContent='ÚR. '+p.level;$('hpbar').style.width
 
 function updateMapHUD(){$('maptitle').textContent=map().name;$('mapdesc').textContent=map().desc;$('mapregion').textContent='◈ '+map().region;$('maplevel').textContent=map().metinsOnly?'Metiny všetkých úrovní 1–99':'Odporúčaná úroveň '+map().level+'+';$('minimaplabel').textContent=map().name.toUpperCase();}
 
-function chooseClass(id){if(running||!CLASSES[id])return;const old=maxHP();p.classId=id;p.hp=Math.min(maxHP(),p.hp+Math.max(0,maxHP()-old));renderClasses();updateClassHUD();updateHUD();}
+// Creation uses an isolated draft. Existing profiles never change vocation.
+function chooseClass() { return false; }
+function chooseSchool() { return false; }
+function renderClasses() {}
 
-function chooseSchool(id){if(running||SCHOOLS[id]?.classId!==p.classId)return;p.schools[p.classId]=id;renderClasses();updateClassHUD();updateHUD();}
-
-function renderClasses(){$('classes').innerHTML=Object.entries(CLASSES).map(([id,c])=>`<button class="class-option ${p.classId===id?'selected':''}" data-class="${id}" aria-pressed="${p.classId===id}"><b>${c.name}</b></button>`).join('');$('schools').innerHTML=Object.entries(SCHOOLS).filter(([id,c])=>c.classId===p.classId).map(([id,c])=>`<button class="school-option ${p.schools[p.classId]===id?'selected':''}" data-school="${id}" aria-pressed="${p.schools[p.classId]===id}">${c.name}</button>`).join('');document.querySelectorAll('[data-class]').forEach(b=>b.onclick=()=>chooseClass(b.dataset.class));document.querySelectorAll('[data-school]').forEach(b=>b.onclick=()=>chooseSchool(b.dataset.school));}
-
-function updateClassHUD(){$('playerclass').textContent=role().name;$('classhint').textContent=role().desc;school().skills.forEach((s,i)=>{$(i?'skill'+(i+1):'skill').querySelector('small').textContent=s[0];$(i?'skill'+(i+1):'skill').title=`${s[0]} · stupeň ${skillProgress(skillKey(i)).rank} · ${s[3]} many · ${s[2]} s\n${s[6]}`;});$('attack').querySelector('small').textContent=p.classId==='ninja'&&p.schools.ninja==='archery'?'Streľba':p.classId==='shaman'?'Úder vejárom':'Základný útok';}
+function updateClassHUD(){$('portrait').textContent=({warrior:'侍',ninja:'影',sura:'魔',shaman:'龍'})[p.classId];$('playername').textContent=characterDisplayName(p);$('playerclass').textContent=role().name;school().skills.forEach((s,i)=>{$(i?'skill'+(i+1):'skill').querySelector('small').textContent=s[0];$(i?'skill'+(i+1):'skill').title=`${s[0]} · stupeň ${skillProgress(skillKey(i)).rank} · ${s[3]} many · ${s[2]} s\n${s[6]}`;});$('attack').querySelector('small').textContent=p.classId==='ninja'&&p.schools.ninja==='archery'?'Streľba':p.classId==='shaman'?'Úder vejárom':'Základný útok';}
 
 function updateHUD(){baseHUD();$('capes').textContent=p.braveryCapes;$('cape-cooldown').textContent=capeCooldown>0?Math.ceil(capeCooldown):'';p.mp=Math.max(0,Math.min(maxMP(),p.mp));$('mpbar').style.width=p.mp/maxMP()*100+'%';$('mptext').textContent=Math.ceil(p.mp)+' / '+maxMP();for(let i=0;i<6;i++)$(i?'cooldown'+(i+1):'cooldown').textContent=spellCD[i]>0?Math.ceil(spellCD[i]):'';$('coords').textContent=Math.hypot(p.x-1000,p.y-1050)<190?'Útočisko · cestovanie M':farmAreaAt().name+(map().metinsOnly?' · Metiny Lv.':' · Lv.')+farmAreaLevelRange(farmAreaAt()).join('–');$('buffs').textContent=Object.entries(buffs).map(([id,t])=>{const s=Object.values(SCHOOLS).flatMap(c=>c.skills).find(s=>s[1]===id);return(s?s[0]:id)+' '+Math.ceil(t)+'s';}).join(' · ');if(p.claimed)$('questnote').textContent='✓ Dokončené · ďalšie úlohy v denníku J';updateCombatHUD();updateCombatAssistHUD();}
 
@@ -2683,6 +3048,81 @@ function careerPanel(tab = careerTab) {
 }
 
 
+// src/js/ui/character-art.js
+function characterAvatar(record) {
+  const cls=record.classId,gear=record.data?.equipped||{},school=record.data?.schools?.[cls]||DEFAULT_SCHOOLS[cls];
+  const color=CLASSES[cls].color,metal=gear.armor?['#9fada0','#90c7dc','#c3a0e0'][gear.armor.rarity||0]:'#56655e',gold='#d9b77c';
+  const robe=cls==='shaman',hood=cls==='ninja',sura=cls==='sura';
+  const weapon=(!hood||school==='archery'||gear.weapon)?school==='archery'?'<path d="M222 190Q307 284 229 385M226 194l3 184" fill="none" stroke="'+gold+'" stroke-width="10"/>':robe?'<path d="m230 260-18-97q59-9 82 40Z" fill="#d0b47b" stroke="#f7dd9f" stroke-width="4"/><path d="m230 260 7-92m-7 92 30-79m-30 79 52-62" stroke="#865c4a" stroke-width="3"/>':'<path d="m238 315 17-166 12-28 8 31-23 165Z" fill="#d3e2db" stroke="#eef7e9" stroke-width="2"/><path d="m220 312 47 5m-26-1-5 35" stroke="'+gold+'" stroke-width="9"/>':hood?'<path d="m233 290 8-99 11 35-9 65m-119 5-25-78-2 41 17 40" stroke="#acb6ac" stroke-width="6" fill="none"/>':'';
+  return '<svg class="roster-avatar" viewBox="0 0 360 490" role="img" aria-label="'+CLASSES[cls].name+' · aktuálna výbava"><ellipse cx="180" cy="451" rx="114" ry="22" fill="#071410" opacity=".65"/><ellipse class="avatar-halo" cx="180" cy="270" rx="132" ry="165" fill="none" stroke="'+color+'" opacity=".15"/><path d="M128 176 83 398 148 378 183 203 231 409 275 410 233 180Z" fill="'+(sura?'#352447':hood?'#153f36':'#513e34')+'" opacity=".9"/><path d="m151 332-12 112 30 1 15-99 10 99 31-1-13-112" fill="#273934" stroke="#637367" stroke-width="3"/><path d="m137 422-7 31 37-1 3-29m23 0 5 29 37 1-13-31" fill="'+(gear.boots?metal:'#3b3c32')+'" stroke="#b9a77a" stroke-width="3"/><path d="m132 179-23 94 28 7 21-78m58-22 31 94-27 7-26-80" fill="'+(robe?'#c0b496':metal)+'" stroke="'+gold+'" stroke-width="4"/>'+(robe?'<path d="m141 178-16 230 57-13 55 14-20-229-39-13Z" fill="#bcae8a" stroke="#e6d6aa" stroke-width="4"/><path d="m176 183-13 213 27-10 2-201" fill="#9a5650"/>':'<path d="m139 180-5 133 47 33 45-34-10-132-37-17Z" fill="'+metal+'" stroke="'+gold+'" stroke-width="4"/><path d="m145 192 34 17 31-17-4 84-28 27-29-29Z" fill="'+(sura?'#51405e':hood?'#2f5547':'#657d70')+'" stroke="'+color+'" stroke-width="3"/><path d="m144 295 67-1 4 18-73 2Z" fill="#493e2f" stroke="'+gold+'" stroke-width="3"/>')+'<path d="m164 157 0 26 29 0-2-27" fill="#b89979"/><ellipse cx="178" cy="127" rx="30" ry="40" fill="#c8af8c"/>'+(hood?'<path d="m145 132-3-43 35-22 34 22 3 45-22-19-33 0Z" fill="#244c40" stroke="#739986" stroke-width="3"/><path d="m148 134 59 0-13 27-33 0Z" fill="#193c32"/>':'<path d="m147 124-5-34 20-19 33 1 20 25-7 38-17-38-31 6Z" fill="'+(sura?'#30263b':'#303a32')+'"/><path d="m163 126 9 0m16 0 8 0" stroke="#4d4637" stroke-width="3"/>')+(gear.helmet?'<path d="m143 113 4-33 31-14 30 14 6 33-36-18Z" fill="'+metal+'" stroke="'+gold+'" stroke-width="4"/>':'')+(sura?'<path class="avatar-runes" d="m114 217-14 76 22 15 13-83" stroke="#c98cec" stroke-width="12" fill="none"/><path d="m110 255 15-3m-18 20 15-3" stroke="#f0c7ff" stroke-width="3"/>':'')+(gear.shield?'<path d="m96 236-42 17 6 78 42 41 31-49-8-71Z" fill="#405c52" stroke="'+gold+'" stroke-width="6"/><path d="m91 253 4 89m-28-56 52-7" stroke="'+metal+'" stroke-width="5"/>':'')+weapon+'<circle cx="179" cy="304" r="9" fill="'+gold+'"/><path d="m176 298 6 7-8 3Z" fill="#6a4a36"/></svg>';
+}
+function characterBackdrop() { return '<svg class="character-scenery" viewBox="0 0 1300 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="realm-sky" x2="0" y2="1"><stop stop-color="#1e3939"/><stop offset="1" stop-color="#0a1b19"/></linearGradient><radialGradient id="realm-moon"><stop stop-color="#efd8a2" stop-opacity=".5"/><stop offset="1" stop-color="#d5e6c8" stop-opacity="0"/></radialGradient></defs><path fill="url(#realm-sky)" d="M0 0h1300v720H0Z"/><circle cx="740" cy="180" r="210" fill="url(#realm-moon)"/><circle cx="740" cy="160" r="55" fill="#aabfb0" opacity=".15"/><path d="m0 360 200-240 150 210 155-200 220 260 140-190 190 220 145-160 100 180v280H0Z" fill="#314a42" opacity=".4"/><path d="m0 410 190-100 130 150 160-140 210 150 160-120 190 120 160-130 100 70v310H0Z" fill="#0d2520"/><path d="M520 430v-170h30v-25h-58l127-35 80 35h-55v25h29v170m140 0v-170h30v-25h-58l127-35 80 35h-55v25h29v170" fill="#78917a" opacity=".17"/><path d="M450 510h550l150 210H180Z" fill="#31483a" opacity=".2"/><path d="M0 600q300-80 600-20t700-15v155H0" fill="#071410"/></svg>'; }
+
+
+// src/js/ui/characters.js
+function setCharacterScreenMode(selecting) {
+  for(const child of Array.from($('game-shell').children||[]))if(!['intro','modal'].includes(child.id))child.inert=selecting;
+}
+let characterDraft = null, pendingCharacterImport = null;
+function rosterMessage(text) { $('roster-message').textContent=text; }
+function characterEquipmentSummary(record) {
+  return '<div class="roster-equipment">'+Object.entries(EQUIPMENT).map(([slot,spec])=>{const item=record.data.equipped?.[slot];return '<div title="'+escapeHTML(item?item.name+' +'+(item.enhance||0):spec.name+' · prázdne')+'" class="'+(item?'has-gear':'')+'">'+itemIcon(item||{slot},!item)+'<span>'+spec.name+'</span></div>';}).join('')+'</div>';
+}
+function renderCharacterScreen() {
+  characterDraft=null;$('intro').inert=false;document.body.classList.add('character-select');setCharacterScreenMode(true);
+  const list=listCharacters(),record=characterStore.account.profiles[characterStore.account.selectedId]||list[0];
+  $('intro').innerHTML=characterBackdrop()+'<div class="roster-shell"><div class="roster-heading"><div><span class="eyebrow">SIEŇ HRDINOV</span><h2>Tvoj ďalší príbeh.</h2><p>Jedna postava. Jedno povolanie. Vlastný osud.</p></div><span class="roster-count">'+list.length+' / '+CHARACTER_RULES.maxCharacters+' POSTÁV</span></div><div id="roster-message" class="roster-message" role="status">'+escapeHTML(characterStore.error||characterStore.writeError)+'</div><div class="roster-layout"><aside class="roster-sidebar"><span class="eyebrow">TVOJE POSTAVY</span><div class="character-list">'+(list.length?list.map(c=>'<button class="character-card '+(record?.id===c.id?'selected':'')+'" data-character="'+c.id+'" aria-pressed="'+(record?.id===c.id)+'"><span class="class-crest" style="color:'+CLASSES[c.classId].color+'">'+({warrior:'侍',ninja:'影',sura:'魔',shaman:'龍'}[c.classId])+'</span><span><b>'+escapeHTML(characterDisplayName(c))+'</b><small>'+CLASSES[c.classId].name+' · Úroveň '+c.data.level+'</small><em>'+escapeHTML(MAPS[c.data.mapId]?.name||'Údolie')+'</em></span></button>').join(''):'<div class="roster-empty"><span>◇</span><h3>Sieň čaká na hrdinu.</h3><p>Vytvor prvú postavu alebo importuj svoju zálohu.</p></div>')+'</div><button id="create-character" class="roster-secondary" '+(list.length>=CHARACTER_RULES.maxCharacters||characterStore.error?'disabled':'')+'>+ Vytvoriť postavu</button><div class="roster-backups"><button id="export-characters" '+(characterStore.error&&!list.length?'disabled':'')+'>Exportovať postavy</button><button id="import-characters">Importovať postavy</button><input type="file" id="character-import-file" accept=".json,application/json" hidden></div><button id="download-safety" class="roster-safety" hidden>Záloha pred posledným importom</button></aside><div class="roster-stage">'+(record?'<div class="stage-runes"></div>'+characterAvatar(record)+'<div class="stage-caption"><span class="eyebrow">'+CLASSES[record.classId].name+' · '+escapeHTML(SCHOOLS[record.data.schools?.[record.classId]]?.name||'')+'</span><h2>'+escapeHTML(characterDisplayName(record))+'</h2><p>ÚROVEŇ '+record.data.level+'</p></div>':'<div class="empty-stage"><div class="stage-runes"></div><span>✧</span><p>Každá legenda má svoj začiatok.</p></div>')+'</div><section class="roster-detail">'+(record?'<span class="eyebrow">CESTA POSTAVY</span><h3>'+escapeHTML(characterDisplayName(record))+'</h3><p>'+escapeHTML(CLASSES[record.classId].desc)+'</p><div class="roster-stats"><div><span>Úroveň</span><b>'+record.data.level+'</b></div><div><span>Yang</span><b>'+record.data.gold.toLocaleString('sk-SK')+'</b></div><div><span>EXP</span><b>'+record.data.xp.toLocaleString('sk-SK')+'</b></div><div><span>Inventár</span><b>'+record.data.bag.length+' predmetov</b></div><div><span>Biológia</span><b>'+(record.data.career?.biology?.stage||0)+' / '+BIOLOGY.length+'</b></div><div><span>Úspechy</span><b>'+Object.values(record.data.achievements||{}).filter(Boolean).length+' / '+Object.keys(CHARACTER_ACHIEVEMENTS).length+'</b></div></div><h4>Aktuálna výbava</h4>'+characterEquipmentSummary(record)+'<p class="roster-dates">Vytvorená: '+new Date(record.createdAt).toLocaleDateString('sk-SK')+'<br>Posledné hranie: '+(record.lastPlayedAt?new Date(record.lastPlayedAt).toLocaleString('sk-SK'):'Ešte nehraná')+'</p><button id="character-details" class="roster-secondary">Informácie a progres</button>':'<span class="eyebrow">ŠTYRI POVOLANIA</span><h3>Vyber si vlastnú cestu.</h3><p>Bojovník, Ninja, Sura alebo Šaman. Každá postava má vlastný inventár, mapy a celý postup.</p>')+'<div class="roster-play"><button id="start" class="roster-primary" '+(!record||characterStore.error?'disabled':'')+'>Hrať <span>→</span></button><button id="delete-character" class="roster-delete" '+(!record?'disabled':'')+'>Vymazať postavu</button></div></section></div></div>';
+  $('intro').scrollTop=0;window.scrollTo?.(0,0);resize();
+  document.querySelectorAll('[data-character]').forEach(button=>button.onclick=()=>{try{selectCharacter(button.dataset.character);}catch(error){rosterMessage(error.message);}});
+  $('create-character').onclick=()=>{characterDraft={name:'',classId:'warrior',schoolId:'body'};renderCharacterCreation();};
+  $('start').onclick=()=>{if(!playCharacter())rosterMessage(characterStore.writeError||'Vyber postavu.');};
+  $('delete-character').onclick=()=>record&&showCharacterDeletion(record.id);
+  if(record)$('character-details').onclick=()=>showCharacterDetails(record);
+  $('export-characters').onclick=()=>{try{downloadCharacterJSON(exportCharacters());rosterMessage('Záloha všetkých postáv je pripravená na uloženie.');}catch(error){rosterMessage(error.message);}};
+  $('import-characters').onclick=()=>$('character-import-file').click();$('character-import-file').onchange=handleCharacterBackupFile;
+  try{const safety=localStorage.getItem(CHARACTER_RULES.storageKey+'.safety');$('download-safety').hidden=!safety;$('download-safety').onclick=()=>downloadCharacterJSON(safety,'grindoria-characters-safety-backup.json');}catch{}
+}
+function renderCharacterCreation() {
+  const draft=characterDraft,cls=CLASSES[draft.classId],preview={name:draft.name.replace(/^\*/,''),isGM:draft.name.startsWith('*'),classId:draft.classId,data:{equipped:{},schools:{[draft.classId]:draft.schoolId}}};
+  $('intro').innerHTML=characterBackdrop()+'<div class="roster-shell creation-shell"><div class="roster-heading"><div><span class="eyebrow">NOVÝ PRÍBEH</span><h2>Stvor svojho hrdinu.</h2><p>Povolanie zostane tejto postave navždy.</p></div><button id="cancel-creation" class="roster-secondary">← Výber postáv</button></div><div class="creation-layout"><section><span class="eyebrow">01 · POVOLANIE</span><div class="creation-classes">'+Object.entries(CLASSES).map(([id,c])=>'<button data-create-class="'+id+'" aria-pressed="'+(draft.classId===id)+'"><b>'+c.name+'</b><small>'+c.desc+'</small></button>').join('')+'</div><span class="eyebrow">02 · ŠKOLA SCHOPNOSTÍ</span><div class="creation-schools">'+Object.entries(SCHOOLS).filter(([,s])=>s.classId===draft.classId).map(([id,s])=>'<button data-create-school="'+id+'" aria-pressed="'+(draft.schoolId===id)+'">'+s.name+'</button>').join('')+'</div><p class="creation-note">Vzhľad vychádza z povolania a nasadenej výbavy. Hra používa vlastnú 2D grafiku.</p></section><div class="roster-stage">'+characterAvatar(preview)+'<div class="stage-caption"><span class="eyebrow">'+cls.name+'</span><h2 id="draft-caption">'+escapeHTML(characterDisplayName({...preview,name:preview.name||'Tvoj hrdina'}))+'</h2></div></div><form id="character-create-form" class="creation-form" novalidate><span class="eyebrow">03 · TVOJE MENO</span><h3>'+cls.name+'</h3><p>'+cls.desc+'</p><label for="character-name">Meno postavy</label><input id="character-name" type="text" minlength="'+CHARACTER_RULES.nameMin+'" maxlength="'+(CHARACTER_RULES.nameMax+1)+'" autocomplete="off" spellcheck="false" value="'+escapeHTML(draft.name)+'" placeholder="Zadaj meno"><small>'+CHARACTER_RULES.nameMin+'–'+CHARACTER_RULES.nameMax+' znakov · písmená, čísla, _ a -<br>Predpona * zobrazí [GM]. Ide o lokálne označenie, nie overenie administrátora.</small><div class="roster-stats"><div><span>Životy</span><b>'+(100+cls.health)+'</b></div><div><span>Mana</span><b>108</b></div><div><span>Rýchlosť</span><b>'+cls.speed+'</b></div><div><span>Kritický zásah</span><b>'+Math.round(cls.crit*100)+' %</b></div></div><p>Začiatočné atribúty: sila 0 · vitalita 0 · obratnosť 0 · inteligencia 0.</p><p id="creation-error" class="form-error" role="alert"></p><button class="roster-primary" id="confirm-character" type="submit">Vytvoriť postavu →</button><p class="creation-note">Samostatný inventár, vybavenie a progres. Povolanie po vytvorení nezmeníš.</p></form></div></div>';
+  $('intro').scrollTop=0;window.scrollTo?.(0,0);
+  $('cancel-creation').onclick=renderCharacterScreen;
+  document.querySelectorAll('[data-create-class]').forEach(button=>button.onclick=()=>{draft.classId=button.dataset.createClass;draft.schoolId=DEFAULT_SCHOOLS[draft.classId];renderCharacterCreation();});
+  document.querySelectorAll('[data-create-school]').forEach(button=>button.onclick=()=>{draft.schoolId=button.dataset.createSchool;renderCharacterCreation();});
+  $('character-name').oninput=event=>{draft.name=event.target.value;$('draft-caption').textContent=(draft.name.startsWith('*')?'[GM] ':'')+(draft.name.replace(/^\*/,'')||'Tvoj hrdina');};
+  $('character-create-form').onsubmit=event=>{event.preventDefault();try{createCharacter($('character-name').value,draft.classId,draft.schoolId);renderCharacterScreen();rosterMessage('Postava je pripravená. Klikni na Hrať.');}catch(error){$('creation-error').textContent=error.message;}};
+}
+function showCharacterDeletion(id) {
+  const record=characterStore.account.profiles[id];if(!record)return;
+  modal('<span class="eyebrow">TRVALÉ ODSTRÁNENIE</span><h2>Vymazať '+escapeHTML(characterDisplayName(record))+'?</h2><p>Odstránenie je <b>nezvratné</b>. Zmizne inventár, výbava, mapy aj celý progres tejto postavy. Ostatné postavy zostanú zachované. Pred pokračovaním si môžeš vytvoriť export.</p><label for="delete-character-name">Zadaj celé meno: <b>'+escapeHTML(characterDisplayName(record))+'</b></label><input id="delete-character-name" type="text" autocomplete="off" spellcheck="false"><p id="delete-character-error" class="form-error" role="alert"></p><button id="confirm-character-delete" class="roster-delete" disabled>Definitívne vymazať postavu</button>');
+  $('delete-character-name').oninput=event=>$('confirm-character-delete').disabled=characterNameKey(event.target.value.trim().normalize('NFKC'))!==characterNameKey(characterDisplayName(record));
+  $('confirm-character-delete').onclick=()=>{try{deleteCharacter(id,$('delete-character-name').value);closeModal();renderCharacterScreen();rosterMessage('Postava bola vymazaná.');}catch(error){$('delete-character-error').textContent=error.message;}};
+}
+function showCharacterDetails(record) {
+  const d=record.data,c=d.career;
+  modal('<span class="eyebrow">'+CLASSES[record.classId].name+' · ÚROVEŇ '+d.level+'</span><h2>'+escapeHTML(characterDisplayName(record))+'</h2><p>'+escapeHTML(MAPS[d.mapId].name)+' · '+Math.round(d.x)+', '+Math.round(d.y)+'<br>Sila '+d.strength+' · Vitalita '+d.vitality+' · Obratnosť '+d.dexterity+' · Inteligencia '+d.intelligence+'<br>Životy '+Math.ceil(d.hp)+' · Mana '+Math.ceil(d.mp)+' · Yang '+d.gold+'<br>Príšery '+d.kills+' · Metiny '+d.stones+' · Bossovia '+d.bossKills+'<br>Biológia '+c.biology.stage+'/'+BIOLOGY.length+' · Paragon '+c.endgame.paragon+' · Trhliny '+c.endgame.highest+'</p><h3>Schopnosti</h3><p>'+SCHOOLS[d.schools[record.classId]].skills.map((skill,index)=>escapeHTML(skill[0])+': stupeň '+(c.skills[d.schools[record.classId]+':'+index]?.rank||1)).join('<br>')+'</p><h3>Úspechy</h3><p>'+Object.entries(CHARACTER_ACHIEVEMENTS).map(([id,name])=>(d.achievements[id]?'◆ ':'◇ ')+name).join('<br>')+'</p><h3>Bestiár</h3><p>'+(Object.entries(d.bestiary).map(([id,count])=>escapeHTML(id)+' · '+count).join('<br>')||'Zatiaľ bez porazených protivníkov.')+'</p>');
+}
+function downloadCharacterJSON(text,filename='grindoria-characters-backup-'+new Date().toISOString().slice(0,10)+'.json') {
+  const blob=new Blob([text],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=filename;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+async function handleCharacterBackupFile(event) {
+  const file=event.target.files?.[0];if(!file)return;
+  try{if(file.size>CHARACTER_RULES.maxBackupBytes)throw new Error('Súbor je príliš veľký.');pendingCharacterImport=prepareCharacterImport(await file.text());renderCharacterImport();}catch(error){rosterMessage(error.message);}finally{event.target.value='';}
+}
+function renderCharacterImport() {
+  const incoming=listCharacters(pendingCharacterImport.account),existing=listCharacters();
+  modal('<span class="eyebrow">OBNOVA ZO ZÁLOHY</span><h2>Importovať '+incoming.length+' postáv</h2><p>Pred uložením skontroluj všetky postavy a zvoľ spôsob importu.</p><div class="import-summary">'+incoming.map(record=>{const nameConflict=existing.some(c=>characterNameKey(c.name)===characterNameKey(record.name)),idConflict=Object.hasOwn(characterStore.account.profiles,record.id);return '<div><b>'+escapeHTML(characterDisplayName(record))+'</b><span>'+CLASSES[record.classId].name+' · Úroveň '+record.data.level+'</span>'+(nameConflict?'<small class="form-error">Konflikt mena · pri pridaní zadaj nové meno.</small>':'')+(idConflict?'<small>Konflikt ID · pri pridaní vznikne nové ID.</small>':'')+'<label>Nové meno pri pridaní<input data-import-name="'+record.id+'" type="text" value="'+escapeHTML(characterInputName(record))+'" maxlength="'+(CHARACTER_RULES.nameMax+1)+'"></label></div>';}).join('')+'</div><label class="import-mode"><input type="radio" name="import-mode" id="import-mode-add" checked> Pridať a zachovať existujúce postavy</label><label class="import-mode"><input type="radio" name="import-mode" id="import-mode-replace"> Nahradiť celý zoznam postáv</label><p>Pridanie: '+(existing.length+incoming.length)+' / '+CHARACTER_RULES.maxCharacters+' postáv. Rovnaké mená treba vyriešiť ručne; rovnaké ID sa bezpečne zmenia.</p><label id="import-replace-warning" class="import-warning" hidden><input id="confirm-replace" type="checkbox"> Rozumiem, že aktuálne postavy, ktoré nie sú v zálohe, sa stratia. Pred nahradením sa automaticky uloží bezpečnostná záloha.</label><p id="character-import-error" class="form-error" role="alert"></p><button id="confirm-character-import" class="roster-primary">Potvrdiť import</button>');
+  const modeChanged=()=>{$('import-replace-warning').hidden=!$('import-mode-replace').checked;};$('import-mode-add').onchange=modeChanged;$('import-mode-replace').onchange=modeChanged;
+  $('confirm-character-import').onclick=()=>{try{const renames={};document.querySelectorAll('[data-import-name]').forEach(input=>renames[input.dataset.importName]=input.value);const mode=$('import-mode-replace').checked?'replace':'add';importCharacterBackup(pendingCharacterImport,mode,{renames:mode==='add'?renames:{},confirmReplace:$('confirm-replace').checked});pendingCharacterImport=null;closeModal();renderCharacterScreen();rosterMessage('Import bol dokončený. Všetky postavy sú pripravené.');}catch(error){$('character-import-error').textContent=error.message;}};
+}
+
+function showCharacterSaveFailure() {
+  modal('<span class="eyebrow">POSTUP ZOSTÁVA V TEJTO RELÁCII</span><h2>Uloženie sa nepodarilo</h2><p>'+escapeHTML(characterStore.writeError)+'<br>Pred zatvorením hry si môžeš stiahnuť všetky postavy vrátane aktuálneho neuloženého postupu.</p><button id="emergency-character-export" class="roster-primary">Exportovať všetky postavy teraz</button><button id="retry-character-save" class="roster-secondary">Skúsiť uložiť a vrátiť sa</button><p id="emergency-export-status" role="status"></p>');
+  $('emergency-character-export').onclick=()=>{try{downloadCharacterJSON(exportCharacters());$('emergency-export-status').textContent='Záloha obsahuje aj aktuálny postup. Ulož súbor do zariadenia.';}catch(error){$('emergency-export-status').textContent=error.message;}};
+  $('retry-character-save').onclick=returnToCharacters;
+}
+
+
 // src/js/render/primitives.js
 function polygon(points,fill,stroke){ctx.beginPath();points.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();}}
 
@@ -2730,7 +3170,7 @@ else if(cls==='sura'){polygon([[x-11,y-34],[x-12,y-9],[x+12,y-9],[x+10,y-34]],'#
 else{polygon([[x-11,y-33],[x-17,y+2],[x+17,y+2],[x+10,y-33],[x,y-39]],'#d1bd96','#eeddb3');polygon([[x-3,y-33],[x+1,y+1],[x+7,y],[x+3,y-32]],'#ab6e60');line(x-13,y-28,x-20,y-15-cast*15,'#edd7ac',6);}
 ellipse(x,y-42,7,9,'#d5bd97');if(cls==='ninja'){polygon([[x-8,y-45],[x-6,y-52],[x+7,y-51],[x+9,y-40],[x-8,y-39]],'#223e36');line(x-5,y-43,x+5,y-43,'#e3d2a2',2);polygon([[x+6,y-45],[x+24,y-47],[x+10,y-40]],'#456d53');}else{polygon([[x-8,y-45],[x-6,y-51],[x+7,y-51],[x+9,y-39],[x+2,y-44]],cls==='sura'?'#31263c':'#2f3630');if(cls==='shaman')line(x-7,y-48,x+7,y-48,'#d3a65d',2);}
 if(Math.sin(face)<-.3)ellipse(x,y-43,7,8,cls==='sura'?'#31263c':'#2f3630');ctx.restore();ctx.save();ctx.translate(x+Math.cos(face)*16,y-24+Math.sin(face)*10-cast*12);const swing=slash>0?(1-slash/.22)*Math.PI*1.2-1.3:Math.sin(clock*2)*.06;ctx.rotate(Math.atan2(Math.sin(face)*.62,Math.cos(face))+Math.PI/2+swing+(moving?.1:0));if(cls==='ninja'&&p.schools.ninja==='archery'){ctx.strokeStyle='#b7a577';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,-4,20,-1.4,1.4);ctx.stroke();line(3,-23,3,16,'#d1c6a6',1);}else if(cls==='shaman'){polygon([[0,0],[-8,-22],[0,-29],[10,-25],[20,-13]],'#d7c68c','#f4e3b4');for(let i=0;i<4;i++)line(0,0,-5+i*7,-23+i,'#ad7d64',1);}else{line(0,8,0,-30,'#e4e8d0',cls==='ninja'?3:4);line(-6,0,6,0,'#c7aa73',3);if(cls==='sura'||active('aura'))line(0,-5,0,-30,color,2);}
-ctx.restore();if(cls==='ninja'&&p.schools.ninja==='blade'){line(x-19,y-14,x-25,y-35,'#cad9bd',3);line(x-24,y-16,x-16,y-19,'#ac9766',2);}text(role().name+' · '+school().name,x,y-68,color,9);ctx.restore();}
+ctx.restore();if(cls==='ninja'&&p.schools.ninja==='blade'){line(x-19,y-14,x-25,y-35,'#cad9bd',3);line(x-24,y-16,x-16,y-19,'#ac9766',2);}text(characterDisplayName(p),x,y-82,'#ead7ac',11);text(role().name+' · '+school().name,x,y-68,color,9);ctx.restore();}
 
 
 // src/js/render/effects.js
@@ -2983,6 +3423,8 @@ initializeCareer();
 initializeInventory();
 initializeFarming();
 initializeLoot();
+initializeCharacterAccount();
+$('sound').textContent='Zvuk: '+(sound?'zapnutý':'vypnutý');
 initializeFullscreen();
 initializeCombatAssist();
 loadMap(p.mapId,true);
@@ -3016,10 +3458,10 @@ function handleGameKeyDown(e) {
 
 canvas.addEventListener('pointermove',setCombatPointer);canvas.addEventListener('pointerleave',leaveCombatPointer);window.addEventListener('blur',combatBlur);
 canvas.addEventListener('pointerdown',handleCombatClick);
-$('start').onclick=startGame;$('attack').onclick=()=>hotbarAction(()=>attack());$('skill').onclick=()=>hotbarAction(()=>castSkill(0));$('potion').onclick=()=>hotbarAction(potion);$('inventory').onclick=()=>hotbarAction(inventory);$('close').onclick=closeModal;$('claim').onclick=()=>{if(p.claimed||p.kills<5||p.stones<3)return;p.claimed=true;p.gold+=150;experience(60);toast('Údolie je zachránené!\n+150 zlata · +60 skúseností');updateHUD();save();};
-$('sound').onclick=()=>{sound=!sound;$('sound').textContent='Zvuk: '+(sound?'zapnutý':'vypnutý');beep(440);};document.querySelectorAll('[data-key]').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();keys[b.dataset.key]=true;b.setPointerCapture(e.pointerId);});for(const type of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(type,()=>keys[b.dataset.key]=false);});window.addEventListener('pagehide',save);updateHUD();
+$('attack').onclick=()=>hotbarAction(()=>attack());$('skill').onclick=()=>hotbarAction(()=>castSkill(0));$('potion').onclick=()=>hotbarAction(potion);$('inventory').onclick=()=>hotbarAction(inventory);$('close').onclick=closeModal;$('claim').onclick=()=>{if(p.claimed||p.kills<5||p.stones<3)return;p.claimed=true;p.gold+=150;experience(60);toast('Údolie je zachránené!\n+150 zlata · +60 skúseností');updateHUD();save();};
+$('sound').onclick=()=>{sound=!sound;$('sound').textContent='Zvuk: '+(sound?'zapnutý':'vypnutý');beep(440);saveGlobalSettings();};document.querySelectorAll('[data-key]').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();keys[b.dataset.key]=true;b.setPointerCapture(e.pointerId);});for(const type of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(type,()=>keys[b.dataset.key]=false);});window.addEventListener('pagehide',save);updateHUD();
 
-$('journal').onclick=journal;renderClasses();updateClassHUD();
+$('journal').onclick=journal;updateClassHUD();
 
 for(let i=1;i<6;i++)$('skill'+(i+1)).onclick=()=>hotbarAction(()=>castSkill(i));$('travel').onclick=travelMenu;$('spellbook').onclick=spellbook;updateHUD();
 
@@ -3029,12 +3471,10 @@ $('career').onclick=()=>careerPanel();
 
 $('bravery').onclick=()=>hotbarAction(useBraveryCape);
 
-function startGame() {
-  if (pendingSaveImports.length) { openSaveImport(); return; }
-  running=true; document.body.classList.add('started'); canvas.focus();
-  p.hp=Math.min(p.hp,maxHP()); save();
-  toast('Vitaj v Grindorii, '+role().name.toLowerCase()+'.');
-}
+function startGame() { return playCharacter(); }
+$('backup-characters').onclick=()=>{try{downloadCharacterJSON(exportCharacters());toast('Záloha všetkých postáv bola pripravená.');}catch(error){toast(error.message);}};
+$('characters').onclick=returnToCharacters;$('character-menu').onclick=returnToCharacters;
+renderCharacterScreen();
 
 </script>
 </body></html>

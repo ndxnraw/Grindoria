@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict');
-const {createGame}=require('./helpers/game.cjs');
+const { createGame, readSavedProfile }=require('./helpers/game.cjs');
 
 function arena(run){run('running=true;paused=false;p.x=400;p.y=1400;cam.x=p.x;cam.y=p.y;p.hp=100000;face=0;attackCD=0;castPose=0;combatAim.inside=false;resetCombatFlow();mobs.forEach(m=>{m.hp=0;m.dead=1000;m.dot=null;m.dots=[];});let foe=mobs.find(m=>m.type==="wolf");Object.assign(foe,{x:700,y:1400,homeX:700,homeY:1400,hp:10000,max:10000,skin:"wolf",resistances:{physical:0,piercing:0,fire:0,poison:0,dark:0,lightning:0,arcane:0},engaged:0,taunt:0,cd:2});');}
 
@@ -103,7 +103,7 @@ test('poison and fire coexist, same-type effects refresh, and persistent states 
   run('let before=foe.hp;updateCombat(1);');assert.equal(run('before-foe.hp'),22);
   run('save();let id=foe.spawnId,savedTime=p.worldStates.valley.mobs.find(m=>m.spawnId===id).dots[0].time;foe.dots[0].time=1;');
   assert.equal(run('p.worldStates.valley.mobs.find(m=>m.spawnId===id).dots[0].time'),run('savedTime'));
-  const reload=createGame(JSON.parse(saved.get('grindoria-save-v1')));assert.equal(reload.run(`mobs.find(m=>m.spawnId==='${run('id')}').dots.length`),2);assert.equal(reload.run('target'),null);
+  const reload=createGame(readSavedProfile(saved));assert.equal(reload.run(`mobs.find(m=>m.spawnId==='${run('id')}').dots.length`),2);assert.equal(reload.run('target'),null);
 });
 
 test('48 active skills emit distinct animations and still enforce their mana and cooldown',()=>{

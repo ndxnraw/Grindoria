@@ -2,6 +2,8 @@ initializeCareer();
 initializeInventory();
 initializeFarming();
 initializeLoot();
+initializeCharacterAccount();
+$('sound').textContent='Zvuk: '+(sound?'zapnutý':'vypnutý');
 initializeFullscreen();
 initializeCombatAssist();
 loadMap(p.mapId,true);
@@ -35,10 +37,10 @@ function handleGameKeyDown(e) {
 
 canvas.addEventListener('pointermove',setCombatPointer);canvas.addEventListener('pointerleave',leaveCombatPointer);window.addEventListener('blur',combatBlur);
 canvas.addEventListener('pointerdown',handleCombatClick);
-$('start').onclick=startGame;$('attack').onclick=()=>hotbarAction(()=>attack());$('skill').onclick=()=>hotbarAction(()=>castSkill(0));$('potion').onclick=()=>hotbarAction(potion);$('inventory').onclick=()=>hotbarAction(inventory);$('close').onclick=closeModal;$('claim').onclick=()=>{if(p.claimed||p.kills<5||p.stones<3)return;p.claimed=true;p.gold+=150;experience(60);toast('Údolie je zachránené!\n+150 zlata · +60 skúseností');updateHUD();save();};
-$('sound').onclick=()=>{sound=!sound;$('sound').textContent='Zvuk: '+(sound?'zapnutý':'vypnutý');beep(440);};document.querySelectorAll('[data-key]').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();keys[b.dataset.key]=true;b.setPointerCapture(e.pointerId);});for(const type of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(type,()=>keys[b.dataset.key]=false);});window.addEventListener('pagehide',save);updateHUD();
+$('attack').onclick=()=>hotbarAction(()=>attack());$('skill').onclick=()=>hotbarAction(()=>castSkill(0));$('potion').onclick=()=>hotbarAction(potion);$('inventory').onclick=()=>hotbarAction(inventory);$('close').onclick=closeModal;$('claim').onclick=()=>{if(p.claimed||p.kills<5||p.stones<3)return;p.claimed=true;p.gold+=150;experience(60);toast('Údolie je zachránené!\n+150 zlata · +60 skúseností');updateHUD();save();};
+$('sound').onclick=()=>{sound=!sound;$('sound').textContent='Zvuk: '+(sound?'zapnutý':'vypnutý');beep(440);saveGlobalSettings();};document.querySelectorAll('[data-key]').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();keys[b.dataset.key]=true;b.setPointerCapture(e.pointerId);});for(const type of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(type,()=>keys[b.dataset.key]=false);});window.addEventListener('pagehide',save);updateHUD();
 
-$('journal').onclick=journal;renderClasses();updateClassHUD();
+$('journal').onclick=journal;updateClassHUD();
 
 for(let i=1;i<6;i++)$('skill'+(i+1)).onclick=()=>hotbarAction(()=>castSkill(i));$('travel').onclick=travelMenu;$('spellbook').onclick=spellbook;updateHUD();
 
@@ -48,9 +50,7 @@ $('career').onclick=()=>careerPanel();
 
 $('bravery').onclick=()=>hotbarAction(useBraveryCape);
 
-function startGame() {
-  if (pendingSaveImports.length) { openSaveImport(); return; }
-  running=true; document.body.classList.add('started'); canvas.focus();
-  p.hp=Math.min(p.hp,maxHP()); save();
-  toast('Vitaj v Grindorii, '+role().name.toLowerCase()+'.');
-}
+function startGame() { return playCharacter(); }
+$('backup-characters').onclick=()=>{try{downloadCharacterJSON(exportCharacters());toast('Záloha všetkých postáv bola pripravená.');}catch(error){toast(error.message);}};
+$('characters').onclick=returnToCharacters;$('character-menu').onclick=returnToCharacters;
+renderCharacterScreen();

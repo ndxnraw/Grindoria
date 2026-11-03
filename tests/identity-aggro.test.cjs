@@ -1,10 +1,10 @@
 const test = require('node:test'), assert = require('node:assert/strict');
-const { createGame } = require('./helpers/game.cjs');
+const { createGame, readSavedProfile } = require('./helpers/game.cjs');
 
 function profile(level = 17) {
   const game = createGame();
   game.run(`p.level=${level};p.gold=1234;p.braveryCapes=2;save();`);
-  return JSON.parse(game.saved.get('grindoria-save-v1'));
+  return readSavedProfile(game.saved);
 }
 
 test('ordinary, elite and rare enemies stay neutral while wandering near a peaceful player', () => {
@@ -51,12 +51,11 @@ test('the canonical save takes precedence and unrelated storage is not imported'
   assert.equal(other.run('p.level'), 1); assert.equal(other.saved.has('grindoria-save-v1'), false);
 });
 
-test('multiple compatible profiles require an explicit selection before play', () => {
-  const first = profile(17), second = profile(8);
-  const { run, saved, elements } = createGame(first, 'previous-save-v1', { 'second-save-v1': second });
-  assert.equal(run('pendingSaveImports.length'), 2); assert.equal(saved.has('grindoria-save-v1'), false);
-  run('save();'); assert.equal(saved.has('grindoria-save-v1'), false);
-  run('startGame();'); assert.equal(run('running'), false); assert.match(elements.get('modalcontent').innerHTML, /Pokračovať v príbehu/);
-  assert.equal(run('chooseSaveImport(1)'), true); assert.equal(run('p.level'), 8); assert.equal(run('running'), true);
-  assert.equal(JSON.parse(saved.get('grindoria-save-v1')).level, 8);
+test('multiple compatible saves migrate into separate selectable characters before play', () => {
+  const first=profile(17),second=profile(8);
+  const {run,saved}=createGame(first,'previous-save-v1',{'second-save-v1':second},{emptyRoster:true});
+  assert.equal(run('characterStore.account.order.length'),2);assert.equal(run('characterStore.activeId'),null);assert.equal(run('running'),false);
+  run('let selected=characterStore.account.order[1];selectCharacter(selected);playCharacter(selected);');
+  assert.equal(run('p.level'),8);assert.equal(run('running'),true);assert.equal(readSavedProfile(saved).level,8);
+  assert.deepEqual(JSON.parse(saved.get('previous-save-v1')),first);assert.deepEqual(JSON.parse(saved.get('second-save-v1')),second);
 });
