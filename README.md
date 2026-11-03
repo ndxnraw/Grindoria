@@ -46,6 +46,15 @@ Otvor `dist/Grindoria.html` dvojklikom v prehliadači. Celá hra je v jednom sú
 
 Klik na nepriateľa alebo Metin ho označí: postava sleduje jeho aktuálnu polohu a v dosahu automaticky útočí. Smrť cieľa nasledovanie zastaví. WASD, šípky alebo Esc zrušia označenie. Klik do prázdna vyvolá útok bez pohybu; bez označeného cieľa postava mieri podľa kurzora. Ľavé kliknutie na korisť ju zdvihne; Y pozbiera predmety v okolí bez potreby kurzora. Dostupné je aj dotykové ovládanie.
 
+## Automatické mierenie a Autospell
+
+Dva prepínače **nad hotbarom** sa dajú zapnúť nezávisle:
+
+- **Automierenie** otáča postavu na najbližšiu živú príšeru alebo Metin do 500 jednotiek. Označený cieľ má prednosť. Samo nevytvára pohyb ani základné útoky; medzerník naďalej ovládaš ty.
+- **Autospell** používa dostupné schopnosti so skutočnou spotrebou many, cooldownmi a dosahom. Bez automatického mierenia používa označený cieľ alebo smer postavy. Zahŕňa aj premiestňujúce výpady a dostupné liečenie pri nízkom zdraví.
+
+Nastavenie sa zapamätá. V útočisku, otvorenom paneli a neaktívnom okne automatika čaká. **Esc v hre vypne oba režimy**; Esc pri otvorenom paneli najprv zavrie panel. Kliknutie na schopnosť vráti ovládanie hernej ploche, takže medzerník hneď funguje.
+
 ## Obsah
 
 - Bojovník, nindža, Sura a šaman; každé povolanie má dve školy.
@@ -125,7 +134,7 @@ npm run check:dist
 
 Testy pokrývajú všetkých 48 schopností, postup, ukladanie, mapy, respawn a prípravu vydania. Nenahrádzajú vizuálnu kontrolu v prehliadači. Rovnaké príkazy používa GitHub Actions na Windows a Linuxe.
 
-Zmeny zapisuj pod `[Unreleased]` v [CHANGELOG.md](CHANGELOG.md). Príkaz `npm run release -- 0.11.1` presunie poznámky do novej verzie, pridá dátum a odkazy, zosúladí verziu hry a vytvorí offline súbor. Sám necommituje ani neposiela zmeny na GitHub.
+Zmeny zapisuj pod `[Unreleased]` v [CHANGELOG.md](CHANGELOG.md). Príkaz `npm run release -- 0.12.1` presunie poznámky do novej verzie, pridá dátum a odkazy, zosúladí verziu hry a vytvorí offline súbor. Sám necommituje ani neposiela zmeny na GitHub.
 
 Podrobnosti: [vydávanie](docs/RELEASING.md), [architektúra](docs/ARCHITECTURE.md), [prispievanie](CONTRIBUTING.md).
 

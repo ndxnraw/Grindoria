@@ -14,7 +14,7 @@ function setCombatPointer(event) {
 
 function leaveCombatPointer() { combatAim.inside = false; clearLootPointer(); }
 
-function combatBlur() { keysClear(); leaveCombatPointer(); clearCombatTarget(); }
+function combatBlur() { combatAssist.focused = false; keysClear(); leaveCombatPointer(); clearCombatTarget(); }
 
 function cursorWorld() {
   const rect = canvas.getBoundingClientRect();
@@ -22,7 +22,7 @@ function cursorWorld() {
 }
 
 function updateFacing() {
-  const enemy = selectedEnemy();
+  const enemy = selectedEnemy() || assistedAimEnemy();
   if (enemy) face = Math.atan2(enemy.y - p.y, enemy.x - p.x);
   else if (combatAim.inside) { const aim = cursorWorld(); if (Math.hypot(aim.x-p.x,aim.y-p.y)>3) face=Math.atan2(aim.y-p.y,aim.x-p.x); }
 }
@@ -36,6 +36,8 @@ function enemyInArc(m, range, angle = face, halfArc = BATTLE.halfArc) {
 function aimEnemy(range) {
   const selected = selectedEnemy();
   if (selected) return Math.hypot(selected.x-p.x,selected.y-p.y)<=range ? selected : null;
+  const assisted = assistedAimEnemy(range);
+  if (assisted) return assisted;
   return mobs.filter(m=>enemyInArc(m,range)).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0] || null;
 }
 

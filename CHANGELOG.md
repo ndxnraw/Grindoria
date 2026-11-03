@@ -10,6 +10,21 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.12.0] - 2026-11-03
+
+### Added
+- Nezávislé prepínače Automierenie a Autospell nad hotbarom s uložením nastavenia.
+- Mierenie na najbližšieho živého nepriateľa do 500 jednotiek bez automatickej chôdze; označený cieľ má prednosť.
+- Automatická rotácia dostupných schopností s manou, cooldownmi, dosahom, podporou komb a liečením pri nízkom zdraví.
+- Osem regresných testov hotbaru, klávesnice, mierenia, automatického zosielania, pauzy a uloženia prepínačov.
+
+### Changed
+- Esc v hre vypne oba automatické režimy; pauza, útočisko a neaktívne okno pozastavia asistenciu.
+
+### Fixed
+- Kliknutie na schopnosť, útok, elixír alebo plášť vráti fokus hernej ploche a neblokuje ďalší útok medzerníkom.
+- Zamerané herné tlačidlo neprehltne medzerník; textové polia a dialógy pri pauze si zachovajú vlastné ovládanie.
+
 ## [0.11.0] - 2026-11-03
 
 ### Added
@@ -254,7 +269,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.11.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.12.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -269,3 +284,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.9.0]: https://github.com/ndxnraw/Grindoria/compare/v0.8.1...v0.9.0
 [0.10.0]: https://github.com/ndxnraw/Grindoria/compare/v0.9.0...v0.10.0
 [0.11.0]: https://github.com/ndxnraw/Grindoria/compare/v0.10.0...v0.11.0
+[0.12.0]: https://github.com/ndxnraw/Grindoria/compare/v0.11.0...v0.12.0

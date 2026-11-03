@@ -159,3 +159,13 @@ Testy battle-controls.test.cjs overujú smerovanie, živé nasledovanie, rušeni
 ## Prehľadnosť od 0.11.0
 
 Smerová šípka pri postave sa nevykresľuje; orientáciu určuje kurzor a smer zbrane. Označený nepriateľ si zachováva prsteň a značku cieľa. Náhľad koristi vyžaduje 0,55 s bez pohybu kurzora; prebehnutie myšou počas mierenia ho resetuje. F10 alebo tlačidlo ⛶ v minimape prepína celú obrazovku.
+
+## Automatická pomoc od 0.12.0
+
+Dva prepínače nad hotbarom sú nezávislé a ukladajú sa do p.combatAssist; starý postup ich má predvolene vypnuté. Automierenie vyberá najbližší živý cieľ do 500 jednotiek bez čelného obmedzenia. Nevyberá ciele v útočisku. Ručne označený cieľ má prednosť; asistencia nevytvára cieľ nasledovania ani sama nespúšťa základný útok. Pri smrti automaticky mieri na ďalší najbližší cieľ.
+
+Autospell používa existujúce castSkill, skutočné cooldowny, dosah a cenu many. Bez Automierenia používa ručné označenie alebo čelný smer. Rotuje šesť schopností s odstupom 0,8 s, čaká na dokončenie animácie a uprednostní dostupné dokončenie komba. Aktívne aury neopakuje. Vyliečenie uprednostní pod 65 % maximálneho zdravia; Životnú silu nespustí pri 35 % alebo menej. Výpady a kotúľanie môžu premiestniť postavu rovnako ako pri ručnom použití. Nedostupné schopnosti preskočí bez opakovaných hlášok o mane.
+
+Pred začatím hry, pri pauze, smrti, v útočisku, pri strate zamerania okna alebo skrytom tabe asistencia nič nové nezosiela. Po návrate do aktívneho okna pokračuje. Esc pri zavretom paneli zruší cieľ aj oba prepínače a uloží vypnutý stav. Esc v natívnom fullscreene navyše ukončí celú obrazovku. Pri browserovom fullscreene môže prvý Esc spracovať sám prehliadač.
+
+Hotbar po použití schopnosti, elixíru či plášťa vráti fokus Canvasu bez posunu stránky. Medzerník počas hry funguje aj pri zameranom tlačidle; bežné písanie v textovom poli a klávesy dialógu pri pauze zostávajú natívne.

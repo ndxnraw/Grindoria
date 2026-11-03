@@ -84,15 +84,24 @@ body.native-fullscreen{margin:0;overflow:hidden}
 body.native-fullscreen>header,body.native-fullscreen .world-title,body.native-fullscreen main>footer{display:none}
 body.native-fullscreen main{padding:0;max-width:none;width:100%;margin:0}
 body.native-fullscreen .game-shell{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;min-height:0;max-height:none;border:0;border-radius:0}
+
+/* Independent combat assistance toggles stay above the skill bar. */
+.combat-assist{position:absolute;bottom:111px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:7}
+.combat-assist button{padding:7px 12px;border:1px solid #8b8059;background:#15241fe8;color:#bec5ad;border-radius:3px;font:600 10px Segoe UI,sans-serif;white-space:nowrap;cursor:pointer}
+.combat-assist button[aria-pressed="true"]{border-color:#dec17d;background:#485039;color:#ffe4a6}
+.combat-assist button:focus-visible{outline:2px solid #f2d49b;outline-offset:2px}
+@media(max-width:850px){.combat-assist{bottom:162px}}
+@media(max-width:450px){.combat-assist{bottom:204px}.combat-assist button{padding:6px 9px;font-size:10px}}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b>ALPHA 0.11.0</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b>ALPHA 0.12.0</b></span></header>
 <main><div class="world-title"><div><span class="eyebrow">KAPITOLA I · PREBUDENIE</span><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Pod pokojnými korunami sa prebúdza stará temnota.</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
 <section id="game-shell" class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb iba WASD alebo šípkami, cieľ kliknutím, smerový útok myšou alebo medzerníkom, schopnosť Q, liečenie E, korisť ľavým kliknutím alebo Y v okolí, zlato a zásoby automaticky."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
 <div class="hud player"><div class="portrait">侍</div><div><div class="player-name"><b id="playerclass">Bojovník</b> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 60 skúseností</small></div></div>
 <div class="hud map"><button id="fullscreen" class="fullscreen-control" type="button" aria-label="Celá obrazovka" aria-pressed="false" title="Celá obrazovka · F10">⛶</button><canvas id="minimap" width="138" height="118"></canvas><span id="minimaplabel">ÚDOLIE TICHÉHO VETRA</span></div>
 <div class="hud quest"><span class="eyebrow">AKTÍVNA ÚLOHA</span><h3>Praskliny v pokoji</h3><p>Osloboď údolie od temnoty.</p><div id="q-wolves">◇ Poraz príšery <b>0 / 5</b></div><div id="q-stones">◇ Znič kamene osudu <b>0 / 3</b></div><button id="claim" hidden>Vyzdvihnúť odmenu · 150 zlata</button><small id="questnote">Odmena: 150 zlata + 60 skúseností</small></div>
 <div id="toast" role="status"></div><div id="target-panel" class="hud target-panel" aria-live="off" hidden></div><div id="combat-flow" class="hud combat-flow" aria-live="polite" hidden></div><div id="buffs" class="buffs" aria-live="off"></div><div class="hud location">⌖ &nbsp; <span id="coords">Útočisko pútnikov</span></div>
+<div class="combat-assist" role="group" aria-label="Automatická pomoc v boji"><button id="auto-aim" type="button" aria-pressed="false" title="Mieri na najbližšieho nepriateľa do 500 jednotiek. Označený cieľ má prednosť; bez automatickej chôdze.">Automierenie: VYP</button><button id="auto-spell" type="button" aria-pressed="false" title="Používa dostupné schopnosti vrátane výpadov; rešpektuje manu a cooldowny. Esc vypne pomocníkov.">Autospell: VYP</button></div>
 <div class="hotbar"><button id="attack"><kbd>SPACE</kbd><span>⚔</span><small>Sek mečom</small></button><button id="skill"><kbd>Q</kbd><span>✺</span><small>Veterný kruh</small><em id="cooldown"></em></button><button id="skill2"><kbd>R</kbd><span>✧</span><small>Schopnosť</small><em id="cooldown2"></em></button><button id="skill3"><kbd>T</kbd><span>☄</span><small>Schopnosť</small><em id="cooldown3"></em></button><button id="skill4"><kbd>V</kbd><span>◈</span><small>Schopnosť</small><em id="cooldown4"></em></button><button id="skill5"><kbd>U</kbd><span>❖</span><small>Schopnosť</small><em id="cooldown5"></em></button><button id="skill6"><kbd>O</kbd><span>✥</span><small>Schopnosť</small><em id="cooldown6"></em></button><button id="potion"><kbd>E</kbd><span>⚱</span><small>Elixír <b id="pots">5</b></small></button><button id="bravery" title="Plášť statočnosti · B · dosah 650 · priťahovanie 18 s"><kbd>B</kbd><span>⚑</span><small>Plášť <b id="capes">10</b></small><em id="cape-cooldown"></em></button><div class="divider"></div><button id="inventory"><kbd>I</kbd><span>▣</span><small>Výbava</small></button></div>
 <div class="hud wallet"><span>◉</span> <b id="gold">0</b> <small>ZLATO</small></div>
 <div id="intro" class="overlay"><div class="intro-card"><span class="eyebrow">TVOJ PRÍBEH SA ZAČÍNA</span><h2>Temnota padá.<br><em>Ty povstaň.</em></h2><p>Štyri povolania, osem škôl a päť máp. Vyber si cestu, ovládni svoje schopnosti a poraz strážcov kráľovstva.</p><div class="intro-controls"><span><kbd>W A S D</kbd> Pohyb</span><span><kbd>SPACE</kbd> Útok</span><span><kbd>Q R T V U O</kbd> Kúzla</span><span><kbd>E</kbd> Liečenie</span></div><div class="class-select" id="classes"></div><div class="school-select" id="schools"></div><p id="classhint" class="class-hint"></p><button class="primary" id="start">Vstúpiť do údolia <span>→</span></button><small>Vlastná 2D adaptácia schopností; animácie sa líšia od Metin2.</small></div></div>
@@ -439,7 +448,7 @@ function keysClear(){Object.keys(keys).forEach(k=>keys[k]=false);}
 function update(dt) {
   clock+=dt;if(!running||paused)return;
   attackCD=Math.max(0,attackCD-dt);slash=Math.max(0,slash-dt);ring=Math.max(0,ring-dt);updateCombat(dt);
-  updatePlayerControl(dt);if(keys[' '])attack();
+  updatePlayerControl(dt);if(keys[' '])attack();updateAutoSpell(dt);
   const safe=isSanctuary(p);if(safe){p.hp=Math.min(maxHP(),p.hp+12*dt);p.mp=Math.min(maxMP(),p.mp+dt*10);}
   updateMetins(dt,safe);updateEnemySpawns(dt,safe);updateGroundLoot(dt);updateBoss(dt,safe);
   if(p.hp<=0)death();if(target&&!selectedEnemy())clearCombatTarget();
@@ -1774,7 +1783,7 @@ function setCombatPointer(event) {
 
 function leaveCombatPointer() { combatAim.inside = false; clearLootPointer(); }
 
-function combatBlur() { keysClear(); leaveCombatPointer(); clearCombatTarget(); }
+function combatBlur() { combatAssist.focused = false; keysClear(); leaveCombatPointer(); clearCombatTarget(); }
 
 function cursorWorld() {
   const rect = canvas.getBoundingClientRect();
@@ -1782,7 +1791,7 @@ function cursorWorld() {
 }
 
 function updateFacing() {
-  const enemy = selectedEnemy();
+  const enemy = selectedEnemy() || assistedAimEnemy();
   if (enemy) face = Math.atan2(enemy.y - p.y, enemy.x - p.x);
   else if (combatAim.inside) { const aim = cursorWorld(); if (Math.hypot(aim.x-p.x,aim.y-p.y)>3) face=Math.atan2(aim.y-p.y,aim.x-p.x); }
 }
@@ -1796,6 +1805,8 @@ function enemyInArc(m, range, angle = face, halfArc = BATTLE.halfArc) {
 function aimEnemy(range) {
   const selected = selectedEnemy();
   if (selected) return Math.hypot(selected.x-p.x,selected.y-p.y)<=range ? selected : null;
+  const assisted = assistedAimEnemy(range);
+  if (assisted) return assisted;
   return mobs.filter(m=>enemyInArc(m,range)).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0] || null;
 }
 
@@ -2080,6 +2091,75 @@ function attack(skill=false) {
 }
 
 
+// src/js/systems/combat-assist.js
+const COMBAT_ASSIST = { range: 500, spellInterval: .8 };
+const combatAssist = { focused: true, timer: 0, nextSkill: 0 };
+
+function initializeCombatAssist() {
+  p.combatAssist = { autoAim: p.combatAssist?.autoAim === true, autoSpell: p.combatAssist?.autoSpell === true };
+  $('auto-aim').onclick = () => toggleCombatAssist('autoAim');
+  $('auto-spell').onclick = () => toggleCombatAssist('autoSpell');
+  updateCombatAssistHUD();
+}
+
+function combatAssistAvailable() { return running && !paused && p.hp > 0 && combatAssist.focused && !document.hidden && !isSanctuary(p); }
+
+function closestAssistEnemy(range = COMBAT_ASSIST.range) {
+  let best = null, distance = range;
+  for (const enemy of mobs) {
+    if (enemy.hp <= 0 || isSanctuary(enemy)) continue;
+    const d = Math.hypot(enemy.x-p.x, enemy.y-p.y);
+    if (d <= distance && (!best || d < distance)) { best = enemy; distance = d; }
+  }
+  return best;
+}
+
+function assistedAimEnemy(range = COMBAT_ASSIST.range) {
+  return p.combatAssist?.autoAim && combatAssistAvailable() ? closestAssistEnemy(Math.min(range, COMBAT_ASSIST.range)) : null;
+}
+
+function toggleCombatAssist(setting) {
+  if (!running || paused || !['autoAim', 'autoSpell'].includes(setting)) return false;
+  p.combatAssist[setting] = !p.combatAssist[setting];
+  if (setting === 'autoSpell') { combatAssist.timer = 0; combatAssist.nextSkill = 0; }
+  updateFacing(); updateCombatAssistHUD(); save(); canvas.focus({preventScroll:true});
+  return p.combatAssist[setting];
+}
+
+function stopCombatAssist() {
+  const enabled = p.combatAssist?.autoAim || p.combatAssist?.autoSpell;
+  if (p.combatAssist) { p.combatAssist.autoAim = false; p.combatAssist.autoSpell = false; }
+  combatAssist.timer = 0; combatAssist.nextSkill = 0;
+  updateCombatAssistHUD();
+  if (enabled) save();
+}
+
+function autoSkillReady(index) {
+  const skill = school().skills[index], kind = skill[1], cost = skill[3], range = skill[5] || COMBAT_ASSIST.range;
+  if (spellCD[index] > 0 || p.mp < cost) return false;
+  if (kind === 'heal') return p.hp < maxHP() * .65;
+  if (kind === 'burst' && p.hp <= maxHP() * .35) return false;
+  if (SUPPORT_SKILLS.has(kind)) return !active(kind) && Boolean(selectedEnemy() && Math.hypot(target.x-p.x,target.y-p.y)<=COMBAT_ASSIST.range || assistedAimEnemy() || aimEnemy(COMBAT_ASSIST.range));
+  // The same target, reach and aiming rules apply as for a manual cast.
+  return Boolean(aimEnemy(range));
+}
+
+function updateAutoSpell(dt) {
+  if (!p.combatAssist?.autoSpell || !combatAssistAvailable()) return;
+  combatAssist.timer = Math.max(0, combatAssist.timer - dt);
+  if (combatAssist.timer > 0 || castPose > 0) return;
+  const combo = SCHOOL_COMBOS[schoolId()], ready = combatFlow.time > 0 && combatFlow.lastKey === schoolId()+':'+combo.sequence[0];
+  const order = Array.from({length:6}, (_,i)=>(combatAssist.nextSkill+i)%6);
+  if (ready) order.unshift(combo.sequence[1]);
+  // Recovery takes priority when this school has a healing ability.
+  const heal = school().skills.findIndex(skill=>skill[1]==='heal');
+  if (heal >= 0 && p.hp < maxHP()*.65) order.unshift(heal);
+  for (const index of new Set(order)) if (autoSkillReady(index) && castSkill(index)) {
+    combatAssist.nextSkill = (index+1)%6; combatAssist.timer = COMBAT_ASSIST.spellInterval; return;
+  }
+}
+
+
 // src/js/ui/panels.js
 function modal(html){clearLootPointer();$('modal').className='overlay';paused=true;keysClear();$('modalcontent').innerHTML=html;$('modal').hidden=false;$('modalcard').scrollTop=0;}
 
@@ -2092,7 +2172,7 @@ function journal(){if(!running)return;const huntTarget=(p.huntClaimed+1)*10;moda
 
 function travelMenu(){if(!running)return;if(p.career.endgame.run){careerPanel('endgame');return;}modal(`<span class="eyebrow">CESTY KRÁĽOVSTVA · M</span><h2>Cestovná mapa</h2><p>Cestovať môžeš z útočiska na každej mape. Vyššie oblasti sú prístupné hneď, ale ich príšery sú silnejšie.</p><div class="map-list">${Object.entries(MAPS).map(([id,c])=>`<button data-map="${id}" class="map-card ${p.mapId===id?'selected':''}" style="--map-color:${c.ground}"><b>${c.name}</b><small>Úroveň ${c.level}+ · ${c.mob} · ${c.boss}</small><small>${c.metinsOnly?'99 Metinov · úrovne 1–99 · bez voľných príšer':c.count+' pohyblivých príšer · '+c.packCount+' skupinových bodov'}</small><span>${p.mapId===id?'Nachádzaš sa tu':c.desc}</span></button>`).join('')}</div><button class="primary" id="metinAtlas">Atlas Metinov · úrovne, vlny a dropy</button><p id="travelmsg" role="status"></p>`);$('metinAtlas').onclick=metinCodex;document.querySelectorAll('[data-map]').forEach(b=>b.onclick=()=>{if(p.mapId===b.dataset.map)return;if(Math.hypot(p.x-1000,p.y-1050)>190){$('travelmsg').textContent='Najprv sa vráť do útočiska uprostred mapy.';return;}loadMap(b.dataset.map);});}
 
-function help(){modal('<span class="eyebrow">SPRIEVODCA</span><h2>Cesta bojovníka</h2><p><b>WASD / šípky</b> — pohyb; zrušia automatické nasledovanie<br><b>Ľavý klik</b> — cieľ alebo smerový útok, bez chôdze do prázdna<br><b>Medzerník</b> — smerový útok (možno držať)<br><b>F10 / ⛶</b> — celá obrazovka<br><b>C</b> — bojový manuál<br><b>Q R T V U O</b> — šesť schopností školy<br><b>P</b> — dlhodobá progresia<br><b>K</b> — kniha schopností a ich účinky<br><b>Y</b> — pozbierať predmety v okolí bez kurzora; zlato a zásoby sa zbierajú automaticky<br><b>E</b> — elixír zdravia<br><b>B</b> — Plášť statočnosti (650 jednotiek, 18 s)<br><b>I</b> — výbava a vlastnosti<br><b>J</b> — denník úloh<br><b>M</b> — cestovanie medzi mapami z útočiska<br><b>F</b> — obchodník<br><b>Esc</b> — zavrieť okno</p><p>Kliknutie na nepriateľa alebo Metin označí živý cieľ; postava ho nasleduje a v dosahu automaticky útočí. Po smrti cieľa zastaví. Bez cieľa mieriš kurzorom. Náhľad koristi sa otvorí až po zastavení kurzora na 0,55 s; bežná korisť zmizne po 3 minútach, epická výbava a relikvie po 10 minútach. Vyber si povolanie a školu pred vstupom do hry. Kúzla spotrebúvajú manu, ktorá sa automaticky obnovuje. Modré, zelené a fialové efekty označujú rôzne schopnosti, jedy a ochranné aury.</p><p>Príšery sa voľne potulujú po okolí. Zásah vyprovokuje ich skupinu, spolu najviac päť príšer; plášť pritiahne všetky pohyblivé ciele v dosahu. Bossovia napádajú automaticky. Fialové označenie znamená elitu, zlaté vzácnu príšeru. Respawn: bežné príšery 5 s, elity 8 s, vzácne varianty 20 s, vzácne hliadky 75 s, kamene 18 s a bossovia 40 s. Plášť spotrebuje 1 kus aj bez cieľov; ďalšie kúpiš u obchodníka alebo získaš z koristi. Útočisko je chránené: plášť ani útočné kúzla v ňom nefungujú. Útočenie na Metin privoláva vlny obrancov podľa jeho úrovne. Šuterland obsahuje Metiny Lv.1–99; otvor Mapy (M) a Atlas Metinov pre presné dropy. Každá mapa má vlastných protivníkov a silnejšie odmeny. Boss pod 30 % zdravia zúri; Sura ho dokáže potlačiť Zrušením kúzla.</p><p>Vlastná 2D adaptácia šiestich klasických schopností každej školy, nie pôvodné animácie ani presná simulácia hodnôt Metin2. Postup sa ukladá v tomto prehliadači.</p>');}
+function help(){modal('<span class="eyebrow">SPRIEVODCA</span><h2>Cesta bojovníka</h2><p><b>WASD / šípky</b> — pohyb; zrušia automatické nasledovanie<br><b>Ľavý klik</b> — cieľ alebo smerový útok, bez chôdze do prázdna<br><b>Medzerník</b> — smerový útok (možno držať)<br><b>Prepínače nad hotbarom</b> — automatické mierenie a Autospell<br><b>F10 / ⛶</b> — celá obrazovka<br><b>C</b> — bojový manuál<br><b>Q R T V U O</b> — šesť schopností školy<br><b>P</b> — dlhodobá progresia<br><b>K</b> — kniha schopností a ich účinky<br><b>Y</b> — pozbierať predmety v okolí bez kurzora; zlato a zásoby sa zbierajú automaticky<br><b>E</b> — elixír zdravia<br><b>B</b> — Plášť statočnosti (650 jednotiek, 18 s)<br><b>I</b> — výbava a vlastnosti<br><b>J</b> — denník úloh<br><b>M</b> — cestovanie medzi mapami z útočiska<br><b>F</b> — obchodník<br><b>Esc</b> — zavrieť okno</p><p>Kliknutie na nepriateľa alebo Metin označí živý cieľ; postava ho nasleduje a v dosahu automaticky útočí. Po smrti cieľa zastaví. Bez cieľa mieriš kurzorom, alebo zapni Automierenie na najbližšieho nepriateľa do 500 jednotiek. Autospell samostatne používa dostupné schopnosti vrátane výpadov, pri nízkom zdraví uprednostní liečenie. Označený cieľ má prednosť. Vypínače sú nad lištou schopností; Esc v hre vypne oba režimy. Bez označeného cieľa automatické mierenie samo nezačne kráčať ani sekať. Náhľad koristi sa otvorí až po zastavení kurzora na 0,55 s; bežná korisť zmizne po 3 minútach, epická výbava a relikvie po 10 minútach. Vyber si povolanie a školu pred vstupom do hry. Kúzla spotrebúvajú manu, ktorá sa automaticky obnovuje. Modré, zelené a fialové efekty označujú rôzne schopnosti, jedy a ochranné aury.</p><p>Príšery sa voľne potulujú po okolí. Zásah vyprovokuje ich skupinu, spolu najviac päť príšer; plášť pritiahne všetky pohyblivé ciele v dosahu. Bossovia napádajú automaticky. Fialové označenie znamená elitu, zlaté vzácnu príšeru. Respawn: bežné príšery 5 s, elity 8 s, vzácne varianty 20 s, vzácne hliadky 75 s, kamene 18 s a bossovia 40 s. Plášť spotrebuje 1 kus aj bez cieľov; ďalšie kúpiš u obchodníka alebo získaš z koristi. Útočisko je chránené: plášť ani útočné kúzla v ňom nefungujú. Útočenie na Metin privoláva vlny obrancov podľa jeho úrovne. Šuterland obsahuje Metiny Lv.1–99; otvor Mapy (M) a Atlas Metinov pre presné dropy. Každá mapa má vlastných protivníkov a silnejšie odmeny. Boss pod 30 % zdravia zúri; Sura ho dokáže potlačiť Zrušením kúzla.</p><p>Vlastná 2D adaptácia šiestich klasických schopností každej školy, nie pôvodné animácie ani presná simulácia hodnôt Metin2. Postup sa ukladá v tomto prehliadači.</p>');}
 
 function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
@@ -2410,7 +2490,7 @@ function spellbook() {
 function combatManual() {
   if(!running)return;
   const resist=playerResistances();
-  modal(`<span class="eyebrow">ŠKOLA BOJA · C</span><h2>Bojový manuál</h2><p><b>WASD / šípky:</b> pohyb a prerušenie automatického nasledovania.<br><b>Klik na nepriateľa alebo Metin:</b> označiť, nasledovať živú pozíciu a automaticky útočiť v dosahu.<br><b>Klik do prázdna:</b> smerový útok, bez presunu postavy.<br><b>Kurzor:</b> orientácia bez cieľa. Medzerník útočí rovnakým smerom; môžeš ho držať.<br><b>Esc:</b> zatvoriť panel alebo zrušiť cieľ. Smrť cieľa, zmena mapy a strata zamerania okna zastavia nasledovanie.<br><b>F10 / ⛶:</b> celá obrazovka.<br><b>Y:</b> korisť v okolí; zlato a zásoby sa zbierajú automaticky.</p><h3>Typy poškodenia a tvoje odolnosti</h3><div class="battle-type-grid">${Object.entries(DAMAGE_TYPES).map(([id,spec])=>`<div style="border-left-color:${spec.color}"><b>${spec.name}</b><span>${resistanceText(resist[id])}</span></div>`).join('')}</div><p>Fyzické zásahy používajú celú obranu, prierazné 60 % a elementálne či magické 25 %. Typová odolnosť sa potom uplatní samostatne. Pozitívna odolnosť cieľa škodu znižuje, negatívna znamená slabinu. Odolnosti sú obmedzené na 75 %, slabiny na −50 %. Metiny navyše používajú vlastný pancier a základnú odolnosť. Oslabenie Zrušením kúzla znižuje kladné typové odolnosti o 15 percentuálnych bodov a potláča zúrivosť bossa.</p><p>Kritický zásah spôsobí 1,8× poškodenie pred odolnosťami. Jed a oheň môžu pôsobiť naraz; opakovanie rovnakého efektu obnoví trvanie a ponechá silnejšiu hodnotu. Základný útok zblízka je čelný výsek; kruhové útoky sú určené na obkľúčenie. Šípy letia priamo a môžu minúť pohyblivý cieľ, vybrané magické strely sledujú označeného nepriateľa.</p>${passiveCard()}<h3>Kombá všetkých škôl</h3>${Object.entries(SCHOOL_COMBOS).map(([id,combo])=>`<div class="career-card"><h3>${combo.name}</h3><p>${SCHOOLS[id].name}: ${combo.sequence.map(i=>SCHOOLS[id].skills[i][0]).join(' → ')}<br>Do 4 sekúnd, +${Math.round(combo.bonus*100)} % poškodenia alebo liečenia druhej schopnosti.</p></div>`).join('')}`);
+  modal(`<span class="eyebrow">ŠKOLA BOJA · C</span><h2>Bojový manuál</h2><p><b>WASD / šípky:</b> pohyb a prerušenie automatického nasledovania.<br><b>Klik na nepriateľa alebo Metin:</b> označiť, nasledovať živú pozíciu a automaticky útočiť v dosahu.<br><b>Klik do prázdna:</b> smerový útok, bez presunu postavy.<br><b>Kurzor:</b> orientácia bez cieľa. Medzerník útočí rovnakým smerom; môžeš ho držať.<br><b>Esc:</b> zatvoriť panel alebo zrušiť cieľ. Smrť cieľa, zmena mapy a strata zamerania okna zastavia nasledovanie.<br><b>F10 / ⛶:</b> celá obrazovka.<br><b>Y:</b> korisť v okolí; zlato a zásoby sa zbierajú automaticky.</p><h3>Automatická pomoc</h3><p>Prepínače nad hotbarom fungujú nezávisle. <b>Automierenie</b> otáča postavu na najbližšiu živú príšeru alebo Metin do 500 jednotiek; samo nezačne chodiť ani základný útok. Ručne označený cieľ má prednosť. <b>Autospell</b> používa schopnosti podľa smeru mierenia a dosahu, rešpektuje manu a cooldowny. Zahŕňa výpady, ktoré môžu premiestniť postavu. Pri nízkom zdraví uprednostní dostupné liečenie a neobnovuje ešte aktívne aury. Režimy čakajú v útočisku, otvorenom paneli a neaktívnom okne. Nastavenie sa uloží; Esc v hre oba vypne.</p><h3>Typy poškodenia a tvoje odolnosti</h3><div class="battle-type-grid">${Object.entries(DAMAGE_TYPES).map(([id,spec])=>`<div style="border-left-color:${spec.color}"><b>${spec.name}</b><span>${resistanceText(resist[id])}</span></div>`).join('')}</div><p>Fyzické zásahy používajú celú obranu, prierazné 60 % a elementálne či magické 25 %. Typová odolnosť sa potom uplatní samostatne. Pozitívna odolnosť cieľa škodu znižuje, negatívna znamená slabinu. Odolnosti sú obmedzené na 75 %, slabiny na −50 %. Metiny navyše používajú vlastný pancier a základnú odolnosť. Oslabenie Zrušením kúzla znižuje kladné typové odolnosti o 15 percentuálnych bodov a potláča zúrivosť bossa.</p><p>Kritický zásah spôsobí 1,8× poškodenie pred odolnosťami. Jed a oheň môžu pôsobiť naraz; opakovanie rovnakého efektu obnoví trvanie a ponechá silnejšiu hodnotu. Základný útok zblízka je čelný výsek; kruhové útoky sú určené na obkľúčenie. Šípy letia priamo a môžu minúť pohyblivý cieľ, vybrané magické strely sledujú označeného nepriateľa.</p>${passiveCard()}<h3>Kombá všetkých škôl</h3>${Object.entries(SCHOOL_COMBOS).map(([id,combo])=>`<div class="career-card"><h3>${combo.name}</h3><p>${SCHOOLS[id].name}: ${combo.sequence.map(i=>SCHOOLS[id].skills[i][0]).join(' → ')}<br>Do 4 sekúnd, +${Math.round(combo.bonus*100)} % poškodenia alebo liečenia druhej schopnosti.</p></div>`).join('')}`);
 }
 
 
@@ -2429,7 +2509,7 @@ function renderClasses(){$('classes').innerHTML=Object.entries(CLASSES).map(([id
 
 function updateClassHUD(){$('playerclass').textContent=role().name;$('classhint').textContent=role().desc;school().skills.forEach((s,i)=>{$(i?'skill'+(i+1):'skill').querySelector('small').textContent=s[0];$(i?'skill'+(i+1):'skill').title=`${s[0]} · stupeň ${skillProgress(skillKey(i)).rank} · ${s[3]} many · ${s[2]} s\n${s[6]}`;});$('attack').querySelector('small').textContent=p.classId==='ninja'&&p.schools.ninja==='archery'?'Streľba':p.classId==='shaman'?'Úder vejárom':'Základný útok';}
 
-function updateHUD(){baseHUD();$('capes').textContent=p.braveryCapes;$('cape-cooldown').textContent=capeCooldown>0?Math.ceil(capeCooldown):'';p.mp=Math.max(0,Math.min(maxMP(),p.mp));$('mpbar').style.width=p.mp/maxMP()*100+'%';$('mptext').textContent=Math.ceil(p.mp)+' / '+maxMP();for(let i=0;i<6;i++)$(i?'cooldown'+(i+1):'cooldown').textContent=spellCD[i]>0?Math.ceil(spellCD[i]):'';$('coords').textContent=Math.hypot(p.x-1000,p.y-1050)<190?'Útočisko · cestovanie M':farmAreaAt().name+(map().metinsOnly?' · Metiny Lv.':' · Lv.')+farmAreaLevelRange(farmAreaAt()).join('–');$('buffs').textContent=Object.entries(buffs).map(([id,t])=>{const s=Object.values(SCHOOLS).flatMap(c=>c.skills).find(s=>s[1]===id);return(s?s[0]:id)+' '+Math.ceil(t)+'s';}).join(' · ');if(p.claimed)$('questnote').textContent='✓ Dokončené · ďalšie úlohy v denníku J';updateCombatHUD();}
+function updateHUD(){baseHUD();$('capes').textContent=p.braveryCapes;$('cape-cooldown').textContent=capeCooldown>0?Math.ceil(capeCooldown):'';p.mp=Math.max(0,Math.min(maxMP(),p.mp));$('mpbar').style.width=p.mp/maxMP()*100+'%';$('mptext').textContent=Math.ceil(p.mp)+' / '+maxMP();for(let i=0;i<6;i++)$(i?'cooldown'+(i+1):'cooldown').textContent=spellCD[i]>0?Math.ceil(spellCD[i]):'';$('coords').textContent=Math.hypot(p.x-1000,p.y-1050)<190?'Útočisko · cestovanie M':farmAreaAt().name+(map().metinsOnly?' · Metiny Lv.':' · Lv.')+farmAreaLevelRange(farmAreaAt()).join('–');$('buffs').textContent=Object.entries(buffs).map(([id,t])=>{const s=Object.values(SCHOOLS).flatMap(c=>c.skills).find(s=>s[1]===id);return(s?s[0]:id)+' '+Math.ceil(t)+'s';}).join(' · ');if(p.claimed)$('questnote').textContent='✓ Dokončené · ďalšie úlohy v denníku J';updateCombatHUD();updateCombatAssistHUD();}
 
 
 // src/js/ui/fullscreen.js
@@ -2487,6 +2567,24 @@ function initializeFullscreen() {
     document.addEventListener('fullscreenerror', () => toast('Prehliadač nepovolil celú obrazovku.'));
     syncBrowserFullscreen();
   }
+}
+
+
+// src/js/ui/combat-assist.js
+function updateCombatAssistHUD() {
+  for (const [id, setting, label] of [['auto-aim','autoAim','Automierenie'],['auto-spell','autoSpell','Autospell']]) {
+    const enabled = p.combatAssist?.[setting] === true, button = $(id);
+    button.setAttribute('aria-pressed', String(enabled));
+    button.textContent = label + ': ' + (enabled ? 'ZAP' : 'VYP');
+    button.disabled = !running || paused;
+  }
+}
+
+function hotbarAction(action) {
+  if (!running || paused) return;
+  const result = action();
+  if (!paused) canvas.focus({preventScroll:true});
+  return result;
 }
 
 
@@ -2886,26 +2984,50 @@ initializeInventory();
 initializeFarming();
 initializeLoot();
 initializeFullscreen();
+initializeCombatAssist();
 loadMap(p.mapId,true);
 window.addEventListener('resize',resize);resize();
 
 requestAnimationFrame(frame);
-document.addEventListener('visibilitychange',()=>{keysClear();save();});
-window.addEventListener('keydown',e=>{if([' ','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))e.preventDefault();let key=e.key.length===1?e.key.toLowerCase():e.key;if(key==='F10'){e.preventDefault();if(!e.repeat)toggleGameFullscreen();return;}if(key==='Escape'&&fullscreenState.native&&fullscreenState.active){e.preventDefault();setGameFullscreen(false);return;}if(key==='Escape'){keysClear();if(!$('modal').hidden)closeModal();else clearCombatTarget();return;}if(!running||paused)return;if(e.target&&['BUTTON','INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)&&key===' ')return;keys[key]=true;if(e.repeat)return;if(key==='y'){e.preventDefault();pickNearbyGroundDrops();return;}if(spellKeys.includes(key))castSkill(spellKeys.indexOf(key));if(key==='b')useBraveryCape();if(key==='p')careerPanel();if(key==='k')spellbook();if(key==='m')travelMenu();if(key==='e')potion();if(key==='i')inventory();if(key==='f')shop();if(key==='j')journal();if(key==='c')combatManual();if(key==='?')help();});window.addEventListener('keyup',e=>keys[e.key.length===1?e.key.toLowerCase():e.key]=false);
+document.addEventListener('visibilitychange',()=>{keysClear();if(document.hidden)combatBlur();else combatAssist.focused=typeof document.hasFocus==='function'?document.hasFocus():true;save();});
+window.addEventListener('focus',()=>{combatAssist.focused=true;combatAssist.timer=0;});
+window.addEventListener('keydown',handleGameKeyDown);
+window.addEventListener('keyup',e=>keys[e.key.length===1?e.key.toLowerCase():e.key]=false);
+
+function handleGameKeyDown(e) {
+  const key=e.key.length===1?e.key.toLowerCase():e.key;
+  if(key==='F10'){e.preventDefault();if(!e.repeat)toggleGameFullscreen();return;}
+  if(key==='Escape'){
+    keysClear();
+    if(fullscreenState.native&&fullscreenState.active){clearCombatTarget();stopCombatAssist();e.preventDefault();setGameFullscreen(false);return;}
+    if(!$('modal').hidden)closeModal();else{clearCombatTarget();stopCombatAssist();}
+    return;
+  }
+  // Text fields retain normal editing; focused game buttons never swallow Space.
+  if(e.target&&(['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)||e.target.isContentEditable))return;
+  if(!running||paused)return;
+  if([' ','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(key))e.preventDefault();
+  keys[key]=true;if(e.repeat)return;
+  if(key==='y'){e.preventDefault();pickNearbyGroundDrops();return;}
+  if(spellKeys.includes(key))castSkill(spellKeys.indexOf(key));
+  if(key==='b')useBraveryCape();if(key==='p')careerPanel();if(key==='k')spellbook();if(key==='m')travelMenu();
+  if(key==='e')potion();if(key==='i')inventory();if(key==='f')shop();if(key==='j')journal();if(key==='c')combatManual();if(key==='?')help();
+}
+
 canvas.addEventListener('pointermove',setCombatPointer);canvas.addEventListener('pointerleave',leaveCombatPointer);window.addEventListener('blur',combatBlur);
 canvas.addEventListener('pointerdown',handleCombatClick);
-$('start').onclick=startGame;$('attack').onclick=()=>attack();$('skill').onclick=()=>attack(true);$('potion').onclick=potion;$('inventory').onclick=()=>{if(running)inventory();};$('close').onclick=closeModal;$('claim').onclick=()=>{if(p.claimed||p.kills<5||p.stones<3)return;p.claimed=true;p.gold+=150;experience(60);toast('Údolie je zachránené!\n+150 zlata · +60 skúseností');updateHUD();save();};
+$('start').onclick=startGame;$('attack').onclick=()=>hotbarAction(()=>attack());$('skill').onclick=()=>hotbarAction(()=>castSkill(0));$('potion').onclick=()=>hotbarAction(potion);$('inventory').onclick=()=>hotbarAction(inventory);$('close').onclick=closeModal;$('claim').onclick=()=>{if(p.claimed||p.kills<5||p.stones<3)return;p.claimed=true;p.gold+=150;experience(60);toast('Údolie je zachránené!\n+150 zlata · +60 skúseností');updateHUD();save();};
 $('sound').onclick=()=>{sound=!sound;$('sound').textContent='Zvuk: '+(sound?'zapnutý':'vypnutý');beep(440);};document.querySelectorAll('[data-key]').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();keys[b.dataset.key]=true;b.setPointerCapture(e.pointerId);});for(const type of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(type,()=>keys[b.dataset.key]=false);});window.addEventListener('pagehide',save);updateHUD();
 
 $('journal').onclick=journal;renderClasses();updateClassHUD();
 
-for(let i=1;i<6;i++)$('skill'+(i+1)).onclick=()=>castSkill(i);$('travel').onclick=travelMenu;$('spellbook').onclick=spellbook;updateHUD();
+for(let i=1;i<6;i++)$('skill'+(i+1)).onclick=()=>hotbarAction(()=>castSkill(i));$('travel').onclick=travelMenu;$('spellbook').onclick=spellbook;updateHUD();
 
 $('help').onclick=help;
 
 $('career').onclick=()=>careerPanel();
 
-$('bravery').onclick=useBraveryCape;
+$('bravery').onclick=()=>hotbarAction(useBraveryCape);
 
 function startGame() {
   if (pendingSaveImports.length) { openSaveImport(); return; }

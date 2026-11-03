@@ -21,8 +21,8 @@ Každú zmenu zapisuj ako odrážku pod `[Unreleased]` do `Added`, `Changed` ale
 ## Príprava vydania
 
 ```sh
-npm run release -- 0.11.1 --dry-run
-npm run release -- 0.11.1
+npm run release -- 0.12.1 --dry-run
+npm run release -- 0.12.1
 ```
 
 Použi vyššiu stabilnú verziu v tvare `major.minor.patch`. Skript odmietne rovnakú alebo nižšiu verziu aj prázdnu sekciu `Unreleased`. Pred zápisom spustí kontroly a testy. Potom:
@@ -44,13 +44,13 @@ Skontroluj diff a otvor offline HTML. Potom vytvor commit a tag, napríklad:
 
 ```sh
 git add package.json src/index.html CHANGELOG.md dist/
-git commit -m "chore(release): 0.11.1"
-git tag -a v0.11.1 -m "Grindoria 0.11.1"
+git commit -m "chore(release): 0.12.1"
+git tag -a v0.12.1 -m "Grindoria 0.12.1"
 git push origin main
-git push origin v0.11.1
+git push origin v0.12.1
 ```
 
-Porovnávacie odkazy potrebujú vzdialenú referenciu pre každú vydanú verziu. Verzie `v0.3.1`, `v0.4.0`, `v0.5.0`, `v0.6.0`, `v0.6.1`, `v0.7.0`, `v0.8.0`, `v0.8.1` `v0.9.0` `v0.10.0` a `v0.11.0` majú referenčné vetvy vytvorené cez prepojenie GitHub; ďalšie vydania označuj tagmi podľa postupu vyššie. Do referenčných vetiev ďalšie zmeny necommituj. Záznamy 0.1.0–0.3.0 sú iba história skoršieho prototypu, preto odkazujú priamo na sekcie changelogu.
+Porovnávacie odkazy potrebujú vzdialenú referenciu pre každú vydanú verziu. Verzie `v0.3.1`, `v0.4.0`, `v0.5.0`, `v0.6.0`, `v0.6.1`, `v0.7.0`, `v0.8.0`, `v0.8.1` `v0.9.0` `v0.10.0` `v0.11.0` a `v0.12.0` majú referenčné vetvy vytvorené cez prepojenie GitHub; ďalšie vydania označuj tagmi podľa postupu vyššie. Do referenčných vetiev ďalšie zmeny necommituj. Záznamy 0.1.0–0.3.0 sú iba história skoršieho prototypu, preto odkazujú priamo na sekcie changelogu.
 
 GitHub Release možno následne vytvoriť pre daný tag a priložiť `dist/Grindoria.html`. Samotné vytvorenie zdrojovej verzie nepublikuje hru na webový hosting.
 

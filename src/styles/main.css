@@ -82,3 +82,11 @@ body.native-fullscreen{margin:0;overflow:hidden}
 body.native-fullscreen>header,body.native-fullscreen .world-title,body.native-fullscreen main>footer{display:none}
 body.native-fullscreen main{padding:0;max-width:none;width:100%;margin:0}
 body.native-fullscreen .game-shell{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;min-height:0;max-height:none;border:0;border-radius:0}
+
+/* Independent combat assistance toggles stay above the skill bar. */
+.combat-assist{position:absolute;bottom:111px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:7}
+.combat-assist button{padding:7px 12px;border:1px solid #8b8059;background:#15241fe8;color:#bec5ad;border-radius:3px;font:600 10px Segoe UI,sans-serif;white-space:nowrap;cursor:pointer}
+.combat-assist button[aria-pressed="true"]{border-color:#dec17d;background:#485039;color:#ffe4a6}
+.combat-assist button:focus-visible{outline:2px solid #f2d49b;outline-offset:2px}
+@media(max-width:850px){.combat-assist{bottom:162px}}
+@media(max-width:450px){.combat-assist{bottom:204px}.combat-assist button{padding:6px 9px;font-size:10px}}
