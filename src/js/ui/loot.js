@@ -1,5 +1,5 @@
 function signedItemStat(stat, value) {
-  const amount = stat === 'crit' ? Number((Math.abs(value) * 100).toFixed(2)) + ' %' : Number(Math.abs(value).toFixed(2));
+  const amount = percentItemStat(stat) ? Number((Math.abs(value) * 100).toFixed(2)) + ' %' : Number(Math.abs(value).toFixed(2));
   return (value > 0 ? '+' : value < 0 ? '−' : '') + amount;
 }
 

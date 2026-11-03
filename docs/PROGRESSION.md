@@ -82,3 +82,7 @@ Stupeň zvyšuje životy, poškodenie aj úroveň nepriateľov. Aktívna expedí
 Postup používa kľúč `grindoria-save-v1`. Pri prvom načítaní nového systému sa zachová level a percentuálny postup k ďalšiemu. Staré globálne kováčske bonusy sa prevedú na aktuálne nasadenú zbraň bez straty ich hodnoty. Uložené mapy dostanú nové úrovne a silu nepriateľov pri zachovaní pomeru životov a časovačov.
 
 Automatické testy overujú krivku, ochranu pred opakovanými odmenami, zdroje a ceny jednotlivých ciest, skutočný účinok bonusov, migráciu a expedície. Čísla sú východiskové nastavenie pre dlhodobé farmenie; tempo celej ekonomiky ešte vyžaduje dlhšie hranie a spätnú väzbu. Hra je lokálna a uložený súbor si hráč môže upraviť; nejde o serverovú ochranu proti podvádzaniu.
+
+## Boj od 0.10.0
+
+Školy majú pasívne stupne na úrovniach 10, 25, 50 a 75. Nevyžadujú knihy ani aktívne body; prax a knihy naďalej zvyšujú aktívne schopnosti. Výbava môže dopĺňať typové odolnosti a kritický zásah. Pozri [COMBAT.md](COMBAT.md).

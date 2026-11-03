@@ -249,7 +249,7 @@ function enterRift() {
   drops.length = 0;
   mobs.forEach(m => {
     applyRiftScaling(m, tier, end.run.id);
-    m.dead = 0; m.cd = 2; m.stun = 0; m.dot = null; m.skillContributors = [];
+    m.dead = 0; m.cd = 2; m.stun = 0; m.dot = null; m.dots=[]; m.skillContributors = [];
     m.taunt = 0; m.engaged = 0;
     m.x = m.homeX ?? (m.type === 'boss' ? 1690 : m.x);
     m.y = m.homeY ?? (m.type === 'boss' ? 330 : m.y);

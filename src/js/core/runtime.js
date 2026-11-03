@@ -14,4 +14,14 @@ function frame(t){const dt=Math.min((t-last)/1000,.05);last=t;update(dt);draw();
 
 function keysClear(){Object.keys(keys).forEach(k=>keys[k]=false);}
 
-function update(dt){clock+=dt;if(!running||paused)return;attackCD=Math.max(0,attackCD-dt);slash=Math.max(0,slash-dt);ring=Math.max(0,ring-dt);updateCombat(dt);let dx=(keys.d||keys.ArrowRight?1:0)-(keys.a||keys.ArrowLeft?1:0),dy=(keys.s||keys.ArrowDown?1:0)-(keys.w||keys.ArrowUp?1:0);if(dx||dy)target=null;else if(target){dx=target.x-p.x;dy=target.y-p.y;if(Math.hypot(dx,dy)<8){target=null;dx=dy=0;}}const dist=Math.hypot(dx,dy);if(dist){face=Math.atan2(dy,dx);p.x=Math.max(45,Math.min(SIZE-45,p.x+dx/dist*speedValue()*dt));p.y=Math.max(45,Math.min(SIZE-45,p.y+dy/dist*speedValue()*dt));}if(keys[' '])attack();const safe=isSanctuary(p);if(safe){p.hp=Math.min(maxHP(),p.hp+12*dt);p.mp=Math.min(maxMP(),p.mp+dt*10);}updateMetins(dt,safe);updateEnemySpawns(dt,safe);updateGroundLoot(dt);updateBoss(dt,safe);if(p.hp<=0)death();cam.x+=(p.x-cam.x)*Math.min(1,dt*7);cam.y+=(p.y-cam.y)*Math.min(1,dt*7);for(let i=particles.length-1;i>=0;i--){particles[i].age+=dt;if(particles[i].age>1.2)particles.splice(i,1);}toastTimer-=dt;if(toastTimer<0)$('toast').style.opacity='0';saveTimer+=dt;if(saveTimer>4){save();saveTimer=0;}updateHUD();}
+function update(dt) {
+  clock+=dt;if(!running||paused)return;
+  attackCD=Math.max(0,attackCD-dt);slash=Math.max(0,slash-dt);ring=Math.max(0,ring-dt);updateCombat(dt);
+  updatePlayerControl(dt);if(keys[' '])attack();
+  const safe=isSanctuary(p);if(safe){p.hp=Math.min(maxHP(),p.hp+12*dt);p.mp=Math.min(maxMP(),p.mp+dt*10);}
+  updateMetins(dt,safe);updateEnemySpawns(dt,safe);updateGroundLoot(dt);updateBoss(dt,safe);
+  if(p.hp<=0)death();if(target&&!selectedEnemy())clearCombatTarget();
+  cam.x+=(p.x-cam.x)*Math.min(1,dt*7);cam.y+=(p.y-cam.y)*Math.min(1,dt*7);
+  for(let i=particles.length-1;i>=0;i--){particles[i].age+=dt;if(particles[i].age>1.2)particles.splice(i,1);}
+  toastTimer-=dt;if(toastTimer<0)$('toast').style.opacity='0';saveTimer+=dt;if(saveTimer>4){save();saveTimer=0;}updateHUD();
+}

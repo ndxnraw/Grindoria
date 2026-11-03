@@ -40,9 +40,10 @@ Otvor `dist/Grindoria.html` dvojklikom v prehliadači. Celá hra je v jednom sú
 | J | Denník úloh |
 | M | Cestovanie z útočiska |
 | F | Obchodník |
-| Esc | Zavrieť okno |
+| C | Bojový manuál a odolnosti |
+| Esc | Zavrieť okno alebo zrušiť cieľ |
 
-Kliknutie v teréne presúva postavu, kliknutie na blízku príšeru útočí. Ľavé kliknutie na korisť ju zdvihne; Y pozbiera predmety v okolí bez potreby kurzora. Dostupné je aj dotykové ovládanie.
+Klik na nepriateľa alebo Metin ho označí: postava sleduje jeho aktuálnu polohu a v dosahu automaticky útočí. Smrť cieľa nasledovanie zastaví. WASD, šípky alebo Esc zrušia označenie. Klik do prázdna vyvolá útok bez pohybu; bez označeného cieľa postava mieri podľa kurzora. Ľavé kliknutie na korisť ju zdvihne; Y pozbiera predmety v okolí bez potreby kurzora. Dostupné je aj dotykové ovládanie.
 
 ## Obsah
 
@@ -65,6 +66,10 @@ Postup sa ukladá v `localStorage` pod kľúčom `grindoria-save-v1`. Závisí o
 Osem typov Metinov má vlastné modely, úrovne, obtiažnosť, životy, odolnosť a loot pooly. Počas útoku pravidelne privolávajú agresívnych obrancov podľa úrovne. **M → Šuterland** vedie na mapu s 99 Metinmi, po jednom pre každú úroveň 1–99; bez boja sa tam bežné príšery nevyskytujú.
 
 **M → Atlas Metinov** ukazuje konkrétne šance na Yang, rudu, knihy, alchymistické materiály, kamene vylepšenia, výbavu a relikvie. Kamene vylepšenia používa kováč od +4. Všetky dropy najprv dopadnú na zem a používajú aktuálne pravidlá zbierania. Pozri [METINS.md](docs/METINS.md).
+
+## Boj a schopnosti
+
+48 aktívnych schopností má vlastné animácie, náklady many a cooldowny. Sedem typov poškodenia používa odlišné odolnosti a slabiny. Každá škola získava pasívnu schopnosť na úrovniach 10, 25, 50 a 75 a vlastnú dvojicu schopností pre kombo do štyroch sekúnd. Jed a popálenie môžu pôsobiť súčasne; šípy letia v smere mierenia a vybrané magické strely sledujú cieľ. **K** ukáže účel schopností, pasívny bonus a kombo; **C** otvorí pravidlá boja. Pozri [COMBAT.md](docs/COMBAT.md).
 
 ## Korisť na zemi
 
@@ -114,7 +119,7 @@ npm run check:dist
 
 Testy pokrývajú všetkých 48 schopností, postup, ukladanie, mapy, respawn a prípravu vydania. Nenahrádzajú vizuálnu kontrolu v prehliadači. Rovnaké príkazy používa GitHub Actions na Windows a Linuxe.
 
-Zmeny zapisuj pod `[Unreleased]` v [CHANGELOG.md](CHANGELOG.md). Príkaz `npm run release -- 0.9.1` presunie poznámky do novej verzie, pridá dátum a odkazy, zosúladí verziu hry a vytvorí offline súbor. Sám necommituje ani neposiela zmeny na GitHub.
+Zmeny zapisuj pod `[Unreleased]` v [CHANGELOG.md](CHANGELOG.md). Príkaz `npm run release -- 0.10.1` presunie poznámky do novej verzie, pridá dátum a odkazy, zosúladí verziu hry a vytvorí offline súbor. Sám necommituje ani neposiela zmeny na GitHub.
 
 Podrobnosti: [vydávanie](docs/RELEASING.md), [architektúra](docs/ARCHITECTURE.md), [prispievanie](CONTRIBUTING.md).
 

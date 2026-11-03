@@ -1,0 +1,102 @@
+const combatAim = { inside: false, clientX: 0, clientY: 0 };
+let playerMoving = false;
+
+function selectedEnemy() {
+  return target && mobs.includes(target) && target.hp > 0 ? target : null;
+}
+
+function clearCombatTarget() { target = null; $('target-panel').hidden = true; }
+
+function setCombatPointer(event) {
+  combatAim.inside = true; combatAim.clientX = event.clientX; combatAim.clientY = event.clientY;
+  setLootPointer(event); updateFacing();
+}
+
+function leaveCombatPointer() { combatAim.inside = false; clearLootPointer(); }
+
+function combatBlur() { keysClear(); leaveCombatPointer(); clearCombatTarget(); }
+
+function cursorWorld() {
+  const rect = canvas.getBoundingClientRect();
+  return world(combatAim.clientX - (rect.left || 0), combatAim.clientY - (rect.top || 0));
+}
+
+function updateFacing() {
+  const enemy = selectedEnemy();
+  if (enemy) face = Math.atan2(enemy.y - p.y, enemy.x - p.x);
+  else if (combatAim.inside) { const aim = cursorWorld(); if (Math.hypot(aim.x-p.x,aim.y-p.y)>3) face=Math.atan2(aim.y-p.y,aim.x-p.x); }
+}
+
+function enemyInArc(m, range, angle = face, halfArc = BATTLE.halfArc) {
+  if (m.hp <= 0) return false;
+  const dx=m.x-p.x,dy=m.y-p.y,d=Math.hypot(dx,dy);
+  return d <= range && (d < 3 || (dx*Math.cos(angle)+dy*Math.sin(angle))/d >= Math.cos(halfArc));
+}
+
+function aimEnemy(range) {
+  const selected = selectedEnemy();
+  if (selected) return Math.hypot(selected.x-p.x,selected.y-p.y)<=range ? selected : null;
+  return mobs.filter(m=>enemyInArc(m,range)).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0] || null;
+}
+
+function aimedPoint(range) {
+  if (combatAim.inside) {
+    const aim=cursorWorld(),d=Math.hypot(aim.x-p.x,aim.y-p.y),distance=Math.min(range,d);
+    return {x:p.x+Math.cos(face)*distance,y:p.y+Math.sin(face)*distance};
+  }
+  return {x:p.x+Math.cos(face)*range,y:p.y+Math.sin(face)*range};
+}
+
+function enemyAtPointer(x,y) {
+  return mobs.filter(m=>m.hp>0).sort((a,b)=>b.y-a.y).find(m=>{
+    if(m.type==='stone')return metinHitTest(m,x,y);
+    const a=screen(m.x,m.y),width=m.type==='boss'?48:m.skin==='wolf'?31:38,height=m.type==='boss'?112:m.skin==='wolf'?48:74;
+    return Math.abs(x-a.x)<=width && y>=a.y-height && y<=a.y+9;
+  }) || null;
+}
+
+function rangedBasic() { return p.classId==='ninja' && p.schools.ninja==='archery'; }
+function basicAttackRange() { return rangedBasic()?BATTLE.rangedRange:BATTLE.meleeRange; }
+
+function selectCombatTarget(enemy) {
+  if(!enemy||enemy.hp<=0||!mobs.includes(enemy))return false;
+  target=enemy; updateFacing(); updateCombatHUD();
+  if(Math.hypot(enemy.x-p.x,enemy.y-p.y)<=basicAttackRange())attack();
+  return true;
+}
+
+function handleCombatClick(event) {
+  if(event.button!==undefined&&event.button!==0||!running||paused)return;
+  setCombatPointer(event);
+  const loot=groundDropAt(lootPointer.x,lootPointer.y);
+  if(loot){pickUpGroundDrop(loot.id);canvas.focus();return;}
+  const enemy=enemyAtPointer(lootPointer.x,lootPointer.y);
+  if(enemy)selectCombatTarget(enemy);
+  else{clearCombatTarget();updateFacing();attack();}
+  canvas.focus();
+}
+
+function movePlayer(dx,dy,distance) {
+  const d=Math.hypot(dx,dy);if(!d||distance<=0)return;
+  const oldX=p.x,oldY=p.y;
+  p.x=Math.max(45,Math.min(SIZE-45,p.x+dx/d*distance));p.y=Math.max(45,Math.min(SIZE-45,p.y+dy/d*distance));
+  playerMoving=Math.hypot(p.x-oldX,p.y-oldY)>.001;
+}
+
+function updatePlayerControl(dt) {
+  playerMoving=false;
+  if(target&&!selectedEnemy())clearCombatTarget();
+  const dx=(keys.d||keys.ArrowRight?1:0)-(keys.a||keys.ArrowLeft?1:0),dy=(keys.s||keys.ArrowDown?1:0)-(keys.w||keys.ArrowUp?1:0);
+  if(dx||dy){clearCombatTarget();movePlayer(dx,dy,speedValue()*dt);if(!combatAim.inside)face=Math.atan2(dy,dx);}
+  else{
+    const enemy=selectedEnemy();
+    if(enemy){
+      if(isSanctuary(enemy)){clearCombatTarget();return;}
+      const d=Math.hypot(enemy.x-p.x,enemy.y-p.y),stop=isSanctuary(p)?0:rangedBasic()?BATTLE.rangedStop:BATTLE.meleeStop;
+      if(d>stop)movePlayer(enemy.x-p.x,enemy.y-p.y,Math.min(d-stop,speedValue()*dt));
+      updateFacing();
+      if(Math.hypot(enemy.x-p.x,enemy.y-p.y)<=basicAttackRange()&&castPose<=.2)attack();
+    }
+  }
+  updateFacing();
+}

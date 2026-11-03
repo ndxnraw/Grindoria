@@ -95,7 +95,7 @@ function hydrateSpawnPopulation(old) {
     return restoreMetinGuards(generated.map(m => {
       const prior = saved.get(m.spawnId);
       if (m.type === 'stone') return restoreMetin(m, prior);
-      return prior ? { ...m, ...prior, dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0, roamTarget: null, roamWait: rand() * 4, returning: false } : m;
+      return prior ? { ...m, ...cloneEnemyState(prior), dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0, roamTarget: null, roamWait: rand() * 4, returning: false } : m;
     }), old.mobs);
   }
   // Upgrade old sparse populations into distinct new slots without reviving their dead.
@@ -114,6 +114,7 @@ function hydrateSpawnPopulation(old) {
     m.dead = Math.max(0, prior.dead || 0); m.cd = Math.max(0, prior.cd || 0);
     m.skillContributors = [...(prior.skillContributors || [])];
     if (prior.dot) m.dot = { ...prior.dot };
+    m.dots=(prior.dots||[]).map(dot=>({...dot}));
   }
   return restoreMetinGuards(generated, old.mobs);
 }
@@ -123,7 +124,7 @@ function loadLegacyRift(old) {
   return old.mobs.map((prior, index) => {
     const id = 'legacy-rift:' + index, x = prior.homeX ?? prior.x, y = prior.homeY ?? prior.y;
     spawnPoints.push({ id, kind: prior.type === 'wolf' ? 'pack' : prior.type, x, y, area: farmAreaAt(prior).id, offset: 0 });
-    return upgradeLegacyMetin({ ...prior, spawnId: id + ':0', spawnPointId: id, spawnSlot: 0, variant: 'normal', respawnSeconds: prior.type === 'boss' ? 40 : prior.type === 'stone' ? 18 : 5, taunt: 0, engaged: 0, stun: 0, windup: 0 }, spawnPoints.at(-1));
+    return upgradeLegacyMetin({ ...cloneEnemyState(prior), spawnId: id + ':0', spawnPointId: id, spawnSlot: 0, variant: 'normal', respawnSeconds: prior.type === 'boss' ? 40 : prior.type === 'stone' ? 18 : 5, taunt: 0, engaged: 0, stun: 0, windup: 0 }, spawnPoints.at(-1));
   });
 }
 
@@ -131,7 +132,7 @@ function respawnEnemy(m) {
   const point = spawnPoints.find(p => p.id === m.spawnPointId);
   if (!point || legacyRiftLayout) {
     m.hp = m.max; m.x = m.homeX ?? m.x; m.y = m.homeY ?? m.y;
-    m.dead = 0; m.cd = 1; m.taunt = 0; m.engaged = 0; m.stun = 0; m.slow = 0; m.dot = null; m.windup = 0; m.skillContributors = [];
+    m.dead = 0; m.cd = 1; m.taunt = 0; m.engaged = 0; m.stun = 0; m.slow = 0; m.dot = null; m.dots=[]; m.windup = 0; m.skillContributors = [];
     m.roamTarget = null; m.roamWait = rand() * 4; m.returning = false;
     if (m.type === 'stone') { m.metinCombat = 0; m.metinWaveTimer = 0; m.metinGeneration = (m.metinGeneration || 0) + 1; }
     return;

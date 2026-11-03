@@ -21,7 +21,10 @@ Funkcie môžu medzi súbormi volať zdieľané pomenované funkcie. Načítanie
 | --- | --- |
 | `data/` | `CLASSES`, `SCHOOLS`, `MAPS`, `EQUIPMENT`, `METIN_TYPES`, rozmery predmetov a herné hodnoty |
 | `core/` | Stav, náhodný generátor, kamera, časovanie a aktualizácia sveta |
-| `systems/combat.js` | Útoky, kúzla, mana, stavy, strely a AI bossa |
+| `systems/combat.js` | Zásahy, zdravie, mana, stavy a AI bossa |
+| `systems/targeting.js` | Živý cieľ, kurzor, čelné výseky, klávesnicový pohyb a nasledovanie |
+| `systems/battle.js` | Typové odolnosti, pasívne bonusy, kombá, súbežné stavy a pohyb striel |
+| `systems/abilities.js` | Aktivácia 48 schopností, mana, cooldowny a smerový základný útok |
 | `systems/progression.js` | Skúsenosti, výbava, vlastnosti a odmeny |
 | `systems/world.js` | Generovanie, cestovanie, snímky máp a uloženie |
 | `systems/career.js` | EXP ekonomika, migrácia, tréning, schopnosti, biológia, alchýmia, relikvie, špecializácia a expedície |
@@ -67,3 +70,11 @@ Korisť z nepriateľov vytvára `spawnGroundDrop()`. Materiály, predmety a reli
 `renderBuild()` pripraví deterministický obsah bez zápisu; testy a skúšobné vydanie nemenia publikované súbory. `check:dist` porovná commitnuté HTML so zdrojmi pred spustením testov v CI.
 
 Zostavenie vytvorí `dist/Grindoria.html` a totožné `dist/index.html`; oba sa verzujú v repozitári. Pri zostavení sa odstránia zastarané HTML názvy v tomto priečinku. Obsah vloží cez náhradné funkcie, aby JavaScriptové znaky `$` nemenili text počas zostavovania. Vložený kód prejde syntaktickou kontrolou a výstup nesmie obsahovať externé runtime závislosti.
+
+## Ovládanie a boj
+
+`target` je referencia na živého nepriateľa z aktuálneho poľa `mobs`, nikdy bod na mape. Klávesnicový pohyb označenie zruší; prenasledovanie číta polohu cieľa každý krok. Klik najprv skúša korisť, potom nepriateľa, inak len útočí. Smrť, zmena mapy a strata zamerania okna čistia dočasné zameranie. Žiadny bod kliknutia sa neukladá.
+
+`data/battle.js` definuje sedem typov, profily odolností, metadáta schopností, osem pasívnych bonusov a osem komb. Animácie 48 aktivácií odlišuje `render/battle.js`; panel cieľa, knihu a manuál spravuje `ui/battle.js`. HUD prekresľuje detail cieľa iba pri zmene údajov.
+
+Jed a oheň sú samostatné položky `dots`; staré `dot` sa importuje raz. Snímky svetov, obnova populácie a Metinov používajú hlbokú kópiu stavov. Pasívny stupeň sa odvodzuje od levelu, bez ďalšej migrácie kariéry. Zameranie, kombo, strely a animácie sú dočasné. Podrobnosti a poradie výpočtov: [COMBAT.md](COMBAT.md).

@@ -1,10 +1,11 @@
-function hit(m, amount) {
+function hit(m, amount, type='physical') {
   if (m.hp <= 0 || !Number.isFinite(amount) || amount <= 0) return 0;
-  const damage = m.type === 'stone' ? metinDamage(m, amount) : amount, actual = Math.min(m.hp, damage);
+  const damage = m.type === 'stone' ? metinDamage(m, amount, type) : resolveEnemyDamage(m, amount, type), actual = Math.min(m.hp, damage);
   if (m.type === 'stone') registerMetinAttack(m); else provokeEnemyGroup(m);
   m.hp = Math.max(0, m.hp - damage); m.hit = .15;
   float('-' + actual, m.x, m.y - 65); beep(170);
   if (m.hp <= 0) {
+    if(target===m)clearCombatTarget();m.dot=null;m.dots=[];
     m.windup = 0; m.dead = m.metinParentId ? 1 : m.respawnSeconds || (m.type === 'boss' ? 40 : m.type === 'stone' ? 18 : 5);
     if (m.type === 'boss') p.bossKills++; else p[m.type === 'stone' ? 'stones' : 'kills']++;
     const gained = enemyXP(m); careerKill(m);
@@ -27,13 +28,13 @@ function potion(){return drinkPotion(false);}
 
 function drinkPotion(allowPaused=false){if(!running||(paused&&!allowPaused)||p.hp<=0)return false;if(p.potions<=0){toast('Nemáš elixíry. Navštív obchodníka (F).');return;}if(p.hp>=maxHP()){toast('Zdravie máš plné.');return;}p.potions--;p.hp=Math.min(maxHP(),p.hp+65);float('+65 zdravia',p.x,p.y-65,'#a9e0ac');beep(520,.2);updateHUD();save();return true;}
 
-function death(){p.mp=maxMP();shots.length=0;Object.keys(buffs).forEach(k=>delete buffs[k]);p.gold=Math.floor(p.gold*.9);p.x=1000;p.y=1160;p.hp=maxHP();target=null;mobs.forEach(m=>m.cd=2);toast('Záchrana v útočisku\nStratil si 10 % zlata.');save();}
+function death(){resetCombatFlow();p.mp=maxMP();shots.length=0;Object.keys(buffs).forEach(k=>delete buffs[k]);p.gold=Math.floor(p.gold*.9);p.x=1000;p.y=1160;p.hp=maxHP();target=null;mobs.forEach(m=>m.cd=2);toast('Záchrana v útočisku\nStratil si 10 % zlata.');save();}
 
 function school(){return SCHOOLS[p.schools[p.classId]];}
 
 function active(id){return (buffs[id]||0)>0;}
 
-function maxMP(){return 100+p.level*8+p.intelligence*5+careerBonuses().mp+equipmentBonuses().mp;}
+function maxMP(){return 100+p.level*8+p.intelligence*5+careerBonuses().mp+equipmentBonuses().mp+passiveBonuses().mp;}
 
 function attackPower(){return (active('aura')||active('enchanted')?1.45:1)*(active('attackUp')?1.35:1);}
 
@@ -41,35 +42,53 @@ function armorBonus(){return active('guard')?12:active('armor')?8:0;}
 
 function speedValue(){return (role().speed+p.dexterity*2+equipmentBonuses().speed)*(active('speed')?1.45:active('berserk')?1.22:1);}
 
-function criticalChance(){return Math.min(.8,role().crit+p.dexterity*.01+careerBonuses().crit+equipmentBonuses().crit+(active('dragonPower')?.25:0));}
+function criticalChance(){return Math.min(.8,role().crit+p.dexterity*.01+careerBonuses().crit+equipmentBonuses().crit+passiveBonuses().crit+(active('dragonPower')?.25:0));}
 
 function nearest(range=500,from=p){return mobs.filter(m=>m.hp>0&&Math.hypot(m.x-from.x,m.y-from.y)<range).sort((a,b)=>Math.hypot(a.x-from.x,a.y-from.y)-Math.hypot(b.x-from.x,b.y-from.y))[0];}
 
-function hurtMob(m,mult=1,magic=false,key=castingSkillKey){if(!m||m.hp<=0)return;if(key)rememberSkill(m,key);const crit=rand()<criticalChance(),raw=(damage()+(magic?p.intelligence*4+careerBonuses().magic+equipmentBonuses().magic:0))*mult*(key?skillFactor(key):1)*(crit?1.8:1),amount=Math.max(1,Math.round(raw*(.94+rand()*.12)));const actual=hit(m,amount);if(active('enchanted'))p.hp=Math.min(maxHP(),p.hp+actual*.15);if(crit)float('KRITICKÝ!',m.x,m.y-90,'#f2bc70');}
+function hurtMob(m,mult=1,magic=false,key=castingSkillKey,opts={}) {
+  if(!m||m.hp<=0)return 0;if(key)rememberSkill(m,key);
+  const type=opts.type||(key?skillDamageType(key):magic?'arcane':basicDamageType()),critical=rand()<criticalChance(),multiplier=opts.multiplier??castingMultiplier;
+  const magicBonus=!['physical','piercing'].includes(type)?p.intelligence*4+careerBonuses().magic+equipmentBonuses().magic:0;
+  const raw=(damage()+magicBonus)*mult*(key?skillFactor(key):1)*multiplier*(1+(passiveBonuses().outgoing[type]||0))*(critical?1.8:1);
+  const actual=hit(m,Math.max(1,Math.round(raw*(.94+rand()*.12))),type);
+  if(actual>0&&opts.basic)registerBasicHit(m);
+  if(active('enchanted'))p.hp=Math.min(maxHP(),p.hp+actual*.15);
+  if(critical&&actual>0)float('KRITICKÝ!',m.x,m.y-90,'#f2bc70');return actual;
+}
 
-function areaHit(x,y,r,mult,opts={}){for(const m of mobs)if(m.hp>0&&Math.hypot(m.x-x,(m.y-y)*.85)<r){hurtMob(m,mult,true,opts.skillKey||castingSkillKey);if(opts.stun)m.stun=Math.max(m.stun||0,opts.stun*(m.type==='boss'?.4:1));if(opts.dot&&m.hp>0)m.dot={time:6,tick:1,power:Math.max(3,Math.round(damage()*.18)),kind:opts.dot};if(opts.knock&&m.type!=='stone'){let d=Math.hypot(m.x-x,m.y-y)||1;m.x=Math.max(45,Math.min(SIZE-45,m.x+(m.x-x)/d*45));m.y=Math.max(45,Math.min(SIZE-45,m.y+(m.y-y)/d*45));}}}
+function areaHit(x,y,r,mult,opts={}) {
+  const key=opts.skillKey||castingSkillKey,type=opts.type||(key?skillDamageType(key):'arcane');
+  for(const m of mobs)if(m.hp>0&&Math.hypot(m.x-x,(m.y-y)*.85)<r){hurtMob(m,mult,!['physical','piercing'].includes(type),key,{...opts,type});applyCombatControl(m,opts,x,y);}
+}
 
-function shoot(m,mult,style='bolt',opts={}){if(!m)return;opts={...opts,skillKey:opts.skillKey||castingSkillKey};shots.push({x:p.x,y:p.y-25,target:m,mult,style,color:role().color,opts,life:3});fx('cast',p.x,p.y,role().color,.35);}
+function shoot(m,mult,style='bolt',opts={}) {
+  const key=Object.hasOwn(opts,'skillKey')?opts.skillKey:castingSkillKey,type=opts.type||(key?skillDamageType(key):SKILL_DAMAGE[style]||(style==='arrow'?'piercing':'arcane'));
+  const angle=opts.angle??(m?Math.atan2(m.y-p.y,m.x-p.x):face),range=opts.range||500;
+  const ballistic=style==='arrow'||style.includes('Arrow');
+  shots.push({x:p.x,y:p.y-25,target:ballistic?null:m,mult,style,color:DAMAGE_TYPES[type].color,opts:{...opts,type,skillKey:key,multiplier:opts.multiplier??castingMultiplier},life:range/650+1,remainingRange:range,vx:Math.cos(angle),vy:Math.sin(angle)});
+  fx('cast',p.x,p.y,DAMAGE_TYPES[type].color,.35);return true;
+}
 
-function takeDamage(amount,source){let factor=active('bless')?.7:1;if(active('guard'))factor*=.8;if(active('darkGuard')&&p.mp>=4){factor*=.67;p.mp=Math.max(0,p.mp-4);}if(active('berserk'))factor*=1.2;if(active('fear')&&source&&Math.hypot(source.x-p.x,source.y-p.y)<300)factor*=.65;const n=Math.max(1,Math.round((amount-defense())*factor));p.hp-=n;float('-'+n,p.x,p.y-70,'#eda28d');if(source&&(active('reflect')||active('armor'))&&source.hp>0)hit(source,Math.max(1,Math.round(n*(active('reflect')?.35:.2))));}
+function takeDamage(amount,source,type=enemyDamageType(source)) {
+  let factor=active('bless')?.7:1;if(active('guard'))factor*=.8;
+  if(active('darkGuard')&&p.mp>=4){factor*=.67;p.mp=Math.max(0,p.mp-4);}
+  if(active('berserk'))factor*=1.2;if(active('fear')&&source&&Math.hypot(source.x-p.x,source.y-p.y)<300)factor*=.65;
+  const armorFactor=type==='physical'?1:type==='piercing'?.6:.25;
+  const n=Math.max(1,Math.round((amount-defense()*armorFactor)*factor*(1-(playerResistances()[type]||0))));
+  p.hp-=n;float('-'+n,p.x,p.y-70,DAMAGE_TYPES[type]?.color||'#eda28d');
+  if(source&&(active('reflect')||active('armor'))&&source.hp>0)hit(source,Math.max(1,Math.round(n*(active('reflect')?.35:.2))),'arcane');
+  return n;
+}
 
-function castSkill(index){if(!running||paused||p.hp<=0||index<0||index>5)return false;const s=school().skills[index],[name,kind,cd,cost,mult,range]=s;if(isSanctuary(p)&&!['heal','aura','berserk','guard','enchanted','armor','fear','stealth','speed','spirit','darkGuard','bless','reflect','dragonPower','attackUp'].includes(kind)){toast('Útočisko je chránené. Zaútoč až mimo neho.');return false;}if(spellCD[index]>0)return false;if(p.mp<cost){toast('Nedostatok many · priebežne sa obnovuje.');return false;}const noTarget=['spin','stomp','poisonCloud','dragonSpin','flameBurst','dragonRoar','dragonBreath','beam','finger','cleave','burst','triple','heal','aura','berserk','guard','enchanted','armor','fear','stealth','speed','spirit','darkGuard','bless','reflect','dragonPower','attackUp'];const m=nearest(range||500);if(!m&&!noTarget.includes(kind)){toast('Priblíž sa k cieľu.');return false;}if(kind==='burst'&&p.hp<=maxHP()*.08){toast('Na Životnú silu potrebuješ viac zdravia.');return false;}p.mp-=cost;castingSkillKey=skillKey(index);if(m)rememberSkill(m,castingSkillKey);spellCD[index]=cd*(1-(skillProgress(castingSkillKey).rank-1)*.01);skillCD=spellCD[0];castPose=.6;castStyle=kind;beep(p.classId==='sura'?160:p.classId==='shaman'?620:320,.17);float(name,p.x,p.y-100,role().color);if(m)face=Math.atan2(m.y-p.y,m.x-p.x);
-if(['aura','berserk','guard','enchanted','armor','fear','stealth','speed','spirit','darkGuard','bless','reflect','dragonPower','attackUp'].includes(kind)){buffs[kind]=(kind==='fear'||kind==='berserk'?10:kind==='stealth'?8:12)*skillFactor(castingSkillKey);if(kind==='spirit')spiritTick=0;fx(kind==='stealth'?'smoke':'aura',p.x,p.y,role().color,1.1);}
-else if(kind==='heal'){const n=Math.min(maxHP()-p.hp,Math.round((45+p.level*5+p.intelligence*4+careerBonuses().magic)*skillFactor(castingSkillKey)));p.hp+=n;fx('heal',p.x,p.y,'#b4f4c1',1);float('+'+Math.round(n)+' zdravia',p.x,p.y-65,'#b4f4c1');}
-else if(['dash','poisonDash','roll'].includes(kind)){if(m){const d=Math.hypot(m.x-p.x,m.y-p.y)||1,old={x:p.x,y:p.y};p.x=Math.max(45,Math.min(SIZE-45,m.x-(m.x-p.x)/d*40));p.y=Math.max(45,Math.min(SIZE-45,m.y-(m.y-p.y)/d*40));target=null;fx('dash',old.x,old.y,role().color,.5);fx(kind==='roll'?'spin':'slash');areaHit(p.x,p.y,kind==='roll'?155:90,mult,{dot:kind==='poisonDash'?'poison':null,stun:kind==='dash'?.8:0});}}
-else if(kind==='ambush'){hurtMob(m,mult*(active('stealth')?2:1),true);fx('cross',m.x,m.y,role().color,.6);}
-else if(['darkBolt','darkOrb','spiritBolt','fireArrow','poisonArrow','talisman','boltStun','dispel'].includes(kind)){shoot(m,mult,kind,{radius:kind==='darkOrb'?100:kind==='fireArrow'?80:0,dot:kind==='poisonArrow'?'poison':kind==='fireArrow'?'fire':null,stun:kind==='boltStun'?1.8:0,slow:kind==='spiritBolt'?4:0,dispel:kind==='dispel'});}
-else if(kind==='multiShot'){for(let j=0;j<3;j++)shoot(m,mult/3,'arrow',{delay:j*.12});}
-else if(kind==='arrowRain'){mobs.filter(n=>n.hp>0&&Math.hypot(n.x-p.x,n.y-p.y)<range).slice(0,5).forEach(n=>shoot(n,mult,'arrow'));}
-else if(['lightning','spark','storm','chain'].includes(kind)){const list=kind==='chain'?mobs.filter(n=>n.hp>0&&Math.hypot(n.x-m.x,n.y-m.y)<220).slice(0,4):[m];for(const n of list){fx('lightning',n.x,n.y,p.classId==='shaman'?'#b9eaff':'#ffe7a4',.7);if(kind==='storm')areaHit(n.x,n.y,140,mult,{stun:.8});else{hurtMob(n,mult,true);if(kind==='spark')n.stun=1;}}}
-else if(kind==='ground'){fx('ground',m.x,m.y,role().color,.9);areaHit(m.x,m.y,140,mult,{knock:true});}
-else if(['beam','dragonBreath','finger','cleave'].includes(kind)){fx(kind==='dragonBreath'?'dragon':kind==='finger'?'finger':'beam',p.x,p.y,role().color,.8);const ux=Math.cos(face),uy=Math.sin(face);for(const n of mobs){let dx=n.x-p.x,dy=n.y-p.y,along=dx*ux+dy*uy,across=Math.abs(dx*uy-dy*ux);if(n.hp>0&&along>-30&&along<range&&across<(kind==='dragonBreath'?100:65)){hurtMob(n,mult,true);if(kind==='dragonBreath')n.dot={time:6,tick:1,power:Math.round(damage()*.18),kind:'fire'};}}}
-else if(kind==='triple'){const n=nearest(range);if(n)for(let j=0;j<3;j++){hurtMob(n,mult/3);fx('slash',n.x,n.y-5,role().color,.35+j*.13,face+j*1.3);}}
-else{if(kind==='burst')p.hp-=maxHP()*.08;fx(kind==='poisonCloud'?'poison':kind==='dragonRoar'?'dragon':kind==='flameBurst'?'fire':kind==='stomp'||kind==='burst'?'ground':'spin',p.x,p.y,role().color,.85);areaHit(p.x,p.y,range,mult,{dot:kind==='poisonCloud'?'poison':kind==='dragonRoar'||kind==='flameBurst'?'fire':null,stun:kind==='stomp'?1.7:0,knock:kind==='dragonSpin'});}
-if(kind!=='stealth')delete buffs.stealth;castingSkillKey=null;updateHUD();return true;}
-
-function attack(skill=false){if(skill)return castSkill(0);if(!running||paused||p.hp<=0||attackCD>0||isSanctuary(p))return;attackCD=(p.classId==='ninja'?.32:.42)*(active('berserk')?.6:1);slash=.22;castStyle='basic';const ranged=p.classId==='ninja'&&p.schools.ninja==='archery';if(ranged){const m=nearest(500);if(m)shoot(m,1,'arrow');}else{fx(p.classId==='ninja'?'cross':p.classId==='shaman'?'fan':'slash',p.x,p.y,role().color,.25);for(const m of mobs)if(m.hp>0&&Math.hypot(m.x-p.x,(m.y-p.y)*.85)<95)hurtMob(m);}delete buffs.stealth;beep(230);}
-
-function updateCombat(dt){castPose=Math.max(0,castPose-dt);for(let i=0;i<6;i++)spellCD[i]=Math.max(0,spellCD[i]-dt);skillCD=spellCD[0];for(const id of Object.keys(buffs)){buffs[id]-=dt;if(buffs[id]<=0)delete buffs[id];}p.mp=Math.min(maxMP(),p.mp+dt*(active('speed')?11:7));for(let i=effects.length-1;i>=0;i--){effects[i].life-=dt;if(effects[i].life<=0)effects.splice(i,1);}for(const m of mobs){m.stun=Math.max(0,(m.stun||0)-dt);m.slow=Math.max(0,(m.slow||0)-dt);m.suppressed=Math.max(0,(m.suppressed||0)-dt);if(m.hp>0&&m.dot){m.dot.time-=dt;m.dot.tick-=dt;if(m.dot.tick<=0){m.dot.tick+=1;hit(m,m.dot.power);fx(m.dot.kind==='poison'?'poison':'fire',m.x,m.y,m.dot.kind==='poison'?'#a9d06e':'#f5ac60',.4);}if(m.dot.time<=0)m.dot=null;}}for(let i=shots.length-1;i>=0;i--){const b=shots[i];b.life-=dt;if(b.opts.delay>0){b.opts.delay-=dt;continue;}if(b.life<=0||b.target.hp<=0){shots.splice(i,1);continue;}const dx=b.target.x-b.x,dy=b.target.y-15-b.y,d=Math.hypot(dx,dy);if(d<650*dt+12){const m=b.target;if(b.opts.radius)areaHit(m.x,m.y,b.opts.radius,b.mult,{dot:b.opts.dot,stun:b.opts.stun,skillKey:b.opts.skillKey});else{hurtMob(m,b.mult,b.style!=='arrow',b.opts.skillKey);if(b.opts.dot&&m.hp>0)m.dot={time:6,tick:1,power:Math.max(3,Math.round(damage()*.18)),kind:b.opts.dot};if(b.opts.stun)m.stun=b.opts.stun;}if(b.opts.dispel)m.suppressed=8;if(b.opts.slow)m.slow=b.opts.slow;fx(b.style==='darkOrb'?'dark':b.style==='fireArrow'?'fire':'impact',m.x,m.y,b.color,.6);shots.splice(i,1);}else{b.x+=dx/d*650*dt;b.y+=dy/d*650*dt;}}if(active('spirit')&&!isSanctuary(p)){spiritTick-=dt;if(spiritTick<=0){spiritTick=1.5;const m=nearest(430);if(m)shoot(m,.85,'fireArrow',{skillKey:'black:3'});}}}
+function updateCombat(dt) {
+  updateCombatFlow(dt);castPose=Math.max(0,castPose-dt);for(let i=0;i<6;i++)spellCD[i]=Math.max(0,spellCD[i]-dt);skillCD=spellCD[0];
+  for(const id of Object.keys(buffs)){buffs[id]-=dt;if(buffs[id]<=0)delete buffs[id];}
+  p.mp=Math.min(maxMP(),p.mp+dt*((active('speed')&&schoolId()==='healing'?11:7)+passiveBonuses().manaRegen));
+  for(let i=effects.length-1;i>=0;i--){effects[i].life-=dt;if(effects[i].life<=0)effects.splice(i,1);}
+  for(const m of mobs){m.stun=Math.max(0,(m.stun||0)-dt);m.slow=Math.max(0,(m.slow||0)-dt);m.suppressed=Math.max(0,(m.suppressed||0)-dt);updateDamageOverTime(m,dt);}
+  updateShots(dt);
+  if(active('spirit')&&!isSanctuary(p)){spiritTick-=dt;if(spiritTick<=0){spiritTick=1.5;const m=nearest(430);if(m)shoot(m,.85,'fireArrow',{skillKey:'black:3',type:'fire',multiplier:1});}}
+}
 
 function updateBoss(dt,safe){const b=mobs.find(m=>m.type==='boss');if(!b||b.hp<=0||b.stun>0)return;const d=Math.hypot(b.x-p.x,b.y-p.y);if(safe||(!(b.taunt>0||b.engaged>0)&&d>500)||active('stealth')){b.windup=0;b.taunt=0;b.engaged=0;const home=Math.hypot(b.x-1690,b.y-330);if(home>4)walkEnemy(b,1690,330,90,dt);b.hp=Math.min(b.max,b.hp+10*dt);return;}const enraged=b.hp<b.max*.3&&!(b.suppressed>0);if(b.windup>0){b.windup-=dt;if(b.windup<=0){b.cd=enraged?2:3;if(d<120){takeDamage(Math.round(26*(b.attackScale||map().scale)*(enraged?1.3:1)),b);beep(90,.25);}else float('ÚHYB!',p.x,p.y-75,'#acd9b0');}return;}if(d<100&&b.cd<=0){b.windup=1;beep(100,.2);return;}if(d>65){const speed=(enraged?115:90)*(b.slow>0?.55:1)*(active('fear')?.65:1);walkEnemy(b,p.x,p.y,speed,dt);}}

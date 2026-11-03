@@ -15,7 +15,7 @@ function inventoryEntry(id) {
 }
 
 function itemBonusText(item) {
-  return Object.entries(itemBonuses(item)).filter(([, value]) => value).map(([stat, value]) => `<span class="bonus-line">${ITEM_STATS[stat]} <b>+${stat === 'crit' ? (value * 100).toFixed(1) + ' %' : value}</b></span>`).join('');
+  return Object.entries(itemBonuses(item)).filter(([, value]) => value).map(([stat, value]) => `<span class="bonus-line">${ITEM_STATS[stat]} <b>+${percentItemStat(stat) ? (value * 100).toFixed(1) + ' %' : value}</b></span>`).join('');
 }
 
 function itemDescription(entry, tooltip = false) {

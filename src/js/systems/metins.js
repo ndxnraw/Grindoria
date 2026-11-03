@@ -50,9 +50,9 @@ function configureMetin(m, point) {
 
 function restoreMetin(fresh, prior) {
   if (!prior) return fresh;
-  if (prior.metinSchema === METIN_RULES.schema) return { ...fresh, ...prior, dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0, metinCombat: Math.max(0, Math.min(METIN_RULES.combatWindow, prior.metinCombat || 0)), metinWaveTimer: Math.max(0, prior.metinWaveTimer || 0) };
+  if (prior.metinSchema === METIN_RULES.schema) return { ...fresh, ...prior, dot: prior.dot ? { ...prior.dot } : null, dots:(prior.dots||[]).map(dot=>({...dot})), skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0, metinCombat: Math.max(0, Math.min(METIN_RULES.combatWindow, prior.metinCombat || 0)), metinWaveTimer: Math.max(0, prior.metinWaveTimer || 0) };
   const hpRatio = Math.max(0, Math.min(1, prior.hp / prior.max));
-  return { ...prior, ...fresh, x: prior.x, y: prior.y, homeX: prior.homeX ?? prior.x, homeY: prior.homeY ?? prior.y, hp: prior.hp <= 0 ? 0 : Math.max(1, Math.round(fresh.max * hpRatio)), dead: Math.max(0, prior.dead || 0), cd: prior.cd || 0, dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])] };
+  return { ...prior, ...fresh, x: prior.x, y: prior.y, homeX: prior.homeX ?? prior.x, homeY: prior.homeY ?? prior.y, hp: prior.hp <= 0 ? 0 : Math.max(1, Math.round(fresh.max * hpRatio)), dead: Math.max(0, prior.dead || 0), cd: prior.cd || 0, dot: prior.dot ? { ...prior.dot } : null, dots:(prior.dots||[]).map(dot=>({...dot})), skillContributors: [...(prior.skillContributors || [])] };
 }
 
 function upgradeLegacyMetin(m, point) {
@@ -66,14 +66,14 @@ function upgradeLegacyMetin(m, point) {
 function restoreMetinGuards(population, prior) {
   const parents = new Set(population.filter(m => m.type === 'stone').map(m => m.spawnId));
   for (const m of prior || []) if (m.metinParentId && m.hp > 0 && m.metinLife > 0 && parents.has(m.metinParentId)) {
-    population.push({ ...m, dot: m.dot ? { ...m.dot } : null, skillContributors: [...(m.skillContributors || [])], taunt: 0, engaged: 0, stun: 0, returning: true });
+    population.push({ ...cloneEnemyState(m), dot: m.dot ? { ...m.dot } : null, skillContributors: [...(m.skillContributors || [])], taunt: 0, engaged: 0, stun: 0, returning: true });
   }
   return population;
 }
 
-function metinDamage(m, amount) {
+function metinDamage(m, amount, type='physical') {
   if (!Number.isFinite(amount) || amount <= 0) return 0;
-  return Math.max(1, Math.round(Math.max(1, amount - (m.metinArmor || 0)) * (1 - (m.metinResistance || 0))));
+  return resolveEnemyDamage(m,Math.max(1, Math.round(Math.max(1, amount - (m.metinArmor || 0)) * (1 - (m.metinResistance || 0)))),type);
 }
 
 function registerMetinAttack(m) {

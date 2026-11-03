@@ -37,3 +37,7 @@ Staršie nepozbierané zlaté kôpky sa premenia na dropy zbierateľné podľa a
 Trhlina má samostatnú korisť. Nepozbierané predmety sa pri jej ukončení prenesú späť do bežného chrámu popri jeho pôvodnej koristi, bez duplikovania. Korisť nemá časovač automatického zmiznutia.
 
 Logiku spravuje `systems/loot.js`, vykreslenie `render/loot.js` a tooltipy `ui/loot.js`. SVG ikony sú rovnaké ako v inventári a načítavajú sa z vložených dát, bez siete. Vykresľujú sa iba predmety vo viditeľnej oblasti; obrázky ikon sa zdieľajú cez cache.
+
+## Boj od 0.10.0
+
+Ľavé kliknutie dáva prednosť predmetu na zemi pred označením nepriateľa alebo smerovým útokom. Automatické zbieranie zlata a zásob aj hromadné Y do 180 jednotiek ostáva zachované. Pozri [COMBAT.md](COMBAT.md).

@@ -40,3 +40,7 @@ Bonusy sa počítajú zo skutočne nasadených predmetov pri útoku, kúzlení, 
 Migrácia zachová mená, bonusy, vzácnosť aj vylepšenia starých predmetov a rozloží ich do mriežky. Ak starý batoh potrebuje viac miesta, dostane dodatočné strany; predmety sa nevymažú ani automaticky nepredajú. Bežný nový drop strany nepridáva. Pri plnom batohu zostáva korisť z nepriateľa alebo kameňa na zemi, bez automatického predaja. Podrobnosti ručného zbierania opisuje [LOOT.md](LOOT.md). Výslovne vyzdvihnuté odmeny úloh naďalej používajú pôvodné pravidlo náhrady za plný batoh.
 
 Presun aj výmena výbavy najprv overia rozloženie. Neplatná operácia ponechá pôvodné predmety a štatistiky. Pozície aj množstvá prežijú uloženie a načítanie hry.
+
+## Boj od 0.10.0
+
+Nová vzácna výbava môže obsahovať typovú odolnosť; zbrane aj kritický zásah. Hodnoty sú percentá, sčítavajú sa zo všetkých slotov a okamžite sa používajú v boji. Staršie predmety si zachovávajú vlastné atribúty. Pozri [COMBAT.md](COMBAT.md).

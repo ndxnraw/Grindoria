@@ -4,7 +4,7 @@ function snapshotMap() {
   if (!mobs.length) return;
   p.worldStates[p.mapId] = {
     progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
-    mobs: mobs.map(m => ({ ...m, dot: m.dot ? { ...m.dot } : null, skillContributors: [...(m.skillContributors || [])] })),
+    mobs: mobs.map(cloneEnemyState),
     drops: drops.map(cloneGroundDrop)
   };
 }
@@ -18,6 +18,7 @@ function loadMap(id, initial=false) {
     if (!running || !isSanctuary(p)) { toast('Cestovať môžeš z útočiska (M).'); return false; }
     snapshotMap();
   }
+  resetCombatFlow();
   p.mapId=id;
   const cfg=map(), old=p.worldStates[id];
   cfg.mobSpeed=75+(cfg.scale-1)*14; seed=cfg.seed; decor.length=0;

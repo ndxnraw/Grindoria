@@ -84,3 +84,7 @@ Staré kamene získajú typ, nový maximálny počet životov a odolnosť pri za
 Aktuálne Metiny ukladajú stav boja, interval vlny, generáciu, poradové číslo posily, typ a zdravie. Privolaní obrancovia ukladajú zostávajúci životný čas a príslušnosť ku kameňu. Načítanie nevytvára druhé kópie posíl. Staršie rozbehnuté riedke trhliny si zachovávajú populáciu do konca výpravy.
 
 Zdrojom nastavení je src/js/data/metins.js, logikou src/js/systems/metins.js, modelmi src/js/render/metins.js a herným Atlasom src/js/ui/metins.js.
+
+## Boj od 0.10.0
+
+Po pancieri a základnej odolnosti sa uplatní typová odolnosť alebo slabina. Osem profilov definuje METIN_RESISTS; Atlas aj panel označeného cieľa ich zobrazujú. Napríklad mráz dostáva o 20 % viac ohnivého poškodenia, žeravý Metin má 50 % odolnosť voči ohňu. Pozri [COMBAT.md](COMBAT.md).

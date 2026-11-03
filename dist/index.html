@@ -68,21 +68,28 @@ nav{gap:18px}.player{min-height:92px}.mana{height:7px;margin-top:4px;background:
 .loot-tooltip[hidden]{display:none}.loot-heading{display:flex;gap:10px;align-items:center;border-bottom:1px solid #88744955;padding-bottom:10px;margin-bottom:7px}.loot-item-icon{width:40px;height:54px;flex-shrink:0;display:grid;place-items:center;background:radial-gradient(ellipse,#77664040,transparent 70%);padding:2px}.loot-heading small{font-size:8px;text-transform:uppercase;letter-spacing:.8px;color:#9a967d}.loot-heading h3{font:17px/1.3 Georgia,serif;color:#e2cea1;margin:4px 0 0}.loot-heading.rarity-1 h3{color:#93c6dd}.loot-heading.rarity-2 h3{color:#d0a8e7}.loot-tooltip h4{font-size:9px;letter-spacing:.6px;text-transform:uppercase;color:#a99d7d;margin:9px 0 3px}.loot-tooltip p{font-size:10px;line-height:1.55;color:#b1b29b;margin:4px 0}.loot-stat{display:flex;justify-content:space-between;gap:8px;font-size:10px;padding:2px 0}.loot-stat b{font-weight:600;color:#d5c69c}.loot-comparison{border-top:1px solid #88744955;margin-top:8px;padding-top:2px}.loot-tooltip .stat-gain,.loot-tooltip .stat-gain b{color:#9bce85}.loot-tooltip .stat-loss,.loot-tooltip .stat-loss b{color:#e58f7f}.loot-tooltip .stat-same,.loot-tooltip .stat-same b{color:#aaa796}.loot-tooltip .loot-controls{border-top:1px solid #88744955;margin-top:10px;padding-top:7px;color:#d6bb7a;font-size:9px}
 
 .item-description .inventory-usable{color:#9bce85!important}.item-description .inventory-unusable{color:#e58f7f!important}
+
+/* Live target, combo state and combat reference. */
+.target-panel{top:22px;left:50%;transform:translateX(-50%);width:270px;padding:11px 14px;background:#14231fee;border-color:#d6b77588;pointer-events:auto}
+.target-panel[hidden],.combat-flow[hidden]{display:none}.target-panel>small{display:block;font-size:7px;letter-spacing:1px;color:#b8a277;padding-right:14px}.target-panel>b{display:block;color:#e4cea0;font:14px/1.4 Georgia,serif;margin:4px 0 7px}.target-panel>button{position:absolute;right:5px;top:4px;background:transparent;border:0;color:#cab88c;font-size:19px;line-height:18px}
+.target-health{height:12px;position:relative;background:#241f20;border:1px solid #ac927944;overflow:hidden}.target-health i{position:absolute;left:0;top:0;height:100%;background:linear-gradient(90deg,#965c57,#d7987c)}.target-health span{position:absolute;inset:0;text-align:center;font-size:8px;color:#fae9cb;line-height:10px}.target-resistances{display:flex;flex-wrap:wrap;gap:3px 8px;margin-top:6px;font-size:8px;color:#aaa98d}.target-resistances .vulnerable{color:#a4ca8a}.target-resistances .resistant{color:#cdb08d}
+.combat-flow{left:22px;bottom:113px;padding:9px 12px;max-width:50%;font-size:10px;color:#ead19a;border-color:#ccb47777;background:#263020ed}.battle-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.battle-type-grid>div{display:flex;justify-content:space-between;gap:8px;border-left:3px solid;background:#ffffff06;padding:8px;font-size:10px}.battle-type-grid span{color:#d5c091}
+@media(max-width:850px){.target-panel{top:119px;left:12px;transform:none;width:215px;padding:8px 10px}.target-panel>b{font-size:12px}.target-panel>small{font-size:6px}.game-shell:has(.target-panel:not([hidden])) .buffs{top:245px;left:12px;max-width:200px}.combat-flow{bottom:150px;left:12px;max-width:49%;font-size:8px}}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b>ALPHA 0.9.0</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b>ALPHA 0.10.0</b></span></header>
 <main><div class="world-title"><div><span class="eyebrow">KAPITOLA I · PREBUDENIE</span><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Pod pokojnými korunami sa prebúdza stará temnota.</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
-<section class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb WASD, útok medzerník, schopnosť Q, liečenie E, korisť ľavým kliknutím alebo Y v okolí, zlato a zásoby automaticky."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
+<section class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb iba WASD alebo šípkami, cieľ kliknutím, smerový útok myšou alebo medzerníkom, schopnosť Q, liečenie E, korisť ľavým kliknutím alebo Y v okolí, zlato a zásoby automaticky."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
 <div class="hud player"><div class="portrait">侍</div><div><div class="player-name"><b id="playerclass">Bojovník</b> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 60 skúseností</small></div></div>
 <div class="hud map"><canvas id="minimap" width="138" height="118"></canvas><span id="minimaplabel">ÚDOLIE TICHÉHO VETRA</span></div>
 <div class="hud quest"><span class="eyebrow">AKTÍVNA ÚLOHA</span><h3>Praskliny v pokoji</h3><p>Osloboď údolie od temnoty.</p><div id="q-wolves">◇ Poraz príšery <b>0 / 5</b></div><div id="q-stones">◇ Znič kamene osudu <b>0 / 3</b></div><button id="claim" hidden>Vyzdvihnúť odmenu · 150 zlata</button><small id="questnote">Odmena: 150 zlata + 60 skúseností</small></div>
-<div id="toast" role="status"></div><div id="buffs" class="buffs" aria-live="off"></div><div class="hud location">⌖ &nbsp; <span id="coords">Útočisko pútnikov</span></div>
+<div id="toast" role="status"></div><div id="target-panel" class="hud target-panel" aria-live="off" hidden></div><div id="combat-flow" class="hud combat-flow" aria-live="polite" hidden></div><div id="buffs" class="buffs" aria-live="off"></div><div class="hud location">⌖ &nbsp; <span id="coords">Útočisko pútnikov</span></div>
 <div class="hotbar"><button id="attack"><kbd>SPACE</kbd><span>⚔</span><small>Sek mečom</small></button><button id="skill"><kbd>Q</kbd><span>✺</span><small>Veterný kruh</small><em id="cooldown"></em></button><button id="skill2"><kbd>R</kbd><span>✧</span><small>Schopnosť</small><em id="cooldown2"></em></button><button id="skill3"><kbd>T</kbd><span>☄</span><small>Schopnosť</small><em id="cooldown3"></em></button><button id="skill4"><kbd>V</kbd><span>◈</span><small>Schopnosť</small><em id="cooldown4"></em></button><button id="skill5"><kbd>U</kbd><span>❖</span><small>Schopnosť</small><em id="cooldown5"></em></button><button id="skill6"><kbd>O</kbd><span>✥</span><small>Schopnosť</small><em id="cooldown6"></em></button><button id="potion"><kbd>E</kbd><span>⚱</span><small>Elixír <b id="pots">5</b></small></button><button id="bravery" title="Plášť statočnosti · B · dosah 650 · priťahovanie 18 s"><kbd>B</kbd><span>⚑</span><small>Plášť <b id="capes">10</b></small><em id="cape-cooldown"></em></button><div class="divider"></div><button id="inventory"><kbd>I</kbd><span>▣</span><small>Výbava</small></button></div>
 <div class="hud wallet"><span>◉</span> <b id="gold">0</b> <small>ZLATO</small></div>
 <div id="intro" class="overlay"><div class="intro-card"><span class="eyebrow">TVOJ PRÍBEH SA ZAČÍNA</span><h2>Temnota padá.<br><em>Ty povstaň.</em></h2><p>Štyri povolania, osem škôl a päť máp. Vyber si cestu, ovládni svoje schopnosti a poraz strážcov kráľovstva.</p><div class="intro-controls"><span><kbd>W A S D</kbd> Pohyb</span><span><kbd>SPACE</kbd> Útok</span><span><kbd>Q R T V U O</kbd> Kúzla</span><span><kbd>E</kbd> Liečenie</span></div><div class="class-select" id="classes"></div><div class="school-select" id="schools"></div><p id="classhint" class="class-hint"></p><button class="primary" id="start">Vstúpiť do údolia <span>→</span></button><small>Vlastná 2D adaptácia schopností; animácie sa líšia od Metin2.</small></div></div>
-<div id="modal" class="overlay" hidden><div class="modal-card"><button id="close" class="close" aria-label="Zavrieť">×</button><div id="modalcontent"></div></div></div>
+<div id="modal" class="overlay" hidden><div id="modalcard" class="modal-card"><button id="close" class="close" aria-label="Zavrieť">×</button><div id="modalcontent"></div></div></div>
 <div class="touch"><button data-key="w">↑</button><div><button data-key="a">←</button><button data-key="s">↓</button><button data-key="d">→</button></div></div>
-</section><footer><span><i></i> Postup sa ukladá automaticky</span><span><kbd>WASD</kbd> pohyb <i>·</i> kliknutie: pohyb / útok <i>·</i> <kbd>M</kbd> mapy <i>·</i> <kbd>K</kbd> kúzla</span><button id="sound">Zvuk: vypnutý</button></footer></main><script>
+</section><footer><span><i></i> Postup sa ukladá automaticky</span><span><kbd>WASD</kbd> pohyb <i>·</i> kliknutie: cieľ / útok <i>·</i> <kbd>M</kbd> mapy <i>·</i> <kbd>K</kbd> kúzla</span><button id="sound">Zvuk: vypnutý</button></footer></main><script>
 // src/js/data/classes.js
 const CLASSES={warrior:{name:'Bojovník',desc:'Meč, sila a odolnosť. Telesná alebo mentálna škola.',health:20,speed:185,crit:.06,color:'#d8b176'},ninja:{name:'Nindža',desc:'Dýky a luk. Prepad, jedy a rýchlosť.',health:0,speed:225,crit:.22,color:'#8bcead'},sura:{name:'Sura',desc:'Prekliata ruka, očarovaná čepeľ a čierna mágia.',health:10,speed:195,crit:.1,color:'#bf8dec'},shaman:{name:'Šaman',desc:'Dračia sila alebo liečenie, blesky a podporné kúzla.',health:0,speed:190,crit:.08,color:'#f2c289'}};
 // Names and school structure follow the six classic skills per school.
@@ -277,6 +284,52 @@ const METIN_GUARDS = [
 ];
 
 
+// src/js/data/battle.js
+const BATTLE = { meleeRange: 95, meleeStop: 76, rangedRange: 500, rangedStop: 420, halfArc: Math.PI * .31, comboWindow: 4 };
+const DAMAGE_TYPES = {
+  physical: { name: 'Fyzické', color: '#dfce9e' }, piercing: { name: 'Prierazné', color: '#c3dca3' },
+  fire: { name: 'Oheň', color: '#f3a56b' }, poison: { name: 'Jed', color: '#acd571' },
+  lightning: { name: 'Blesk', color: '#a6dff2' }, dark: { name: 'Temnota', color: '#c49de4' }, arcane: { name: 'Mágia', color: '#e8c6a5' }
+};
+const SUPPORT_SKILLS = new Set(['heal','aura','berserk','guard','enchanted','armor','fear','stealth','speed','spirit','darkGuard','bless','reflect','dragonPower','attackUp']);
+const SKILL_DAMAGE = {
+  spin:'physical', dash:'physical', triple:'physical', burst:'physical', beam:'physical', stomp:'physical', boltStun:'physical', cleave:'physical', ground:'physical',
+  ambush:'piercing', poisonCloud:'poison', roll:'physical', poisonDash:'poison', fireArrow:'fire', poisonArrow:'poison', arrowRain:'piercing', multiShot:'piercing', spark:'lightning',
+  finger:'dark', dragonSpin:'dark', dispel:'dark', darkBolt:'dark', darkOrb:'dark', flameBurst:'fire', spiritBolt:'dark',
+  dragonRoar:'fire', talisman:'arcane', dragonBreath:'fire', lightning:'lightning', storm:'lightning', chain:'lightning'
+};
+const ACTIVE_SKILLS = Object.fromEntries(Object.entries(SCHOOLS).flatMap(([id, school]) => school.skills.map((skill, index) => [id+':'+index, { animation: id+':'+index, school: id, index, type: SKILL_DAMAGE[skill[1]] || null, support: SUPPORT_SKILLS.has(skill[1]), purpose: skill[6] }])));
+const SCHOOL_PASSIVES = {
+  body: { name: 'Bojový rytmus', text: 'Fyzické poškodenie +3 % za stupeň. Tri úspešné základné zásahy do rovnakého cieľa pripravia zosilnenie najbližšej útočnej schopnosti.' },
+  mental: { name: 'Neústupnosť', text: 'Fyzická odolnosť +6 % na prvom stupni, potom +2 % za ďalší stupeň.' },
+  blade: { name: 'Tichý lovec', text: 'Kritický zásah +1 % a odolnosť voči jedu +6 % za stupeň.' },
+  archery: { name: 'Presná muška', text: 'Prierazné poškodenie +4 % za stupeň.' },
+  weapon: { name: 'Runová oceľ', text: 'Temné poškodenie +3 % a fyzická odolnosť +2 % za stupeň.' },
+  black: { name: 'Temná vôľa', text: 'Odolnosť voči temnote +5 % a maximálna mana +15 za stupeň.' },
+  dragon: { name: 'Dračia krv', text: 'Ohnivé poškodenie a odolnosť voči ohňu +4 % za stupeň.' },
+  healing: { name: 'Čistá myseľ', text: 'Liečenie a odolnosť voči bleskom +4 %, obnova many +0,5 za sekundu za stupeň.' }
+};
+const SCHOOL_COMBOS = {
+  body: { name: 'Búrka čepelí', sequence: [1,0], bonus: .25 }, mental: { name: 'Rozbitá obrana', sequence: [2,0], bonus: .25 },
+  blade: { name: 'Tichá čepeľ', sequence: [4,0], bonus: .2 }, archery: { name: 'Jedovatý výbuch', sequence: [1,0], bonus: .25 },
+  weapon: { name: 'Runový prielom', sequence: [4,0], bonus: .25 }, black: { name: 'Temný požiar', sequence: [1,2], bonus: .25 },
+  dragon: { name: 'Dračí rozsudok', sequence: [5,2], bonus: .25 }, healing: { name: 'Obnovujúci prúd', sequence: [4,3], bonus: .25 }
+};
+const CREATURE_RESISTS = {
+  wolf: { fire: -.1, poison: .15 }, scorpion: { physical: .08, piercing: -.1, fire: .25, poison: .6, lightning: -.15, dark: .05 },
+  yeti: { physical: .12, piercing: .05, fire: -.2, poison: .1, lightning: .2 },
+  demon: { physical: .08, piercing: .05, fire: .4, poison: .2, lightning: -.15, dark: .3, arcane: -.1 }
+};
+const METIN_RESISTS = {
+  fracture: { physical: .05, dark: .25, arcane: -.1 }, fang: { physical: .1, poison: .35, fire: -.1 },
+  sand: { piercing: .2, fire: .25, lightning: -.1 }, frost: { fire: -.2, poison: .1, physical: .05 },
+  ember: { fire: .5, dark: .1, lightning: -.15 }, storm: { lightning: .5, piercing: .1, dark: -.1 },
+  void: { dark: .5, arcane: .2, physical: -.1 }, doom: { physical: .15, fire: .2, poison: .15, lightning: .1, dark: .25, arcane: -.1 }
+};
+
+for (const [type, spec] of Object.entries(DAMAGE_TYPES)) ITEM_STATS[type+'Resist']='Odolnosť · '+spec.name;
+
+
 // src/js/core/persistence.js
 const pendingSaveImports = [];
 
@@ -374,17 +427,28 @@ function frame(t){const dt=Math.min((t-last)/1000,.05);last=t;update(dt);draw();
 
 function keysClear(){Object.keys(keys).forEach(k=>keys[k]=false);}
 
-function update(dt){clock+=dt;if(!running||paused)return;attackCD=Math.max(0,attackCD-dt);slash=Math.max(0,slash-dt);ring=Math.max(0,ring-dt);updateCombat(dt);let dx=(keys.d||keys.ArrowRight?1:0)-(keys.a||keys.ArrowLeft?1:0),dy=(keys.s||keys.ArrowDown?1:0)-(keys.w||keys.ArrowUp?1:0);if(dx||dy)target=null;else if(target){dx=target.x-p.x;dy=target.y-p.y;if(Math.hypot(dx,dy)<8){target=null;dx=dy=0;}}const dist=Math.hypot(dx,dy);if(dist){face=Math.atan2(dy,dx);p.x=Math.max(45,Math.min(SIZE-45,p.x+dx/dist*speedValue()*dt));p.y=Math.max(45,Math.min(SIZE-45,p.y+dy/dist*speedValue()*dt));}if(keys[' '])attack();const safe=isSanctuary(p);if(safe){p.hp=Math.min(maxHP(),p.hp+12*dt);p.mp=Math.min(maxMP(),p.mp+dt*10);}updateMetins(dt,safe);updateEnemySpawns(dt,safe);updateGroundLoot(dt);updateBoss(dt,safe);if(p.hp<=0)death();cam.x+=(p.x-cam.x)*Math.min(1,dt*7);cam.y+=(p.y-cam.y)*Math.min(1,dt*7);for(let i=particles.length-1;i>=0;i--){particles[i].age+=dt;if(particles[i].age>1.2)particles.splice(i,1);}toastTimer-=dt;if(toastTimer<0)$('toast').style.opacity='0';saveTimer+=dt;if(saveTimer>4){save();saveTimer=0;}updateHUD();}
+function update(dt) {
+  clock+=dt;if(!running||paused)return;
+  attackCD=Math.max(0,attackCD-dt);slash=Math.max(0,slash-dt);ring=Math.max(0,ring-dt);updateCombat(dt);
+  updatePlayerControl(dt);if(keys[' '])attack();
+  const safe=isSanctuary(p);if(safe){p.hp=Math.min(maxHP(),p.hp+12*dt);p.mp=Math.min(maxMP(),p.mp+dt*10);}
+  updateMetins(dt,safe);updateEnemySpawns(dt,safe);updateGroundLoot(dt);updateBoss(dt,safe);
+  if(p.hp<=0)death();if(target&&!selectedEnemy())clearCombatTarget();
+  cam.x+=(p.x-cam.x)*Math.min(1,dt*7);cam.y+=(p.y-cam.y)*Math.min(1,dt*7);
+  for(let i=particles.length-1;i>=0;i--){particles[i].age+=dt;if(particles[i].age>1.2)particles.splice(i,1);}
+  toastTimer-=dt;if(toastTimer<0)$('toast').style.opacity='0';saveTimer+=dt;if(saveTimer>4){save();saveTimer=0;}updateHUD();
+}
 
 
 // src/js/systems/combat.js
-function hit(m, amount) {
+function hit(m, amount, type='physical') {
   if (m.hp <= 0 || !Number.isFinite(amount) || amount <= 0) return 0;
-  const damage = m.type === 'stone' ? metinDamage(m, amount) : amount, actual = Math.min(m.hp, damage);
+  const damage = m.type === 'stone' ? metinDamage(m, amount, type) : resolveEnemyDamage(m, amount, type), actual = Math.min(m.hp, damage);
   if (m.type === 'stone') registerMetinAttack(m); else provokeEnemyGroup(m);
   m.hp = Math.max(0, m.hp - damage); m.hit = .15;
   float('-' + actual, m.x, m.y - 65); beep(170);
   if (m.hp <= 0) {
+    if(target===m)clearCombatTarget();m.dot=null;m.dots=[];
     m.windup = 0; m.dead = m.metinParentId ? 1 : m.respawnSeconds || (m.type === 'boss' ? 40 : m.type === 'stone' ? 18 : 5);
     if (m.type === 'boss') p.bossKills++; else p[m.type === 'stone' ? 'stones' : 'kills']++;
     const gained = enemyXP(m); careerKill(m);
@@ -407,13 +471,13 @@ function potion(){return drinkPotion(false);}
 
 function drinkPotion(allowPaused=false){if(!running||(paused&&!allowPaused)||p.hp<=0)return false;if(p.potions<=0){toast('Nemáš elixíry. Navštív obchodníka (F).');return;}if(p.hp>=maxHP()){toast('Zdravie máš plné.');return;}p.potions--;p.hp=Math.min(maxHP(),p.hp+65);float('+65 zdravia',p.x,p.y-65,'#a9e0ac');beep(520,.2);updateHUD();save();return true;}
 
-function death(){p.mp=maxMP();shots.length=0;Object.keys(buffs).forEach(k=>delete buffs[k]);p.gold=Math.floor(p.gold*.9);p.x=1000;p.y=1160;p.hp=maxHP();target=null;mobs.forEach(m=>m.cd=2);toast('Záchrana v útočisku\nStratil si 10 % zlata.');save();}
+function death(){resetCombatFlow();p.mp=maxMP();shots.length=0;Object.keys(buffs).forEach(k=>delete buffs[k]);p.gold=Math.floor(p.gold*.9);p.x=1000;p.y=1160;p.hp=maxHP();target=null;mobs.forEach(m=>m.cd=2);toast('Záchrana v útočisku\nStratil si 10 % zlata.');save();}
 
 function school(){return SCHOOLS[p.schools[p.classId]];}
 
 function active(id){return (buffs[id]||0)>0;}
 
-function maxMP(){return 100+p.level*8+p.intelligence*5+careerBonuses().mp+equipmentBonuses().mp;}
+function maxMP(){return 100+p.level*8+p.intelligence*5+careerBonuses().mp+equipmentBonuses().mp+passiveBonuses().mp;}
 
 function attackPower(){return (active('aura')||active('enchanted')?1.45:1)*(active('attackUp')?1.35:1);}
 
@@ -421,36 +485,54 @@ function armorBonus(){return active('guard')?12:active('armor')?8:0;}
 
 function speedValue(){return (role().speed+p.dexterity*2+equipmentBonuses().speed)*(active('speed')?1.45:active('berserk')?1.22:1);}
 
-function criticalChance(){return Math.min(.8,role().crit+p.dexterity*.01+careerBonuses().crit+equipmentBonuses().crit+(active('dragonPower')?.25:0));}
+function criticalChance(){return Math.min(.8,role().crit+p.dexterity*.01+careerBonuses().crit+equipmentBonuses().crit+passiveBonuses().crit+(active('dragonPower')?.25:0));}
 
 function nearest(range=500,from=p){return mobs.filter(m=>m.hp>0&&Math.hypot(m.x-from.x,m.y-from.y)<range).sort((a,b)=>Math.hypot(a.x-from.x,a.y-from.y)-Math.hypot(b.x-from.x,b.y-from.y))[0];}
 
-function hurtMob(m,mult=1,magic=false,key=castingSkillKey){if(!m||m.hp<=0)return;if(key)rememberSkill(m,key);const crit=rand()<criticalChance(),raw=(damage()+(magic?p.intelligence*4+careerBonuses().magic+equipmentBonuses().magic:0))*mult*(key?skillFactor(key):1)*(crit?1.8:1),amount=Math.max(1,Math.round(raw*(.94+rand()*.12)));const actual=hit(m,amount);if(active('enchanted'))p.hp=Math.min(maxHP(),p.hp+actual*.15);if(crit)float('KRITICKÝ!',m.x,m.y-90,'#f2bc70');}
+function hurtMob(m,mult=1,magic=false,key=castingSkillKey,opts={}) {
+  if(!m||m.hp<=0)return 0;if(key)rememberSkill(m,key);
+  const type=opts.type||(key?skillDamageType(key):magic?'arcane':basicDamageType()),critical=rand()<criticalChance(),multiplier=opts.multiplier??castingMultiplier;
+  const magicBonus=!['physical','piercing'].includes(type)?p.intelligence*4+careerBonuses().magic+equipmentBonuses().magic:0;
+  const raw=(damage()+magicBonus)*mult*(key?skillFactor(key):1)*multiplier*(1+(passiveBonuses().outgoing[type]||0))*(critical?1.8:1);
+  const actual=hit(m,Math.max(1,Math.round(raw*(.94+rand()*.12))),type);
+  if(actual>0&&opts.basic)registerBasicHit(m);
+  if(active('enchanted'))p.hp=Math.min(maxHP(),p.hp+actual*.15);
+  if(critical&&actual>0)float('KRITICKÝ!',m.x,m.y-90,'#f2bc70');return actual;
+}
 
-function areaHit(x,y,r,mult,opts={}){for(const m of mobs)if(m.hp>0&&Math.hypot(m.x-x,(m.y-y)*.85)<r){hurtMob(m,mult,true,opts.skillKey||castingSkillKey);if(opts.stun)m.stun=Math.max(m.stun||0,opts.stun*(m.type==='boss'?.4:1));if(opts.dot&&m.hp>0)m.dot={time:6,tick:1,power:Math.max(3,Math.round(damage()*.18)),kind:opts.dot};if(opts.knock&&m.type!=='stone'){let d=Math.hypot(m.x-x,m.y-y)||1;m.x=Math.max(45,Math.min(SIZE-45,m.x+(m.x-x)/d*45));m.y=Math.max(45,Math.min(SIZE-45,m.y+(m.y-y)/d*45));}}}
+function areaHit(x,y,r,mult,opts={}) {
+  const key=opts.skillKey||castingSkillKey,type=opts.type||(key?skillDamageType(key):'arcane');
+  for(const m of mobs)if(m.hp>0&&Math.hypot(m.x-x,(m.y-y)*.85)<r){hurtMob(m,mult,!['physical','piercing'].includes(type),key,{...opts,type});applyCombatControl(m,opts,x,y);}
+}
 
-function shoot(m,mult,style='bolt',opts={}){if(!m)return;opts={...opts,skillKey:opts.skillKey||castingSkillKey};shots.push({x:p.x,y:p.y-25,target:m,mult,style,color:role().color,opts,life:3});fx('cast',p.x,p.y,role().color,.35);}
+function shoot(m,mult,style='bolt',opts={}) {
+  const key=Object.hasOwn(opts,'skillKey')?opts.skillKey:castingSkillKey,type=opts.type||(key?skillDamageType(key):SKILL_DAMAGE[style]||(style==='arrow'?'piercing':'arcane'));
+  const angle=opts.angle??(m?Math.atan2(m.y-p.y,m.x-p.x):face),range=opts.range||500;
+  const ballistic=style==='arrow'||style.includes('Arrow');
+  shots.push({x:p.x,y:p.y-25,target:ballistic?null:m,mult,style,color:DAMAGE_TYPES[type].color,opts:{...opts,type,skillKey:key,multiplier:opts.multiplier??castingMultiplier},life:range/650+1,remainingRange:range,vx:Math.cos(angle),vy:Math.sin(angle)});
+  fx('cast',p.x,p.y,DAMAGE_TYPES[type].color,.35);return true;
+}
 
-function takeDamage(amount,source){let factor=active('bless')?.7:1;if(active('guard'))factor*=.8;if(active('darkGuard')&&p.mp>=4){factor*=.67;p.mp=Math.max(0,p.mp-4);}if(active('berserk'))factor*=1.2;if(active('fear')&&source&&Math.hypot(source.x-p.x,source.y-p.y)<300)factor*=.65;const n=Math.max(1,Math.round((amount-defense())*factor));p.hp-=n;float('-'+n,p.x,p.y-70,'#eda28d');if(source&&(active('reflect')||active('armor'))&&source.hp>0)hit(source,Math.max(1,Math.round(n*(active('reflect')?.35:.2))));}
+function takeDamage(amount,source,type=enemyDamageType(source)) {
+  let factor=active('bless')?.7:1;if(active('guard'))factor*=.8;
+  if(active('darkGuard')&&p.mp>=4){factor*=.67;p.mp=Math.max(0,p.mp-4);}
+  if(active('berserk'))factor*=1.2;if(active('fear')&&source&&Math.hypot(source.x-p.x,source.y-p.y)<300)factor*=.65;
+  const armorFactor=type==='physical'?1:type==='piercing'?.6:.25;
+  const n=Math.max(1,Math.round((amount-defense()*armorFactor)*factor*(1-(playerResistances()[type]||0))));
+  p.hp-=n;float('-'+n,p.x,p.y-70,DAMAGE_TYPES[type]?.color||'#eda28d');
+  if(source&&(active('reflect')||active('armor'))&&source.hp>0)hit(source,Math.max(1,Math.round(n*(active('reflect')?.35:.2))),'arcane');
+  return n;
+}
 
-function castSkill(index){if(!running||paused||p.hp<=0||index<0||index>5)return false;const s=school().skills[index],[name,kind,cd,cost,mult,range]=s;if(isSanctuary(p)&&!['heal','aura','berserk','guard','enchanted','armor','fear','stealth','speed','spirit','darkGuard','bless','reflect','dragonPower','attackUp'].includes(kind)){toast('Útočisko je chránené. Zaútoč až mimo neho.');return false;}if(spellCD[index]>0)return false;if(p.mp<cost){toast('Nedostatok many · priebežne sa obnovuje.');return false;}const noTarget=['spin','stomp','poisonCloud','dragonSpin','flameBurst','dragonRoar','dragonBreath','beam','finger','cleave','burst','triple','heal','aura','berserk','guard','enchanted','armor','fear','stealth','speed','spirit','darkGuard','bless','reflect','dragonPower','attackUp'];const m=nearest(range||500);if(!m&&!noTarget.includes(kind)){toast('Priblíž sa k cieľu.');return false;}if(kind==='burst'&&p.hp<=maxHP()*.08){toast('Na Životnú silu potrebuješ viac zdravia.');return false;}p.mp-=cost;castingSkillKey=skillKey(index);if(m)rememberSkill(m,castingSkillKey);spellCD[index]=cd*(1-(skillProgress(castingSkillKey).rank-1)*.01);skillCD=spellCD[0];castPose=.6;castStyle=kind;beep(p.classId==='sura'?160:p.classId==='shaman'?620:320,.17);float(name,p.x,p.y-100,role().color);if(m)face=Math.atan2(m.y-p.y,m.x-p.x);
-if(['aura','berserk','guard','enchanted','armor','fear','stealth','speed','spirit','darkGuard','bless','reflect','dragonPower','attackUp'].includes(kind)){buffs[kind]=(kind==='fear'||kind==='berserk'?10:kind==='stealth'?8:12)*skillFactor(castingSkillKey);if(kind==='spirit')spiritTick=0;fx(kind==='stealth'?'smoke':'aura',p.x,p.y,role().color,1.1);}
-else if(kind==='heal'){const n=Math.min(maxHP()-p.hp,Math.round((45+p.level*5+p.intelligence*4+careerBonuses().magic)*skillFactor(castingSkillKey)));p.hp+=n;fx('heal',p.x,p.y,'#b4f4c1',1);float('+'+Math.round(n)+' zdravia',p.x,p.y-65,'#b4f4c1');}
-else if(['dash','poisonDash','roll'].includes(kind)){if(m){const d=Math.hypot(m.x-p.x,m.y-p.y)||1,old={x:p.x,y:p.y};p.x=Math.max(45,Math.min(SIZE-45,m.x-(m.x-p.x)/d*40));p.y=Math.max(45,Math.min(SIZE-45,m.y-(m.y-p.y)/d*40));target=null;fx('dash',old.x,old.y,role().color,.5);fx(kind==='roll'?'spin':'slash');areaHit(p.x,p.y,kind==='roll'?155:90,mult,{dot:kind==='poisonDash'?'poison':null,stun:kind==='dash'?.8:0});}}
-else if(kind==='ambush'){hurtMob(m,mult*(active('stealth')?2:1),true);fx('cross',m.x,m.y,role().color,.6);}
-else if(['darkBolt','darkOrb','spiritBolt','fireArrow','poisonArrow','talisman','boltStun','dispel'].includes(kind)){shoot(m,mult,kind,{radius:kind==='darkOrb'?100:kind==='fireArrow'?80:0,dot:kind==='poisonArrow'?'poison':kind==='fireArrow'?'fire':null,stun:kind==='boltStun'?1.8:0,slow:kind==='spiritBolt'?4:0,dispel:kind==='dispel'});}
-else if(kind==='multiShot'){for(let j=0;j<3;j++)shoot(m,mult/3,'arrow',{delay:j*.12});}
-else if(kind==='arrowRain'){mobs.filter(n=>n.hp>0&&Math.hypot(n.x-p.x,n.y-p.y)<range).slice(0,5).forEach(n=>shoot(n,mult,'arrow'));}
-else if(['lightning','spark','storm','chain'].includes(kind)){const list=kind==='chain'?mobs.filter(n=>n.hp>0&&Math.hypot(n.x-m.x,n.y-m.y)<220).slice(0,4):[m];for(const n of list){fx('lightning',n.x,n.y,p.classId==='shaman'?'#b9eaff':'#ffe7a4',.7);if(kind==='storm')areaHit(n.x,n.y,140,mult,{stun:.8});else{hurtMob(n,mult,true);if(kind==='spark')n.stun=1;}}}
-else if(kind==='ground'){fx('ground',m.x,m.y,role().color,.9);areaHit(m.x,m.y,140,mult,{knock:true});}
-else if(['beam','dragonBreath','finger','cleave'].includes(kind)){fx(kind==='dragonBreath'?'dragon':kind==='finger'?'finger':'beam',p.x,p.y,role().color,.8);const ux=Math.cos(face),uy=Math.sin(face);for(const n of mobs){let dx=n.x-p.x,dy=n.y-p.y,along=dx*ux+dy*uy,across=Math.abs(dx*uy-dy*ux);if(n.hp>0&&along>-30&&along<range&&across<(kind==='dragonBreath'?100:65)){hurtMob(n,mult,true);if(kind==='dragonBreath')n.dot={time:6,tick:1,power:Math.round(damage()*.18),kind:'fire'};}}}
-else if(kind==='triple'){const n=nearest(range);if(n)for(let j=0;j<3;j++){hurtMob(n,mult/3);fx('slash',n.x,n.y-5,role().color,.35+j*.13,face+j*1.3);}}
-else{if(kind==='burst')p.hp-=maxHP()*.08;fx(kind==='poisonCloud'?'poison':kind==='dragonRoar'?'dragon':kind==='flameBurst'?'fire':kind==='stomp'||kind==='burst'?'ground':'spin',p.x,p.y,role().color,.85);areaHit(p.x,p.y,range,mult,{dot:kind==='poisonCloud'?'poison':kind==='dragonRoar'||kind==='flameBurst'?'fire':null,stun:kind==='stomp'?1.7:0,knock:kind==='dragonSpin'});}
-if(kind!=='stealth')delete buffs.stealth;castingSkillKey=null;updateHUD();return true;}
-
-function attack(skill=false){if(skill)return castSkill(0);if(!running||paused||p.hp<=0||attackCD>0||isSanctuary(p))return;attackCD=(p.classId==='ninja'?.32:.42)*(active('berserk')?.6:1);slash=.22;castStyle='basic';const ranged=p.classId==='ninja'&&p.schools.ninja==='archery';if(ranged){const m=nearest(500);if(m)shoot(m,1,'arrow');}else{fx(p.classId==='ninja'?'cross':p.classId==='shaman'?'fan':'slash',p.x,p.y,role().color,.25);for(const m of mobs)if(m.hp>0&&Math.hypot(m.x-p.x,(m.y-p.y)*.85)<95)hurtMob(m);}delete buffs.stealth;beep(230);}
-
-function updateCombat(dt){castPose=Math.max(0,castPose-dt);for(let i=0;i<6;i++)spellCD[i]=Math.max(0,spellCD[i]-dt);skillCD=spellCD[0];for(const id of Object.keys(buffs)){buffs[id]-=dt;if(buffs[id]<=0)delete buffs[id];}p.mp=Math.min(maxMP(),p.mp+dt*(active('speed')?11:7));for(let i=effects.length-1;i>=0;i--){effects[i].life-=dt;if(effects[i].life<=0)effects.splice(i,1);}for(const m of mobs){m.stun=Math.max(0,(m.stun||0)-dt);m.slow=Math.max(0,(m.slow||0)-dt);m.suppressed=Math.max(0,(m.suppressed||0)-dt);if(m.hp>0&&m.dot){m.dot.time-=dt;m.dot.tick-=dt;if(m.dot.tick<=0){m.dot.tick+=1;hit(m,m.dot.power);fx(m.dot.kind==='poison'?'poison':'fire',m.x,m.y,m.dot.kind==='poison'?'#a9d06e':'#f5ac60',.4);}if(m.dot.time<=0)m.dot=null;}}for(let i=shots.length-1;i>=0;i--){const b=shots[i];b.life-=dt;if(b.opts.delay>0){b.opts.delay-=dt;continue;}if(b.life<=0||b.target.hp<=0){shots.splice(i,1);continue;}const dx=b.target.x-b.x,dy=b.target.y-15-b.y,d=Math.hypot(dx,dy);if(d<650*dt+12){const m=b.target;if(b.opts.radius)areaHit(m.x,m.y,b.opts.radius,b.mult,{dot:b.opts.dot,stun:b.opts.stun,skillKey:b.opts.skillKey});else{hurtMob(m,b.mult,b.style!=='arrow',b.opts.skillKey);if(b.opts.dot&&m.hp>0)m.dot={time:6,tick:1,power:Math.max(3,Math.round(damage()*.18)),kind:b.opts.dot};if(b.opts.stun)m.stun=b.opts.stun;}if(b.opts.dispel)m.suppressed=8;if(b.opts.slow)m.slow=b.opts.slow;fx(b.style==='darkOrb'?'dark':b.style==='fireArrow'?'fire':'impact',m.x,m.y,b.color,.6);shots.splice(i,1);}else{b.x+=dx/d*650*dt;b.y+=dy/d*650*dt;}}if(active('spirit')&&!isSanctuary(p)){spiritTick-=dt;if(spiritTick<=0){spiritTick=1.5;const m=nearest(430);if(m)shoot(m,.85,'fireArrow',{skillKey:'black:3'});}}}
+function updateCombat(dt) {
+  updateCombatFlow(dt);castPose=Math.max(0,castPose-dt);for(let i=0;i<6;i++)spellCD[i]=Math.max(0,spellCD[i]-dt);skillCD=spellCD[0];
+  for(const id of Object.keys(buffs)){buffs[id]-=dt;if(buffs[id]<=0)delete buffs[id];}
+  p.mp=Math.min(maxMP(),p.mp+dt*((active('speed')&&schoolId()==='healing'?11:7)+passiveBonuses().manaRegen));
+  for(let i=effects.length-1;i>=0;i--){effects[i].life-=dt;if(effects[i].life<=0)effects.splice(i,1);}
+  for(const m of mobs){m.stun=Math.max(0,(m.stun||0)-dt);m.slow=Math.max(0,(m.slow||0)-dt);m.suppressed=Math.max(0,(m.suppressed||0)-dt);updateDamageOverTime(m,dt);}
+  updateShots(dt);
+  if(active('spirit')&&!isSanctuary(p)){spiritTick-=dt;if(spiritTick<=0){spiritTick=1.5;const m=nearest(430);if(m)shoot(m,.85,'fireArrow',{skillKey:'black:3',type:'fire',multiplier:1});}}
+}
 
 function updateBoss(dt,safe){const b=mobs.find(m=>m.type==='boss');if(!b||b.hp<=0||b.stun>0)return;const d=Math.hypot(b.x-p.x,b.y-p.y);if(safe||(!(b.taunt>0||b.engaged>0)&&d>500)||active('stealth')){b.windup=0;b.taunt=0;b.engaged=0;const home=Math.hypot(b.x-1690,b.y-330);if(home>4)walkEnemy(b,1690,330,90,dt);b.hp=Math.min(b.max,b.hp+10*dt);return;}const enraged=b.hp<b.max*.3&&!(b.suppressed>0);if(b.windup>0){b.windup-=dt;if(b.windup<=0){b.cd=enraged?2:3;if(d<120){takeDamage(Math.round(26*(b.attackScale||map().scale)*(enraged?1.3:1)),b);beep(90,.25);}else float('ÚHYB!',p.x,p.y-75,'#acd9b0');}return;}if(d<100&&b.cd<=0){b.windup=1;beep(100,.2);return;}if(d>65){const speed=(enraged?115:90)*(b.slow>0?.55:1)*(active('fear')?.65:1);walkEnemy(b,p.x,p.y,speed,dt);}}
 
@@ -475,7 +557,9 @@ function makeItem(epic=false, source=null) {
   const rarity = epic ? 2 : source?.variant==='rare' ? 1 : rand() < (source?.variant==='elite' ? .45 : .16) ? 1 : 0;
   const slots = Object.keys(EQUIPMENT), slot = slots[Math.min(slots.length-1, Math.floor(rand()*slots.length))], spec = EQUIPMENT[slot];
   const tier = Math.min(99, source ? enemyLevel(source) : map().enemyLevel);
-  return { name: spec.names[rarity], slot, rarity, tier, requiredLevel: tier, enhance: 0, bonus: spec.base + Math.floor(tier * spec.scale) + rarity * spec.rare, value: 12 + tier * 3 + rarity * 25 };
+  const stats={};
+  if(rarity>0){if(slot==='weapon')stats.crit=.005*rarity;else{const skin=source?.type==='stone'?(METIN_GUARDS.find(t=>source.level<=t.max)?.skin||'demon'):source?.skin;const type=skin?enemyDamageType({skin}):Object.keys(DAMAGE_TYPES)[Math.floor(rand()*Object.keys(DAMAGE_TYPES).length)];stats[type+'Resist']=Math.min(.2,.02+rarity*.02+tier*.001);}}
+  return { name: spec.names[rarity], slot, rarity, tier, requiredLevel: tier, enhance: 0, stats, bonus: spec.base + Math.floor(tier * spec.scale) + rarity * spec.rare, value: 12 + tier * 3 + rarity * 25 };
 }
 
 function awardItem(epic=false,source=null){const item=makeItem(epic,source);if(!addGearItem(item)){p.gold+=item.value;float('Batoh plný · +'+item.value+' zlata',p.x,p.y-110,'#d6cb99');return item;}float(item.name+' → I',p.x,p.y-110,item.rarity===2?'#d3a3eb':item.rarity===1?'#a3ceec':'#d1dab7');return item;}
@@ -496,7 +580,7 @@ function snapshotMap() {
   if (!mobs.length) return;
   p.worldStates[p.mapId] = {
     progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
-    mobs: mobs.map(m => ({ ...m, dot: m.dot ? { ...m.dot } : null, skillContributors: [...(m.skillContributors || [])] })),
+    mobs: mobs.map(cloneEnemyState),
     drops: drops.map(cloneGroundDrop)
   };
 }
@@ -510,6 +594,7 @@ function loadMap(id, initial=false) {
     if (!running || !isSanctuary(p)) { toast('Cestovať môžeš z útočiska (M).'); return false; }
     snapshotMap();
   }
+  resetCombatFlow();
   p.mapId=id;
   const cfg=map(), old=p.worldStates[id];
   cfg.mobSpeed=75+(cfg.scale-1)*14; seed=cfg.seed; decor.length=0;
@@ -785,7 +870,7 @@ function enterRift() {
   drops.length = 0;
   mobs.forEach(m => {
     applyRiftScaling(m, tier, end.run.id);
-    m.dead = 0; m.cd = 2; m.stun = 0; m.dot = null; m.skillContributors = [];
+    m.dead = 0; m.cd = 2; m.stun = 0; m.dot = null; m.dots=[]; m.skillContributors = [];
     m.taunt = 0; m.engaged = 0;
     m.x = m.homeX ?? (m.type === 'boss' ? 1690 : m.x);
     m.y = m.homeY ?? (m.type === 'boss' ? 330 : m.y);
@@ -911,7 +996,7 @@ function hydrateSpawnPopulation(old) {
     return restoreMetinGuards(generated.map(m => {
       const prior = saved.get(m.spawnId);
       if (m.type === 'stone') return restoreMetin(m, prior);
-      return prior ? { ...m, ...prior, dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0, roamTarget: null, roamWait: rand() * 4, returning: false } : m;
+      return prior ? { ...m, ...cloneEnemyState(prior), dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0, roamTarget: null, roamWait: rand() * 4, returning: false } : m;
     }), old.mobs);
   }
   // Upgrade old sparse populations into distinct new slots without reviving their dead.
@@ -930,6 +1015,7 @@ function hydrateSpawnPopulation(old) {
     m.dead = Math.max(0, prior.dead || 0); m.cd = Math.max(0, prior.cd || 0);
     m.skillContributors = [...(prior.skillContributors || [])];
     if (prior.dot) m.dot = { ...prior.dot };
+    m.dots=(prior.dots||[]).map(dot=>({...dot}));
   }
   return restoreMetinGuards(generated, old.mobs);
 }
@@ -939,7 +1025,7 @@ function loadLegacyRift(old) {
   return old.mobs.map((prior, index) => {
     const id = 'legacy-rift:' + index, x = prior.homeX ?? prior.x, y = prior.homeY ?? prior.y;
     spawnPoints.push({ id, kind: prior.type === 'wolf' ? 'pack' : prior.type, x, y, area: farmAreaAt(prior).id, offset: 0 });
-    return upgradeLegacyMetin({ ...prior, spawnId: id + ':0', spawnPointId: id, spawnSlot: 0, variant: 'normal', respawnSeconds: prior.type === 'boss' ? 40 : prior.type === 'stone' ? 18 : 5, taunt: 0, engaged: 0, stun: 0, windup: 0 }, spawnPoints.at(-1));
+    return upgradeLegacyMetin({ ...cloneEnemyState(prior), spawnId: id + ':0', spawnPointId: id, spawnSlot: 0, variant: 'normal', respawnSeconds: prior.type === 'boss' ? 40 : prior.type === 'stone' ? 18 : 5, taunt: 0, engaged: 0, stun: 0, windup: 0 }, spawnPoints.at(-1));
   });
 }
 
@@ -947,7 +1033,7 @@ function respawnEnemy(m) {
   const point = spawnPoints.find(p => p.id === m.spawnPointId);
   if (!point || legacyRiftLayout) {
     m.hp = m.max; m.x = m.homeX ?? m.x; m.y = m.homeY ?? m.y;
-    m.dead = 0; m.cd = 1; m.taunt = 0; m.engaged = 0; m.stun = 0; m.slow = 0; m.dot = null; m.windup = 0; m.skillContributors = [];
+    m.dead = 0; m.cd = 1; m.taunt = 0; m.engaged = 0; m.stun = 0; m.slow = 0; m.dot = null; m.dots=[]; m.windup = 0; m.skillContributors = [];
     m.roamTarget = null; m.roamWait = rand() * 4; m.returning = false;
     if (m.type === 'stone') { m.metinCombat = 0; m.metinWaveTimer = 0; m.metinGeneration = (m.metinGeneration || 0) + 1; }
     return;
@@ -1519,9 +1605,9 @@ function configureMetin(m, point) {
 
 function restoreMetin(fresh, prior) {
   if (!prior) return fresh;
-  if (prior.metinSchema === METIN_RULES.schema) return { ...fresh, ...prior, dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0, metinCombat: Math.max(0, Math.min(METIN_RULES.combatWindow, prior.metinCombat || 0)), metinWaveTimer: Math.max(0, prior.metinWaveTimer || 0) };
+  if (prior.metinSchema === METIN_RULES.schema) return { ...fresh, ...prior, dot: prior.dot ? { ...prior.dot } : null, dots:(prior.dots||[]).map(dot=>({...dot})), skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0, metinCombat: Math.max(0, Math.min(METIN_RULES.combatWindow, prior.metinCombat || 0)), metinWaveTimer: Math.max(0, prior.metinWaveTimer || 0) };
   const hpRatio = Math.max(0, Math.min(1, prior.hp / prior.max));
-  return { ...prior, ...fresh, x: prior.x, y: prior.y, homeX: prior.homeX ?? prior.x, homeY: prior.homeY ?? prior.y, hp: prior.hp <= 0 ? 0 : Math.max(1, Math.round(fresh.max * hpRatio)), dead: Math.max(0, prior.dead || 0), cd: prior.cd || 0, dot: prior.dot ? { ...prior.dot } : null, skillContributors: [...(prior.skillContributors || [])] };
+  return { ...prior, ...fresh, x: prior.x, y: prior.y, homeX: prior.homeX ?? prior.x, homeY: prior.homeY ?? prior.y, hp: prior.hp <= 0 ? 0 : Math.max(1, Math.round(fresh.max * hpRatio)), dead: Math.max(0, prior.dead || 0), cd: prior.cd || 0, dot: prior.dot ? { ...prior.dot } : null, dots:(prior.dots||[]).map(dot=>({...dot})), skillContributors: [...(prior.skillContributors || [])] };
 }
 
 function upgradeLegacyMetin(m, point) {
@@ -1535,14 +1621,14 @@ function upgradeLegacyMetin(m, point) {
 function restoreMetinGuards(population, prior) {
   const parents = new Set(population.filter(m => m.type === 'stone').map(m => m.spawnId));
   for (const m of prior || []) if (m.metinParentId && m.hp > 0 && m.metinLife > 0 && parents.has(m.metinParentId)) {
-    population.push({ ...m, dot: m.dot ? { ...m.dot } : null, skillContributors: [...(m.skillContributors || [])], taunt: 0, engaged: 0, stun: 0, returning: true });
+    population.push({ ...cloneEnemyState(m), dot: m.dot ? { ...m.dot } : null, skillContributors: [...(m.skillContributors || [])], taunt: 0, engaged: 0, stun: 0, returning: true });
   }
   return population;
 }
 
-function metinDamage(m, amount) {
+function metinDamage(m, amount, type='physical') {
   if (!Number.isFinite(amount) || amount <= 0) return 0;
-  return Math.max(1, Math.round(Math.max(1, amount - (m.metinArmor || 0)) * (1 - (m.metinResistance || 0))));
+  return resolveEnemyDamage(m,Math.max(1, Math.round(Math.max(1, amount - (m.metinArmor || 0)) * (1 - (m.metinResistance || 0)))),type);
 }
 
 function registerMetinAttack(m) {
@@ -1608,8 +1694,331 @@ function dropMetinLoot(stone) {
 }
 
 
+// src/js/systems/targeting.js
+const combatAim = { inside: false, clientX: 0, clientY: 0 };
+let playerMoving = false;
+
+function selectedEnemy() {
+  return target && mobs.includes(target) && target.hp > 0 ? target : null;
+}
+
+function clearCombatTarget() { target = null; $('target-panel').hidden = true; }
+
+function setCombatPointer(event) {
+  combatAim.inside = true; combatAim.clientX = event.clientX; combatAim.clientY = event.clientY;
+  setLootPointer(event); updateFacing();
+}
+
+function leaveCombatPointer() { combatAim.inside = false; clearLootPointer(); }
+
+function combatBlur() { keysClear(); leaveCombatPointer(); clearCombatTarget(); }
+
+function cursorWorld() {
+  const rect = canvas.getBoundingClientRect();
+  return world(combatAim.clientX - (rect.left || 0), combatAim.clientY - (rect.top || 0));
+}
+
+function updateFacing() {
+  const enemy = selectedEnemy();
+  if (enemy) face = Math.atan2(enemy.y - p.y, enemy.x - p.x);
+  else if (combatAim.inside) { const aim = cursorWorld(); if (Math.hypot(aim.x-p.x,aim.y-p.y)>3) face=Math.atan2(aim.y-p.y,aim.x-p.x); }
+}
+
+function enemyInArc(m, range, angle = face, halfArc = BATTLE.halfArc) {
+  if (m.hp <= 0) return false;
+  const dx=m.x-p.x,dy=m.y-p.y,d=Math.hypot(dx,dy);
+  return d <= range && (d < 3 || (dx*Math.cos(angle)+dy*Math.sin(angle))/d >= Math.cos(halfArc));
+}
+
+function aimEnemy(range) {
+  const selected = selectedEnemy();
+  if (selected) return Math.hypot(selected.x-p.x,selected.y-p.y)<=range ? selected : null;
+  return mobs.filter(m=>enemyInArc(m,range)).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0] || null;
+}
+
+function aimedPoint(range) {
+  if (combatAim.inside) {
+    const aim=cursorWorld(),d=Math.hypot(aim.x-p.x,aim.y-p.y),distance=Math.min(range,d);
+    return {x:p.x+Math.cos(face)*distance,y:p.y+Math.sin(face)*distance};
+  }
+  return {x:p.x+Math.cos(face)*range,y:p.y+Math.sin(face)*range};
+}
+
+function enemyAtPointer(x,y) {
+  return mobs.filter(m=>m.hp>0).sort((a,b)=>b.y-a.y).find(m=>{
+    if(m.type==='stone')return metinHitTest(m,x,y);
+    const a=screen(m.x,m.y),width=m.type==='boss'?48:m.skin==='wolf'?31:38,height=m.type==='boss'?112:m.skin==='wolf'?48:74;
+    return Math.abs(x-a.x)<=width && y>=a.y-height && y<=a.y+9;
+  }) || null;
+}
+
+function rangedBasic() { return p.classId==='ninja' && p.schools.ninja==='archery'; }
+function basicAttackRange() { return rangedBasic()?BATTLE.rangedRange:BATTLE.meleeRange; }
+
+function selectCombatTarget(enemy) {
+  if(!enemy||enemy.hp<=0||!mobs.includes(enemy))return false;
+  target=enemy; updateFacing(); updateCombatHUD();
+  if(Math.hypot(enemy.x-p.x,enemy.y-p.y)<=basicAttackRange())attack();
+  return true;
+}
+
+function handleCombatClick(event) {
+  if(event.button!==undefined&&event.button!==0||!running||paused)return;
+  setCombatPointer(event);
+  const loot=groundDropAt(lootPointer.x,lootPointer.y);
+  if(loot){pickUpGroundDrop(loot.id);canvas.focus();return;}
+  const enemy=enemyAtPointer(lootPointer.x,lootPointer.y);
+  if(enemy)selectCombatTarget(enemy);
+  else{clearCombatTarget();updateFacing();attack();}
+  canvas.focus();
+}
+
+function movePlayer(dx,dy,distance) {
+  const d=Math.hypot(dx,dy);if(!d||distance<=0)return;
+  const oldX=p.x,oldY=p.y;
+  p.x=Math.max(45,Math.min(SIZE-45,p.x+dx/d*distance));p.y=Math.max(45,Math.min(SIZE-45,p.y+dy/d*distance));
+  playerMoving=Math.hypot(p.x-oldX,p.y-oldY)>.001;
+}
+
+function updatePlayerControl(dt) {
+  playerMoving=false;
+  if(target&&!selectedEnemy())clearCombatTarget();
+  const dx=(keys.d||keys.ArrowRight?1:0)-(keys.a||keys.ArrowLeft?1:0),dy=(keys.s||keys.ArrowDown?1:0)-(keys.w||keys.ArrowUp?1:0);
+  if(dx||dy){clearCombatTarget();movePlayer(dx,dy,speedValue()*dt);if(!combatAim.inside)face=Math.atan2(dy,dx);}
+  else{
+    const enemy=selectedEnemy();
+    if(enemy){
+      if(isSanctuary(enemy)){clearCombatTarget();return;}
+      const d=Math.hypot(enemy.x-p.x,enemy.y-p.y),stop=isSanctuary(p)?0:rangedBasic()?BATTLE.rangedStop:BATTLE.meleeStop;
+      if(d>stop)movePlayer(enemy.x-p.x,enemy.y-p.y,Math.min(d-stop,speedValue()*dt));
+      updateFacing();
+      if(Math.hypot(enemy.x-p.x,enemy.y-p.y)<=basicAttackRange()&&castPose<=.2)attack();
+    }
+  }
+  updateFacing();
+}
+
+
+// src/js/systems/battle.js
+let castingMultiplier=1;
+const combatFlow={lastKey:null,time:0,name:'',flash:0,basicTarget:null,basicHits:0,basicTime:0,rhythm:0};
+
+function schoolId() { return p.schools[p.classId]; }
+function passiveRank() { return p.level<10?0:p.level<25?1:p.level<50?2:p.level<75?3:4; }
+
+function passiveBonuses() {
+  const b={outgoing:{},resist:{},crit:0,mp:0,heal:0,manaRegen:0},rank=passiveRank();
+  if(!rank)return b;
+  switch(schoolId()){
+    case 'body':b.outgoing.physical=.03*rank;break;
+    case 'mental':b.resist.physical=.04+.02*rank;break;
+    case 'blade':b.crit=.01*rank;b.resist.poison=.06*rank;break;
+    case 'archery':b.outgoing.piercing=.04*rank;break;
+    case 'weapon':b.outgoing.dark=.03*rank;b.resist.physical=.02*rank;break;
+    case 'black':b.resist.dark=.05*rank;b.mp=15*rank;break;
+    case 'dragon':b.outgoing.fire=.04*rank;b.resist.fire=.04*rank;break;
+    case 'healing':b.resist.lightning=.04*rank;b.heal=.04*rank;b.manaRegen=.5*rank;break;
+  }
+  return b;
+}
+
+function enemyResistances(m) {
+  const source=m.type==='stone'?(METIN_RESISTS[m.metinType]||{}):(CREATURE_RESISTS[m.skin||'wolf']||{});
+  return Object.fromEntries(Object.keys(DAMAGE_TYPES).map(type=>{
+    let value=Object.hasOwn(m.resistances||{},type)?m.resistances[type]:(source[type]||0)+(m.type==='boss'?.1:0);
+    if(m.suppressed>0&&value>0)value=Math.max(0,value-.15);
+    return [type,Math.max(-.5,Math.min(.75,Number(value)||0))];
+  }));
+}
+
+function playerResistances() {
+  const gear=equipmentBonuses(),passive=passiveBonuses();
+  return Object.fromEntries(Object.keys(DAMAGE_TYPES).map(type=>[type,Math.max(-.5,Math.min(.75,(gear[type+'Resist']||0)+(passive.resist[type]||0)))]));
+}
+
+function resolveEnemyDamage(m,amount,type='physical') {
+  if(!Number.isFinite(amount)||amount<=0)return 0;
+  return Math.max(1,Math.round(amount*(1-(enemyResistances(m)[type]||0))));
+}
+
+function enemyDamageType(m) { return m?.damageType|| (m?.skin==='scorpion'?'poison':m?.skin==='demon'?'fire':'physical'); }
+function basicDamageType() { return rangedBasic()?'piercing':'physical'; }
+function skillDamageType(key) { return ACTIVE_SKILLS[key]?.type||'arcane'; }
+function percentItemStat(stat) { return stat==='crit'||stat.endsWith('Resist'); }
+
+function resetCombatFlow() {
+  clearCombatTarget();Object.assign(combatFlow,{lastKey:null,time:0,name:'',flash:0,basicTarget:null,basicHits:0,basicTime:0,rhythm:0});castingMultiplier=1;playerMoving=false;
+}
+
+function updateCombatFlow(dt) {
+  for(const key of ['time','flash','basicTime','rhythm'])combatFlow[key]=Math.max(0,combatFlow[key]-dt);
+  if(!combatFlow.time)combatFlow.lastKey=null;
+  if(!combatFlow.basicTime){combatFlow.basicTarget=null;combatFlow.basicHits=0;}
+}
+
+function registerBasicHit(m) {
+  if(schoolId()!=='body'||!passiveRank())return;
+  if(combatFlow.basicTarget!==m){combatFlow.basicTarget=m;combatFlow.basicHits=0;}
+  combatFlow.basicHits++;combatFlow.basicTime=3;
+  if(combatFlow.basicHits>=3){combatFlow.basicHits=0;combatFlow.rhythm=5;float('BOJOVÝ RYTMUS',p.x,p.y-95,'#ead19b');}
+}
+
+function beginSkillFlow(index) {
+  const id=schoolId(),key=id+':'+index,combo=SCHOOL_COMBOS[id],meta=ACTIVE_SKILLS[key];let multiplier=1;
+  if(combatFlow.time>0&&combatFlow.lastKey===id+':'+combo.sequence[0]&&index===combo.sequence[1]){
+    multiplier+=combo.bonus;combatFlow.name=combo.name;combatFlow.flash=2;combatFlow.lastKey=null;combatFlow.time=0;
+    float('KOMBO · '+combo.name,p.x,p.y-115,'#f1cf8d',true);fx('comboBurst',p.x,p.y,'#efd09b',.7);
+  }else{combatFlow.lastKey=key;combatFlow.time=BATTLE.comboWindow;}
+  if(meta.type&&combatFlow.rhythm>0){multiplier+=.1+.03*passiveRank();combatFlow.rhythm=0;}
+  return multiplier;
+}
+
+function animateAbility(index) {
+  const key=skillKey(index),meta=ACTIVE_SKILLS[key],color=meta.type?DAMAGE_TYPES[meta.type].color:role().color;
+  effects.push({style:'skillSigil',x:p.x,y:p.y,color,life:.8,total:.8,angle:face,ability:key,school:schoolId(),slot:index});
+}
+
+function applyDamageOverTime(m,kind,power,key=null) {
+  if(m.hp<=0)return;
+  m.dots??=[];let dot=m.dots.find(dot=>dot.kind===kind);
+  if(dot){dot.time=6;dot.power=Math.max(dot.power,power);dot.key=key||dot.key;}
+  else m.dots.push({kind,time:6,tick:1,power,key});
+}
+
+function updateDamageOverTime(m,dt) {
+  if(m.dot){m.dots??=[];if(!m.dots.some(d=>d.kind===m.dot.kind))m.dots.push({...m.dot});m.dot=null;}
+  if(m.hp<=0)return;
+  for(const dot of m.dots||[]){
+    const activeTime=Math.min(dt,dot.time);dot.time=Math.max(0,dot.time-dt);dot.tick-=activeTime;
+    while(dot.tick<=0&&m.hp>0){dot.tick+=1;if(dot.key)rememberSkill(m,dot.key);hit(m,dot.power,dot.kind);fx(dot.kind==='poison'?'poison':'fire',m.x,m.y,DAMAGE_TYPES[dot.kind]?.color||'#cfb481',.4);}
+  }
+  m.dots=(m.dots||[]).filter(dot=>dot.time>0);
+}
+
+function cloneEnemyState(m) { return {...m,dot:m.dot?{...m.dot}:null,dots:(m.dots||[]).map(d=>({...d})),skillContributors:[...(m.skillContributors||[])]}; }
+
+function applyCombatControl(m,opts,x=p.x,y=p.y) {
+  if(m.hp<=0)return;
+  if(opts.stun)m.stun=Math.max(m.stun||0,opts.stun*(m.type==='boss'?.4:1));
+  if(opts.dot)applyDamageOverTime(m,opts.dot,Math.max(3,Math.round(damage()*.18*skillFactor(opts.skillKey||castingSkillKey||'invalid')*(opts.multiplier||castingMultiplier)*(1+(passiveBonuses().outgoing[opts.dot]||0)))),opts.skillKey||castingSkillKey);
+  if(opts.knock&&m.type!=='stone'){const d=Math.hypot(m.x-x,m.y-y)||1;m.x=Math.max(45,Math.min(SIZE-45,m.x+(m.x-x)/d*45));m.y=Math.max(45,Math.min(SIZE-45,m.y+(m.y-y)/d*45));}
+}
+
+function segmentHit(m,x1,y1,x2,y2) {
+  const dx=x2-x1,dy=y2-y1,length=dx*dx+dy*dy,t=length?Math.max(0,Math.min(1,((m.x-x1)*dx+(m.y-15-y1)*dy)/length)):0;
+  const radius=m.type==='stone'?32:m.type==='boss'?32:20;
+  return Math.hypot(m.x-(x1+dx*t),m.y-15-(y1+dy*t))<=radius?t:null;
+}
+
+function impactShot(b,m) {
+  if(b.opts.sharedHits)b.opts.sharedHits.add(m);
+  if(b.opts.radius)areaHit(m.x,m.y,b.opts.radius,b.mult,{...b.opts,type:b.opts.type});
+  else{hurtMob(m,b.mult,!['physical','piercing'].includes(b.opts.type),b.opts.skillKey,b.opts);applyCombatControl(m,b.opts);}
+  if(b.opts.dispel)m.suppressed=8;
+  if(b.opts.slow)m.slow=b.opts.slow;
+  fx(b.style==='darkOrb'?'dark':b.style==='fireArrow'?'fire':'impact',m.x,m.y,b.color,.6);
+}
+
+function updateShots(dt) {
+  for(let i=shots.length-1;i>=0;i--){
+    const b=shots[i];
+    if(b.opts.delay>0){b.opts.delay=Math.max(0,b.opts.delay-dt);continue;}
+    b.life-=dt;if(b.life<=0||b.target&&b.target.hp<=0){shots.splice(i,1);continue;}
+    const step=Math.min(650*dt,b.remainingRange),oldX=b.x,oldY=b.y;
+    if(b.target){const dx=b.target.x-b.x,dy=b.target.y-15-b.y,d=Math.hypot(dx,dy);b.vx=dx/(d||1);b.vy=dy/(d||1);if(d<=step+12){impactShot(b,b.target);shots.splice(i,1);continue;}}
+    b.x+=b.vx*step;b.y+=b.vy*step;b.remainingRange-=step;
+    if(!b.target){
+      const hits=mobs.filter(m=>m.hp>0&&!b.opts.sharedHits?.has(m)).map(m=>({m,t:segmentHit(m,oldX,oldY,b.x,b.y)})).filter(hit=>hit.t!==null).sort((a,b)=>a.t-b.t);
+      if(hits.length){impactShot(b,hits[0].m);shots.splice(i,1);continue;}
+    }
+    if(b.remainingRange<=0)shots.splice(i,1);
+  }
+}
+
+
+// src/js/systems/abilities.js
+function dashDestination(point) {
+  const desired={x:Math.max(45,Math.min(SIZE-45,point.x)),y:Math.max(45,Math.min(SIZE-45,point.y))};
+  if(!isSanctuary(desired))return desired;
+  let low=0,high=1;
+  for(let i=0;i<20;i++){const t=(low+high)/2,at={x:p.x+(desired.x-p.x)*t,y:p.y+(desired.y-p.y)*t};if(Math.hypot(at.x-1000,at.y-1050)<SPAWN_RULES.sanctuaryRadius+8)high=t;else low=t;}
+  return{x:p.x+(desired.x-p.x)*low,y:p.y+(desired.y-p.y)*low};
+}
+
+function castSkill(index) {
+  if(!running||paused||p.hp<=0||!Number.isInteger(index)||index<0||index>5)return false;
+  const s=school().skills[index],[name,kind,cd,cost,mult,range]=s,support=SUPPORT_SKILLS.has(kind),key=skillKey(index),type=skillDamageType(key);
+  if(isSanctuary(p)&&!support){toast('Útočisko je chránené. Zaútoč až mimo neho.');return false;}
+  if(spellCD[index]>0)return false;
+  if(p.mp<cost){toast('Nedostatok many · priebežne sa obnovuje.');return false;}
+  updateFacing();const m=aimEnemy(range||500);
+  const radial=['spin','stomp','poisonCloud','dragonSpin','flameBurst','dragonRoar','burst'];
+  if(!support&&!radial.includes(kind)&&selectedEnemy()&&!m){toast('Označený cieľ je mimo dosahu schopnosti.');return false;}
+  if(kind==='ambush'&&!m){toast('Prepad potrebuje blízky cieľ pred tebou.');return false;}
+  if(kind==='burst'&&p.hp<=maxHP()*.08){toast('Na Životnú silu potrebuješ viac zdravia.');return false;}
+  p.mp-=cost;castingSkillKey=key;castingMultiplier=beginSkillFlow(index);
+  if(m)rememberSkill(m,key);
+  spellCD[index]=cd*(1-(skillProgress(key).rank-1)*.01);skillCD=spellCD[0];castPose=.6;castStyle=kind;
+  animateAbility(index);beep(p.classId==='sura'?160:p.classId==='shaman'?620:320,.17);float(name,p.x,p.y-100,role().color);
+  const opts={skillKey:key,type,multiplier:castingMultiplier};
+  if(support&&kind!=='heal'){
+    buffs[kind]=(kind==='fear'||kind==='berserk'?10:kind==='stealth'?8:12)*skillFactor(key);
+    if(kind==='spirit')spiritTick=0;
+    fx(kind==='stealth'?'smoke':'aura',p.x,p.y,role().color,1.1);
+  }else if(kind==='heal'){
+    const amount=Math.round((45+p.level*5+p.intelligence*4+careerBonuses().magic+equipmentBonuses().magic)*skillFactor(key)*(1+passiveBonuses().heal)*castingMultiplier);
+    const healed=Math.min(maxHP()-p.hp,amount);p.hp+=healed;fx('heal',p.x,p.y,'#b4f4c1',1);float('+'+healed+' zdravia',p.x,p.y-65,'#b4f4c1');
+  }else if(['dash','poisonDash','roll'].includes(kind)){
+    const point=m?{x:m.x,y:m.y}:aimedPoint(range),d=Math.hypot(point.x-p.x,point.y-p.y)||1,travel=Math.max(0,Math.min(range,d-(m?40:0))),old={x:p.x,y:p.y};
+    const destination=dashDestination({x:p.x+(point.x-p.x)/d*travel,y:p.y+(point.y-p.y)/d*travel});p.x=destination.x;p.y=destination.y;
+    fx('dash',old.x,old.y,role().color,.5);fx(kind==='roll'?'spin':'slash');
+    if(!isSanctuary(p))areaHit(p.x,p.y,kind==='roll'?155:90,mult,{...opts,dot:kind==='poisonDash'?'poison':null,stun:kind==='dash'?.8:0});
+  }else if(kind==='ambush'){
+    hurtMob(m,mult*(active('stealth')?2:1),false,key,opts);fx('cross',m.x,m.y,role().color,.6);
+  }else if(['darkBolt','darkOrb','spiritBolt','fireArrow','poisonArrow','talisman','boltStun','dispel'].includes(kind)){
+    shoot(m,mult,kind,{...opts,range,radius:kind==='darkOrb'?100:kind==='fireArrow'?80:0,dot:kind==='poisonArrow'?'poison':kind==='fireArrow'?'fire':null,stun:kind==='boltStun'?1.8:0,slow:kind==='spiritBolt'?4:0,dispel:kind==='dispel'});
+  }else if(kind==='multiShot'){
+    for(let j=0;j<3;j++)shoot(m,mult/3,'arrow',{...opts,range,delay:j*.12});
+  }else if(kind==='arrowRain'){
+    const candidates=mobs.filter(n=>enemyInArc(n,range,face,1.25)).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y)).slice(0,5),sharedHits=new Set();
+    if(candidates.length)for(const enemy of candidates)shoot(enemy,mult,'arrow',{...opts,range,sharedHits});
+    else for(let j=0;j<5;j++)shoot(null,mult,'arrow',{...opts,range,angle:face+(j-2)*.13,sharedHits});
+  }else if(['lightning','spark','storm','chain'].includes(kind)){
+    const anchor=m||aimedPoint(range),list=kind==='chain'&&m?[m,...mobs.filter(n=>n!==m&&n.hp>0&&Math.hypot(n.x-m.x,n.y-m.y)<220).sort((a,b)=>Math.hypot(a.x-m.x,a.y-m.y)-Math.hypot(b.x-m.x,b.y-m.y)).slice(0,3)]:[anchor];
+    for(const n of list){fx('lightning',n.x,n.y,DAMAGE_TYPES[type].color,.7);if(kind==='storm')areaHit(n.x,n.y,140,mult,{...opts,stun:.8});else if(n.hp>0){hurtMob(n,mult,true,key,opts);if(kind==='spark')n.stun=1;}}
+  }else if(kind==='ground'){
+    const at=m||aimedPoint(range);fx('ground',at.x,at.y,role().color,.9);areaHit(at.x,at.y,140,mult,{...opts,knock:true});
+  }else if(['beam','dragonBreath','finger','cleave'].includes(kind)){
+    fx(kind==='dragonBreath'?'dragon':kind==='finger'?'finger':'beam',p.x,p.y,DAMAGE_TYPES[type].color,.8);
+    const ux=Math.cos(face),uy=Math.sin(face);
+    for(const n of mobs){const dx=n.x-p.x,dy=n.y-p.y,along=dx*ux+dy*uy,across=Math.abs(dx*uy-dy*ux);
+      if(n.hp>0&&along>=0&&along<=range&&across<(kind==='dragonBreath'?100:65)){hurtMob(n,mult,!['physical','piercing'].includes(type),key,opts);applyCombatControl(n,{...opts,dot:kind==='dragonBreath'?'fire':null,knock:kind==='cleave'});}}
+  }else if(kind==='triple'){
+    for(let j=0;j<3;j++){if(m)hurtMob(m,mult/3,false,key,opts);fx('slash',p.x,p.y,role().color,.35+j*.13,face+(j-1)*.2);}
+  }else{
+    if(kind==='burst')p.hp-=maxHP()*.08;
+    fx(kind==='poisonCloud'?'poison':kind==='dragonRoar'?'dragon':kind==='flameBurst'?'fire':kind==='stomp'||kind==='burst'?'ground':'spin',p.x,p.y,DAMAGE_TYPES[type].color,.85);
+    areaHit(p.x,p.y,range,mult,{...opts,dot:kind==='poisonCloud'?'poison':kind==='dragonRoar'||kind==='flameBurst'?'fire':null,stun:kind==='stomp'?1.7:0,knock:kind==='dragonSpin'});
+  }
+  if(kind!=='stealth')delete buffs.stealth;
+  castingSkillKey=null;castingMultiplier=1;updateHUD();return true;
+}
+
+function attack(skill=false) {
+  if(skill)return castSkill(0);
+  if(!running||paused||p.hp<=0||attackCD>0||isSanctuary(p))return false;
+  updateFacing();attackCD=(p.classId==='ninja'?.32:.42)*(active('berserk')?.6:1);slash=.22;castStyle='basic';
+  if(rangedBasic())shoot(selectedEnemy()&&Math.hypot(target.x-p.x,target.y-p.y)<=BATTLE.rangedRange?target:null,1,'arrow',{basic:true,type:'piercing',range:BATTLE.rangedRange,skillKey:null,multiplier:1});
+  else{
+    fx(p.classId==='ninja'?'cross':p.classId==='shaman'?'fan':'slash',p.x,p.y,role().color,.25,face);
+    for(const m of mobs)if(enemyInArc(m,BATTLE.meleeRange))hurtMob(m,1,false,null,{basic:true,type:'physical',multiplier:1});
+  }
+  delete buffs.stealth;beep(230);return true;
+}
+
+
 // src/js/ui/panels.js
-function modal(html){clearLootPointer();$('modal').className='overlay';paused=true;keysClear();$('modalcontent').innerHTML=html;$('modal').hidden=false;}
+function modal(html){clearLootPointer();$('modal').className='overlay';paused=true;keysClear();$('modalcontent').innerHTML=html;$('modal').hidden=false;$('modalcard').scrollTop=0;}
 
 function closeModal(){$('modal').className='overlay';$('modal').hidden=true;paused=false;canvas.focus();}
 
@@ -1620,9 +2029,7 @@ function journal(){if(!running)return;const huntTarget=(p.huntClaimed+1)*10;moda
 
 function travelMenu(){if(!running)return;if(p.career.endgame.run){careerPanel('endgame');return;}modal(`<span class="eyebrow">CESTY KRÁĽOVSTVA · M</span><h2>Cestovná mapa</h2><p>Cestovať môžeš z útočiska na každej mape. Vyššie oblasti sú prístupné hneď, ale ich príšery sú silnejšie.</p><div class="map-list">${Object.entries(MAPS).map(([id,c])=>`<button data-map="${id}" class="map-card ${p.mapId===id?'selected':''}" style="--map-color:${c.ground}"><b>${c.name}</b><small>Úroveň ${c.level}+ · ${c.mob} · ${c.boss}</small><small>${c.metinsOnly?'99 Metinov · úrovne 1–99 · bez voľných príšer':c.count+' pohyblivých príšer · '+c.packCount+' skupinových bodov'}</small><span>${p.mapId===id?'Nachádzaš sa tu':c.desc}</span></button>`).join('')}</div><button class="primary" id="metinAtlas">Atlas Metinov · úrovne, vlny a dropy</button><p id="travelmsg" role="status"></p>`);$('metinAtlas').onclick=metinCodex;document.querySelectorAll('[data-map]').forEach(b=>b.onclick=()=>{if(p.mapId===b.dataset.map)return;if(Math.hypot(p.x-1000,p.y-1050)>190){$('travelmsg').textContent='Najprv sa vráť do útočiska uprostred mapy.';return;}loadMap(b.dataset.map);});}
 
-function spellbook(){if(!running)return;modal(`<span class="eyebrow">${role().name} · ${school().name}</span><h2>Kniha schopností</h2><p>Šesť klasických schopností školy podľa Metin2. Popisy uvádzajú základné hodnoty na stupni 1. Vyššie stupne zlepšujú silu kúzla alebo trvanie aury a skracujú obnovu. Vlastné 2D animácie sú prispôsobené tomuto prototypu.</p><div class="spell-list">${school().skills.map((s,i)=>`<div><kbd>${spellKeys[i].toUpperCase()}</kbd><span><b>${s[0]} · stupeň ${skillProgress(skillKey(i)).rank}</b><small>${s[6]}<br>${s[3]} many · obnova ${s[2]} s</small></span></div>`).join('')}</div><p>Manu obnovuješ priebežne, rýchlejšie v útočisku. Inteligencia zvyšuje manu aj poškodenie kúziel. Školu si vyber pred vstupom do hry. Prax a knihy pre zvyšovanie schopností nájdeš v Progrese (P).</p>`);}
-
-function help(){modal('<span class="eyebrow">SPRIEVODCA</span><h2>Cesta bojovníka</h2><p><b>WASD / šípky</b> — pohyb<br><b>Medzerník</b> — základný útok (možno držať)<br><b>Q R T V U O</b> — šesť schopností školy<br><b>P</b> — dlhodobá progresia<br><b>K</b> — kniha schopností a ich účinky<br><b>Y</b> — pozbierať predmety v okolí bez kurzora; zlato a zásoby sa zbierajú automaticky<br><b>E</b> — elixír zdravia<br><b>B</b> — Plášť statočnosti (650 jednotiek, 18 s)<br><b>I</b> — výbava a vlastnosti<br><b>J</b> — denník úloh<br><b>M</b> — cestovanie medzi mapami z útočiska<br><b>F</b> — obchodník<br><b>Esc</b> — zavrieť okno</p><p>Vyber si povolanie a školu pred vstupom do hry. Kúzla spotrebúvajú manu, ktorá sa automaticky obnovuje. Modré, zelené a fialové efekty označujú rôzne schopnosti, jedy a ochranné aury.</p><p>Príšery sa voľne potulujú po okolí. Zásah vyprovokuje ich skupinu, spolu najviac päť príšer; plášť pritiahne všetky pohyblivé ciele v dosahu. Bossovia napádajú automaticky. Fialové označenie znamená elitu, zlaté vzácnu príšeru. Respawn: bežné príšery 5 s, elity 8 s, vzácne varianty 20 s, vzácne hliadky 75 s, kamene 18 s a bossovia 40 s. Plášť spotrebuje 1 kus aj bez cieľov; ďalšie kúpiš u obchodníka alebo získaš z koristi. Útočisko je chránené: plášť ani útočné kúzla v ňom nefungujú. Útočenie na Metin privoláva vlny obrancov podľa jeho úrovne. Šuterland obsahuje Metiny Lv.1–99; otvor Mapy (M) a Atlas Metinov pre presné dropy. Každá mapa má vlastných protivníkov a silnejšie odmeny. Boss pod 30 % zdravia zúri; Sura ho dokáže potlačiť Zrušením kúzla.</p><p>Vlastná 2D adaptácia šiestich klasických schopností každej školy, nie pôvodné animácie ani presná simulácia hodnôt Metin2. Postup sa ukladá v tomto prehliadači.</p>');}
+function help(){modal('<span class="eyebrow">SPRIEVODCA</span><h2>Cesta bojovníka</h2><p><b>WASD / šípky</b> — pohyb; zrušia automatické nasledovanie<br><b>Ľavý klik</b> — cieľ alebo smerový útok, bez chôdze do prázdna<br><b>Medzerník</b> — smerový útok (možno držať)<br><b>C</b> — bojový manuál<br><b>Q R T V U O</b> — šesť schopností školy<br><b>P</b> — dlhodobá progresia<br><b>K</b> — kniha schopností a ich účinky<br><b>Y</b> — pozbierať predmety v okolí bez kurzora; zlato a zásoby sa zbierajú automaticky<br><b>E</b> — elixír zdravia<br><b>B</b> — Plášť statočnosti (650 jednotiek, 18 s)<br><b>I</b> — výbava a vlastnosti<br><b>J</b> — denník úloh<br><b>M</b> — cestovanie medzi mapami z útočiska<br><b>F</b> — obchodník<br><b>Esc</b> — zavrieť okno</p><p>Kliknutie na nepriateľa alebo Metin označí živý cieľ; postava ho nasleduje a v dosahu automaticky útočí. Po smrti cieľa zastaví. Bez cieľa mieriš kurzorom. Vyber si povolanie a školu pred vstupom do hry. Kúzla spotrebúvajú manu, ktorá sa automaticky obnovuje. Modré, zelené a fialové efekty označujú rôzne schopnosti, jedy a ochranné aury.</p><p>Príšery sa voľne potulujú po okolí. Zásah vyprovokuje ich skupinu, spolu najviac päť príšer; plášť pritiahne všetky pohyblivé ciele v dosahu. Bossovia napádajú automaticky. Fialové označenie znamená elitu, zlaté vzácnu príšeru. Respawn: bežné príšery 5 s, elity 8 s, vzácne varianty 20 s, vzácne hliadky 75 s, kamene 18 s a bossovia 40 s. Plášť spotrebuje 1 kus aj bez cieľov; ďalšie kúpiš u obchodníka alebo získaš z koristi. Útočisko je chránené: plášť ani útočné kúzla v ňom nefungujú. Útočenie na Metin privoláva vlny obrancov podľa jeho úrovne. Šuterland obsahuje Metiny Lv.1–99; otvor Mapy (M) a Atlas Metinov pre presné dropy. Každá mapa má vlastných protivníkov a silnejšie odmeny. Boss pod 30 % zdravia zúri; Sura ho dokáže potlačiť Zrušením kúzla.</p><p>Vlastná 2D adaptácia šiestich klasických schopností každej školy, nie pôvodné animácie ani presná simulácia hodnôt Metin2. Postup sa ukladá v tomto prehliadači.</p>');}
 
 function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
@@ -1690,7 +2097,7 @@ function inventoryEntry(id) {
 }
 
 function itemBonusText(item) {
-  return Object.entries(itemBonuses(item)).filter(([, value]) => value).map(([stat, value]) => `<span class="bonus-line">${ITEM_STATS[stat]} <b>+${stat === 'crit' ? (value * 100).toFixed(1) + ' %' : value}</b></span>`).join('');
+  return Object.entries(itemBonuses(item)).filter(([, value]) => value).map(([stat, value]) => `<span class="bonus-line">${ITEM_STATS[stat]} <b>+${percentItemStat(stat) ? (value * 100).toFixed(1) + ' %' : value}</b></span>`).join('');
 }
 
 function itemDescription(entry, tooltip = false) {
@@ -1827,7 +2234,7 @@ function positionItemTooltip(event) {
 
 // src/js/ui/loot.js
 function signedItemStat(stat, value) {
-  const amount = stat === 'crit' ? Number((Math.abs(value) * 100).toFixed(2)) + ' %' : Number(Math.abs(value).toFixed(2));
+  const amount = percentItemStat(stat) ? Number((Math.abs(value) * 100).toFixed(2)) + ' %' : Number(Math.abs(value).toFixed(2));
   return (value > 0 ? '+' : value < 0 ? '−' : '') + amount;
 }
 
@@ -1892,8 +2299,51 @@ function metinCodex() {
   if (!running) return;
   modal(`<span class="eyebrow">ŠUTERLAND · 1–99</span><h2>Atlas Metinov</h2><p>Poškodzovanie kameňa privoláva obrancov. Prvá vlna príde po 0,2 s, ďalšie pravidelne počas boja. Bežné mapy majú miestne typy; Šuterland má jeden Metin každej úrovne 1–99 a bez útoku žiadne voľné príšery.</p>${Object.entries(METIN_TYPES).map(([id, type]) => {
     const pool = type.loot, example = metinStats(type.levels[0], id);
-    return `<section class="career-card metin-card" style="border-left-color:${type.glow}"><h3>${type.name}</h3><p>Šuterland Lv.${type.levels.join('–')} · ${type.difficulty}<br>Vlny: ${type.wave} obrancovia každých ${type.interval.toLocaleString('sk-SK')} s · typy vlk / škorpión / yeti / démon podľa úrovne<br>Na Lv.${type.levels[0]}: ${example.hp} zdravia, ${example.armor} pancier, ${Math.round(example.resistance * 100)} % odolnosť</p><h4>Vlastný loot pool</h4><p>Yang: vždy · základ ${pool.yang.join('–')} × (1 + úroveň × 0,12)<br>${['ore', 'books', 'essence', 'dust', 'upgradeStones'].map(key => MATERIALS[key] + ': ' + metinPercent(pool[key][0]) + ' · ' + pool[key][1] + '–' + pool[key][2] + ' ks').join('<br>')}<br>Výbava: ${metinPercent(pool.gear)} · ${pool.slots.map(slot => EQUIPMENT[slot].name).join(', ')}<br>Epická výbava pri úspešnom drope výbavy: ${metinPercent(pool.epic)}<br>Vzácna relikvia: ${metinPercent(pool.rare)} · ${RELICS[pool.relic].name}<br>${MATERIALS[pool.extra[0]]}: ${metinPercent(pool.extra[1])}</p></section>`;
+    return `<section class="career-card metin-card" style="border-left-color:${type.glow}"><h3>${type.name}</h3><p>Šuterland Lv.${type.levels.join('–')} · ${type.difficulty}<br>Vlny: ${type.wave} obrancovia každých ${type.interval.toLocaleString('sk-SK')} s · typy vlk / škorpión / yeti / démon podľa úrovne<br>Na Lv.${type.levels[0]}: ${example.hp} zdravia, ${example.armor} pancier, ${Math.round(example.resistance * 100)} % základná odolnosť<br>Typové odolnosti: ${Object.entries(METIN_RESISTS[id]||{}).map(([kind,value])=>DAMAGE_TYPES[kind].name+' '+resistanceText(value)).join(', ')}</p><h4>Vlastný loot pool</h4><p>Yang: vždy · základ ${pool.yang.join('–')} × (1 + úroveň × 0,12)<br>${['ore', 'books', 'essence', 'dust', 'upgradeStones'].map(key => MATERIALS[key] + ': ' + metinPercent(pool[key][0]) + ' · ' + pool[key][1] + '–' + pool[key][2] + ' ks').join('<br>')}<br>Výbava: ${metinPercent(pool.gear)} · ${pool.slots.map(slot => EQUIPMENT[slot].name).join(', ')}<br>Epická výbava pri úspešnom drope výbavy: ${metinPercent(pool.epic)}<br>Vzácna relikvia: ${metinPercent(pool.rare)} · ${RELICS[pool.relic].name}<br>${MATERIALS[pool.extra[0]]}: ${metinPercent(pool.extra[1])}</p></section>`;
   }).join('')}<p>Materiály, výbava a relikvie padajú iba z primeraných kameňov, najviac 5 úrovní pod postavou. Všetko dopadne na zem; Yang a zásoby sa potom zbierajú automaticky v dosahu, výbavu a relikvie zdvihneš Y alebo kliknutím. Kamene vylepšenia potrebuje kováč od +4. Najviac 8 živých obrancov na kameň a 60 na mape; neporažení po 45 s aktívnej simulácie zmiznú bez odmeny.</p>`);
+}
+
+
+// src/js/ui/battle.js
+let combatHudSignature='';
+
+function enemyName(enemy) { return enemy.type==='stone'?(METIN_TYPES[enemy.metinType]?.name||'Metin'):enemy.type==='boss'?map().boss:enemy.name||map().mob; }
+function resistanceText(value) { return (value>0?'+':'')+Number((value*100).toFixed(1)).toLocaleString('sk-SK')+' %'; }
+
+function updateCombatHUD() {
+  const enemy=selectedEnemy(),panel=$('target-panel');panel.hidden=!enemy;
+  if(enemy){
+    const signature=[enemy.spawnId,enemy.hp,enemy.max,enemy.level,playerMoving,enemy.suppressed>0].join('|');
+    if(signature!==combatHudSignature){
+      const resistances=enemyResistances(enemy);
+      panel.innerHTML=`<button id="release-target" aria-label="Zrušiť označený cieľ">×</button><small>OZNAČENÝ CIEĽ · ${playerMoving?'NASLEDUJEM':'AUTOMATICKÝ BOJ'}</small><b>${escapeHTML(enemyName(enemy))} · Lv.${enemyLevel(enemy)}</b><div class="target-health"><i style="width:${Math.max(0,enemy.hp/enemy.max*100)}%"></i><span>${Math.ceil(enemy.hp)} / ${enemy.max}</span></div><div class="target-resistances">${Object.entries(resistances).filter(([,value])=>value).map(([type,value])=>`<span class="${value<0?'vulnerable':'resistant'}">${DAMAGE_TYPES[type].name} ${resistanceText(value)}</span>`).join('')||'<span>Bez typových odolností</span>'}</div>`;
+      $('release-target').onclick=()=>{clearCombatTarget();canvas.focus();};combatHudSignature=signature;
+    }
+  }else combatHudSignature='';
+  const combo=SCHOOL_COMBOS[schoolId()],ready=combatFlow.time>0&&combatFlow.lastKey===schoolId()+':'+combo.sequence[0];
+  const flow=$('combat-flow');flow.hidden=!(ready||combatFlow.flash>0||combatFlow.rhythm>0);
+  if(!flow.hidden)flow.textContent=combatFlow.flash>0?'KOMBO · '+combatFlow.name:combatFlow.rhythm>0?'Bojový rytmus · ďalšia útočná schopnosť zosilnená':combo.name+' · '+spellKeys[combo.sequence[1]].toUpperCase()+' do '+Math.ceil(combatFlow.time)+' s';
+}
+
+function passiveCard() {
+  const passive=SCHOOL_PASSIVES[schoolId()],rank=passiveRank();
+  return `<section class="career-card"><span class="eyebrow">PASÍVNA SCHOPNOSŤ · ${rank?'STUPEŇ '+rank+' / 4':'OD ÚROVNE 10'}</span><h3>${passive.name}</h3><p>${passive.text}<br>Stupne sa odomykajú automaticky na úrovniach 10, 25, 50 a 75. Bez many a bez aktivácie.</p></section>`;
+}
+
+function spellbook() {
+  if(!running)return;
+  const combo=SCHOOL_COMBOS[schoolId()];
+  modal(`<span class="eyebrow">${role().name} · ${school().name}</span><h2>Kniha schopností</h2><p>Šesť aktívnych schopností s vlastnými animáciami. Označený cieľ určuje smer; bez cieľa mieriš kurzorom. Plošné schopnosti zasahujú celý svoj uvedený priestor.</p><div class="spell-list">${school().skills.map((s,i)=>{
+    const meta=ACTIVE_SKILLS[skillKey(i)];
+    return `<div><kbd>${spellKeys[i].toUpperCase()}</kbd><span><b>${s[0]} · stupeň ${skillProgress(skillKey(i)).rank}</b><small>${meta.type?DAMAGE_TYPES[meta.type].name+' poškodenie':'Podporná schopnosť'} · ${s[3]} many · základná obnova ${s[2]} s<br>${s[6]}<br>${combo.sequence.includes(i)?'Súčasť komba: '+combo.name:'Samostatná taktická schopnosť'}</small></span></div>`;
+  }).join('')}</div>${passiveCard()}<section class="career-card"><h3>Kombo · ${combo.name}</h3><p>${combo.sequence.map(i=>'<kbd>'+spellKeys[i].toUpperCase()+'</kbd> '+school().skills[i][0]).join(' → ')}<br>Druhú schopnosť úspešne zošli do ${BATTLE.comboWindow} s. Posilní jej poškodenie alebo liečenie o ${Math.round(combo.bonus*100)} %. Neúspešný pokus nespotrebuje kombo.</p></section><button class="primary" id="combat-guide">Bojový manuál · typy poškodenia a ovládanie</button><p>Prax a knihy na zlepšovanie aktívnych schopností nájdeš v Progrese (P).</p>`);
+  $('combat-guide').onclick=combatManual;
+}
+
+function combatManual() {
+  if(!running)return;
+  const resist=playerResistances();
+  modal(`<span class="eyebrow">ŠKOLA BOJA · C</span><h2>Bojový manuál</h2><p><b>WASD / šípky:</b> pohyb a prerušenie automatického nasledovania.<br><b>Klik na nepriateľa alebo Metin:</b> označiť, nasledovať živú pozíciu a automaticky útočiť v dosahu.<br><b>Klik do prázdna:</b> smerový útok, bez presunu postavy.<br><b>Kurzor:</b> orientácia bez cieľa. Medzerník útočí rovnakým smerom; môžeš ho držať.<br><b>Esc:</b> zatvoriť panel alebo zrušiť cieľ. Smrť cieľa, zmena mapy a strata zamerania okna zastavia nasledovanie.<br><b>Y:</b> korisť v okolí; zlato a zásoby sa zbierajú automaticky.</p><h3>Typy poškodenia a tvoje odolnosti</h3><div class="battle-type-grid">${Object.entries(DAMAGE_TYPES).map(([id,spec])=>`<div style="border-left-color:${spec.color}"><b>${spec.name}</b><span>${resistanceText(resist[id])}</span></div>`).join('')}</div><p>Fyzické zásahy používajú celú obranu, prierazné 60 % a elementálne či magické 25 %. Typová odolnosť sa potom uplatní samostatne. Pozitívna odolnosť cieľa škodu znižuje, negatívna znamená slabinu. Odolnosti sú obmedzené na 75 %, slabiny na −50 %. Metiny navyše používajú vlastný pancier a základnú odolnosť. Oslabenie Zrušením kúzla znižuje kladné typové odolnosti o 15 percentuálnych bodov a potláča zúrivosť bossa.</p><p>Kritický zásah spôsobí 1,8× poškodenie pred odolnosťami. Jed a oheň môžu pôsobiť naraz; opakovanie rovnakého efektu obnoví trvanie a ponechá silnejšiu hodnotu. Základný útok zblízka je čelný výsek; kruhové útoky sú určené na obkľúčenie. Šípy letia priamo a môžu minúť pohyblivý cieľ, vybrané magické strely sledujú označeného nepriateľa.</p>${passiveCard()}<h3>Kombá všetkých škôl</h3>${Object.entries(SCHOOL_COMBOS).map(([id,combo])=>`<div class="career-card"><h3>${combo.name}</h3><p>${SCHOOLS[id].name}: ${combo.sequence.map(i=>SCHOOLS[id].skills[i][0]).join(' → ')}<br>Do 4 sekúnd, +${Math.round(combo.bonus*100)} % poškodenia alebo liečenia druhej schopnosti.</p></div>`).join('')}`);
 }
 
 
@@ -1912,7 +2362,7 @@ function renderClasses(){$('classes').innerHTML=Object.entries(CLASSES).map(([id
 
 function updateClassHUD(){$('playerclass').textContent=role().name;$('classhint').textContent=role().desc;school().skills.forEach((s,i)=>{$(i?'skill'+(i+1):'skill').querySelector('small').textContent=s[0];$(i?'skill'+(i+1):'skill').title=`${s[0]} · stupeň ${skillProgress(skillKey(i)).rank} · ${s[3]} many · ${s[2]} s\n${s[6]}`;});$('attack').querySelector('small').textContent=p.classId==='ninja'&&p.schools.ninja==='archery'?'Streľba':p.classId==='shaman'?'Úder vejárom':'Základný útok';}
 
-function updateHUD(){baseHUD();$('capes').textContent=p.braveryCapes;$('cape-cooldown').textContent=capeCooldown>0?Math.ceil(capeCooldown):'';p.mp=Math.max(0,Math.min(maxMP(),p.mp));$('mpbar').style.width=p.mp/maxMP()*100+'%';$('mptext').textContent=Math.ceil(p.mp)+' / '+maxMP();for(let i=0;i<6;i++)$(i?'cooldown'+(i+1):'cooldown').textContent=spellCD[i]>0?Math.ceil(spellCD[i]):'';$('coords').textContent=Math.hypot(p.x-1000,p.y-1050)<190?'Útočisko · cestovanie M':farmAreaAt().name+(map().metinsOnly?' · Metiny Lv.':' · Lv.')+farmAreaLevelRange(farmAreaAt()).join('–');$('buffs').textContent=Object.entries(buffs).map(([id,t])=>{const s=Object.values(SCHOOLS).flatMap(c=>c.skills).find(s=>s[1]===id);return(s?s[0]:id)+' '+Math.ceil(t)+'s';}).join(' · ');if(p.claimed)$('questnote').textContent='✓ Dokončené · ďalšie úlohy v denníku J';}
+function updateHUD(){baseHUD();$('capes').textContent=p.braveryCapes;$('cape-cooldown').textContent=capeCooldown>0?Math.ceil(capeCooldown):'';p.mp=Math.max(0,Math.min(maxMP(),p.mp));$('mpbar').style.width=p.mp/maxMP()*100+'%';$('mptext').textContent=Math.ceil(p.mp)+' / '+maxMP();for(let i=0;i<6;i++)$(i?'cooldown'+(i+1):'cooldown').textContent=spellCD[i]>0?Math.ceil(spellCD[i]):'';$('coords').textContent=Math.hypot(p.x-1000,p.y-1050)<190?'Útočisko · cestovanie M':farmAreaAt().name+(map().metinsOnly?' · Metiny Lv.':' · Lv.')+farmAreaLevelRange(farmAreaAt()).join('–');$('buffs').textContent=Object.entries(buffs).map(([id,t])=>{const s=Object.values(SCHOOLS).flatMap(c=>c.skills).find(s=>s[1]===id);return(s?s[0]:id)+' '+Math.ceil(t)+'s';}).join(' · ');if(p.claimed)$('questnote').textContent='✓ Dokončené · ďalšie úlohy v denníku J';updateCombatHUD();}
 
 
 // src/js/ui/career.js
@@ -2037,7 +2487,7 @@ function baseGround(){ctx.fillStyle='#536b45';ctx.fillRect(0,0,W,H);const gx=Mat
 
 function drawBoss(b){const{x,y}=screen(b.x,b.y);if(x<-150||x>W+150||y<-80||y>H+150)return;shadow(x,y,2.1);if(b.windup>0){ellipse(x,y,120,74,'#db554633');ctx.strokeStyle='#f2a179';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(x,y,120,74,0,0,Math.PI*2);ctx.stroke();text('ÚDER · USTÚP!',x,y+92,'#f6ad8c',11);}line(x-15,y-14,x-22,y+4,'#4c3f38',9);line(x+15,y-14,x+22,y+4,'#4c3f38',9);polygon([[x-24,y-64],[x-33,y-37],[x-25,y-8],[x+25,y-8],[x+33,y-37],[x+24,y-64]],b.hit>0?'#e8c8a6':p.mapId==='snow'?'#c3d5cf':p.mapId==='temple'?'#ac6750':p.mapId==='desert'?'#ac8b53':'#76684c','#b09b6b');polygon([[x-18,y-56],[x,y-77],[x+18,y-56],[x+12,y-33],[x-12,y-33]],'#9a9a73');ellipse(x,y-70,15,16,'#9c9672');polygon([[x-14,y-76],[x-32,y-102],[x-24,y-74],[x-12,y-65]],'#c0b187');polygon([[x+14,y-76],[x+32,y-102],[x+24,y-74],[x+12,y-65]],'#c0b187');line(x-9,y-72,x-3,y-70,'#f1b17f',3);line(x+3,y-70,x+9,y-72,'#f1b17f',3);line(x+36,y-20,x+49,y-77,'#786344',6);polygon([[x+47,y-80],[x+65,y-78],[x+62,y-54],[x+44,y-57]],'#b4b18b');text('♛ '+map().boss.toUpperCase()+' · Lv.'+enemyLevel(b),x,y-126,'#f0c490',12);ctx.fillStyle='#1b2921';ctx.fillRect(x-55,y-114,110,6);ctx.fillStyle='#c88165';ctx.fillRect(x-55,y-114,110*b.hp/b.max,6);text(Math.ceil(b.hp)+' / '+b.max,x,y-97,'#e0d2a8',8);}
 
-function drawCreature(m){const{x,y}=screen(m.x,m.y);if(x<-100||x>W+100||y<-90||y>H+90)return;shadow(x,y,1.2);const c=m.hit>0?'#ead1a4':m.skin==='scorpion'?'#9a6037':m.skin==='yeti'?'#e3e9dc':'#a16455';if(m.skin==='scorpion'){for(let i=0;i<3;i++){line(x-9,y-4-i*6,x-25-i*2,y+6-i*7,c,3);line(x+9,y-4-i*6,x+25+i*2,y+6-i*7,c,3);}ellipse(x,y-11,14,17,c);line(x,y-26,x+13,y-43,c,6);line(x+13,y-43,x+7,y-57,c,5);polygon([[x+7,y-58],[x-2,y-46],[x+10,y-48]],'#c5ab76');ellipse(x-23,y-9,7,9,c);ellipse(x+23,y-9,7,9,c);ellipse(x-4,y-8,2,2,'#f1d17e');ellipse(x+4,y-8,2,2,'#f1d17e');}else if(m.skin==='yeti'){line(x-10,y-12,x-13,y+2,c,9);line(x+10,y-12,x+13,y+2,c,9);ellipse(x,y-29,21,26,c);line(x-19,y-37,x-27,y-14,c,9);line(x+19,y-37,x+27,y-14,c,9);ellipse(x,y-53,13,13,c);ellipse(x,y-51,9,6,'#5e7b80');ellipse(x-4,y-53,2,2,'#b4e6ee');ellipse(x+4,y-53,2,2,'#b4e6ee');}else{polygon([[x-15,y-39],[x-39,y-61],[x-33,y-20],[x-12,y-16]],'#6e4a4c');polygon([[x+15,y-39],[x+39,y-61],[x+33,y-20],[x+12,y-16]],'#6e4a4c');line(x-8,y-10,x-13,y+1,c,6);line(x+8,y-10,x+13,y+1,c,6);polygon([[x-15,y-42],[x-11,y-9],[x+11,y-9],[x+15,y-42]],c);ellipse(x,y-47,11,12,c);polygon([[x-9,y-51],[x-18,y-67],[x-4,y-56]],'#c3a78c');polygon([[x+9,y-51],[x+18,y-67],[x+4,y-56]],'#c3a78c');line(x-6,y-48,x-1,y-46,'#f8ca72',2);line(x+1,y-46,x+6,y-48,'#f8ca72',2);}if(m.hp<m.max||(!m.metinParentId&&Math.hypot(m.x-p.x,m.y-p.y)<150)){ctx.fillStyle='#20342c';ctx.fillRect(x-24,y-77,48,4);ctx.fillStyle='#c78d79';ctx.fillRect(x-24,y-77,48*m.hp/m.max,4);text((m.name||map().mob)+' · Lv.'+enemyLevel(m),x,y-87,'#e1d4b7',9);}if(m.dot)text(m.dot.kind==='poison'?'☠':'♨',x+28,y-35,m.dot.kind==='poison'?'#c6e58e':'#f8bc76',14);}
+function drawCreature(m){const{x,y}=screen(m.x,m.y);if(x<-100||x>W+100||y<-90||y>H+90)return;shadow(x,y,1.2);const c=m.hit>0?'#ead1a4':m.skin==='scorpion'?'#9a6037':m.skin==='yeti'?'#e3e9dc':'#a16455';if(m.skin==='scorpion'){for(let i=0;i<3;i++){line(x-9,y-4-i*6,x-25-i*2,y+6-i*7,c,3);line(x+9,y-4-i*6,x+25+i*2,y+6-i*7,c,3);}ellipse(x,y-11,14,17,c);line(x,y-26,x+13,y-43,c,6);line(x+13,y-43,x+7,y-57,c,5);polygon([[x+7,y-58],[x-2,y-46],[x+10,y-48]],'#c5ab76');ellipse(x-23,y-9,7,9,c);ellipse(x+23,y-9,7,9,c);ellipse(x-4,y-8,2,2,'#f1d17e');ellipse(x+4,y-8,2,2,'#f1d17e');}else if(m.skin==='yeti'){line(x-10,y-12,x-13,y+2,c,9);line(x+10,y-12,x+13,y+2,c,9);ellipse(x,y-29,21,26,c);line(x-19,y-37,x-27,y-14,c,9);line(x+19,y-37,x+27,y-14,c,9);ellipse(x,y-53,13,13,c);ellipse(x,y-51,9,6,'#5e7b80');ellipse(x-4,y-53,2,2,'#b4e6ee');ellipse(x+4,y-53,2,2,'#b4e6ee');}else{polygon([[x-15,y-39],[x-39,y-61],[x-33,y-20],[x-12,y-16]],'#6e4a4c');polygon([[x+15,y-39],[x+39,y-61],[x+33,y-20],[x+12,y-16]],'#6e4a4c');line(x-8,y-10,x-13,y+1,c,6);line(x+8,y-10,x+13,y+1,c,6);polygon([[x-15,y-42],[x-11,y-9],[x+11,y-9],[x+15,y-42]],c);ellipse(x,y-47,11,12,c);polygon([[x-9,y-51],[x-18,y-67],[x-4,y-56]],'#c3a78c');polygon([[x+9,y-51],[x+18,y-67],[x+4,y-56]],'#c3a78c');line(x-6,y-48,x-1,y-46,'#f8ca72',2);line(x+1,y-46,x+6,y-48,'#f8ca72',2);}if(m.hp<m.max||(!m.metinParentId&&Math.hypot(m.x-p.x,m.y-p.y)<150)){ctx.fillStyle='#20342c';ctx.fillRect(x-24,y-77,48,4);ctx.fillStyle='#c78d79';ctx.fillRect(x-24,y-77,48*m.hp/m.max,4);text((m.name||map().mob)+' · Lv.'+enemyLevel(m),x,y-87,'#e1d4b7',9);}if(m.dots?.length||m.dot){const dot=m.dots?.[0]||m.dot;text(dot.kind==='poison'?'☠':'♨',x+28,y-35,dot.kind==='poison'?'#c6e58e':'#f8bc76',14);}}
 
 function ground(){if(p.mapId==='suterland'){suterlandGround();}else if(p.mapId==='valley'){baseGround();}else{const cfg=map();ctx.fillStyle=cfg.ground;ctx.fillRect(0,0,W,H);const gx=Math.floor((cam.x-W/2)/100)*100,gy=Math.floor((cam.y-H/.62/2)/100)*100;for(let x=gx;x<cam.x+W/2+100;x+=100)for(let y=gy;y<cam.y+H/.62/2+100;y+=100){const a=screen(x,y),n=Math.abs(Math.sin(x*12+y*23));if(p.mapId==='temple'){polygon([[a.x,a.y],[a.x+91,a.y],[a.x+91,a.y+53],[a.x,a.y+53]],n>.5?'#51423f':'#493d3b','#272d2c');if(n>.74){line(a.x,a.y,a.x+30,a.y+23,'#bf673d77',2);line(a.x+30,a.y+23,a.x+65,a.y+12,'#d27d4277',2);}}else{ellipse(a.x,a.y,70+n*40,15+n*15,cfg.patch);if(p.mapId==='desert'){for(let j=0;j<3;j++)line(a.x-30,a.y+j*6,a.x+35,a.y+j*6-3,'#e8cb8a22');}else for(let j=0;j<3;j++)line(a.x+j*15,a.y,a.x+j*15+8,a.y+7,'#e9f7ec44');}}const water=screen(270,480);ellipse(water.x,water.y,150,75,cfg.water);ellipse(water.x,water.y,127,61,p.mapId==='temple'?'#e4933e':p.mapId==='snow'?'#b5d5d3':'#71a194');if(p.mapId==='temple')for(let j=0;j<8;j++){const a=screen(270+Math.sin(j)*120,480+Math.cos(j)*90);ellipse(a.x,a.y-5-Math.sin(clock*2+j)*8,4,4,'#f7bc6b88');}ctx.beginPath();[[100,1200],[520,1070],[1000,1090],[1450,900],[1900,670]].forEach(([x,y],i)=>{const a=screen(x,y);i?ctx.lineTo(a.x,a.y):ctx.moveTo(a.x,a.y);});ctx.strokeStyle=cfg.path;ctx.lineWidth=55;ctx.stroke();}const a=screen(870,1160);ellipse(a.x,a.y,23,11,map().accent+'33');ctx.strokeStyle=map().accent;ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(a.x,a.y,21+Math.sin(clock*2)*2,10,0,0,Math.PI*2);ctx.stroke();text('CESTOVANIE · M',a.x,a.y-23,map().accent,8);}
 
@@ -2050,13 +2500,13 @@ function drawMini(){if(clock-lastMiniMapPaint<.1)return;lastMiniMapPaint=clock;m
 
 
 // src/js/render/character.js
-function hero(){const{x,y}=screen(p.x,p.y),moving=target||keys.w||keys.a||keys.s||keys.d||keys.ArrowUp||keys.ArrowDown||keys.ArrowLeft||keys.ArrowRight,step=moving?Math.sin(clock*12)*4:0,cls=p.classId,color=role().color;ctx.save();if(active('stealth'))ctx.globalAlpha=.35;shadow(x,y);if(active('aura')||active('enchanted')||active('guard')||active('armor')||active('darkGuard')||active('bless')||active('reflect')){ellipse(x,y+2,30+Math.sin(clock*4)*3,13,color+'35');ctx.strokeStyle=color+'99';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(x,y-23,25,38,0,0,Math.PI*2);ctx.stroke();}if(active('spirit')){const a=clock*3;ellipse(x+Math.cos(a)*35,y-30+Math.sin(a)*18,6,9,'#f3b565');ellipse(x+Math.cos(a)*35,y-30+Math.sin(a)*18,3,5,'#ffe0a8');}line(x-5,y-12,x-7,y+step,'#293634',cls==='ninja'?4:6);line(x+5,y-12,x+7,y-step,'#293634',cls==='ninja'?4:6);const cast=castPose>0?Math.sin(castPose/.6*Math.PI):0;
+function hero(){const{x,y}=screen(p.x,p.y),moving=target||keys.w||keys.a||keys.s||keys.d||keys.ArrowUp||keys.ArrowDown||keys.ArrowLeft||keys.ArrowRight,step=moving?Math.sin(clock*12)*4:0,cls=p.classId,color=role().color;ctx.save();if(active('stealth'))ctx.globalAlpha=.35;shadow(x,y);if(active('aura')||active('enchanted')||active('guard')||active('armor')||active('darkGuard')||active('bless')||active('reflect')){ellipse(x,y+2,30+Math.sin(clock*4)*3,13,color+'35');ctx.strokeStyle=color+'99';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(x,y-23,25,38,0,0,Math.PI*2);ctx.stroke();}if(active('spirit')){const a=clock*3;ellipse(x+Math.cos(a)*35,y-30+Math.sin(a)*18,6,9,'#f3b565');ellipse(x+Math.cos(a)*35,y-30+Math.sin(a)*18,3,5,'#ffe0a8');}ctx.save();if(Math.cos(face)<0){ctx.translate(x*2,0);ctx.scale(-1,1);}line(x-5,y-12,x-7,y+step,'#293634',cls==='ninja'?4:6);line(x+5,y-12,x+7,y-step,'#293634',cls==='ninja'?4:6);const cast=castPose>0?Math.sin(castPose/.6*Math.PI):0;
 if(cls==='warrior'){polygon([[x-12,y-33],[x-18,y+2],[x+3,y-8],[x+6,y-29]],'#9b5241');polygon([[x-12,y-32],[x-10,y-11],[x+11,y-11],[x+13,y-32],[x,y-37]],'#a2ad9b','#d3d3ad');line(x-10,y-23,x+10,y-23,'#c8b889',3);ellipse(x-14,y-30,7,6,'#889581');ellipse(x+14,y-30,7,6,'#889581');}
 else if(cls==='ninja'){polygon([[x-10,y-32],[x-8,y-10],[x+8,y-10],[x+10,y-32],[x,y-37]],'#38594b','#7c9a71');polygon([[x-9,y-30],[x-16,y-7],[x-3,y-14],[x+4,y-29]],'#233d35');line(x-8,y-15,x+8,y-15,'#a09367',3);line(x-14,y-28,x-19,y-16,'#668f73',4);}
 else if(cls==='sura'){polygon([[x-11,y-34],[x-12,y-9],[x+12,y-9],[x+10,y-34]],'#513e69','#a48ba9');polygon([[x-10,y-28],[x-8,y-14],[x+8,y-14],[x+8,y-28]],'#947998');line(x-13,y-29,x-19,y-14-cast*14,'#8a4eb0',7);ellipse(x-19,y-15-cast*14,10+Math.sin(clock*5)*2,9,'#bd7fe34a');for(let i=0;i<3;i++)line(x-21+i*3,y-15-cast*14,x-24+i*3,y-7-cast*14,'#c89ce9',1.5);}
 else{polygon([[x-11,y-33],[x-17,y+2],[x+17,y+2],[x+10,y-33],[x,y-39]],'#d1bd96','#eeddb3');polygon([[x-3,y-33],[x+1,y+1],[x+7,y],[x+3,y-32]],'#ab6e60');line(x-13,y-28,x-20,y-15-cast*15,'#edd7ac',6);}
 ellipse(x,y-42,7,9,'#d5bd97');if(cls==='ninja'){polygon([[x-8,y-45],[x-6,y-52],[x+7,y-51],[x+9,y-40],[x-8,y-39]],'#223e36');line(x-5,y-43,x+5,y-43,'#e3d2a2',2);polygon([[x+6,y-45],[x+24,y-47],[x+10,y-40]],'#456d53');}else{polygon([[x-8,y-45],[x-6,y-51],[x+7,y-51],[x+9,y-39],[x+2,y-44]],cls==='sura'?'#31263c':'#2f3630');if(cls==='shaman')line(x-7,y-48,x+7,y-48,'#d3a65d',2);}
-ctx.save();ctx.translate(x+16,y-24-cast*12);const swing=slash>0?(1-slash/.22)*Math.PI*1.2-1.3:Math.sin(clock*2)*.06;ctx.rotate(swing+(moving?.1:0));if(cls==='ninja'&&p.schools.ninja==='archery'){ctx.strokeStyle='#b7a577';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,-4,20,-1.4,1.4);ctx.stroke();line(3,-23,3,16,'#d1c6a6',1);}else if(cls==='shaman'){polygon([[0,0],[-8,-22],[0,-29],[10,-25],[20,-13]],'#d7c68c','#f4e3b4');for(let i=0;i<4;i++)line(0,0,-5+i*7,-23+i,'#ad7d64',1);}else{line(0,8,0,-30,'#e4e8d0',cls==='ninja'?3:4);line(-6,0,6,0,'#c7aa73',3);if(cls==='sura'||active('aura'))line(0,-5,0,-30,color,2);}
+if(Math.sin(face)<-.3)ellipse(x,y-43,7,8,cls==='sura'?'#31263c':'#2f3630');ctx.restore();ctx.save();ctx.translate(x+Math.cos(face)*16,y-24+Math.sin(face)*10-cast*12);const swing=slash>0?(1-slash/.22)*Math.PI*1.2-1.3:Math.sin(clock*2)*.06;ctx.rotate(Math.atan2(Math.sin(face)*.62,Math.cos(face))+Math.PI/2+swing+(moving?.1:0));if(cls==='ninja'&&p.schools.ninja==='archery'){ctx.strokeStyle='#b7a577';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,-4,20,-1.4,1.4);ctx.stroke();line(3,-23,3,16,'#d1c6a6',1);}else if(cls==='shaman'){polygon([[0,0],[-8,-22],[0,-29],[10,-25],[20,-13]],'#d7c68c','#f4e3b4');for(let i=0;i<4;i++)line(0,0,-5+i*7,-23+i,'#ad7d64',1);}else{line(0,8,0,-30,'#e4e8d0',cls==='ninja'?3:4);line(-6,0,6,0,'#c7aa73',3);if(cls==='sura'||active('aura'))line(0,-5,0,-30,color,2);}
 ctx.restore();if(cls==='ninja'&&p.schools.ninja==='blade'){line(x-19,y-14,x-25,y-35,'#cad9bd',3);line(x-24,y-16,x-16,y-19,'#ac9766',2);}text(role().name+' · '+school().name,x,y-68,color,9);ctx.restore();}
 
 
@@ -2066,13 +2516,13 @@ function fx(style,x=p.x,y=p.y,color=role().color,life=.65,angle=face){effects.pu
 function drawEffects(){for(const e of effects){const a=screen(e.x,e.y),t=1-e.life/e.total,color=e.color;ctx.save();ctx.globalAlpha=Math.min(1,e.life/e.total*1.7);ctx.translate(a.x,a.y);ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=3;
 if(['spin','ground','aura','heal','poison','fire','dark','impact','cast','smoke'].includes(e.style)){const r=15+t*(e.style==='spin'?165:e.style==='ground'?140:e.style==='poison'?155:80);ellipse(0,-5,r,r*.55,color+'25');ctx.beginPath();ctx.ellipse(0,-5,r,r*.55,t*2,0,Math.PI*2);ctx.stroke();for(let j=0;j<8;j++){const b=j*Math.PI/4+t*4,x=Math.cos(b)*r,y=Math.sin(b)*r*.5;if(e.style==='heal'){line(x,y-15,x,y-25,color,2);line(x-4,y-20,x+4,y-20,color,2);}else if(e.style==='fire'){polygon([[x-5,y],[x+Math.sin(j+t*10)*5,y-25-t*20],[x+6,y]],'#f7bb6c');}else ellipse(x,y-10,3+t*3,3+t*4,color);}}
 else if(e.style==='lightning'){ctx.lineWidth=4;ctx.shadowColor=color;ctx.shadowBlur=15;const pts=[[0,-180],[-18,-130],[12,-134],[-8,-80],[16,-86],[0,-10]];ctx.beginPath();pts.forEach(([x,y],i)=>i?ctx.lineTo(x+Math.sin(t*15+i)*8,y):ctx.moveTo(x,y));ctx.stroke();ellipse(0,0,28+t*40,12+t*20,color+'44');}
-else if(['slash','cross'].includes(e.style)){ctx.rotate(e.angle*.35);ctx.lineWidth=5;ctx.beginPath();ctx.ellipse(0,-15,35+t*45,20+t*20,0,Math.PI*1.05,Math.PI*1.95);ctx.stroke();if(e.style==='cross'){line(-30,-45,30,5,color,3);line(-30,5,30,-45,color,3);}}
+else if(['slash','cross','fan'].includes(e.style)){const r=35+t*45;ctx.lineWidth=5;ctx.beginPath();for(let i=0;i<=18;i++){const angle=e.angle-.95+i/18*1.9,px=Math.cos(angle)*r,py=Math.sin(angle)*r*.62-16;i?ctx.lineTo(px,py):ctx.moveTo(px,py);}ctx.stroke();if(e.style==='cross'){const ux=Math.cos(e.angle),uy=Math.sin(e.angle)*.62;line(ux*25-uy*15,uy*25-16+ux*15,ux*65+uy*15,uy*65-16-ux*15,color,3);}}
 else if(['beam','finger','dragon','dash'].includes(e.style)){const length=e.style==='dragon'?260:e.style==='beam'?280:e.style==='dash'?180:120,ux=Math.cos(e.angle),uy=Math.sin(e.angle)*.62;line(0,-20,ux*length*t,uy*length*t-20,color,e.style==='finger'?20:8);for(let j=0;j<8;j++){const d=(j/8+t*.15)*length,off=Math.sin(j+t*13)*18;ellipse(ux*d+off,uy*d-20+Math.cos(j+t*8)*14,15+(e.style==='dragon'?10:0),9,color+'88');}if(e.style==='dragon'){const x=ux*length*t,y=uy*length*t-20;polygon([[x-18,y],[x+ux*30,y+uy*30-8],[x+10,y+12],[x,y+20]],'#e8bc81');line(x-5,y-10,x-16,y-35,color,4);line(x+6,y-10,x+18,y-30,color,4);}}
-ctx.restore();}for(const b of shots){if(b.opts.delay>0)continue;const a=screen(b.x,b.y),target=screen(b.target.x,b.target.y-15),angle=Math.atan2(target.y-a.y,target.x-a.x);ctx.save();ctx.translate(a.x,a.y);ctx.rotate(angle);if(b.style==='arrow'||b.style.includes('Arrow')){line(-20,0,6,0,b.style==='fireArrow'?'#f6b06a':b.style==='poisonArrow'?'#a6d77b':'#e7d7aa',2);polygon([[10,0],[1,-4],[1,4]],'#e8dfc0');}else if(b.style==='talisman'){polygon([[-8,-11],[7,-11],[8,10],[-7,10]],'#f1d6a1');line(-3,-6,3,5,'#a25043',2);}else{ellipse(0,0,b.style==='darkOrb'?16:8,b.style==='darkOrb'?13:6,b.color+'66');ellipse(0,0,b.style==='darkOrb'?9:5,b.style==='darkOrb'?8:4,b.color);line(-30,0,-5,0,b.color+'66',4);}ctx.restore();}}
+ctx.restore();}for(const b of shots){if(b.opts.delay>0)continue;const a=screen(b.x,b.y),target=b.target?screen(b.target.x,b.target.y-15):screen(b.x+b.vx*40,b.y+b.vy*40),angle=Math.atan2(target.y-a.y,target.x-a.x);ctx.save();ctx.translate(a.x,a.y);ctx.rotate(angle);if(b.style==='arrow'||b.style.includes('Arrow')){line(-20,0,6,0,b.style==='fireArrow'?'#f6b06a':b.style==='poisonArrow'?'#a6d77b':'#e7d7aa',2);polygon([[10,0],[1,-4],[1,4]],'#e8dfc0');}else if(b.style==='talisman'){polygon([[-8,-11],[7,-11],[8,10],[-7,10]],'#f1d6a1');line(-3,-6,3,5,'#a25043',2);}else{ellipse(0,0,b.style==='darkOrb'?16:8,b.style==='darkOrb'?13:6,b.color+'66');ellipse(0,0,b.style==='darkOrb'?9:5,b.style==='darkOrb'?8:4,b.color);line(-30,0,-5,0,b.color+'66',4);}ctx.restore();}}
 
 
 // src/js/render/scene.js
-function draw(){ctx.setTransform(dpr,0,0,dpr,0,0);ground();drawFarmRegions();const objects=[...decor.map(d=>({y:d.y,draw:()=>d.type==='tree'?tree(d):rock(d)})),{y:1050,draw:shrine},{y:1110,draw:merchant},...mobs.filter(m=>m.hp>0).map(m=>({y:m.y,draw:()=>mobDraw(m)})),{y:p.y,draw:hero}];objects.sort((a,b)=>a.y-b.y).forEach(o=>o.draw());if(target){const a=screen(target.x,target.y);ctx.strokeStyle='#d9cd9260';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(a.x,a.y,11,6,0,0,Math.PI*2);ctx.stroke();}for(const f of particles){const a=screen(f.x,f.y);text(f.t,a.x,a.y-f.age*36,f.color, f.big?22:14);}const glow=ctx.createRadialGradient(W*.3,H*.1,0,W*.3,H*.1,W*.7);glow.addColorStop(0,'#e4e5ad0e');glow.addColorStop(1,'#091b1a25');ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);drawEffects();drawFarmingEffects();drawGroundLoot();drawMini();}
+function draw(){ctx.setTransform(dpr,0,0,dpr,0,0);ground();drawFarmRegions();const objects=[...decor.map(d=>({y:d.y,draw:()=>d.type==='tree'?tree(d):rock(d)})),{y:1050,draw:shrine},{y:1110,draw:merchant},...mobs.filter(m=>m.hp>0).map(m=>({y:m.y,draw:()=>mobDraw(m)})),{y:p.y,draw:hero}];objects.sort((a,b)=>a.y-b.y).forEach(o=>o.draw());drawCombatTarget();for(const f of particles){const a=screen(f.x,f.y);text(f.t,a.x,a.y-f.age*36,f.color, f.big?22:14);}const glow=ctx.createRadialGradient(W*.3,H*.1,0,W*.3,H*.1,W*.7);glow.addColorStop(0,'#e4e5ad0e');glow.addColorStop(1,'#091b1a25');ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);drawEffects();drawFarmingEffects();drawBattleEffects();drawGroundLoot();drawMini();}
 
 
 // src/js/render/farming.js
@@ -2264,6 +2714,52 @@ function suterlandGround() {
 }
 
 
+// src/js/render/battle.js
+function drawCombatTarget() {
+  if(!running)return;
+  if(!selectedEnemy()){
+    const a=screen(p.x,p.y),length=48,ux=Math.cos(face),uy=Math.sin(face)*.62;
+    line(a.x+ux*22,a.y+uy*22,a.x+ux*length,a.y+uy*length,'#e1d1a266',2);
+    polygon([[a.x+ux*56,a.y+uy*56],[a.x+ux*43-Math.sin(face)*5,a.y+uy*43+Math.cos(face)*3],[a.x+ux*43+Math.sin(face)*5,a.y+uy*43-Math.cos(face)*3]],'#e0cf9b88');
+    return;
+  }
+  const enemy=selectedEnemy(),a=screen(enemy.x,enemy.y),radius=enemy.type==='boss'?48:enemy.type==='stone'?40:29,pulse=Math.sin(clock*5)*2;
+  ctx.strokeStyle='#efd38f';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(a.x,a.y+3,radius+pulse,(radius+pulse)*.5,0,0,Math.PI*2);ctx.stroke();
+  const top=a.y-(enemy.type==='stone'?145*metinModelScale(enemy):enemy.type==='boss'?135:enemy.skin==='wolf'?65:92);
+  polygon([[a.x-7,top],[a.x+7,top],[a.x,top+10]],'#f5da91');
+  for(const side of [-1,1]){line(a.x+side*(radius+7),a.y-12,a.x+side*(radius+7),a.y+13,'#f1d99c',2);}
+}
+
+function drawBattleEffects() {
+  const schoolIndex=Object.keys(SCHOOLS);
+  for(const e of effects){
+    if(e.style!=='skillSigil'&&e.style!=='comboBurst')continue;
+    const at=screen(e.x,e.y),t=1-e.life/e.total;ctx.save();ctx.translate(at.x,at.y);ctx.globalAlpha=Math.max(0,1-t);
+    ctx.strokeStyle=e.color;ctx.fillStyle=e.color;ctx.lineWidth=e.style==='comboBurst'?3:1.5;
+    if(e.style==='comboBurst'){
+      ctx.beginPath();ctx.ellipse(0,-10,40+t*145,20+t*72,0,0,Math.PI*2);ctx.stroke();
+      for(let i=0;i<12;i++){const a=i*Math.PI/6;line(Math.cos(a)*(25+t*110),Math.sin(a)*(13+t*55)-10,Math.cos(a)*(45+t*140),Math.sin(a)*(23+t*70)-10,e.color,2);}
+    }else{
+      const family=schoolIndex.indexOf(e.school),count=e.slot+3,radius=28+t*(55+e.slot*9),rotation=e.angle+t*(family%2?-1:1);
+      ctx.beginPath();
+      for(let i=0;i<=count;i++){const a=rotation+i*Math.PI*2/count,x=Math.cos(a)*radius,y=Math.sin(a)*radius*.5-12;i?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.stroke();
+      for(let i=0;i<=e.slot;i++){
+        const a=rotation+i*Math.PI*2/(e.slot+1),x=Math.cos(a)*radius,y=Math.sin(a)*radius*.5-12;
+        if(e.school==='healing'){line(x-5,y,x+5,y,e.color,2);line(x,y-7,x,y+7,e.color,2);}
+        else if(e.school==='archery'){line(x-5,y+6,x+5,y-6,e.color,2);polygon([[x+5,y-6],[x-1,y-5],[x+4,y]],e.color);}
+        else if(e.school==='mental'){ctx.strokeRect(x-5,y-5,10,10);}
+        else if(e.school==='body'){line(x-7,y+5,x+7,y-5,e.color,3);}
+        else if(e.school==='blade'){polygon([[x,y-8],[x+5,y+4],[x-5,y+4]],e.color);}
+        else if(e.school==='weapon'){ctx.beginPath();ctx.arc(x,y,6+t*3,0,Math.PI*1.5);ctx.stroke();}
+        else if(e.school==='black'){ellipse(x,y,5,7,e.color);line(x,y-10,x,y+10,e.color,1);}
+        else{polygon([[x,y-9],[x+7,y],[x,y+8],[x-7,y]],e.color);line(x-8,y-2,x-12,y-9,e.color,2);}
+      }
+    }
+    ctx.restore();
+  }
+}
+
+
 // src/js/main.js
 initializeCareer();
 initializeInventory();
@@ -2273,10 +2769,10 @@ loadMap(p.mapId,true);
 window.addEventListener('resize',resize);resize();
 
 requestAnimationFrame(frame);
-window.addEventListener('blur',keysClear);document.addEventListener('visibilitychange',()=>{keysClear();save();});
-window.addEventListener('keydown',e=>{if([' ','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))e.preventDefault();let key=e.key.length===1?e.key.toLowerCase():e.key;if(key==='Escape'){closeModal();return;}if(!running||paused)return;if(e.target&&['BUTTON','INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)&&key===' ')return;keys[key]=true;if(e.repeat)return;if(key==='y'){e.preventDefault();pickNearbyGroundDrops();return;}if(spellKeys.includes(key))castSkill(spellKeys.indexOf(key));if(key==='b')useBraveryCape();if(key==='p')careerPanel();if(key==='k')spellbook();if(key==='m')travelMenu();if(key==='e')potion();if(key==='i')inventory();if(key==='f')shop();if(key==='j')journal();if(key==='?')help();});window.addEventListener('keyup',e=>keys[e.key.length===1?e.key.toLowerCase():e.key]=false);
-canvas.addEventListener('pointermove',setLootPointer);canvas.addEventListener('pointerleave',clearLootPointer);window.addEventListener('blur',clearLootPointer);
-canvas.addEventListener('pointerdown',e=>{if(e.button!==undefined&&e.button!==0)return;if(!running||paused)return;setLootPointer(e);const loot=groundDropAt(lootPointer.x,lootPointer.y);if(loot){pickUpGroundDrop(loot.id);canvas.focus();return;}const r=canvas.getBoundingClientRect(),a=world(e.clientX-r.left,e.clientY-r.top);const m=mobs.find(m=>m.hp>0&&(m.type==='stone'?metinHitTest(m,lootPointer.x,lootPointer.y):Math.hypot(m.x-a.x,(m.y-a.y)*.7)<45));if(m){if(Math.hypot(m.x-p.x,m.y-p.y)<100){attack();target=null;}else target={x:m.x,y:m.y};}else if(Math.hypot(a.x-870,a.y-1160)<50)travelMenu();else if(Math.hypot(a.x-1110,a.y-1110)<45)shop();else target=a;canvas.focus();});
+document.addEventListener('visibilitychange',()=>{keysClear();save();});
+window.addEventListener('keydown',e=>{if([' ','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))e.preventDefault();let key=e.key.length===1?e.key.toLowerCase():e.key;if(key==='Escape'){keysClear();if(!$('modal').hidden)closeModal();else clearCombatTarget();return;}if(!running||paused)return;if(e.target&&['BUTTON','INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)&&key===' ')return;keys[key]=true;if(e.repeat)return;if(key==='y'){e.preventDefault();pickNearbyGroundDrops();return;}if(spellKeys.includes(key))castSkill(spellKeys.indexOf(key));if(key==='b')useBraveryCape();if(key==='p')careerPanel();if(key==='k')spellbook();if(key==='m')travelMenu();if(key==='e')potion();if(key==='i')inventory();if(key==='f')shop();if(key==='j')journal();if(key==='c')combatManual();if(key==='?')help();});window.addEventListener('keyup',e=>keys[e.key.length===1?e.key.toLowerCase():e.key]=false);
+canvas.addEventListener('pointermove',setCombatPointer);canvas.addEventListener('pointerleave',leaveCombatPointer);window.addEventListener('blur',combatBlur);
+canvas.addEventListener('pointerdown',handleCombatClick);
 $('start').onclick=startGame;$('attack').onclick=()=>attack();$('skill').onclick=()=>attack(true);$('potion').onclick=potion;$('inventory').onclick=()=>{if(running)inventory();};$('close').onclick=closeModal;$('claim').onclick=()=>{if(p.claimed||p.kills<5||p.stones<3)return;p.claimed=true;p.gold+=150;experience(60);toast('Údolie je zachránené!\n+150 zlata · +60 skúseností');updateHUD();save();};
 $('sound').onclick=()=>{sound=!sound;$('sound').textContent='Zvuk: '+(sound?'zapnutý':'vypnutý');beep(440);};document.querySelectorAll('[data-key]').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();keys[b.dataset.key]=true;b.setPointerCapture(e.pointerId);});for(const type of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(type,()=>keys[b.dataset.key]=false);});window.addEventListener('pagehide',save);updateHUD();
 
