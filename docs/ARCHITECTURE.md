@@ -113,3 +113,7 @@ Target zostáva referencia na vybraného nepriateľa. Dočasný combatSelection.
 ## Výroba a alchýmia od 0.19.0
 
 `data/crafting.js` registruje materiály, produkty a 47 receptov. `systems/crafting.js` kontroluje NPC, úroveň, cenu a kapacitu pred výrobou; zdieľa generátor výbavy, materiálové počítadlá, kováčske ceny a alchymistické kamene. `ui/crafting.js` zobrazuje recepty, zásoby a progres. Účinky alchýmie vstupujú cez `careerBonuses()` do existujúcich bojových výpočtov; `updateAlchemy()` beží iba pri aktívnej simulácii. `validateCraftingProfile()` dopĺňa validáciu záloh, migrácia zachováva pôvodné polia. Pozri [CRAFTING.md](CRAFTING.md).
+
+## NPC ekonomika od 0.20.0
+
+Data/economy.js definuje tovar a obchodníkov. Systems/economy.js spravuje p.economy, čas simulácie, zásoby, deterministické ponuky a ceny. UI/economy.js poskytuje nákup a výkup. Pôvodný shop(), buyBraveryCapes() a sellItem() delegujú na spoločnú logiku. Profily sa migrujú pri inicializácii; zálohy validuje validateEconomyProfile(). Pozri [ECONOMY.md](ECONOMY.md).

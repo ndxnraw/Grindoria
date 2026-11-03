@@ -10,6 +10,21 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.20.0] - 2026-11-03
+
+### Added
+- Simulovaný NPC trh s konečnými zásobami, dynamickým dopytom, cenovými trendmi a obnovou každých 10 minút aktívnej hry.
+- Zbrojár v Meste, exkluzívne ponuky obchodníkov, nákup materiálov a dve obmedzené vzácne ponuky výbavy.
+- Výkup výbavy a materiálov s bonusmi špecialistov, prehľadom cien, zásob a obnovy.
+- Izolovaný uložený trh každej postavy, migrácia, validácia záloh a 13 regresných testov ekonomiky.
+
+### Changed
+- Yang ako hlavné označenie meny v obchodných paneloch a peňaženke.
+- Nákup elixírov a plášťov používa trhové zásoby a ceny; výkup v inventári vyžaduje blízkeho obchodníka.
+
+### Fixed
+- Neplatný nákup, zastaraná cena, plný batoh alebo nedostatok Yang nemenia peniaze ani predmety.
+
 ## [0.19.0] - 2026-11-03
 
 ### Added
@@ -389,7 +404,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.19.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.20.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -412,3 +427,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.17.0]: https://github.com/ndxnraw/Grindoria/compare/v0.16.0...v0.17.0
 [0.18.0]: https://github.com/ndxnraw/Grindoria/compare/v0.17.0...v0.18.0
 [0.19.0]: https://github.com/ndxnraw/Grindoria/compare/v0.18.0...v0.19.0
+[0.20.0]: https://github.com/ndxnraw/Grindoria/compare/v0.19.0...v0.20.0
