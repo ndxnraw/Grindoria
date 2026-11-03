@@ -190,17 +190,18 @@ function collectRelic(id) {
 }
 
 function careerKill(m) {
+  const giveMaterial = (id, count = 1) => dropMaterial(id, count, m);
   const eligible = rewardEligible(m), c = p.career;
   // Biological specimens stay available when revisiting lower-level maps.
   const bio = BIOLOGY.find(b => b.map === p.mapId);
   if (bio && m.type === 'wolf') {
     c.samplePity[p.mapId] = (c.samplePity[p.mapId] || 0) + 1;
-    if (c.samplePity[p.mapId] >= 4) { addMaterial(bio.item); c.samplePity[p.mapId] = 0; }
+    if (c.samplePity[p.mapId] >= 4) { giveMaterial(bio.item); c.samplePity[p.mapId] = 0; }
   }
   if (eligible) {
-    c.eligibleKills++; addMaterial('essence', m.type === 'boss' ? 12 : m.type === 'stone' ? 4 : 1);
-    if (c.eligibleKills % 5 === 0) { addMaterial('ore'); addMaterial('training'); }
-    if (m.type === 'stone' || m.type === 'boss') { addMaterial('books'); addMaterial('dust', m.type === 'boss' ? 5 : 1); }
+    c.eligibleKills++; giveMaterial('essence', m.type === 'boss' ? 12 : m.type === 'stone' ? 4 : 1);
+    if (c.eligibleKills % 5 === 0) { giveMaterial('ore'); giveMaterial('training'); }
+    if (m.type === 'stone' || m.type === 'boss') { giveMaterial('books'); giveMaterial('dust', m.type === 'boss' ? 5 : 1); }
     const used = new Set(m.skillContributors || []);
     school().skills.forEach((s, i) => { if (active(s[1])) used.add(skillKey(i)); });
     for (const key of used) {
@@ -213,9 +214,9 @@ function careerKill(m) {
   }
   if (m.type === 'boss') {
     c.keyPity++;
-    if (c.keyPity >= 3) { addMaterial('keys'); c.keyPity = 0; }
+    if (c.keyPity >= 3) { giveMaterial('keys'); c.keyPity = 0; }
     c.relicPity[p.mapId] = (c.relicPity[p.mapId] || 0) + 1;
-    if (rand() < .08 || c.relicPity[p.mapId] >= 10) { collectRelic(p.mapId); c.relicPity[p.mapId] = 0; }
+    if (rand() < .08 || c.relicPity[p.mapId] >= 10) { spawnGroundDrop({ kind: 'relic', relicId: p.mapId, count: 1 }, m); c.relicPity[p.mapId] = 0; }
   }
   const run = c.endgame.run;
   if (run?.active && p.mapId === 'temple' && m.riftId === run.id) {
@@ -240,9 +241,11 @@ function enterRift() {
   if (!pay({ keys: 3 })) return false;
   const tier = Math.min(PROGRESSION.maxRiftTier, end.highest + 1);
   loadMap('temple');
+  snapshotMap();
   end.run = { id: (p.career.riftSerial = (p.career.riftSerial || 0) + 1), tier, kills: 0, bosses: 0, active: true };
   // Separate expedition enemies from the ordinary map snapshot.
   p.career.normalTemple = p.worldStates.temple;
+  drops.length = 0;
   mobs.forEach(m => {
     applyRiftScaling(m, tier, end.run.id);
     m.dead = 0; m.cd = 2; m.stun = 0; m.dot = null; m.skillContributors = [];
@@ -258,7 +261,8 @@ function finishRift(claim = true) {
   if (!run || (claim && (run.kills < 20 || run.bosses < 1))) return false;
   if (claim) { addMaterial('shards', 10 + run.tier * 3); end.highest = Math.max(end.highest, run.tier); }
   end.run = null;
-  p.worldStates.temple = p.career.normalTemple;
+  const ordinary = p.career.normalTemple || {};
+  p.worldStates.temple = { ...ordinary, drops: [...(ordinary.drops || []), ...drops.map(cloneGroundDrop)] };
   delete p.career.normalTemple;
   // Do not overwrite the ordinary snapshot with expedition enemies on exit.
   mobs.length = 0; drops.length = 0; p.x = 1000; p.y = 1160;

@@ -1,3 +1,7 @@
+function requiredItemLevel(item) { return Number.isSafeInteger(item.requiredLevel) && item.requiredLevel > 0 ? item.requiredLevel : 1; }
+function canEquipItem(item) { return !!EQUIPMENT[item?.slot] && p.level >= requiredItemLevel(item) && (!Array.isArray(item.classes) || item.classes.includes(p.classId)); }
+function itemEquipReason(item) { if (!EQUIPMENT[item?.slot]) return 'Predmet nemožno vybaviť.'; if (p.level < requiredItemLevel(item)) return 'Nedostatočná úroveň · vyžaduje ' + requiredItemLevel(item); if (Array.isArray(item.classes) && !item.classes.includes(p.classId)) return 'Predmet nie je pre tvoje povolanie.'; return 'Možno vybaviť · ' + EQUIPMENT[item.slot].name; }
+
 function itemSize(item) { return EQUIPMENT[item.slot]?.size || [1, 1]; }
 
 function itemCells(item, cell) {
@@ -77,7 +81,7 @@ function finishInventoryChange() {
 function equipItem(index) {
   if (!Number.isInteger(index) || index < 0 || index >= p.bag.length) return false;
   const item = p.bag[index], slot = item.slot;
-  if (!EQUIPMENT[slot]) return false;
+  if (!canEquipItem(item)) { toast(itemEquipReason(item)); return false; }
   const old = p.equipped[slot], next = p.bag.filter((_, i) => i !== index);
   if (old) next.push(old);
   const layout = gearLayout(next);
@@ -111,13 +115,17 @@ function moveGearItem(uid, cell) {
   applyGearLayout(layout); finishInventoryChange(); return true;
 }
 
-function supplyEntries() {
-  const all = [
+function supplyDefinitions() {
+  return [
     { id: 'potions', name: 'Liečivý elixír', count: p.potions, icon: 'potion', description: 'Obnoví 65 zdravia. Kláves E.', action: 'drink' },
     { id: 'braveryCapes', name: 'Plášť statočnosti', count: p.braveryCapes, icon: 'cape', description: 'Privolá pohyblivých nepriateľov v dosahu 650 na 18 sekúnd. Kláves B.', action: 'cape' },
     ...Object.entries(MATERIALS).map(([id, name]) => ({ id: 'material:' + id, name, count: p.career.materials[id], icon: id, description: 'Rozvojový materiál. Použitie otvorí príslušnú cestu progresie.', action: 'material', material: id })),
     ...Object.entries(GEMS).map(([id, gem]) => ({ id: 'gem:' + id, name: gem.name, count: p.career.alchemy.stock[id], icon: id, description: gem.text + ' Použitie otvorí alchýmiu.', action: 'alchemy' }))
   ];
+}
+
+function supplyEntries() {
+  const all = supplyDefinitions();
   const entries = all.filter(item => item.count > 0), occupied = new Set();
   for (const item of entries) {
     let cell = p.inventory.supplyCells[item.id];

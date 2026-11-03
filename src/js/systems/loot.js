@@ -1,0 +1,137 @@
+const LOOT_RULES = { fallDuration: .65, pickupRange: 180 };
+const lootPointer = { inside: false, x: 0, y: 0, clientX: 0, clientY: 0 };
+let hoveredLootId = null, lootTooltipSignature = '';
+const lootSupplyCatalog = new Map();
+
+function initializeLoot() {
+  lootSupplyCatalog.clear(); supplyDefinitions().forEach(item => lootSupplyCatalog.set(item.id, item));
+  if (!Number.isSafeInteger(p.lootSerial) || p.lootSerial < 0) p.lootSerial = 0;
+  for (const state of [...Object.values(p.worldStates), p.career.normalTemple]) {
+    for (const drop of state?.drops || []) if (Number.isSafeInteger(drop.id)) p.lootSerial = Math.max(p.lootSerial, drop.id);
+  }
+}
+
+function cloneGroundDrop(drop) {
+  return { ...drop, ...(drop.item ? { item: { ...drop.item, ...(drop.item.stats ? { stats: { ...drop.item.stats } } : {}), ...(drop.item.special ? { special: [...drop.item.special] } : {}) } } : {}) };
+}
+
+function hydrateGroundDrops(saved) {
+  const ids = new Set();
+  return saved.map(prior => {
+    const drop = cloneGroundDrop(prior);
+    // Existing map snapshots contained only uncollected gold piles.
+    drop.kind ??= 'gold';
+    drop.count ??= drop.value || 1;
+    if (!Number.isSafeInteger(drop.id) || drop.id < 1 || ids.has(drop.id)) drop.id = ++p.lootSerial;
+    p.lootSerial = Math.max(p.lootSerial, drop.id); ids.add(drop.id);
+    drop.fallAge = LOOT_RULES.fallDuration;
+    drop.launchX = drop.x; drop.launchY = drop.y;
+    return drop;
+  });
+}
+
+function spawnGroundDrop(payload, source) {
+  const angle = rand() * Math.PI * 2, radius = 22 + rand() * 64;
+  const drop = {
+    ...payload, id: ++p.lootSerial,
+    x: Math.max(45, Math.min(SIZE - 45, source.x + Math.cos(angle) * radius)),
+    y: Math.max(45, Math.min(SIZE - 45, source.y + Math.sin(angle) * radius)),
+    launchX: source.x, launchY: source.y, fallAge: 0
+  };
+  if (drop.kind === 'gold') drop.value = drop.count;
+  drops.push(drop); return drop;
+}
+
+function dropMaterial(id, count, source) {
+  if (MATERIALS[id] && Number.isSafeInteger(count) && count > 0) return spawnGroundDrop({ kind: 'supply', supplyId: 'material:' + id, count }, source);
+}
+
+function groundDropView(drop) {
+  if (drop.kind === 'gear') return { ...drop.item, count: 1, description: 'Výbava postavy.' };
+  if (drop.kind === 'supply') {
+    const definition = lootSupplyCatalog.get(drop.supplyId);
+    return definition ? { ...definition, count: drop.count, rarity: 0, requiredLevel: 1 } : null;
+  }
+  if (drop.kind === 'relic' && RELICS[drop.relicId]) {
+    const relic = RELICS[drop.relicId];
+    return { name: relic.name, icon: 'shards', count: 1, rarity: 2, requiredLevel: 1, description: relic.text + (p.career.collection[drop.relicId] ? ' Ďalší exemplár sa po zdvihnutí premení na 10 prachov.' : 'Po zdvihnutí aktivuje trvalý bonus zbierky.') };
+  }
+  if (drop.kind === 'gold') return { name: 'Zlato', icon: 'gold', count: drop.count, rarity: 0, requiredLevel: 1, description: 'Mena pre obchodníka, kováča a rozvoj postavy.' };
+  return null;
+}
+
+function groundDropVisual(drop) {
+  const t = Math.min(1, (drop.fallAge ?? LOOT_RULES.fallDuration) / LOOT_RULES.fallDuration);
+  const position = screen((drop.launchX ?? drop.x) + (drop.x - (drop.launchX ?? drop.x)) * t, (drop.launchY ?? drop.y) + (drop.y - (drop.launchY ?? drop.y)) * t);
+  const elevation = Math.sin(t * Math.PI) * 42 + (1 - t) * 25;
+  return { x: position.x, y: position.y - 17 - elevation, elevation };
+}
+
+function groundDropAt(x, y) {
+  let closest = null, distance = Infinity;
+  for (let i = drops.length - 1; i >= 0; i--) {
+    const drop = drops[i], visual = groundDropVisual(drop), dx = Math.abs(x - visual.x), dy = Math.abs(y - visual.y);
+    if (dx > 19 || dy > 21) continue;
+    const d = Math.hypot(dx, dy);
+    if (d < distance) { closest = drop; distance = d; }
+  }
+  return closest;
+}
+
+function setLootPointer(event) {
+  const rect = canvas.getBoundingClientRect();
+  lootPointer.x = event.clientX - (rect.left || 0); lootPointer.y = event.clientY - (rect.top || 0);
+  lootPointer.clientX = event.clientX; lootPointer.clientY = event.clientY;
+  lootPointer.inside = lootPointer.x >= 0 && lootPointer.y >= 0 && lootPointer.x <= W && lootPointer.y <= H;
+  updateLootHover();
+}
+
+function clearLootPointer() {
+  lootPointer.inside = false; hoveredLootId = null; lootTooltipSignature = '';
+  $('loot-tooltip').hidden = true; canvas.style.cursor = '';
+}
+
+function grantGroundSupply(id, count) {
+  if (!Number.isSafeInteger(count) || count < 1) return false;
+  let holder, key;
+  if (id.startsWith('material:') && MATERIALS[id.slice(9)]) { holder = p.career.materials; key = id.slice(9); }
+  else if (id.startsWith('gem:') && GEMS[id.slice(4)]) { holder = p.career.alchemy.stock; key = id.slice(4); }
+  else if (id === 'potions' || id === 'braveryCapes') { holder = p; key = id; }
+  else return false;
+  if (!Number.isSafeInteger((holder[key] || 0) + count)) return false;
+  holder[key] = (holder[key] || 0) + count; return true;
+}
+
+function pickUpGroundDrop(id) {
+  if (!running || paused || p.hp <= 0) return false;
+  const index = drops.findIndex(drop => drop.id === id);
+  if (index < 0) return false;
+  const drop = drops[index], view = groundDropView(drop);
+  if (!view || drop.fallAge < LOOT_RULES.fallDuration) return false;
+  if (Math.hypot(drop.x - p.x, drop.y - p.y) > LOOT_RULES.pickupRange) { toast('Priblíž sa ku koristi a znova klikni alebo stlač Y.'); return false; }
+  if (drop.kind === 'gear') {
+    if (!addGearItem(cloneGroundDrop(drop).item)) { toast('V inventári nie je dosť miesta. Predmet zostáva na zemi.'); return false; }
+  } else if (drop.kind === 'supply') {
+    if (!grantGroundSupply(drop.supplyId, drop.count)) return false;
+  } else if (drop.kind === 'relic') collectRelic(drop.relicId);
+  else if (drop.kind === 'gold') {
+    if (!Number.isSafeInteger(drop.count) || drop.count < 1 || !Number.isSafeInteger(p.gold + drop.count)) return false;
+    p.gold += drop.count;
+  } else return false;
+  drops.splice(index, 1);
+  float('+' + (view.count > 1 ? view.count + ' ' : '') + view.name, p.x, p.y - 75, '#dec799');
+  beep(750, .05); updateHUD(); save(); updateLootHover(); return true;
+}
+
+function pickHoveredGroundDrop() {
+  if (!lootPointer.inside) return false;
+  updateLootHover();
+  const drop = drops.find(drop => drop.id === hoveredLootId);
+  return drop ? pickUpGroundDrop(drop.id) : false;
+}
+
+function updateGroundLoot(dt) {
+  for (const drop of drops) drop.fallAge = Math.min(LOOT_RULES.fallDuration, (drop.fallAge || 0) + dt);
+  // No attraction, proximity collection, timers that erase loot, or implicit inventory transfer.
+  updateLootHover();
+}

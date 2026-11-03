@@ -31,9 +31,11 @@ test('elite and rare rolls produce stronger enemies and appropriate respawn inte
 test('rare kills have better gold, EXP, equipment and materials without bypassing weak-target penalties', () => {
   const { run } = createGame();
   run('rand=()=>.5;p.level=10;p.xp=0;let regular={...mobs[0],hp:1,level:10,variant:"normal",skillContributors:[]};hit(regular,2);');
-  const xp = run('p.xp'), gold = run('drops.at(-1).value');
+  const xp = run('p.xp'), gold = run('drops.findLast(d=>d.kind==="gold").value');
   run('let rare={...mobs[0],hp:1,level:10,variant:"rare",skillContributors:[]};hit(rare,2);');
-  assert(run('p.xp') - xp > xp); assert.equal(run('drops.at(-1).value'), gold * 4);
+  assert(run('p.xp') - xp > xp); assert.equal(run('drops.findLast(d=>d.kind==="gold").value'), gold * 4);
+  assert(run('drops.some(d=>d.kind==="gear"&&d.item.rarity>=1)'));
+  run('running=true;for(const drop of [...drops]){drop.fallAge=LOOT_RULES.fallDuration;p.x=drop.x;p.y=drop.y;pickUpGroundDrop(drop.id);}');
   assert(run('p.bag.at(-1).rarity>=1')); assert(run('p.career.materials.books>=1'));
   assert(run('p.career.materials.ore>=3')); assert.equal(run('p.braveryCapes'), 12);
   const books = run('p.career.materials.books'); run('hit(rare,100);'); assert.equal(run('p.career.materials.books'), books);

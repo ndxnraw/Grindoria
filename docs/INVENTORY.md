@@ -29,7 +29,7 @@ Elixír možno vypiť aj v otvorenom inventári. Plášť uzavrie inventár a po
 | Opasok | 2 × 1 | Obrana |
 | Talizman | 1 × 2 | Kritický zásah |
 
-Každý typ padá z bežných zdrojov výbavy v troch vzácnostiach. Všetkých desať slotov možno vylepšovať u kováča. Rozmery a číselné bonusy predstavujú vlastné nastavenie Grindorie.
+Každý typ padá z bežných zdrojov výbavy v troch vzácnostiach. Nové predmety uvádzajú a kontrolujú požadovanú úroveň; stará výbava bez tejto požiadavky zostáva použiteľná. Všetkých desať slotov možno vylepšovať u kováča. Rozmery a číselné bonusy predstavujú vlastné nastavenie Grindorie.
 
 Bonusy sa počítajú zo skutočne nasadených predmetov pri útoku, kúzlení, prijatom poškodení aj pohybe. Zloženie predmetu zníži maximá zdravia a many a oreže aktuálne hodnoty na nový limit; opakované nasadzovanie neposkytuje bezplatné liečenie.
 
@@ -37,6 +37,6 @@ Bonusy sa počítajú zo skutočne nasadených predmetov pri útoku, kúzlení, 
 
 `p.bag` naďalej obsahuje výbavu, teraz aj trvalé `uid` a počiatočné `cell`. `p.equipped` používa vyššie uvedených desať slotov. `p.inventory` uchováva schému, počet strán, poradové číslo identity a pozície zásobníkov. Počty zásob zostávajú v pôvodných `p.potions`, `p.braveryCapes`, `p.career.materials` a `p.career.alchemy.stock`; nejde o druhé kópie tých istých zdrojov.
 
-Migrácia zachová mená, bonusy, vzácnosť aj vylepšenia starých predmetov a rozloží ich do mriežky. Ak starý batoh potrebuje viac miesta, dostane dodatočné strany; predmety sa nevymažú ani automaticky nepredajú. Bežný nový drop strany nepridáva. Pri plnom batohu sa nový drop prevedie na jeho predajnú hodnotu, rovnako ako v starších verziách.
+Migrácia zachová mená, bonusy, vzácnosť aj vylepšenia starých predmetov a rozloží ich do mriežky. Ak starý batoh potrebuje viac miesta, dostane dodatočné strany; predmety sa nevymažú ani automaticky nepredajú. Bežný nový drop strany nepridáva. Pri plnom batohu zostáva korisť z nepriateľa alebo kameňa na zemi, bez automatického predaja. Podrobnosti ručného zbierania opisuje [LOOT.md](LOOT.md). Výslovne vyzdvihnuté odmeny úloh naďalej používajú pôvodné pravidlo náhrady za plný batoh.
 
 Presun aj výmena výbavy najprv overia rozloženie. Neplatná operácia ponechá pôvodné predmety a štatistiky. Pozície aj množstvá prežijú uloženie a načítanie hry.

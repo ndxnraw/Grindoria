@@ -40,7 +40,7 @@ function chooseSaveImport(index) {
   if (!Number.isInteger(index) || index < -1 || index >= pendingSaveImports.length) return false;
   if (index >= 0) {
     p = { ...p, ...pendingSaveImports[index] };
-    initializeCareer(); initializeInventory(); initializeFarming(); loadMap(p.mapId, true);
+    initializeCareer(); initializeInventory(); initializeFarming(); initializeLoot(); loadMap(p.mapId, true);
     renderClasses(); updateClassHUD(); updateHUD();
   }
   pendingSaveImports.length = 0;

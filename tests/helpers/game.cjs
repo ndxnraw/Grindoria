@@ -7,7 +7,7 @@ exports.createGame = function (oldSave, storageKey = 'grindoria-save-v1', additi
   for (const [key, value] of Object.entries(additionalStorage)) saved.set(key, typeof value === 'string' ? value : JSON.stringify(value));
   const paint = new Proxy({ createRadialGradient: () => ({ addColorStop() {} }) }, { get: (o, key) => key in o ? o[key] : () => {} });
   const element = id => {
-    if (!elements.has(id)) elements.set(id, { style: {}, textContent: '', innerHTML: '', hidden: true, querySelector: selector => element(id + selector), getContext: () => paint, getBoundingClientRect: () => ({ width: 1200, height: 700 }), addEventListener() {}, focus() {} });
+    if (!elements.has(id)) elements.set(id, { style: {}, textContent: '', innerHTML: '', hidden: true, querySelector: selector => element(id + selector), getContext: () => paint, getBoundingClientRect: () => ({ width: 1200, height: 700 }), addEventListener(name, fn) { listeners.set(id + ":" + name, fn); }, focus() {} });
     return elements.get(id);
   };
   const context = vm.createContext({

@@ -5,7 +5,7 @@ let W=1200,H=700,dpr=1,running=false,paused=false,last=0,clock=0,target=null,fac
 const keys={},mouse={x:0,y:0},cam={x:1000,y:1050};
 let p={x:1000,y:1050,hp:100,level:1,xp:0,gold:0,potions:5,kills:0,stones:0,claimed:false,weapon:0};
 try{const s=loadPlayerSave();if(s&&Number.isFinite(s.level)&&s.level>=1&&s.level<=99)p={...p,...s,x:1000,y:1050};}catch{}
-const spellKeys=['q','r','t','y','u','o'],buffs={},effects=[],shots=[];
+const spellKeys=['q','r','t','v','u','o'],buffs={},effects=[],shots=[];
 let spellCD=[0,0,0,0,0,0],castPose=0,castStyle='',spiritTick=0;
 p.classId=CLASSES[p.classId]?p.classId:'warrior';p.strength??=0;p.vitality??=0;p.dexterity??=0;p.points??=Math.max(0,(p.level-1)*3);p.bag??=[];p.equipped??={weapon:null,armor:null};p.bossKills??=0;p.bossClaimed??=false;p.huntClaimed??=0;
 p.intelligence??=0;p.mp??=100+p.level*8;p.worldStates??={};p.mapId=MAPS[p.mapId]?p.mapId:'valley';p.schools??={};for(const [classId,id] of Object.entries({warrior:'body',ninja:'blade',sura:'weapon',shaman:'dragon'})){if(SCHOOLS[p.schools[classId]]?.classId!==classId)p.schools[classId]=id;}

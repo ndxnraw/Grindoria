@@ -10,6 +10,27 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.8.0] - 2026-11-03
+
+### Added
+
+- Fyzický dopad všetkej koristi z nepriateľov a kameňov: výbava, zlato, zásoby, materiály, vzorky, kľúče aj relikvie.
+- Ručné zbieranie ľavým kliknutím alebo klávesom Y s kurzorom nad predmetom; dosah 180 jednotiek.
+- Tooltip s ikonou, požadovanou úrovňou, raritou, atribútmi, bonusmi, špeciálnymi vlastnosťami a možnosťou vybavenia.
+- Automatické porovnanie použiteľnej výbavy s rovnakým slotom: zelené zvýšenia, červené zníženia a číselné rozdiely.
+- Preklápanie tooltipu pri okrajoch obrazovky a odstup od kurzora, aj pri scrollovaní a pohybe kamery.
+- Testy manuálnych vstupov, dopadu, nulového automatického zbierania, plného inventára, porovnávania a zachovania koristi.
+
+### Changed
+
+- Odstránené priťahovanie zlata a všetky automatické prevody predmetových odmien pri zabití do inventára.
+- Štvrtá schopnosť je na V; Y je vyhradené zbieraniu. Označenia ovládania sú zjednotené.
+- Nová výbava kontroluje požadovanú úroveň pri nasadení; existujúce predmety zostávajú použiteľné.
+
+### Fixed
+
+- Plný inventár ponechá predmet na zemi bez predaja. Uloženie, cestovanie a ukončenie trhliny zachovajú nepozbieranú korisť bez duplikácie.
+
 ## [0.7.0] - 2026-11-03
 
 ### Added
@@ -160,7 +181,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.8.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -170,3 +191,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.6.0]: https://github.com/ndxnraw/Grindoria/compare/v0.5.0...v0.6.0
 [0.6.1]: https://github.com/ndxnraw/Grindoria/compare/v0.6.0...v0.6.1
 [0.7.0]: https://github.com/ndxnraw/Grindoria/compare/v0.6.1...v0.7.0
+[0.8.0]: https://github.com/ndxnraw/Grindoria/compare/v0.7.0...v0.8.0

@@ -62,6 +62,8 @@ Základný princíp priťahovania príšer vychádza z [Metin2 Wiki – Bravery 
 - Plášť nefunguje pred začatím hry, pri otvorenom paneli, po smrti ani v chránenom útočisku. Pri odmietnutom použití sa kus nespotrebuje.
 - Použitie zruší maskovanie. Návrat do útočiska alebo nové maskovanie preruší vyprovokovanie; po vypršaní účinku pokračuje iba rozbehnutý boj, kým trvá vyprovokovanie. Samotná blízkosť nové aggro nevyvolá.
 
+Korisť vrátane plášťov, materiálov a výbavy sa od verzie 0.8.0 zbiera ručne zo zeme, kliknutím alebo Y pod kurzorom. Pozri [LOOT.md](LOOT.md).
+
 Nové aj migrované postavy dostanú jednorazovo zásobu 10 kusov. Už uložená nula sa pri načítaní nedopĺňa. Obchodník predáva 10 kusov za 100 zlata. Boss pridá 3 kusy, vzácny nepriateľ 2; bežní a elitní protivníci ich môžu tiež zanechať.
 
 Útočisko je skutočne chránené: z jeho vnútra nemožno používať základné ani útočné kúzla na bezpečné farmenie. Liečenie a podporné aury zostávajú dostupné. Nepriatelia pri pohybe obchádzajú jeho kruhový okraj.

@@ -21,7 +21,7 @@ function itemBonusText(item) {
 function itemDescription(entry, tooltip = false) {
   const item = entry.item, gear = entry.kind !== 'supply';
   const [w, h] = gear ? itemSize(item) : [1, 1];
-  return `<div class="item-description rarity-${item.rarity || 0}"><small>${gear ? (entry.kind === 'equipped' ? 'NASADENÉ · ' : '') + EQUIPMENT[item.slot].name : 'ZÁSOBY · ' + item.count.toLocaleString('sk-SK') + ' ks'}</small><h3>${escapeHTML(item.name)}${gear ? ' +' + (item.enhance || 0) : ''}</h3>${!tooltip ? `<div class="detail-icon">${itemIcon(item)}</div>` : ''}${gear ? `<p>${rarityName(item.rarity)} · stupeň ${item.tier || 1} · ${w} × ${h} políčka</p>${itemBonusText(item)}<p class="item-price">Predaj: ${item.value || 0} zlata</p>` : `<p>${escapeHTML(item.description)}</p><p>Rovnaký typ sa automaticky stackuje.<br>Množstvo: <b>${item.count.toLocaleString('sk-SK')} ks</b></p>`}</div>`;
+  return `<div class="item-description rarity-${item.rarity || 0}"><small>${gear ? (entry.kind === 'equipped' ? 'NASADENÉ · ' : '') + EQUIPMENT[item.slot].name : 'ZÁSOBY · ' + item.count.toLocaleString('sk-SK') + ' ks'}</small><h3>${escapeHTML(item.name)}${gear ? ' +' + (item.enhance || 0) : ''}</h3>${!tooltip ? `<div class="detail-icon">${itemIcon(item)}</div>` : ''}${gear ? `<p>${rarityName(item.rarity)} · stupeň ${item.tier || 1} · ${w} × ${h} políčka</p><p class="${canEquipItem(item) ? 'inventory-usable' : 'inventory-unusable'}">Požadovaná úroveň: ${requiredItemLevel(item)}<br>${escapeHTML(itemEquipReason(item))}</p>${itemBonusText(item)}<p class="item-price">Predaj: ${item.value || 0} zlata</p>` : `<p>${escapeHTML(item.description)}</p><p>Rovnaký typ sa automaticky stackuje.<br>Množstvo: <b>${item.count.toLocaleString('sk-SK')} ks</b></p>`}</div>`;
 }
 
 function inventory() {
@@ -113,7 +113,7 @@ function renderInventoryDetail() {
 
 function activateInventoryEntry(id) {
   const entry = inventoryEntry(id); if (!entry) return false;
-  if (entry.kind === 'gear') return equipItem(p.bag.findIndex(item => item.uid === entry.item.uid));
+  if (entry.kind === 'gear') { if (!canEquipItem(entry.item)) { inventoryMessage(itemEquipReason(entry.item)); return false; } return equipItem(p.bag.findIndex(item => item.uid === entry.item.uid)); }
   if (entry.kind === 'equipped') { const ok = unequipItem(entry.item.slot); if (!ok) inventoryMessage('V inventári nie je dosť súvislého miesta.'); return ok; }
   const ok = useInventorySupply(id);
   if (ok && entry.item.action === 'drink') inventory();

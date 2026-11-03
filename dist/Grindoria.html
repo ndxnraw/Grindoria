@@ -63,18 +63,23 @@ nav{gap:18px}.player{min-height:92px}.mana{height:7px;margin-top:4px;background:
 .equipment-slot:not(.filled) .item-icon{filter:grayscale(1);opacity:.28}
 
 .inventory-overlay{grid-template-columns:minmax(0,1fr)}.inventory-overlay .modal-card{min-width:0}.inventory-title{min-height:0;flex-wrap:nowrap}
+/* Ground loot: one cursor-safe tooltip, icons are shared with the inventory. */
+.loot-tooltip{position:fixed;z-index:45;width:282px;max-width:calc(100vw - 16px);max-height:calc(100vh - 16px);overflow:auto;pointer-events:none;padding:13px;background:#101612f5;color:#bdb8a2;border:1px solid #a28a56;box-shadow:0 4px 24px #000b;font:11px/1.5 'Segoe UI',sans-serif;scrollbar-width:thin;box-sizing:border-box;overflow-wrap:anywhere}
+.loot-tooltip[hidden]{display:none}.loot-heading{display:flex;gap:10px;align-items:center;border-bottom:1px solid #88744955;padding-bottom:10px;margin-bottom:7px}.loot-item-icon{width:40px;height:54px;flex-shrink:0;display:grid;place-items:center;background:radial-gradient(ellipse,#77664040,transparent 70%);padding:2px}.loot-heading small{font-size:8px;text-transform:uppercase;letter-spacing:.8px;color:#9a967d}.loot-heading h3{font:17px/1.3 Georgia,serif;color:#e2cea1;margin:4px 0 0}.loot-heading.rarity-1 h3{color:#93c6dd}.loot-heading.rarity-2 h3{color:#d0a8e7}.loot-tooltip h4{font-size:9px;letter-spacing:.6px;text-transform:uppercase;color:#a99d7d;margin:9px 0 3px}.loot-tooltip p{font-size:10px;line-height:1.55;color:#b1b29b;margin:4px 0}.loot-stat{display:flex;justify-content:space-between;gap:8px;font-size:10px;padding:2px 0}.loot-stat b{font-weight:600;color:#d5c69c}.loot-comparison{border-top:1px solid #88744955;margin-top:8px;padding-top:2px}.loot-tooltip .stat-gain,.loot-tooltip .stat-gain b{color:#9bce85}.loot-tooltip .stat-loss,.loot-tooltip .stat-loss b{color:#e58f7f}.loot-tooltip .stat-same,.loot-tooltip .stat-same b{color:#aaa796}.loot-tooltip .loot-controls{border-top:1px solid #88744955;margin-top:10px;padding-top:7px;color:#d6bb7a;font-size:9px}
+
+.item-description .inventory-usable{color:#9bce85!important}.item-description .inventory-unusable{color:#e58f7f!important}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b>ALPHA 0.7.0</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><span class="active">DOBRODRUŽSTVO</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO DOBRODRUŽSTVO <b>ALPHA 0.8.0</b></span></header>
 <main><div class="world-title"><div><span class="eyebrow">KAPITOLA I · PREBUDENIE</span><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Pod pokojnými korunami sa prebúdza stará temnota.</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
-<section class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb WASD, útok medzerník, schopnosť Q, liečenie E."></canvas><div class="vignette"></div>
+<section class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb WASD, útok medzerník, schopnosť Q, liečenie E, korisť ľavým kliknutím alebo Y nad predmetom."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
 <div class="hud player"><div class="portrait">侍</div><div><div class="player-name"><b id="playerclass">Bojovník</b> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 60 skúseností</small></div></div>
 <div class="hud map"><canvas id="minimap" width="138" height="118"></canvas><span id="minimaplabel">ÚDOLIE TICHÉHO VETRA</span></div>
 <div class="hud quest"><span class="eyebrow">AKTÍVNA ÚLOHA</span><h3>Praskliny v pokoji</h3><p>Osloboď údolie od temnoty.</p><div id="q-wolves">◇ Poraz príšery <b>0 / 5</b></div><div id="q-stones">◇ Znič kamene osudu <b>0 / 3</b></div><button id="claim" hidden>Vyzdvihnúť odmenu · 150 zlata</button><small id="questnote">Odmena: 150 zlata + 60 skúseností</small></div>
 <div id="toast" role="status"></div><div id="buffs" class="buffs" aria-live="off"></div><div class="hud location">⌖ &nbsp; <span id="coords">Útočisko pútnikov</span></div>
-<div class="hotbar"><button id="attack"><kbd>SPACE</kbd><span>⚔</span><small>Sek mečom</small></button><button id="skill"><kbd>Q</kbd><span>✺</span><small>Veterný kruh</small><em id="cooldown"></em></button><button id="skill2"><kbd>R</kbd><span>✧</span><small>Schopnosť</small><em id="cooldown2"></em></button><button id="skill3"><kbd>T</kbd><span>☄</span><small>Schopnosť</small><em id="cooldown3"></em></button><button id="skill4"><kbd>Y</kbd><span>◈</span><small>Schopnosť</small><em id="cooldown4"></em></button><button id="skill5"><kbd>U</kbd><span>❖</span><small>Schopnosť</small><em id="cooldown5"></em></button><button id="skill6"><kbd>O</kbd><span>✥</span><small>Schopnosť</small><em id="cooldown6"></em></button><button id="potion"><kbd>E</kbd><span>⚱</span><small>Elixír <b id="pots">5</b></small></button><button id="bravery" title="Plášť statočnosti · B · dosah 650 · priťahovanie 18 s"><kbd>B</kbd><span>⚑</span><small>Plášť <b id="capes">10</b></small><em id="cape-cooldown"></em></button><div class="divider"></div><button id="inventory"><kbd>I</kbd><span>▣</span><small>Výbava</small></button></div>
+<div class="hotbar"><button id="attack"><kbd>SPACE</kbd><span>⚔</span><small>Sek mečom</small></button><button id="skill"><kbd>Q</kbd><span>✺</span><small>Veterný kruh</small><em id="cooldown"></em></button><button id="skill2"><kbd>R</kbd><span>✧</span><small>Schopnosť</small><em id="cooldown2"></em></button><button id="skill3"><kbd>T</kbd><span>☄</span><small>Schopnosť</small><em id="cooldown3"></em></button><button id="skill4"><kbd>V</kbd><span>◈</span><small>Schopnosť</small><em id="cooldown4"></em></button><button id="skill5"><kbd>U</kbd><span>❖</span><small>Schopnosť</small><em id="cooldown5"></em></button><button id="skill6"><kbd>O</kbd><span>✥</span><small>Schopnosť</small><em id="cooldown6"></em></button><button id="potion"><kbd>E</kbd><span>⚱</span><small>Elixír <b id="pots">5</b></small></button><button id="bravery" title="Plášť statočnosti · B · dosah 650 · priťahovanie 18 s"><kbd>B</kbd><span>⚑</span><small>Plášť <b id="capes">10</b></small><em id="cape-cooldown"></em></button><div class="divider"></div><button id="inventory"><kbd>I</kbd><span>▣</span><small>Výbava</small></button></div>
 <div class="hud wallet"><span>◉</span> <b id="gold">0</b> <small>ZLATO</small></div>
-<div id="intro" class="overlay"><div class="intro-card"><span class="eyebrow">TVOJ PRÍBEH SA ZAČÍNA</span><h2>Temnota padá.<br><em>Ty povstaň.</em></h2><p>Štyri povolania, osem škôl a štyri oblasti. Vyber si cestu, ovládni svoje schopnosti a poraz strážcov kráľovstva.</p><div class="intro-controls"><span><kbd>W A S D</kbd> Pohyb</span><span><kbd>SPACE</kbd> Útok</span><span><kbd>Q R T Y U O</kbd> Kúzla</span><span><kbd>E</kbd> Liečenie</span></div><div class="class-select" id="classes"></div><div class="school-select" id="schools"></div><p id="classhint" class="class-hint"></p><button class="primary" id="start">Vstúpiť do údolia <span>→</span></button><small>Vlastná 2D adaptácia schopností; animácie sa líšia od Metin2.</small></div></div>
+<div id="intro" class="overlay"><div class="intro-card"><span class="eyebrow">TVOJ PRÍBEH SA ZAČÍNA</span><h2>Temnota padá.<br><em>Ty povstaň.</em></h2><p>Štyri povolania, osem škôl a štyri oblasti. Vyber si cestu, ovládni svoje schopnosti a poraz strážcov kráľovstva.</p><div class="intro-controls"><span><kbd>W A S D</kbd> Pohyb</span><span><kbd>SPACE</kbd> Útok</span><span><kbd>Q R T V U O</kbd> Kúzla</span><span><kbd>E</kbd> Liečenie</span></div><div class="class-select" id="classes"></div><div class="school-select" id="schools"></div><p id="classhint" class="class-hint"></p><button class="primary" id="start">Vstúpiť do údolia <span>→</span></button><small>Vlastná 2D adaptácia schopností; animácie sa líšia od Metin2.</small></div></div>
 <div id="modal" class="overlay" hidden><div class="modal-card"><button id="close" class="close" aria-label="Zavrieť">×</button><div id="modalcontent"></div></div></div>
 <div class="touch"><button data-key="w">↑</button><div><button data-key="a">←</button><button data-key="s">↓</button><button data-key="d">→</button></div></div>
 </section><footer><span><i></i> Postup sa ukladá automaticky</span><span><kbd>WASD</kbd> pohyb <i>·</i> kliknutie: pohyb / útok <i>·</i> <kbd>M</kbd> mapy <i>·</i> <kbd>K</kbd> kúzla</span><button id="sound">Zvuk: vypnutý</button></footer></main><script>
@@ -292,7 +297,7 @@ function chooseSaveImport(index) {
   if (!Number.isInteger(index) || index < -1 || index >= pendingSaveImports.length) return false;
   if (index >= 0) {
     p = { ...p, ...pendingSaveImports[index] };
-    initializeCareer(); initializeInventory(); initializeFarming(); loadMap(p.mapId, true);
+    initializeCareer(); initializeInventory(); initializeFarming(); initializeLoot(); loadMap(p.mapId, true);
     renderClasses(); updateClassHUD(); updateHUD();
   }
   pendingSaveImports.length = 0;
@@ -314,7 +319,7 @@ let W=1200,H=700,dpr=1,running=false,paused=false,last=0,clock=0,target=null,fac
 const keys={},mouse={x:0,y:0},cam={x:1000,y:1050};
 let p={x:1000,y:1050,hp:100,level:1,xp:0,gold:0,potions:5,kills:0,stones:0,claimed:false,weapon:0};
 try{const s=loadPlayerSave();if(s&&Number.isFinite(s.level)&&s.level>=1&&s.level<=99)p={...p,...s,x:1000,y:1050};}catch{}
-const spellKeys=['q','r','t','y','u','o'],buffs={},effects=[],shots=[];
+const spellKeys=['q','r','t','v','u','o'],buffs={},effects=[],shots=[];
 let spellCD=[0,0,0,0,0,0],castPose=0,castStyle='',spiritTick=0;
 p.classId=CLASSES[p.classId]?p.classId:'warrior';p.strength??=0;p.vitality??=0;p.dexterity??=0;p.points??=Math.max(0,(p.level-1)*3);p.bag??=[];p.equipped??={weapon:null,armor:null};p.bossKills??=0;p.bossClaimed??=false;p.huntClaimed??=0;
 p.intelligence??=0;p.mp??=100+p.level*8;p.worldStates??={};p.mapId=MAPS[p.mapId]?p.mapId:'valley';p.schools??={};for(const [classId,id] of Object.entries({warrior:'body',ninja:'blade',sura:'weapon',shaman:'dragon'})){if(SCHOOLS[p.schools[classId]]?.classId!==classId)p.schools[classId]=id;}
@@ -346,11 +351,11 @@ function frame(t){const dt=Math.min((t-last)/1000,.05);last=t;update(dt);draw();
 
 function keysClear(){Object.keys(keys).forEach(k=>keys[k]=false);}
 
-function update(dt){clock+=dt;if(!running||paused)return;attackCD=Math.max(0,attackCD-dt);slash=Math.max(0,slash-dt);ring=Math.max(0,ring-dt);updateCombat(dt);let dx=(keys.d||keys.ArrowRight?1:0)-(keys.a||keys.ArrowLeft?1:0),dy=(keys.s||keys.ArrowDown?1:0)-(keys.w||keys.ArrowUp?1:0);if(dx||dy)target=null;else if(target){dx=target.x-p.x;dy=target.y-p.y;if(Math.hypot(dx,dy)<8){target=null;dx=dy=0;}}const dist=Math.hypot(dx,dy);if(dist){face=Math.atan2(dy,dx);p.x=Math.max(45,Math.min(SIZE-45,p.x+dx/dist*speedValue()*dt));p.y=Math.max(45,Math.min(SIZE-45,p.y+dy/dist*speedValue()*dt));}if(keys[' '])attack();const safe=isSanctuary(p);if(safe){p.hp=Math.min(maxHP(),p.hp+12*dt);p.mp=Math.min(maxMP(),p.mp+dt*10);}updateEnemySpawns(dt,safe);for(let i=drops.length-1;i>=0;i--){const d=drops[i],distance=Math.hypot(d.x-p.x,d.y-p.y);if(distance<110){d.x+=(p.x-d.x)*dt*8;d.y+=(p.y-d.y)*dt*8;}if(distance<30){p.gold+=d.value;float('+'+d.value+' zlata',p.x,p.y-50,'#e9ce87');drops.splice(i,1);beep(750,.05);}}updateBoss(dt,safe);if(p.hp<=0)death();cam.x+=(p.x-cam.x)*Math.min(1,dt*7);cam.y+=(p.y-cam.y)*Math.min(1,dt*7);for(let i=particles.length-1;i>=0;i--){particles[i].age+=dt;if(particles[i].age>1.2)particles.splice(i,1);}toastTimer-=dt;if(toastTimer<0)$('toast').style.opacity='0';saveTimer+=dt;if(saveTimer>4){save();saveTimer=0;}updateHUD();}
+function update(dt){clock+=dt;if(!running||paused)return;attackCD=Math.max(0,attackCD-dt);slash=Math.max(0,slash-dt);ring=Math.max(0,ring-dt);updateCombat(dt);let dx=(keys.d||keys.ArrowRight?1:0)-(keys.a||keys.ArrowLeft?1:0),dy=(keys.s||keys.ArrowDown?1:0)-(keys.w||keys.ArrowUp?1:0);if(dx||dy)target=null;else if(target){dx=target.x-p.x;dy=target.y-p.y;if(Math.hypot(dx,dy)<8){target=null;dx=dy=0;}}const dist=Math.hypot(dx,dy);if(dist){face=Math.atan2(dy,dx);p.x=Math.max(45,Math.min(SIZE-45,p.x+dx/dist*speedValue()*dt));p.y=Math.max(45,Math.min(SIZE-45,p.y+dy/dist*speedValue()*dt));}if(keys[' '])attack();const safe=isSanctuary(p);if(safe){p.hp=Math.min(maxHP(),p.hp+12*dt);p.mp=Math.min(maxMP(),p.mp+dt*10);}updateEnemySpawns(dt,safe);updateGroundLoot(dt);updateBoss(dt,safe);if(p.hp<=0)death();cam.x+=(p.x-cam.x)*Math.min(1,dt*7);cam.y+=(p.y-cam.y)*Math.min(1,dt*7);for(let i=particles.length-1;i>=0;i--){particles[i].age+=dt;if(particles[i].age>1.2)particles.splice(i,1);}toastTimer-=dt;if(toastTimer<0)$('toast').style.opacity='0';saveTimer+=dt;if(saveTimer>4){save();saveTimer=0;}updateHUD();}
 
 
 // src/js/systems/combat.js
-function hit(m,amount){if(m.hp<=0)return;if(amount>0)provokeEnemyGroup(m);m.hp-=amount;m.hit=.15;float('-'+amount,m.x,m.y-65);beep(170);if(m.hp<=0){m.hp=0;m.windup=0;m.dead=m.respawnSeconds||(m.type==='boss'?40:m.type==='stone'?18:5);if(m.type==='boss')p.bossKills++;else p[m.type==='stone'?'stones':'kills']++;const gained=enemyXP(m);careerKill(m);farmBonusLoot(m);experience(gained);float(gained?'+'+gained+' EXP':'Slabý cieľ · bez EXP',m.x,m.y-85,gained?'#d6c28c':'#8e9f92');drops.push({x:m.x,y:m.y,value:Math.round((m.type==='boss'?120:m.type==='stone'?35:7+Math.floor(rand()*7))*map().scale*(ENEMY_VARIANTS[m.variant]?.gold||1))});dropFarmEquipment(m);if(rand()<.25){p.potions++;float('+1 elixír',m.x,m.y-100,'#a8d9b0');}if(m.type==='boss')toast('Strážca padol! Korisť čaká vo výbave (I).');else if(!p.claimed&&p.kills>=5&&p.stones>=3)toast('Úloha splnená! Vyzdvihni si odmenu.');}}
+function hit(m,amount){if(m.hp<=0)return;if(amount>0)provokeEnemyGroup(m);m.hp-=amount;m.hit=.15;float('-'+amount,m.x,m.y-65);beep(170);if(m.hp<=0){m.hp=0;m.windup=0;m.dead=m.respawnSeconds||(m.type==='boss'?40:m.type==='stone'?18:5);if(m.type==='boss')p.bossKills++;else p[m.type==='stone'?'stones':'kills']++;const gained=enemyXP(m);careerKill(m);farmBonusLoot(m);experience(gained);float(gained?'+'+gained+' EXP':'Slabý cieľ · bez EXP',m.x,m.y-85,gained?'#d6c28c':'#8e9f92');spawnGroundDrop({kind:'gold',count:Math.round((m.type==='boss'?120:m.type==='stone'?35:7+Math.floor(rand()*7))*map().scale*(ENEMY_VARIANTS[m.variant]?.gold||1))},m);dropFarmEquipment(m);if(rand()<.25)spawnGroundDrop({kind:'supply',supplyId:'potions',count:1},m);if(m.type==='boss')toast('Strážca padol! Korisť leží na zemi · klikni alebo Y.');else if(!p.claimed&&p.kills>=5&&p.stones>=3)toast('Úloha splnená! Vyzdvihni si odmenu.');}}
 
 function potion(){return drinkPotion(false);}
 
@@ -424,7 +429,7 @@ function makeItem(epic=false, source=null) {
   const rarity = epic ? 2 : source?.variant==='rare' ? 1 : rand() < (source?.variant==='elite' ? .45 : .16) ? 1 : 0;
   const slots = Object.keys(EQUIPMENT), slot = slots[Math.min(slots.length-1, Math.floor(rand()*slots.length))], spec = EQUIPMENT[slot];
   const tier = Math.min(99, source ? enemyLevel(source) : map().enemyLevel);
-  return { name: spec.names[rarity], slot, rarity, tier, enhance: 0, bonus: spec.base + Math.floor(tier * spec.scale) + rarity * spec.rare, value: 12 + tier * 3 + rarity * 25 };
+  return { name: spec.names[rarity], slot, rarity, tier, requiredLevel: tier, enhance: 0, bonus: spec.base + Math.floor(tier * spec.scale) + rarity * spec.rare, value: 12 + tier * 3 + rarity * 25 };
 }
 
 function awardItem(epic=false,source=null){const item=makeItem(epic,source);if(!addGearItem(item)){p.gold+=item.value;float('Batoh plný · +'+item.value+' zlata',p.x,p.y-110,'#d6cb99');return item;}float(item.name+' → I',p.x,p.y-110,item.rarity===2?'#d3a3eb':item.rarity===1?'#a3ceec':'#d1dab7');return item;}
@@ -446,7 +451,7 @@ function snapshotMap() {
   p.worldStates[p.mapId] = {
     progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
     mobs: mobs.map(m => ({ ...m, dot: m.dot ? { ...m.dot } : null, skillContributors: [...(m.skillContributors || [])] })),
-    drops: drops.map(d => ({ ...d }))
+    drops: drops.map(cloneGroundDrop)
   };
 }
 
@@ -471,7 +476,8 @@ function loadMap(id, initial=false) {
   const oldRun=p.career.endgame.run&&id==='temple'&&old?.mobs?.length&&old.spawnSchema!==SPAWN_RULES.schema;
   const population=oldRun?loadLegacyRift(old):hydrateSpawnPopulation(old);
   mobs.length=0; mobs.push(...population); drops.length=0;
-  drops.push(...(old?.drops||[]).map(d=>({...d})));
+  drops.push(...hydrateGroundDrops(old?.drops||[]));
+  clearLootPointer();
   p.x=1000; p.y=1160; cam.x=p.x; cam.y=p.y; target=null;
   shots.length=0; effects.length=0; particles.length=0; lastMiniMapPaint=-Infinity;
   Object.keys(buffs).forEach(k=>delete buffs[k]);
@@ -674,17 +680,18 @@ function collectRelic(id) {
 }
 
 function careerKill(m) {
+  const giveMaterial = (id, count = 1) => dropMaterial(id, count, m);
   const eligible = rewardEligible(m), c = p.career;
   // Biological specimens stay available when revisiting lower-level maps.
   const bio = BIOLOGY.find(b => b.map === p.mapId);
   if (bio && m.type === 'wolf') {
     c.samplePity[p.mapId] = (c.samplePity[p.mapId] || 0) + 1;
-    if (c.samplePity[p.mapId] >= 4) { addMaterial(bio.item); c.samplePity[p.mapId] = 0; }
+    if (c.samplePity[p.mapId] >= 4) { giveMaterial(bio.item); c.samplePity[p.mapId] = 0; }
   }
   if (eligible) {
-    c.eligibleKills++; addMaterial('essence', m.type === 'boss' ? 12 : m.type === 'stone' ? 4 : 1);
-    if (c.eligibleKills % 5 === 0) { addMaterial('ore'); addMaterial('training'); }
-    if (m.type === 'stone' || m.type === 'boss') { addMaterial('books'); addMaterial('dust', m.type === 'boss' ? 5 : 1); }
+    c.eligibleKills++; giveMaterial('essence', m.type === 'boss' ? 12 : m.type === 'stone' ? 4 : 1);
+    if (c.eligibleKills % 5 === 0) { giveMaterial('ore'); giveMaterial('training'); }
+    if (m.type === 'stone' || m.type === 'boss') { giveMaterial('books'); giveMaterial('dust', m.type === 'boss' ? 5 : 1); }
     const used = new Set(m.skillContributors || []);
     school().skills.forEach((s, i) => { if (active(s[1])) used.add(skillKey(i)); });
     for (const key of used) {
@@ -697,9 +704,9 @@ function careerKill(m) {
   }
   if (m.type === 'boss') {
     c.keyPity++;
-    if (c.keyPity >= 3) { addMaterial('keys'); c.keyPity = 0; }
+    if (c.keyPity >= 3) { giveMaterial('keys'); c.keyPity = 0; }
     c.relicPity[p.mapId] = (c.relicPity[p.mapId] || 0) + 1;
-    if (rand() < .08 || c.relicPity[p.mapId] >= 10) { collectRelic(p.mapId); c.relicPity[p.mapId] = 0; }
+    if (rand() < .08 || c.relicPity[p.mapId] >= 10) { spawnGroundDrop({ kind: 'relic', relicId: p.mapId, count: 1 }, m); c.relicPity[p.mapId] = 0; }
   }
   const run = c.endgame.run;
   if (run?.active && p.mapId === 'temple' && m.riftId === run.id) {
@@ -724,9 +731,11 @@ function enterRift() {
   if (!pay({ keys: 3 })) return false;
   const tier = Math.min(PROGRESSION.maxRiftTier, end.highest + 1);
   loadMap('temple');
+  snapshotMap();
   end.run = { id: (p.career.riftSerial = (p.career.riftSerial || 0) + 1), tier, kills: 0, bosses: 0, active: true };
   // Separate expedition enemies from the ordinary map snapshot.
   p.career.normalTemple = p.worldStates.temple;
+  drops.length = 0;
   mobs.forEach(m => {
     applyRiftScaling(m, tier, end.run.id);
     m.dead = 0; m.cd = 2; m.stun = 0; m.dot = null; m.skillContributors = [];
@@ -742,7 +751,8 @@ function finishRift(claim = true) {
   if (!run || (claim && (run.kills < 20 || run.bosses < 1))) return false;
   if (claim) { addMaterial('shards', 10 + run.tier * 3); end.highest = Math.max(end.highest, run.tier); }
   end.run = null;
-  p.worldStates.temple = p.career.normalTemple;
+  const ordinary = p.career.normalTemple || {};
+  p.worldStates.temple = { ...ordinary, drops: [...(ordinary.drops || []), ...drops.map(cloneGroundDrop)] };
   delete p.career.normalTemple;
   // Do not overwrite the ordinary snapshot with expedition enemies on exit.
   mobs.length = 0; drops.length = 0; p.x = 1000; p.y = 1160;
@@ -1029,21 +1039,25 @@ function buyBraveryCapes() {
 function farmBonusLoot(m) {
   const eligible = rewardEligible(m), rare = m.variant === 'rare', elite = m.variant === 'elite';
   let capes = m.type === 'boss' ? 3 : rare ? 2 : rand() < (elite ? .25 : .02) ? 1 : 0;
-  if (capes) { p.braveryCapes += capes; float('+' + capes + ' Plášť statočnosti', m.x, m.y - 105, '#dfbc8b'); }
+  if (capes) spawnGroundDrop({ kind: 'supply', supplyId: 'braveryCapes', count: capes }, m);
   if (!eligible || m.type !== 'wolf') return;
-  if (rare) { addMaterial('ore', 3); addMaterial('dust', 3); addMaterial('books'); addMaterial('training'); }
-  else if (elite) { addMaterial('ore'); addMaterial('essence', 2); }
+  if (rare) { dropMaterial('ore', 3, m); dropMaterial('dust', 3, m); dropMaterial('books', 1, m); dropMaterial('training', 1, m); }
+  else if (elite) { dropMaterial('ore', 1, m); dropMaterial('essence', 2, m); }
 }
 
 function dropFarmEquipment(m) {
   const rare = m.variant === 'rare', elite = m.variant === 'elite';
-  if (m.type === 'boss') return awardItem(true, m);
-  if (m.type === 'stone' || rare || rand() < (elite ? .75 : .32)) return awardItem(rare ? rand() < .25 : elite && rand() < .08, m);
+  if (m.type === 'boss') return spawnGroundDrop({ kind: 'gear', item: makeItem(true, m) }, m);
+  if (m.type === 'stone' || rare || rand() < (elite ? .75 : .32)) return spawnGroundDrop({ kind: 'gear', item: makeItem(rare ? rand() < .25 : elite && rand() < .08, m) }, m);
 }
 
 
 
 // src/js/systems/inventory.js
+function requiredItemLevel(item) { return Number.isSafeInteger(item.requiredLevel) && item.requiredLevel > 0 ? item.requiredLevel : 1; }
+function canEquipItem(item) { return !!EQUIPMENT[item?.slot] && p.level >= requiredItemLevel(item) && (!Array.isArray(item.classes) || item.classes.includes(p.classId)); }
+function itemEquipReason(item) { if (!EQUIPMENT[item?.slot]) return 'Predmet nemožno vybaviť.'; if (p.level < requiredItemLevel(item)) return 'Nedostatočná úroveň · vyžaduje ' + requiredItemLevel(item); if (Array.isArray(item.classes) && !item.classes.includes(p.classId)) return 'Predmet nie je pre tvoje povolanie.'; return 'Možno vybaviť · ' + EQUIPMENT[item.slot].name; }
+
 function itemSize(item) { return EQUIPMENT[item.slot]?.size || [1, 1]; }
 
 function itemCells(item, cell) {
@@ -1123,7 +1137,7 @@ function finishInventoryChange() {
 function equipItem(index) {
   if (!Number.isInteger(index) || index < 0 || index >= p.bag.length) return false;
   const item = p.bag[index], slot = item.slot;
-  if (!EQUIPMENT[slot]) return false;
+  if (!canEquipItem(item)) { toast(itemEquipReason(item)); return false; }
   const old = p.equipped[slot], next = p.bag.filter((_, i) => i !== index);
   if (old) next.push(old);
   const layout = gearLayout(next);
@@ -1157,13 +1171,17 @@ function moveGearItem(uid, cell) {
   applyGearLayout(layout); finishInventoryChange(); return true;
 }
 
-function supplyEntries() {
-  const all = [
+function supplyDefinitions() {
+  return [
     { id: 'potions', name: 'Liečivý elixír', count: p.potions, icon: 'potion', description: 'Obnoví 65 zdravia. Kláves E.', action: 'drink' },
     { id: 'braveryCapes', name: 'Plášť statočnosti', count: p.braveryCapes, icon: 'cape', description: 'Privolá pohyblivých nepriateľov v dosahu 650 na 18 sekúnd. Kláves B.', action: 'cape' },
     ...Object.entries(MATERIALS).map(([id, name]) => ({ id: 'material:' + id, name, count: p.career.materials[id], icon: id, description: 'Rozvojový materiál. Použitie otvorí príslušnú cestu progresie.', action: 'material', material: id })),
     ...Object.entries(GEMS).map(([id, gem]) => ({ id: 'gem:' + id, name: gem.name, count: p.career.alchemy.stock[id], icon: id, description: gem.text + ' Použitie otvorí alchýmiu.', action: 'alchemy' }))
   ];
+}
+
+function supplyEntries() {
+  const all = supplyDefinitions();
   const entries = all.filter(item => item.count > 0), occupied = new Set();
   for (const item of entries) {
     let cell = p.inventory.supplyCells[item.id];
@@ -1235,8 +1253,148 @@ function sellItem(index) {
 }
 
 
+// src/js/systems/loot.js
+const LOOT_RULES = { fallDuration: .65, pickupRange: 180 };
+const lootPointer = { inside: false, x: 0, y: 0, clientX: 0, clientY: 0 };
+let hoveredLootId = null, lootTooltipSignature = '';
+const lootSupplyCatalog = new Map();
+
+function initializeLoot() {
+  lootSupplyCatalog.clear(); supplyDefinitions().forEach(item => lootSupplyCatalog.set(item.id, item));
+  if (!Number.isSafeInteger(p.lootSerial) || p.lootSerial < 0) p.lootSerial = 0;
+  for (const state of [...Object.values(p.worldStates), p.career.normalTemple]) {
+    for (const drop of state?.drops || []) if (Number.isSafeInteger(drop.id)) p.lootSerial = Math.max(p.lootSerial, drop.id);
+  }
+}
+
+function cloneGroundDrop(drop) {
+  return { ...drop, ...(drop.item ? { item: { ...drop.item, ...(drop.item.stats ? { stats: { ...drop.item.stats } } : {}), ...(drop.item.special ? { special: [...drop.item.special] } : {}) } } : {}) };
+}
+
+function hydrateGroundDrops(saved) {
+  const ids = new Set();
+  return saved.map(prior => {
+    const drop = cloneGroundDrop(prior);
+    // Existing map snapshots contained only uncollected gold piles.
+    drop.kind ??= 'gold';
+    drop.count ??= drop.value || 1;
+    if (!Number.isSafeInteger(drop.id) || drop.id < 1 || ids.has(drop.id)) drop.id = ++p.lootSerial;
+    p.lootSerial = Math.max(p.lootSerial, drop.id); ids.add(drop.id);
+    drop.fallAge = LOOT_RULES.fallDuration;
+    drop.launchX = drop.x; drop.launchY = drop.y;
+    return drop;
+  });
+}
+
+function spawnGroundDrop(payload, source) {
+  const angle = rand() * Math.PI * 2, radius = 22 + rand() * 64;
+  const drop = {
+    ...payload, id: ++p.lootSerial,
+    x: Math.max(45, Math.min(SIZE - 45, source.x + Math.cos(angle) * radius)),
+    y: Math.max(45, Math.min(SIZE - 45, source.y + Math.sin(angle) * radius)),
+    launchX: source.x, launchY: source.y, fallAge: 0
+  };
+  if (drop.kind === 'gold') drop.value = drop.count;
+  drops.push(drop); return drop;
+}
+
+function dropMaterial(id, count, source) {
+  if (MATERIALS[id] && Number.isSafeInteger(count) && count > 0) return spawnGroundDrop({ kind: 'supply', supplyId: 'material:' + id, count }, source);
+}
+
+function groundDropView(drop) {
+  if (drop.kind === 'gear') return { ...drop.item, count: 1, description: 'Výbava postavy.' };
+  if (drop.kind === 'supply') {
+    const definition = lootSupplyCatalog.get(drop.supplyId);
+    return definition ? { ...definition, count: drop.count, rarity: 0, requiredLevel: 1 } : null;
+  }
+  if (drop.kind === 'relic' && RELICS[drop.relicId]) {
+    const relic = RELICS[drop.relicId];
+    return { name: relic.name, icon: 'shards', count: 1, rarity: 2, requiredLevel: 1, description: relic.text + (p.career.collection[drop.relicId] ? ' Ďalší exemplár sa po zdvihnutí premení na 10 prachov.' : 'Po zdvihnutí aktivuje trvalý bonus zbierky.') };
+  }
+  if (drop.kind === 'gold') return { name: 'Zlato', icon: 'gold', count: drop.count, rarity: 0, requiredLevel: 1, description: 'Mena pre obchodníka, kováča a rozvoj postavy.' };
+  return null;
+}
+
+function groundDropVisual(drop) {
+  const t = Math.min(1, (drop.fallAge ?? LOOT_RULES.fallDuration) / LOOT_RULES.fallDuration);
+  const position = screen((drop.launchX ?? drop.x) + (drop.x - (drop.launchX ?? drop.x)) * t, (drop.launchY ?? drop.y) + (drop.y - (drop.launchY ?? drop.y)) * t);
+  const elevation = Math.sin(t * Math.PI) * 42 + (1 - t) * 25;
+  return { x: position.x, y: position.y - 17 - elevation, elevation };
+}
+
+function groundDropAt(x, y) {
+  let closest = null, distance = Infinity;
+  for (let i = drops.length - 1; i >= 0; i--) {
+    const drop = drops[i], visual = groundDropVisual(drop), dx = Math.abs(x - visual.x), dy = Math.abs(y - visual.y);
+    if (dx > 19 || dy > 21) continue;
+    const d = Math.hypot(dx, dy);
+    if (d < distance) { closest = drop; distance = d; }
+  }
+  return closest;
+}
+
+function setLootPointer(event) {
+  const rect = canvas.getBoundingClientRect();
+  lootPointer.x = event.clientX - (rect.left || 0); lootPointer.y = event.clientY - (rect.top || 0);
+  lootPointer.clientX = event.clientX; lootPointer.clientY = event.clientY;
+  lootPointer.inside = lootPointer.x >= 0 && lootPointer.y >= 0 && lootPointer.x <= W && lootPointer.y <= H;
+  updateLootHover();
+}
+
+function clearLootPointer() {
+  lootPointer.inside = false; hoveredLootId = null; lootTooltipSignature = '';
+  $('loot-tooltip').hidden = true; canvas.style.cursor = '';
+}
+
+function grantGroundSupply(id, count) {
+  if (!Number.isSafeInteger(count) || count < 1) return false;
+  let holder, key;
+  if (id.startsWith('material:') && MATERIALS[id.slice(9)]) { holder = p.career.materials; key = id.slice(9); }
+  else if (id.startsWith('gem:') && GEMS[id.slice(4)]) { holder = p.career.alchemy.stock; key = id.slice(4); }
+  else if (id === 'potions' || id === 'braveryCapes') { holder = p; key = id; }
+  else return false;
+  if (!Number.isSafeInteger((holder[key] || 0) + count)) return false;
+  holder[key] = (holder[key] || 0) + count; return true;
+}
+
+function pickUpGroundDrop(id) {
+  if (!running || paused || p.hp <= 0) return false;
+  const index = drops.findIndex(drop => drop.id === id);
+  if (index < 0) return false;
+  const drop = drops[index], view = groundDropView(drop);
+  if (!view || drop.fallAge < LOOT_RULES.fallDuration) return false;
+  if (Math.hypot(drop.x - p.x, drop.y - p.y) > LOOT_RULES.pickupRange) { toast('Priblíž sa ku koristi a znova klikni alebo stlač Y.'); return false; }
+  if (drop.kind === 'gear') {
+    if (!addGearItem(cloneGroundDrop(drop).item)) { toast('V inventári nie je dosť miesta. Predmet zostáva na zemi.'); return false; }
+  } else if (drop.kind === 'supply') {
+    if (!grantGroundSupply(drop.supplyId, drop.count)) return false;
+  } else if (drop.kind === 'relic') collectRelic(drop.relicId);
+  else if (drop.kind === 'gold') {
+    if (!Number.isSafeInteger(drop.count) || drop.count < 1 || !Number.isSafeInteger(p.gold + drop.count)) return false;
+    p.gold += drop.count;
+  } else return false;
+  drops.splice(index, 1);
+  float('+' + (view.count > 1 ? view.count + ' ' : '') + view.name, p.x, p.y - 75, '#dec799');
+  beep(750, .05); updateHUD(); save(); updateLootHover(); return true;
+}
+
+function pickHoveredGroundDrop() {
+  if (!lootPointer.inside) return false;
+  updateLootHover();
+  const drop = drops.find(drop => drop.id === hoveredLootId);
+  return drop ? pickUpGroundDrop(drop.id) : false;
+}
+
+function updateGroundLoot(dt) {
+  for (const drop of drops) drop.fallAge = Math.min(LOOT_RULES.fallDuration, (drop.fallAge || 0) + dt);
+  // No attraction, proximity collection, timers that erase loot, or implicit inventory transfer.
+  updateLootHover();
+}
+
+
 // src/js/ui/panels.js
-function modal(html){$('modal').className='overlay';paused=true;keysClear();$('modalcontent').innerHTML=html;$('modal').hidden=false;}
+function modal(html){clearLootPointer();$('modal').className='overlay';paused=true;keysClear();$('modalcontent').innerHTML=html;$('modal').hidden=false;}
 
 function closeModal(){$('modal').className='overlay';$('modal').hidden=true;paused=false;canvas.focus();}
 
@@ -1249,7 +1407,7 @@ function travelMenu(){if(!running)return;if(p.career.endgame.run){careerPanel('e
 
 function spellbook(){if(!running)return;modal(`<span class="eyebrow">${role().name} · ${school().name}</span><h2>Kniha schopností</h2><p>Šesť klasických schopností školy podľa Metin2. Popisy uvádzajú základné hodnoty na stupni 1. Vyššie stupne zlepšujú silu kúzla alebo trvanie aury a skracujú obnovu. Vlastné 2D animácie sú prispôsobené tomuto prototypu.</p><div class="spell-list">${school().skills.map((s,i)=>`<div><kbd>${spellKeys[i].toUpperCase()}</kbd><span><b>${s[0]} · stupeň ${skillProgress(skillKey(i)).rank}</b><small>${s[6]}<br>${s[3]} many · obnova ${s[2]} s</small></span></div>`).join('')}</div><p>Manu obnovuješ priebežne, rýchlejšie v útočisku. Inteligencia zvyšuje manu aj poškodenie kúziel. Školu si vyber pred vstupom do hry. Prax a knihy pre zvyšovanie schopností nájdeš v Progrese (P).</p>`);}
 
-function help(){modal('<span class="eyebrow">SPRIEVODCA</span><h2>Cesta bojovníka</h2><p><b>WASD / šípky</b> — pohyb<br><b>Medzerník</b> — základný útok (možno držať)<br><b>Q R T Y U O</b> — šesť schopností školy<br><b>P</b> — dlhodobá progresia<br><b>K</b> — kniha schopností a ich účinky<br><b>E</b> — elixír zdravia<br><b>B</b> — Plášť statočnosti (650 jednotiek, 18 s)<br><b>I</b> — výbava a vlastnosti<br><b>J</b> — denník úloh<br><b>M</b> — cestovanie medzi mapami z útočiska<br><b>F</b> — obchodník<br><b>Esc</b> — zavrieť okno</p><p>Vyber si povolanie a školu pred vstupom do hry. Kúzla spotrebúvajú manu, ktorá sa automaticky obnovuje. Modré, zelené a fialové efekty označujú rôzne schopnosti, jedy a ochranné aury.</p><p>Príšery sa voľne potulujú po okolí. Zásah vyprovokuje ich skupinu, spolu najviac päť príšer; plášť pritiahne všetky pohyblivé ciele v dosahu. Bossovia napádajú automaticky. Fialové označenie znamená elitu, zlaté vzácnu príšeru. Respawn: bežné príšery 5 s, elity 8 s, vzácne varianty 20 s, vzácne hliadky 75 s, kamene 18 s a bossovia 40 s. Plášť spotrebuje 1 kus aj bez cieľov; ďalšie kúpiš u obchodníka alebo získaš z koristi. Útočisko je chránené: plášť ani útočné kúzla v ňom nefungujú. Každá mapa má vlastných protivníkov a silnejšie odmeny. Boss pod 30 % zdravia zúri; Sura ho dokáže potlačiť Zrušením kúzla.</p><p>Vlastná 2D adaptácia šiestich klasických schopností každej školy, nie pôvodné animácie ani presná simulácia hodnôt Metin2. Postup sa ukladá v tomto prehliadači.</p>');}
+function help(){modal('<span class="eyebrow">SPRIEVODCA</span><h2>Cesta bojovníka</h2><p><b>WASD / šípky</b> — pohyb<br><b>Medzerník</b> — základný útok (možno držať)<br><b>Q R T V U O</b> — šesť schopností školy<br><b>P</b> — dlhodobá progresia<br><b>K</b> — kniha schopností a ich účinky<br><b>Y</b> — zdvihnúť predmet pod kurzorom (aj ľavým kliknutím)<br><b>E</b> — elixír zdravia<br><b>B</b> — Plášť statočnosti (650 jednotiek, 18 s)<br><b>I</b> — výbava a vlastnosti<br><b>J</b> — denník úloh<br><b>M</b> — cestovanie medzi mapami z útočiska<br><b>F</b> — obchodník<br><b>Esc</b> — zavrieť okno</p><p>Vyber si povolanie a školu pred vstupom do hry. Kúzla spotrebúvajú manu, ktorá sa automaticky obnovuje. Modré, zelené a fialové efekty označujú rôzne schopnosti, jedy a ochranné aury.</p><p>Príšery sa voľne potulujú po okolí. Zásah vyprovokuje ich skupinu, spolu najviac päť príšer; plášť pritiahne všetky pohyblivé ciele v dosahu. Bossovia napádajú automaticky. Fialové označenie znamená elitu, zlaté vzácnu príšeru. Respawn: bežné príšery 5 s, elity 8 s, vzácne varianty 20 s, vzácne hliadky 75 s, kamene 18 s a bossovia 40 s. Plášť spotrebuje 1 kus aj bez cieľov; ďalšie kúpiš u obchodníka alebo získaš z koristi. Útočisko je chránené: plášť ani útočné kúzla v ňom nefungujú. Každá mapa má vlastných protivníkov a silnejšie odmeny. Boss pod 30 % zdravia zúri; Sura ho dokáže potlačiť Zrušením kúzla.</p><p>Vlastná 2D adaptácia šiestich klasických schopností každej školy, nie pôvodné animácie ani presná simulácia hodnôt Metin2. Postup sa ukladá v tomto prehliadači.</p>');}
 
 function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
@@ -1263,6 +1421,7 @@ function itemIcon(item, empty = false) {
   const gold = empty ? '#766c58' : '#d8ad5c', dark = empty ? '#403d34' : '#444c52';
   const gem = empty ? '#4b463a' : ['#a24f3f', '#59b4c0', '#bc7bdb'][rarity];
   const shapes = {
+    gold: '<ellipse cx="32" cy="47" rx="25" ry="12" fill="#9d702f" stroke="#e5c96b" stroke-width="2"/><ellipse cx="28" cy="36" rx="22" ry="11" fill="#b98e39" stroke="#edce78" stroke-width="2"/><ellipse cx="35" cy="23" rx="23" ry="12" fill="#e2bd5c" stroke="#f3dd99" stroke-width="2"/><path d="M35 15v16m-6-13 8-2 6 4-11 5 8 4" stroke="#9a712c" fill="none" stroke-width="2"/>',
     weapon: `<path fill="${dark}" d="M34 6 41 20 31 65 24 67 27 20Z"/><path fill="${metal}" d="M34 6 36 23 27 64 23 62 29 19Z"/><path fill="#eff0dc" d="m34 6-3 22-6 32 3-37Z"/><path fill="${gold}" d="m14 62 28 4-1 6-29-4Z"/><path fill="#764a32" d="m23 69 9 1-3 17-9-1Z"/><path fill="${gold}" d="m18 85 14 2-1 5-14-2Z"/>`,
     armor: `<path fill="${dark}" d="m20 8 12 7 12-7 14 12-7 13-7-3 4 26-16 5-16-5 4-26-7 3-7-13Z"/><path fill="${metal}" d="m21 14 11 6 11-6 9 8-8 8 1 20-13 6-13-6 1-20-8-8Z"/><path fill="${gold}" d="m27 21 5 6 5-6-1 26-4 5-4-5Z"/><path fill="${gem}" d="m32 25 5 7-5 7-5-7Z"/><path d="m19 46 13 6 13-6M16 18l5 6m27-6-5 6" stroke="#eee0b1" fill="none"/>`,
     helmet: `<path fill="${dark}" d="M8 49V30Q9 12 32 9q23 3 24 21v19l-15 8-9-12-9 12Z"/><path fill="${metal}" d="M12 44V30q1-16 20-18 19 2 20 18v14L38 34H26Z"/><path fill="${gold}" d="m29 7 6 0 2 30-5 14-5-14Z"/><path fill="#191c1d" d="m15 32 12 2-2 7-10 1m34-10-12 2 2 7 10 1"/><path fill="${gem}" d="m32 16 4 6-4 6-4-6Z"/>`,
@@ -1321,7 +1480,7 @@ function itemBonusText(item) {
 function itemDescription(entry, tooltip = false) {
   const item = entry.item, gear = entry.kind !== 'supply';
   const [w, h] = gear ? itemSize(item) : [1, 1];
-  return `<div class="item-description rarity-${item.rarity || 0}"><small>${gear ? (entry.kind === 'equipped' ? 'NASADENÉ · ' : '') + EQUIPMENT[item.slot].name : 'ZÁSOBY · ' + item.count.toLocaleString('sk-SK') + ' ks'}</small><h3>${escapeHTML(item.name)}${gear ? ' +' + (item.enhance || 0) : ''}</h3>${!tooltip ? `<div class="detail-icon">${itemIcon(item)}</div>` : ''}${gear ? `<p>${rarityName(item.rarity)} · stupeň ${item.tier || 1} · ${w} × ${h} políčka</p>${itemBonusText(item)}<p class="item-price">Predaj: ${item.value || 0} zlata</p>` : `<p>${escapeHTML(item.description)}</p><p>Rovnaký typ sa automaticky stackuje.<br>Množstvo: <b>${item.count.toLocaleString('sk-SK')} ks</b></p>`}</div>`;
+  return `<div class="item-description rarity-${item.rarity || 0}"><small>${gear ? (entry.kind === 'equipped' ? 'NASADENÉ · ' : '') + EQUIPMENT[item.slot].name : 'ZÁSOBY · ' + item.count.toLocaleString('sk-SK') + ' ks'}</small><h3>${escapeHTML(item.name)}${gear ? ' +' + (item.enhance || 0) : ''}</h3>${!tooltip ? `<div class="detail-icon">${itemIcon(item)}</div>` : ''}${gear ? `<p>${rarityName(item.rarity)} · stupeň ${item.tier || 1} · ${w} × ${h} políčka</p><p class="${canEquipItem(item) ? 'inventory-usable' : 'inventory-unusable'}">Požadovaná úroveň: ${requiredItemLevel(item)}<br>${escapeHTML(itemEquipReason(item))}</p>${itemBonusText(item)}<p class="item-price">Predaj: ${item.value || 0} zlata</p>` : `<p>${escapeHTML(item.description)}</p><p>Rovnaký typ sa automaticky stackuje.<br>Množstvo: <b>${item.count.toLocaleString('sk-SK')} ks</b></p>`}</div>`;
 }
 
 function inventory() {
@@ -1413,7 +1572,7 @@ function renderInventoryDetail() {
 
 function activateInventoryEntry(id) {
   const entry = inventoryEntry(id); if (!entry) return false;
-  if (entry.kind === 'gear') return equipItem(p.bag.findIndex(item => item.uid === entry.item.uid));
+  if (entry.kind === 'gear') { if (!canEquipItem(entry.item)) { inventoryMessage(itemEquipReason(entry.item)); return false; } return equipItem(p.bag.findIndex(item => item.uid === entry.item.uid)); }
   if (entry.kind === 'equipped') { const ok = unequipItem(entry.item.slot); if (!ok) inventoryMessage('V inventári nie je dosť súvislého miesta.'); return ok; }
   const ok = useInventorySupply(id);
   if (ok && entry.item.action === 'drink') inventory();
@@ -1447,6 +1606,66 @@ function positionItemTooltip(event) {
   const rect = tooltip.getBoundingClientRect();
   tooltip.style.left = Math.max(8, Math.min(event.clientX + 14, width - rect.width - 12)) + 'px';
   tooltip.style.top = Math.max(8, Math.min(event.clientY + 14, height - rect.height - 12)) + 'px';
+}
+
+
+// src/js/ui/loot.js
+function signedItemStat(stat, value) {
+  const amount = stat === 'crit' ? Number((Math.abs(value) * 100).toFixed(2)) + ' %' : Number(Math.abs(value).toFixed(2));
+  return (value > 0 ? '+' : value < 0 ? '−' : '') + amount;
+}
+
+function groundItemComparison(item) {
+  const worn = p.equipped[item.slot], current = itemBonuses(worn), next = itemBonuses(item);
+  return `<div class="loot-comparison"><h4>Porovnanie: ${escapeHTML(worn?.name || 'prázdny slot')}</h4>${Object.keys(ITEM_STATS).filter(stat => current[stat] || next[stat]).map(stat => {
+    const change = next[stat] - current[stat];
+    return `<div class="loot-stat ${change > 0 ? 'stat-gain' : change < 0 ? 'stat-loss' : 'stat-same'}"><span>${ITEM_STATS[stat]}</span><b>${signedItemStat(stat, change)}</b></div>`;
+  }).join('')}</div>`;
+}
+
+function groundDropTooltip(drop) {
+  const item = groundDropView(drop); if (!item) return '';
+  const gear = drop.kind === 'gear', required = requiredItemLevel(item), usable = gear && canEquipItem(item);
+  let details;
+  if (gear) {
+    const spec = EQUIPMENT[item.slot], base = (Number(item.bonus) || 0) * (spec.stat === 'crit' ? .01 : 1);
+    const extras = Object.entries(item.stats || {}).filter(([stat, value]) => ITEM_STATS[stat] && Number.isFinite(value));
+    const specials = Array.isArray(item.special) ? item.special : [];
+    details = `<h4>Základné atribúty</h4><div class="loot-stat"><span>${ITEM_STATS[spec.stat]}</span><b>${signedItemStat(spec.stat, base)}</b></div><div class="loot-stat"><span>Vylepšenie +${item.enhance || 0}</span><b>${signedItemStat(spec.stat, (item.enhance || 0) * 3 * (spec.stat === 'crit' ? .01 : 1))}</b></div><h4>Bonusy</h4>${extras.length ? extras.map(([stat, value]) => `<div class="loot-stat"><span>${ITEM_STATS[stat]}</span><b>${signedItemStat(stat, value)}</b></div>`).join('') : '<p>Bez dodatočných bonusov.</p>'}<h4>Špeciálne vlastnosti</h4><p>${specials.length ? specials.map(value => escapeHTML(value)).join('<br>') : 'Žiadne.'}</p><p class="${usable ? 'stat-gain' : 'stat-loss'}">${usable ? 'Možno vybaviť · ' + spec.name : escapeHTML(itemEquipReason(item))}</p>${usable ? groundItemComparison(item) : ''}`;
+  } else details = `<p>${escapeHTML(item.description)}</p><div class="loot-stat"><span>Množstvo</span><b>${item.count.toLocaleString('sk-SK')}</b></div><h4>Vybavenie</h4><p>${drop.kind === 'relic' ? 'Relikvia zbierky · nezaberá slot výbavy.' : 'Nie je výbava postavy.'}</p>`;
+  return `<div class="loot-heading rarity-${item.rarity || 0}"><div class="loot-item-icon">${itemIcon(item)}</div><div><small>${gear ? EQUIPMENT[item.slot].name : drop.kind === 'gold' ? 'MENA' : drop.kind === 'relic' ? 'RELIKVIA' : 'ZÁSOBY'} · ${rarityName(item.rarity)}</small><h3>${escapeHTML(item.name)}${gear ? ' +' + (item.enhance || 0) : ''}</h3></div></div><div class="loot-stat ${p.level < required ? 'stat-loss' : ''}"><span>Požadovaná úroveň</span><b>${required}</b></div>${details}<p class="loot-controls">${drop.fallAge < LOOT_RULES.fallDuration ? 'Predmet dopadá na zem…' : Math.hypot(drop.x - p.x, drop.y - p.y) > LOOT_RULES.pickupRange ? 'Priblíž sa · dosah zbierania 180' : 'Ľavé tlačidlo alebo Y · zdvihnúť'}</p>`;
+}
+
+function floatingTooltipPosition(x, y, width, height, viewportWidth, viewportHeight) {
+  const gap = 14, edge = 8, w = Math.min(width, viewportWidth - edge * 2), h = Math.min(height, viewportHeight - edge * 2);
+  const clamp = (v, max) => Math.max(edge, Math.min(v, max));
+  const candidates = [[x + gap, y + gap], [x - gap - w, y + gap], [x + gap, y - gap - h], [x - gap - w, y - gap - h]];
+  for (const [left, top] of candidates) {
+    const cx = clamp(left, viewportWidth - w - edge), cy = clamp(top, viewportHeight - h - edge);
+    if (x >= cx - 6 && x <= cx + w + 6 && y >= cy - 6 && y <= cy + h + 6) continue;
+    return { left: cx, top: cy, maxHeight: viewportHeight - edge * 2 };
+  }
+  const below = viewportHeight - y - gap - edge, above = y - gap - edge, room = Math.max(1, below, above);
+  const maxHeight = Math.min(h, room);
+  return { left: clamp(x + gap, viewportWidth - w - edge), top: below >= above ? y + gap : y - gap - maxHeight, maxHeight };
+}
+
+function updateLootHover() {
+  if (!running || paused || !lootPointer.inside) { hoveredLootId = null; $('loot-tooltip').hidden = true; canvas.style.cursor = ''; return; }
+  // Scrolling or resizing can move the canvas underneath a stationary cursor.
+  const canvasRect = canvas.getBoundingClientRect();
+  lootPointer.x = lootPointer.clientX - (canvasRect.left || 0); lootPointer.y = lootPointer.clientY - (canvasRect.top || 0);
+  if (lootPointer.x < 0 || lootPointer.y < 0 || lootPointer.x > W || lootPointer.y > H) { hoveredLootId = null; $('loot-tooltip').hidden = true; canvas.style.cursor = ''; return; }
+  const drop = groundDropAt(lootPointer.x, lootPointer.y);
+  if (!drop) { hoveredLootId = null; $('loot-tooltip').hidden = true; canvas.style.cursor = ''; return; }
+  hoveredLootId = drop.id; canvas.style.cursor = 'pointer';
+  const signature = [drop.id, p.level, p.classId, drop.fallAge >= LOOT_RULES.fallDuration, Math.hypot(drop.x - p.x, drop.y - p.y) <= LOOT_RULES.pickupRange, JSON.stringify(p.equipped)].join('|');
+  const tooltip = $('loot-tooltip');
+  if (signature !== lootTooltipSignature) { tooltip.innerHTML = groundDropTooltip(drop); lootTooltipSignature = signature; }
+  tooltip.hidden = false; tooltip.style.maxHeight = ((window.innerHeight || H) - 16) + 'px';
+  const rect = tooltip.getBoundingClientRect();
+  const position = floatingTooltipPosition(lootPointer.clientX, lootPointer.clientY, rect.width, rect.height, window.innerWidth || W, window.innerHeight || H);
+  tooltip.style.left = position.left + 'px'; tooltip.style.top = position.top + 'px'; tooltip.style.maxHeight = position.maxHeight + 'px';
 }
 
 
@@ -1625,7 +1844,7 @@ ctx.restore();}for(const b of shots){if(b.opts.delay>0)continue;const a=screen(b
 
 
 // src/js/render/scene.js
-function draw(){ctx.setTransform(dpr,0,0,dpr,0,0);ground();drawFarmRegions();for(const d of drops){const a=screen(d.x,d.y);ellipse(a.x,a.y,8,4,'#d6ba5650');ellipse(a.x,a.y-5+Math.sin(clock*4)*2,4,4,'#e5cd77');}const objects=[...decor.map(d=>({y:d.y,draw:()=>d.type==='tree'?tree(d):rock(d)})),{y:1050,draw:shrine},{y:1110,draw:merchant},...mobs.filter(m=>m.hp>0).map(m=>({y:m.y,draw:()=>mobDraw(m)})),{y:p.y,draw:hero}];objects.sort((a,b)=>a.y-b.y).forEach(o=>o.draw());if(target){const a=screen(target.x,target.y);ctx.strokeStyle='#d9cd9260';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(a.x,a.y,11,6,0,0,Math.PI*2);ctx.stroke();}for(const f of particles){const a=screen(f.x,f.y);text(f.t,a.x,a.y-f.age*36,f.color, f.big?22:14);}const glow=ctx.createRadialGradient(W*.3,H*.1,0,W*.3,H*.1,W*.7);glow.addColorStop(0,'#e4e5ad0e');glow.addColorStop(1,'#091b1a25');ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);drawEffects();drawFarmingEffects();drawMini();}
+function draw(){ctx.setTransform(dpr,0,0,dpr,0,0);ground();drawFarmRegions();const objects=[...decor.map(d=>({y:d.y,draw:()=>d.type==='tree'?tree(d):rock(d)})),{y:1050,draw:shrine},{y:1110,draw:merchant},...mobs.filter(m=>m.hp>0).map(m=>({y:m.y,draw:()=>mobDraw(m)})),{y:p.y,draw:hero}];objects.sort((a,b)=>a.y-b.y).forEach(o=>o.draw());if(target){const a=screen(target.x,target.y);ctx.strokeStyle='#d9cd9260';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(a.x,a.y,11,6,0,0,Math.PI*2);ctx.stroke();}for(const f of particles){const a=screen(f.x,f.y);text(f.t,a.x,a.y-f.age*36,f.color, f.big?22:14);}const glow=ctx.createRadialGradient(W*.3,H*.1,0,W*.3,H*.1,W*.7);glow.addColorStop(0,'#e4e5ad0e');glow.addColorStop(1,'#091b1a25');ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);drawEffects();drawFarmingEffects();drawGroundLoot();drawMini();}
 
 
 // src/js/render/farming.js
@@ -1700,17 +1919,58 @@ function drawFarmMinimap() {
 }
 
 
+// src/js/render/loot.js
+const groundIconCache = new Map();
+
+function groundIcon(item) {
+  if (typeof Image === 'undefined') return null;
+  const key = (item.icon || item.slot) + ':' + (item.rarity || 0);
+  if (!groundIconCache.has(key)) {
+    const image = new Image();
+    image.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(itemIcon(item).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" '));
+    groundIconCache.set(key, image);
+  }
+  const image = groundIconCache.get(key);
+  return image.complete && image.naturalWidth ? image : null;
+}
+
+function drawGroundLoot() {
+  for (const drop of drops) {
+    const visual = groundDropVisual(drop);
+    if (visual.x < -40 || visual.x > W + 40 || visual.y < -65 || visual.y > H + 40) continue;
+    const item = groundDropView(drop); if (!item) continue;
+    const location = screen(drop.x, drop.y), selected = drop.id === hoveredLootId;
+    const color = ['#cfbc7f', '#88c5dd', '#c899e5'][item.rarity || 0];
+    ellipse(location.x, location.y, selected ? 19 : 12, selected ? 7 : 4, color + (selected ? '88' : '40'));
+    const icon = groundIcon(item), height = item.slot === 'weapon' || item.slot === 'talisman' ? 36 : 28, width = height === 36 ? 23 : 28;
+    if (icon) ctx.drawImage(icon, visual.x - width / 2, visual.y - height / 2, width, height);
+    else { ellipse(visual.x, visual.y, 7, 7, color); }
+    if (item.count > 1) {
+      ctx.font = 'bold 9px Segoe UI,sans-serif'; ctx.textAlign = 'right'; ctx.lineWidth = 3; ctx.strokeStyle = '#101713'; ctx.fillStyle = '#f5e8bc';
+      ctx.strokeText(String(item.count), visual.x + 16, visual.y + 15); ctx.fillText(String(item.count), visual.x + 16, visual.y + 15);
+    }
+    if (selected) {
+      const label = item.name + (drop.kind === 'gear' ? ' +' + (item.enhance || 0) : '');
+      ctx.font = '11px Segoe UI,sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = '#0d1613'; ctx.fillStyle = color;
+      ctx.strokeText(label, visual.x, visual.y - 25); ctx.fillText(label, visual.x, visual.y - 25);
+    }
+  }
+}
+
+
 // src/js/main.js
 initializeCareer();
 initializeInventory();
 initializeFarming();
+initializeLoot();
 loadMap(p.mapId,true);
 window.addEventListener('resize',resize);resize();
 
 requestAnimationFrame(frame);
 window.addEventListener('blur',keysClear);document.addEventListener('visibilitychange',()=>{keysClear();save();});
-window.addEventListener('keydown',e=>{if([' ','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))e.preventDefault();let key=e.key.length===1?e.key.toLowerCase():e.key;if(key==='Escape'){closeModal();return;}if(!running||paused)return;if(e.target&&['BUTTON','INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)&&key===' ')return;keys[key]=true;if(e.repeat)return;if(spellKeys.includes(key))castSkill(spellKeys.indexOf(key));if(key==='b')useBraveryCape();if(key==='p')careerPanel();if(key==='k')spellbook();if(key==='m')travelMenu();if(key==='e')potion();if(key==='i')inventory();if(key==='f')shop();if(key==='j')journal();if(key==='?')help();});window.addEventListener('keyup',e=>keys[e.key.length===1?e.key.toLowerCase():e.key]=false);
-canvas.addEventListener('pointerdown',e=>{if(!running||paused)return;const r=canvas.getBoundingClientRect(),a=world(e.clientX-r.left,e.clientY-r.top);const m=mobs.find(m=>m.hp>0&&Math.hypot(m.x-a.x,(m.y-a.y)*.7)<45);if(m){if(Math.hypot(m.x-p.x,m.y-p.y)<100){attack();target=null;}else target={x:m.x,y:m.y};}else if(Math.hypot(a.x-870,a.y-1160)<50)travelMenu();else if(Math.hypot(a.x-1110,a.y-1110)<45)shop();else target=a;canvas.focus();});
+window.addEventListener('keydown',e=>{if([' ','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))e.preventDefault();let key=e.key.length===1?e.key.toLowerCase():e.key;if(key==='Escape'){closeModal();return;}if(!running||paused)return;if(e.target&&['BUTTON','INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)&&key===' ')return;keys[key]=true;if(e.repeat)return;if(key==='y'){e.preventDefault();pickHoveredGroundDrop();return;}if(spellKeys.includes(key))castSkill(spellKeys.indexOf(key));if(key==='b')useBraveryCape();if(key==='p')careerPanel();if(key==='k')spellbook();if(key==='m')travelMenu();if(key==='e')potion();if(key==='i')inventory();if(key==='f')shop();if(key==='j')journal();if(key==='?')help();});window.addEventListener('keyup',e=>keys[e.key.length===1?e.key.toLowerCase():e.key]=false);
+canvas.addEventListener('pointermove',setLootPointer);canvas.addEventListener('pointerleave',clearLootPointer);window.addEventListener('blur',clearLootPointer);
+canvas.addEventListener('pointerdown',e=>{if(e.button!==undefined&&e.button!==0)return;if(!running||paused)return;setLootPointer(e);const loot=groundDropAt(lootPointer.x,lootPointer.y);if(loot){pickUpGroundDrop(loot.id);canvas.focus();return;}const r=canvas.getBoundingClientRect(),a=world(e.clientX-r.left,e.clientY-r.top);const m=mobs.find(m=>m.hp>0&&Math.hypot(m.x-a.x,(m.y-a.y)*.7)<45);if(m){if(Math.hypot(m.x-p.x,m.y-p.y)<100){attack();target=null;}else target={x:m.x,y:m.y};}else if(Math.hypot(a.x-870,a.y-1160)<50)travelMenu();else if(Math.hypot(a.x-1110,a.y-1110)<45)shop();else target=a;canvas.focus();});
 $('start').onclick=startGame;$('attack').onclick=()=>attack();$('skill').onclick=()=>attack(true);$('potion').onclick=potion;$('inventory').onclick=()=>{if(running)inventory();};$('close').onclick=closeModal;$('claim').onclick=()=>{if(p.claimed||p.kills<5||p.stones<3)return;p.claimed=true;p.gold+=150;experience(60);toast('Údolie je zachránené!\n+150 zlata · +60 skúseností');updateHUD();save();};
 $('sound').onclick=()=>{sound=!sound;$('sound').textContent='Zvuk: '+(sound?'zapnutý':'vypnutý');beep(440);};document.querySelectorAll('[data-key]').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();keys[b.dataset.key]=true;b.setPointerCapture(e.pointerId);});for(const type of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(type,()=>keys[b.dataset.key]=false);});window.addEventListener('pagehide',save);updateHUD();
 

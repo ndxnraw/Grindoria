@@ -103,7 +103,7 @@ test('rare collection bonuses do not stack duplicates; guaranteed drops prevent 
   run('collectRelic("valley");'); assert.equal(run('careerBonuses().attack'), 3); assert.equal(run('p.career.materials.dust'), 10);
   run('collectRelic("desert");collectRelic("snow");collectRelic("temple");');
   assert.equal(run('careerBonuses().attack'), 11); assert.equal(run('careerBonuses().hp'), 40);
-  run('delete p.career.collection.valley;p.career.relicPity.valley=9;p.level=99;careerKill({type:"boss",level:6});');
+  run('delete p.career.collection.valley;p.career.relicPity.valley=9;p.level=99;careerKill({type:"boss",level:6,x:p.x,y:p.y});running=true;let relic=drops.find(d=>d.kind==="relic");relic.fallAge=LOOT_RULES.fallDuration;pickUpGroundDrop(relic.id);');
   assert.equal(run('p.career.collection.valley'), true);
 });
 

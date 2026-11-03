@@ -5,7 +5,7 @@ function snapshotMap() {
   p.worldStates[p.mapId] = {
     progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
     mobs: mobs.map(m => ({ ...m, dot: m.dot ? { ...m.dot } : null, skillContributors: [...(m.skillContributors || [])] })),
-    drops: drops.map(d => ({ ...d }))
+    drops: drops.map(cloneGroundDrop)
   };
 }
 
@@ -30,7 +30,8 @@ function loadMap(id, initial=false) {
   const oldRun=p.career.endgame.run&&id==='temple'&&old?.mobs?.length&&old.spawnSchema!==SPAWN_RULES.schema;
   const population=oldRun?loadLegacyRift(old):hydrateSpawnPopulation(old);
   mobs.length=0; mobs.push(...population); drops.length=0;
-  drops.push(...(old?.drops||[]).map(d=>({...d})));
+  drops.push(...hydrateGroundDrops(old?.drops||[]));
+  clearLootPointer();
   p.x=1000; p.y=1160; cam.x=p.x; cam.y=p.y; target=null;
   shots.length=0; effects.length=0; particles.length=0; lastMiniMapPaint=-Infinity;
   Object.keys(buffs).forEach(k=>delete buffs[k]);
