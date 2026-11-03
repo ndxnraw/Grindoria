@@ -10,6 +10,21 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.22.0] - 2026-11-03
+
+### Added
+- Tri opakovateľné dungeony: Hrobka jedovatého kráľa, Ľadová pevnosť a Priepasť zabudnutých, každá v troch obtiažnostiach s vlastnou lokalitou, rozložením a nepriateľmi.
+- Tri unikátne modely bossov, pečate, kruhové útoky, výpady, rázové vlny, mrazivé spomalenie, posily a fázy boja.
+- Zaručené unikáty, Legendary a Mythic endgame korisť s ochranou pred zlou sériou, počty dokončení a uloženie rozbehnutých výprav.
+- Vstup cez Mapy a Progres, HUD cieľov, bezpečný návrat koristi do Mesta a 17 regresných testov dungeonov.
+
+### Changed
+- Existujúci boj, inventár, fyzická korisť a mapové snímky podporujú oddelené dungeonové výpravy bez zmeny pôvodných trhlín.
+
+### Fixed
+- Zabitie bossa vyplatí odmeny len raz; mŕtvi nepriatelia v dungeone sa neobnovujú.
+- Načítanie zachová poškodenie, dokončené ciele, fázy, polia a pripravovaný útok bez znásobenia populácie.
+
 ## [0.21.0] - 2026-11-03
 
 ### Added
@@ -420,7 +435,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.21.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.22.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -445,3 +460,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.19.0]: https://github.com/ndxnraw/Grindoria/compare/v0.18.0...v0.19.0
 [0.20.0]: https://github.com/ndxnraw/Grindoria/compare/v0.19.0...v0.20.0
 [0.21.0]: https://github.com/ndxnraw/Grindoria/compare/v0.20.0...v0.21.0
+[0.22.0]: https://github.com/ndxnraw/Grindoria/compare/v0.21.0...v0.22.0

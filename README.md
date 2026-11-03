@@ -76,3 +76,7 @@ Obchodník, Zbrojár a alchymista v Meste majú konečné zásoby, meniace sa ce
 ## Ovládanie rozhrania
 
 Panely zachovávajú pozíciu pri nákupe a predaji. Náklady ukazujú Máš / Potrebuješ. Predmet môžeš vyhodiť vytiahnutím mimo inventára alebo tlačidlom Vyhodiť… a potvrdením; na zemi ho znova zdvihneš kliknutím alebo Y. [Rozhranie](docs/UI.md).
+
+## Dungeony
+
+Mapy (M) → Dungeony alebo Progres (P) → Dungeony. Tri lokality, tri obtiažnosti, vlastné mechaniky bossov a unikátna korisť. Endgame Priepasť ponúka Legendary a Mythic výbavu so zárukou po sérii úspechov. [Pravidlá a odmeny](docs/DUNGEONS.md).

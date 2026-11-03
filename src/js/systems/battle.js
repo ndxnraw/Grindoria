@@ -94,7 +94,7 @@ function updateDamageOverTime(m,dt) {
   m.dots=(m.dots||[]).filter(dot=>dot.time>0);
 }
 
-function cloneEnemyState(m) { return {...m,dot:m.dot?{...m.dot}:null,dots:(m.dots||[]).map(d=>({...d})),skillContributors:[...(m.skillContributors||[])]}; }
+function cloneEnemyState(m) { return {...m,dot:m.dot?{...m.dot}:null,dots:(m.dots||[]).map(d=>({...d})),skillContributors:[...(m.skillContributors||[])],...(m.attackPlan?{attackPlan:{...m.attackPlan}}:{})}; }
 
 function applyCombatControl(m,opts,x=p.x,y=p.y) {
   if(m.hp<=0)return;

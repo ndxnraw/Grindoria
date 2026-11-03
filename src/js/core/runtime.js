@@ -19,7 +19,7 @@ function update(dt) {
   attackCD=Math.max(0,attackCD-dt);slash=Math.max(0,slash-dt);ring=Math.max(0,ring-dt);updateCombatAssistTimers(dt);updateAlchemy(dt);updateEconomy(dt);updateCombat(dt);
   updatePlayerControl(dt);if(keys[' '])attack();updateAutoSpell(dt);
   const safe=isSanctuary(p);if(safe){p.hp=Math.min(maxHP(),p.hp+12*dt);p.mp=Math.min(maxMP(),p.mp+dt*10);}
-  updateMetins(dt,safe);updateEnemySpawns(dt,safe);updateGroundLoot(dt);updateBoss(dt,safe);updateAutoPotion();
+  updateDungeon(dt,safe);updateMetins(dt,safe);updateEnemySpawns(dt,safe);updateGroundLoot(dt);updateBoss(dt,safe);updateAutoPotion();
   if(p.hp<=0)death();if(target&&!selectedEnemy())clearCombatTarget();
   cam.x+=(p.x-cam.x)*Math.min(1,dt*7);cam.y+=(p.y-cam.y)*Math.min(1,dt*7);
   for(let i=particles.length-1;i>=0;i--){particles[i].age+=dt;if(particles[i].age>1.2)particles.splice(i,1);}
