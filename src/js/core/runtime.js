@@ -16,7 +16,7 @@ function keysClear(){Object.keys(keys).forEach(k=>keys[k]=false);}
 
 function update(dt) {
   clock+=dt;if(!running||paused)return;travelCombat.time=Math.max(0,travelCombat.time-dt);
-  attackCD=Math.max(0,attackCD-dt);slash=Math.max(0,slash-dt);ring=Math.max(0,ring-dt);updateCombatAssistTimers(dt);updateCombat(dt);
+  attackCD=Math.max(0,attackCD-dt);slash=Math.max(0,slash-dt);ring=Math.max(0,ring-dt);updateCombatAssistTimers(dt);updateAlchemy(dt);updateCombat(dt);
   updatePlayerControl(dt);if(keys[' '])attack();updateAutoSpell(dt);
   const safe=isSanctuary(p);if(safe){p.hp=Math.min(maxHP(),p.hp+12*dt);p.mp=Math.min(maxMP(),p.mp+dt*10);}
   updateMetins(dt,safe);updateEnemySpawns(dt,safe);updateGroundLoot(dt);updateBoss(dt,safe);updateAutoPotion();
@@ -25,3 +25,4 @@ function update(dt) {
   for(let i=particles.length-1;i>=0;i--){particles[i].age+=dt;if(particles[i].age>1.2)particles.splice(i,1);}
   toastTimer-=dt;if(toastTimer<0)$('toast').style.opacity='0';saveTimer+=dt;if(saveTimer>4){save();saveTimer=0;}updateHUD();
 }
+

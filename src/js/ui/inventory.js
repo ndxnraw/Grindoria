@@ -117,8 +117,8 @@ function activateInventoryEntry(id) {
   if (entry.kind === 'gear') { if (!canEquipItem(entry.item)) { inventoryMessage(itemEquipReason(entry.item)); return false; } return equipItem(p.bag.findIndex(item => item.uid === entry.item.uid)); }
   if (entry.kind === 'equipped') { const ok = unequipItem(entry.item.slot); if (!ok) inventoryMessage('V inventári nie je dosť súvislého miesta.'); return ok; }
   const ok = useInventorySupply(id);
-  if (ok && entry.item.action === 'drink') inventory();
-  if (!ok) inventoryMessage(entry.item.action === 'drink' ? 'Zdravie je plné alebo elixír nemožno použiť.' : 'Plášť použi mimo bezpečnej zóny a počkaj na obnovenie.');
+  if (ok && ['drink','product'].includes(entry.item.action)) inventory();
+  if (!ok) inventoryMessage(entry.item.action === 'product' ? 'Účinok už pôsobí, mana je plná alebo ešte beží cooldown.' : entry.item.action === 'drink' ? 'Zdravie je plné alebo elixír nemožno použiť.' : 'Plášť použi mimo bezpečnej zóny a počkaj na obnovenie.');
   return ok;
 }
 
@@ -149,3 +149,4 @@ function positionItemTooltip(event) {
   tooltip.style.left = Math.max(8, Math.min(event.clientX + 14, width - rect.width - 12)) + 'px';
   tooltip.style.top = Math.max(8, Math.min(event.clientY + 14, height - rect.height - 12)) + 'px';
 }
+

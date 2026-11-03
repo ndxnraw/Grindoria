@@ -160,3 +160,7 @@ body.character-select .game-shell:fullscreen,body.native-fullscreen.character-se
 #playerclass[hidden]{display:none}
 
 .weapon-upgrade-aura{animation:weapon-glow 1.5s ease-in-out infinite alternate;transform-origin:32px 40px}.upgrade-7{animation-duration:1.2s}.upgrade-8{animation-duration:.95s}.upgrade-9{animation-duration:.7s}@keyframes weapon-glow{from{opacity:.55}to{opacity:1}}@media(prefers-reduced-motion:reduce){.weapon-upgrade-aura{animation:none}}
+
+
+/* Crafting and alchemy */
+.craft-workshop select{max-width:100%;padding:8px;background:#24372e;color:#f0dfb5;border:1px solid #8d8059;border-radius:4px}.craft-recipes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:12px;margin-top:16px}.craft-recipes .career-card{margin:0}.craft-recipe h4{margin:0 0 8px}.craft-recipe ul{padding-left:20px;font-size:13px;line-height:1.6}.craft-recipe small{display:block;margin-top:8px}.craft-missing{color:#f0a899}.craft-products{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:10px;margin:16px 0}.craft-products>div{padding:12px;border:1px solid #8d805966;border-radius:6px}.craft-products small{display:block;margin:6px 0}.craft-workshop details{margin:12px 0}.craft-workshop summary{cursor:pointer}

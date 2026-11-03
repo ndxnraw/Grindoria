@@ -5,6 +5,12 @@ function itemIcon(item, empty = false) {
   const gold = empty ? '#766c58' : '#d8ad5c', dark = empty ? '#403d34' : '#444c52';
   const gem = empty ? '#4b463a' : ['#a24f3f', '#59b4c0', '#bc7bdb'][rarity];
   const shapes = {
+    herb: '<path d="M30 60V13M30 42Q4 43 9 22q20-1 21 20M30 28Q55 29 55 7q-23 0-25 21" fill="#70a66c" stroke="#d0d9a0" stroke-width="3"/>',
+    hide: '<path d="m14 4 17 9L50 4l9 14-10 15 9 21-21-3-9 10-15-12-10 1 10-22-9-11Z" fill="#9d7954" stroke="#d4bc8e" stroke-width="2"/><path d="m22 22 18 20m-19-2 20-17" stroke="#67513c"/>',
+    crystal: '<path d="m7 42 11-30 14 8L43 3l15 35-26 24Z" fill="#8ca8d7" stroke="#e0d7f3" stroke-width="2"/><path d="m18 12 9 36L43 3m-11 17 15 27-15 15" fill="none" stroke="#dddaf0"/>',
+    ingot: '<path d="m7 44 8-26 33-5 12 26-10 14-34 4Z" fill="#8a9da0" stroke="#dbe0cb" stroke-width="2"/><path d="m15 18 7 22 38-1M22 40l-6 17" fill="none" stroke="#dbe0cb"/>',
+    extract: '<path d="M23 4h18v13l10 12v25q-19 12-38 0V29l10-12Z" fill="#4b7762" stroke="#dfc996" stroke-width="2"/><path d="M16 35h32v17q-16 8-32 0Z" fill="#a2bc68"/><path d="m23 7 18 0M27 42l11 5-9 3" stroke="#f6e5b2" stroke-width="3"/>',
+    primal: '<path d="m32 2 8 15 17 3-8 15 8 18-19-2-9 11-9-16L3 39l14-12V9Z" fill="#9d6db5" stroke="#efc4ec" stroke-width="2"/><circle cx="31" cy="32" r="9" fill="#f0bdf5"/><path d="m31 22-5 11 7 9 5-10Z" fill="#633b86"/>',
  forgeCore:'<path d="m32 3 23 14 2 31-25 14L7 48l2-31Z" fill="#585d62" stroke="#dfae6a" stroke-width="3"/><path d="M17 20h30v9H17zM24 29h16v19H24zM17 48h30v6H17z" fill="#edb35b"/><path d="m29 8 6 0 3 10-6 8-6-8Z" fill="#ffe4a3"/>',
  smithCharm:'<path d="m32 3 8 16 18 3-13 14 3 23-16-11-16 11 3-23L6 22l18-3Z" fill="#7c7440" stroke="#e1d18d" stroke-width="2"/><path d="m32 19 9 13-9 13-9-13Z" fill="#9ce3a2"/>',
  protectionScroll:'<path d="M16 6h33l-5 50-17 7-15-8Z" fill="#d7c695" stroke="#f7e7b5" stroke-width="2"/><path d="m31 17 13 5-3 20-10 10-10-10-3-20Z" fill="#6488b1"/><path d="M31 22v23m-7-13h14" stroke="#e5f0ea" stroke-width="3"/>',
@@ -52,3 +58,4 @@ function itemIcon(item, empty = false) {
 function equipmentFigure() {
   return characterAvatar({classId:p.classId,data:p}).replace('class="roster-avatar"','class="equipment-figure"');
 }
+

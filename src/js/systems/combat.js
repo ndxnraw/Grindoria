@@ -10,7 +10,7 @@ function hit(m, amount, type='physical',penetrated=false) {
     m.windup = 0; m.dead = m.metinParentId ? 1 : m.respawnSeconds || (m.type === 'boss' ? 40 : m.type === 'stone' ? 18 : 8);
     if (m.type === 'boss') p.bossKills++; else p[m.type === 'stone' ? 'stones' : 'kills']++;
     recordCharacterKill(m);
-    const gained = enemyXP(m); careerKill(m);dropForgeSupplies(m);
+    const gained = enemyXP(m); careerKill(m);dropForgeSupplies(m);dropCraftMaterials(m);
     if (m.type === 'stone') { m.metinCombat = 0; m.metinWaveTimer = 0; dropMetinLoot(m);for(const guard of mobs.filter(guard=>guard.hp>0&&guard.metinParentId===m.spawnId&&guard.metinGeneration===m.metinGeneration))hit(guard,guard.hp,'arcane',true); }
     else {
       farmBonusLoot(m);
@@ -108,3 +108,4 @@ function updateCombat(dt) {
 }
 
 function updateBoss(dt,safe){const b=mobs.find(m=>m.type==='boss');if(!b||b.hp<=0||b.stun>0)return;const d=Math.hypot(b.x-p.x,b.y-p.y);if(safe||(!(b.taunt>0||b.engaged>0)&&d>500)||active('stealth')){b.windup=0;b.taunt=0;b.engaged=0;const home=Math.hypot(b.x-b.homeX,b.y-b.homeY);if(home>4)walkEnemy(b,b.homeX,b.homeY,90,dt);b.hp=Math.min(b.max,b.hp+10*dt);return;}const enraged=b.hp<b.max*.3&&!(b.suppressed>0);if(b.windup>0){b.windup-=dt;if(b.windup<=0){b.cd=enraged?2:3;if(d<120){takeDamage(Math.round(26*(b.attackScale||map().scale)*(enraged?1.3:1)),b);beep(90,.25);}else float('ÚHYB!',p.x,p.y-75,'#acd9b0');}return;}if(d<100&&b.cd<=0){b.windup=1;beep(100,.2);return;}if(d>65){const speed=(enraged?115:90)*(b.slow>0?.55:1)*(active('fear')?.65:1);walkEnemy(b,p.x,p.y,speed,dt);}}
+

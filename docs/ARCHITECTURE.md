@@ -108,3 +108,8 @@ Data/rarities.js definuje stabilné ID a poradie šiestich rarít, váhy zdrojov
 ## Výber a nasledovanie od 0.17.0
 
 Target zostáva referencia na vybraného nepriateľa. Dočasný combatSelection.following povoľuje pohyb a automatické útoky až po dvojkliku. Prvý klik iba zobrazí údaje, SPACE označí skutočne zasiahnutý živý cieľ. Pri zmene mapy, postavy, smrti, pohybe alebo strate fokusu sa stav zruší. Žiadne nové dáta sa neukladajú do profilu.
+
+
+## Výroba a alchýmia od 0.19.0
+
+`data/crafting.js` registruje materiály, produkty a 47 receptov. `systems/crafting.js` kontroluje NPC, úroveň, cenu a kapacitu pred výrobou; zdieľa generátor výbavy, materiálové počítadlá, kováčske ceny a alchymistické kamene. `ui/crafting.js` zobrazuje recepty, zásoby a progres. Účinky alchýmie vstupujú cez `careerBonuses()` do existujúcich bojových výpočtov; `updateAlchemy()` beží iba pri aktívnej simulácii. `validateCraftingProfile()` dopĺňa validáciu záloh, migrácia zachováva pôvodné polia. Pozri [CRAFTING.md](CRAFTING.md).

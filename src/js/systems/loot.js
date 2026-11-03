@@ -140,6 +140,7 @@ function grantGroundSupply(id, count) {
   if (!Number.isSafeInteger(count) || count < 1) return false;
   let holder, key;
   if (id.startsWith('material:') && MATERIALS[id.slice(9)]) { holder = p.career.materials; key = id.slice(9); }
+  else if (id.startsWith('alchemy:') && Object.hasOwn(ALCHEMY_PRODUCTS,id.slice(8))) { holder = p.career.alchemy.products; key = id.slice(8); }
   else if (id.startsWith('gem:') && GEMS[id.slice(4)]) { holder = p.career.alchemy.stock; key = id.slice(4); }
   else if (id === 'potions' || id === 'braveryCapes') { holder = p; key = id; }
   else return false;
@@ -204,3 +205,4 @@ function updateGroundLoot(dt) {
   flushAutomaticLoot();
   updateLootHover(dt);
 }
+

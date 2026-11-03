@@ -120,6 +120,7 @@ function supplyDefinitions() {
     { id: 'potions', name: 'Liečivý elixír', count: p.potions, icon: 'potion', description: 'Obnoví 65 zdravia. Kláves E. Spoločný cooldown 4 s aj pre Autoelixíry.', action: 'drink' },
     { id: 'braveryCapes', name: 'Plášť statočnosti', count: p.braveryCapes, icon: 'cape', description: 'Privolá pohyblivých nepriateľov v dosahu 650 na 18 sekúnd. Kláves B.', action: 'cape' },
     ...Object.entries(MATERIALS).map(([id, name]) => ({ id: 'material:' + id, name, count: p.career.materials[id], icon: id, description: ['ore','upgradeStones','forgeCore','smithCharm','protectionScroll'].includes(id)?'Použitie: kováč.':'Materiál na progresiu.', action: 'material', material: id })),
+    ...Object.entries(ALCHEMY_PRODUCTS).map(([id, product]) => ({ id: 'alchemy:' + id, name: product.name, count: p.career.alchemy.products[id], icon: product.icon, description: product.text, action: 'product' })),
     ...Object.entries(GEMS).map(([id, gem]) => ({ id: 'gem:' + id, name: gem.name, count: p.career.alchemy.stock[id], icon: id, description: gem.text + ' Použitie otvorí alchýmiu.', action: 'alchemy' }))
   ];
 }
@@ -165,6 +166,7 @@ function consumeSupply(id, count) {
   if (!item || item.count < count) return false;
   if (id.startsWith('material:')) p.career.materials[id.slice(9)] -= count;
   else if (id.startsWith('gem:')) p.career.alchemy.stock[id.slice(4)] -= count;
+  else if (id.startsWith('alchemy:')) p.career.alchemy.products[id.slice(8)] -= count;
   else p[id] -= count;
   return true;
 }
@@ -181,6 +183,8 @@ function deleteInventoryItem(id, count = 1) {
 function useInventorySupply(id) {
   const item = supplyEntries().find(item => item.id === id);
   if (!item || !running || p.hp <= 0) return false;
+  if (item.action === 'product') return useAlchemyProduct(id.slice(8), true);
+  if (item.material && Object.hasOwn(CRAFT_MATERIALS, item.material)) { careerPanel(['herb','extract','crystal'].includes(item.material) ? 'alchemy' : 'crafting'); return true; }
   if (item.action === 'drink') return drinkPotion(true);
   if (item.action === 'cape') {
     if (isSanctuary(p) || capeCooldown > 0) return false;
@@ -195,3 +199,4 @@ function sellItem(index) {
   p.gold += itemSaleValue(p.bag.splice(index, 1)[0]);
   finishInventoryChange(); inventory(); return true;
 }
+

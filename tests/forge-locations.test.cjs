@@ -5,7 +5,7 @@ function smith(){const g=createGame();g.run('running=true;loadMap("town",true);p
 test('new characters start in the smaller peaceful town with reusable NPC services',()=>{
  const {run,elements}=createEmptyGame();run('var id=createCharacter("Novacik","sura");playCharacter(id);');
  assert.equal(run('p.mapId'),'town');assert.equal(run('SIZE'),1200);assert.equal(run('mobs.length'),0);assert.equal(run('spawnPoints.length'),0);assert(run('isSanctuary(p)'));
- assert.equal(run('Object.keys(NPCS).length'),3);run('p.x=NPCS.merchant.x;p.y=NPCS.merchant.y;');assert(run('interactNPC("merchant")'));assert.match(elements.get('modalcontent').innerHTML,/Kúpiť 3 elixíry/);
+ assert.equal(run('Object.keys(NPCS).length'),4);run('p.x=NPCS.merchant.x;p.y=NPCS.merchant.y;');assert(run('interactNPC("merchant")'));assert.match(elements.get('modalcontent').innerHTML,/Kúpiť 3 elixíry/);
  run('closeModal();p.x=NPCS.smith.x;p.y=NPCS.smith.y;');assert(run('interactNPC("smith")'));assert.match(elements.get('modalcontent').innerHTML,/Kováč · Mesto/);
  run('closeModal();p.x=NPCS.biologist.x;p.y=NPCS.biologist.y;');assert(run('interactNPC("biologist")'));assert.match(elements.get('modalcontent').innerHTML,/Biológ/);
  run('closeModal();loadMap("valley");');assert(!run('interactNPC("merchant")'));assert(!run('buyBraveryCapes()'));assert(run('worldObjects().every(o=>!String(o.type).includes("npc"))'));
@@ -46,7 +46,7 @@ test('missing protection or booster never silently attempts an unprotected upgra
 });
 
 test('blacksmith crafts support for finite resources; only eligible high-level rare sources grant extra supplies',()=>{
- const {run}=smith();run('var before=p.gold,cores=p.career.materials.forgeCore;');assert(run('craftForgeSupport("protectionScroll")'));assert.equal(run('p.gold'),run('before-FORGE_RULES.recipes.protectionScroll.gold'));assert.equal(run('p.career.materials.forgeCore'),run('cores-6'));assert(!run('craftForgeSupport("toString")'));
+ const {run}=smith();run('p.career.crafting.xp=CRAFT_RULES.maxXP;var before=p.gold,cores=p.career.materials.forgeCore;');assert(run('craftForgeSupport("protectionScroll")'));assert.equal(run('p.gold'),run('before-FORGE_RULES.recipes.protectionScroll.gold'));assert.equal(run('p.career.materials.forgeCore'),run('cores-6'));assert(!run('craftForgeSupport("toString")'));
  run('for(const id of Object.keys(MATERIALS))p.career.materials[id]=0;p.level=35;rand=()=>0;var enemy={type:"boss",level:35,x:500,y:500};dropForgeSupplies(enemy);');for(const id of ['forgeCore','smithCharm','protectionScroll'])assert.equal(run('p.career.materials.'+id),1);
  run('dropForgeSupplies({...enemy,level:34});dropForgeSupplies({...enemy,metinParentId:"parent"});dropForgeSupplies({...enemy,type:"wolf",variant:"normal"});p.level=99;dropForgeSupplies(enemy);');assert.equal(run('p.career.materials.forgeCore'),1);assert.equal(run('drops.length'),0);
 });
@@ -97,3 +97,4 @@ test('the second click acts after any delay without a native dblclick and anothe
 test('finishing an expedition immediately after its final combat safely returns to town',()=>{
  const {run}=createGame();run('running=true;p.level=35;p.career.materials.keys=3;enterRift();p.career.endgame.run.kills=20;p.career.endgame.run.bosses=1;travelCombat.time=3;');assert(run('finishRift()'));assert.equal(run('p.mapId'),'town');assert.equal(run('mobs.length'),0);assert.equal(run('SIZE'),1200);
 });
+
