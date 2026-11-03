@@ -264,9 +264,7 @@ function useBraveryCape() {
 }
 
 function buyBraveryCapes() {
-  if (!nearNPC('merchant') || !pay({ gold: SPAWN_RULES.capePrice })) return false;
-  p.braveryCapes += SPAWN_RULES.capeBundle;
-  updateHUD(); save(); return true;
+  return buyMarketOffer('merchant','capes');
 }
 
 function farmBonusLoot(m) {

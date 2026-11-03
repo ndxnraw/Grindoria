@@ -29,6 +29,7 @@ function initializeCareer() {
   }
   for (const id of Object.keys(MATERIALS)) p.career.materials[id] ??= 0;
   initializeCrafting();
+  initializeEconomy();
   p.level = Math.max(1, Math.min(PROGRESSION.maxLevel, p.level));
   if (p.level === PROGRESSION.maxLevel) p.xp = 0;
   // World difficulty changed; preserve death timers/positions while scaling HP proportionally.

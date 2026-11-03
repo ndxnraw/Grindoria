@@ -68,3 +68,7 @@ Hra nepoužíva originálne assety Metin2. Názvy klasických schopností vychá
 ## Výroba a alchýmia
 
 V Progrese (P) otvor Výrobu pri kováčovi alebo Alchýmiu pri alchymistovi v Meste. Obe remeslá majú vlastnú prax, úrovne 1–10 a recepty z materiálov lovu, Metinov a trhlín. [Recepty a pravidlá](docs/CRAFTING.md).
+
+## NPC trh
+
+Obchodník, Zbrojár a alchymista v Meste majú konečné zásoby, meniace sa ceny a výkup. Ponuka sa obnovuje každých 10 minút aktívnej hry. [Ekonomika a obchod](docs/ECONOMY.md).

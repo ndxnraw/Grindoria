@@ -196,7 +196,7 @@ function useInventorySupply(id) {
 
 function sellItem(index) {
   if (!Number.isInteger(index) || index < 0 || index >= p.bag.length) return false;
-  p.gold += itemSaleValue(p.bag.splice(index, 1)[0]);
-  finishInventoryChange(); inventory(); return true;
+  if(!sellMarketGear(p.bag[index].uid)){toast('Predaj výbavu pri obchodníkovi v Meste.');return false;}
+  inventory(); return true;
 }
 

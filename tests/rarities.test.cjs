@@ -36,7 +36,7 @@ test('ideal rolls and synergy increase real value and trader payout; all rarity 
  assert(run('itemMarketValue(high)>itemMarketValue(low)*2'));assert.equal(run('itemSaleValue(high)'),run('Math.floor(itemMarketValue(high)*.25)'));
  run('var prices=RARITIES.map(r=>itemMarketValue(generateEquipmentItem("weapon",r.id,80,"sword",()=>.5)));');assert(run('prices.every((n,i)=>!i||n>prices[i-1])'));
  run('var synergistic={stats:{attack:10,crit:.02,attackSpeed:.03,wolfDamage:.1}},plain={stats:{mp:10,poisonResist:.02}};');assert.equal(run('itemSynergy(synergistic)'),3);assert.equal(run('itemSynergy(plain)'),0);
- run('p.level=99;addGearItem(high);var expected=itemSaleValue(high),goldBefore=p.gold;sellItem(p.bag.length-1);');assert.equal(run('p.gold-goldBefore'),run('expected'));
+ run('running=true;loadMap("town",true);p.x=NPCS.merchant.x;p.y=NPCS.merchant.y;p.level=99;addGearItem(high);var expected=itemSaleValue(high),goldBefore=p.gold;sellItem(p.bag.length-1);');assert.equal(run('p.gold-goldBefore'),run('expected'));
 });
 test('penetration changes actual resisted hits and Metin armor without removing weaknesses',()=>{
  const {run}=createGame();run('running=true;p.x=400;p.y=1400;p.level=1;rand=()=>.2;var foe={type:"wolf",skin:"wolf",hp:10000,max:10000,x:450,y:1400,level:1,resistances:{physical:.5}};var ordinary=hurtMob(foe,1,false,null,{type:"physical"});p.equipped.weapon={slot:"weapon",bonus:0,stats:{penetration:.5}};foe.hp=10000;var pierced=hurtMob(foe,1,false,null,{type:"physical"});');

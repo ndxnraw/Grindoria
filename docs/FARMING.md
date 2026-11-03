@@ -81,3 +81,7 @@ Bezpečná zóna je chránená: z jeho vnútra nemožno používať základné a
 Staré riedke mapy sa rozšíria pri načítaní. Ich mŕtvi nepriatelia sa prenesú do samostatných nových slotov bez duplikácie odmien a so zachovaným časovačom. Už rozbehnutá trhlina zo staršej verzie si ponechá pôvodnú populáciu do konca výpravy; bežný chrám sa rozšíri po návrate. Nové trhliny využívajú husté spawny a zachovávajú silu variantov pri škálovaní stupňa.
 
 Automatické testy overujú hustotu, hranice dosahu, reálny pohyb pritiahnutých cieľov, spotrebu a uloženie kusov, respawn, odmeny, migráciu a kompatibilitu trhlín. Skupinové farmenie a výkon na rôznych zariadeniach ešte potrebujú spätnú väzbu z hrania.
+
+## Trhové ceny od 0.20.0
+
+Cena 100 Yang za 10 plášťov je základná cena prvého cyklu. Aktuálny dopyt upravuje cenu a zásoba obchodníka je obmedzená. Pozri [ECONOMY.md](ECONOMY.md).
