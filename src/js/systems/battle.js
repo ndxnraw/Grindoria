@@ -31,7 +31,7 @@ function enemyResistances(m) {
 
 function playerResistances() {
   const gear=equipmentBonuses(),passive=passiveBonuses();
-  return Object.fromEntries(Object.keys(DAMAGE_TYPES).map(type=>[type,Math.max(-.5,Math.min(.75,(gear[type+'Resist']||0)+(passive.resist[type]||0)))]));
+  return Object.fromEntries(Object.keys(DAMAGE_TYPES).map(type=>[type,Math.max(-.5,Math.min(.75,(gear[type+'Resist']||0)+(passive.resist[type]||0)+(prestigeRank()===5?.05:0)))]));
 }
 
 function resolveEnemyDamage(m,amount,type='physical',penetrated=false) {

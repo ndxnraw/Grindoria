@@ -191,7 +191,7 @@ body{font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ui-text)}button,inp
 .discovery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.bestiary-model{display:block;width:220px;height:200px;max-width:100%;margin:auto;background:#101b20;border:1px solid var(--ui-line)}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.23.0</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.24.0</b></span></header>
 <main><div class="world-title"><div><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Divoký vlk · Strážca pralesa</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
 <section id="game-shell" class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb iba WASD alebo šípkami, výber cieľa kliknutím, nasledovanie a útok druhým klikom na rovnaký cieľ, smerový útok medzerníkom, schopnosť Q, liečenie E, korisť ľavým kliknutím alebo Y v okolí, zlato a zásoby automaticky."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
 <div class="hud player"><div id="portrait" class="portrait">侍</div><div><div class="player-name"><b id="playername">Pútnik</b><small id="playerclass" hidden>Bojovník</small> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 60 skúseností</small></div></div>
@@ -699,6 +699,35 @@ const DUNGEON_UNIQUES={crypt:{name:'Náramok jedovatého kráľa',slot:'bracelet
 MAPS.dungeon={name:'Dungeon',region:'ODDELENÁ VÝPRAVA',desc:'Opakovateľný dungeon',level:20,enemyLevel:20,scale:4,seed:84217,ground:'#263a30',patch:'#8b9f7820',path:'#b1ad7b30',accent:'#a2c58a',water:'#38464f',mob:'Strážcovia',boss:'Strážca',skin:'scorpion',instance:true,size:DUNGEON_RULES.size,count:0,packCount:0,metinCount:0,safeZone:{x:900,y:1640,radius:100},entry:{x:900,y:1640},bossPosition:{x:900,y:380}};
 
 
+// src/js/data/prestige.js
+const PRESTIGE_RULES={schema:1,maxRank:5,maxTraining:10,goalReward:20};
+const PRESTIGE_RANKS=[null,
+ {label:'I',color:'#a1d6c0',bonus:{hp:40},text:'+40 HP'},
+ {label:'II',color:'#8dc3f0',bonus:{defense:4},text:'+4 obrana'},
+ {label:'III',color:'#c4a2ef',bonus:{attack:6,magic:8},text:'+6 útok, +8 sila kúziel'},
+ {label:'IV',color:'#efc879',bonus:{speed:6},text:'+6 rýchlosť pohybu'},
+ {label:'V',color:'#f29bb7',bonus:{attackPercent:.03},text:'+3 % útok, +5 % odolnosť voči všetkým typom poškodenia'}
+];
+const PRESTIGE_TRAINING={vitality:{name:'Odolné telo',text:'+15 HP',bonus:{hp:15}},guard:{name:'Pevná obrana',text:'+1 obrana',bonus:{defense:1}},focus:{name:'Sústredenie',text:'+2 sila kúziel',bonus:{magic:2}}};
+const PRESTIGE_REQUIREMENTS={
+ 2:[{metric:'trial',dungeon:'crypt',tier:1,need:1,label:'Prestížna hrobka · stupeň I+'},{metric:'metins',need:5,label:'Metiny Lv.95+ po aktivácii'},{metric:'skills10',need:3,label:'Schopnosti stupňa 10+'}],
+ 3:[{metric:'trial',dungeon:'frost',tier:2,need:1,label:'Prestížna pevnosť · stupeň II+'},{metric:'bosses',need:3,label:'Vzácni prestížni bossovia'},{metric:'skills20',need:1,label:'Schopnosť maximálneho stupňa'}],
+ 4:[{metric:'trial',dungeon:'abyss',tier:3,need:1,label:'Prestížna priepasť · stupeň III+'},{metric:'biology',need:8,label:'Dokončené biologické etapy'},{metric:'uniques',need:3,label:'Získané dungeonové unikáty'}],
+ 5:[{metric:'trials4',need:3,label:'Rôzne prestížne dungeony · stupeň IV+'},{metric:'bestiary',need:19,label:'Druhy porazené v bestiári'},{metric:'skills20',need:6,label:'Maximálne schopnosti aktuálnej školy'},{metric:'weapon9',need:1,label:'Legendary alebo Mythic zbraň +9'}]
+};
+const PRESTIGE_GOALS={
+ arsenal:{metric:'arsenal',need:10,label:'Mythic výbava +9 vo všetkých slotoch'},
+ perfect:{metric:'perfect',need:1,label:'Mythic predmet s piatimi maximálnymi bonusmi'},
+ skills:{metric:'skills20',need:6,label:'Maximálne schopnosti aktuálnej školy'},
+ biology:{metric:'biology',need:8,label:'Dokončená biológia'},
+ challenges:{metric:'trials5',need:3,label:'Všetky prestížne dungeony · stupeň V'},
+ bosses:{metric:'bossTypes',need:3,label:'Všetci traja vzácni prestížni bossovia'},
+ uniques:{metric:'uniques',need:3,label:'Získané tri dungeonové unikáty'},
+ bestiary:{metric:'bestiary',need:19,label:'Dokončený bestiár'},
+ mastery:{metric:'training',need:30,label:'Všetky prestížne pasívne tréningy'}
+};
+
+
 // src/js/systems/discovery.js
 // Additive, per-character progress. Existing bestiary kill counters remain authoritative.
 const SECRET_PLACES={grove:{name:'Zabudnutý háj',map:'valley',x:1750,y:2440},oasis:{name:'Ukrytá studňa',map:'desert',x:620,y:2440},shrine:{name:'Tichá svätyňa',map:'snow',x:1580,y:1560}};
@@ -1061,6 +1090,7 @@ function validateCharacterProfile(record) {
   assertCharacterObject(data.worldStates,'mapy');for(const [id,state]of Object.entries(data.worldStates)){if(!Object.hasOwn(MAPS,id))characterDataError('referencia mapy.');validateCharacterWorld(state);}if(c.normalTemple)validateCharacterWorld(c.normalTemple);
   validateCraftingProfile(data);
   validateEconomyProfile(data);
+  validatePrestige(data);
   validateDungeonProfile(data);
   validateDiscovery(data);assertCharacterObject(data.bestiary,'bestiár');for(const [key,value]of Object.entries(data.bestiary)){if(!['wolf','scorpion','yeti','demon'].includes(key)&&!(key.startsWith('dungeon:')&&Object.hasOwn(DUNGEONS,key.slice(8)))&&!(key.startsWith('metin:')&&Object.hasOwn(METIN_TYPES,key.slice(6)))&&!(key.startsWith('boss:')&&Object.hasOwn(MAPS,key.slice(5))))characterDataError('záznam bestiára.');assertCharacterNumber(value,'počet v bestiári',0,1e12,true);}
   assertCharacterObject(data.achievements,'úspechy');for(const [key,value]of Object.entries(data.achievements))if(!Object.hasOwn(CHARACTER_ACHIEVEMENTS,key)||typeof value!=='boolean')characterDataError('úspech.');
@@ -1168,7 +1198,7 @@ function hit(m, amount, type='physical',penetrated=false) {
     if(m.dungeonSeal){dungeonUnlocked();return actual;}
     if (m.type === 'boss') p.bossKills++; else p[m.type === 'stone' ? 'stones' : 'kills']++;
     recordCharacterKill(m);
-    const gained = enemyXP(m); careerKill(m);dropForgeSupplies(m);dropCraftMaterials(m);
+    const gained = enemyXP(m); careerKill(m);prestigeKill(m);dropForgeSupplies(m);dropCraftMaterials(m);
     if (m.type === 'stone') { m.metinCombat = 0; m.metinWaveTimer = 0; dropMetinLoot(m);for(const guard of mobs.filter(guard=>guard.hp>0&&guard.metinParentId===m.spawnId&&guard.metinGeneration===m.metinGeneration))hit(guard,guard.hp,'arcane',true); }
     else {
       farmBonusLoot(m);
@@ -1422,6 +1452,7 @@ function initializeCareer() {
   initializeCrafting();
   initializeEconomy();
   initializeDungeons();
+  initializePrestige();
   p.level = Math.max(1, Math.min(PROGRESSION.maxLevel, p.level));
   if (p.level === PROGRESSION.maxLevel) p.xp = 0;
   // World difficulty changed; preserve death timers/positions while scaling HP proportionally.
@@ -1451,6 +1482,7 @@ function careerBonuses() {
   add({ attack: p.career.endgame.paragon * 2, hp: p.career.endgame.paragon * 5 });
   add(alchemyBonuses());
   add(discoveryBonuses());
+  add(prestigeBonuses());
   return b;
 }
 
@@ -1644,6 +1676,51 @@ function upgradeParagon() {
   end.paragon++; save(); return true;
 }
 
+
+
+// src/js/systems/prestige.js
+function initializePrestige(){p.career.prestige??={schema:1,rank:0,marks:0,metins:0,clears:{},bosses:{},uniques:{},claimed:{},training:{vitality:0,guard:0,focus:0}};trackPrestigeUniques();}
+function prestigeRank(data=p){return data?.career?.prestige?.rank||0;}
+function prestigeSuffix(data=p){return prestigeRank(data)?' · P '+PRESTIGE_RANKS[prestigeRank(data)].label:'';}
+function trackPrestigeUniques(){const c=p.career?.prestige;if(!c)return;for(const item of [...(p.bag||[]),...Object.values(p.equipped||{})])if(item&&Object.hasOwn(DUNGEON_UNIQUES,item.uniqueId||''))c.uniques[item.uniqueId]=true;}
+function prestigeBonuses(){const c=p.career?.prestige,b={};if(!c?.rank)return b;const add=(bonus,n=1)=>{for(const [key,value]of Object.entries(bonus))b[key]=(b[key]||0)+value*n;};for(let rank=1;rank<=c.rank;rank++)add(PRESTIGE_RANKS[rank].bonus);for(const [id,training]of Object.entries(PRESTIGE_TRAINING))add(training.bonus,c.training[id]);return b;}
+function prestigeTrialCount(id,minTier){const c=p.career.prestige;return Object.entries(c.clears).filter(([key])=>key.split(':')[0]===id&&Number(key.split(':')[1])>=minTier).reduce((sum,[,n])=>sum+n,0);}
+function prestigeProgress(goal){const c=p.career.prestige,gear=Object.values(p.equipped).filter(Boolean);switch(goal.metric){
+ case'trial':return prestigeTrialCount(goal.dungeon,goal.tier);
+ case'trials4':case'trials5':return Object.keys(DUNGEONS).filter(id=>prestigeTrialCount(id,goal.metric==='trials4'?4:5)>0).length;
+ case'metins':return c.metins;case'bosses':return Object.values(c.bosses).reduce((a,b)=>a+b,0);case'bossTypes':return Object.keys(c.bosses).filter(id=>c.bosses[id]>0).length;
+ case'skills10':case'skills20':return school().skills.filter((s,i)=>(p.career.skills[skillKey(i)]?.rank||1)>=(goal.metric==='skills10'?10:20)).length;
+ case'biology':return p.career.biology.stage;case'uniques':return Object.keys(c.uniques).length;
+ case'bestiary':return ['wolf','scorpion','yeti','demon',...Object.keys(METIN_TYPES).map(id=>'metin:'+id),...['valley','desert','snow','temple'].map(id=>'boss:'+id),...Object.keys(DUNGEONS).map(id=>'dungeon:'+id)].filter(id=>p.bestiary[id]>0).length;
+ case'weapon9':return p.equipped.weapon?.enhance===9&&rarityRank(p.equipped.weapon.rarity)>=4?1:0;
+ case'arsenal':return gear.filter(item=>item.rarity===5&&item.enhance===9).length;
+ case'perfect':return [...p.bag,...gear].some(item=>item.rarity===5&&item.affixes?.length===5&&item.affixes.every(affix=>affix.roll===100))?1:0;
+ case'training':return Object.values(c.training).reduce((a,b)=>a+b,0);
+ }return 0;}
+function prestigeCanChange(){return running&&p.level===PROGRESSION.maxLevel&&!dungeonRun()&&!p.career.endgame.run&&canTravel();}
+function activatePrestige(){if(!prestigeCanChange()||prestigeRank())return false;p.career.prestige.rank=1;p.career.prestige.marks=5;trackPrestigeUniques();save();updateClassHUD();updateHUD();return true;}
+function promotePrestige(){const c=p.career.prestige,next=c.rank+1;if(!prestigeCanChange()||!c.rank||next>PRESTIGE_RULES.maxRank||PRESTIGE_REQUIREMENTS[next].some(goal=>prestigeProgress(goal)<goal.need))return false;c.rank=next;c.marks+=next*5;save();updateClassHUD();updateHUD();return true;}
+function trainPrestige(id){const c=p.career.prestige;if(!running||p.hp<=0||!c.rank||!Object.hasOwn(PRESTIGE_TRAINING,id)||c.training[id]>=PRESTIGE_RULES.maxTraining)return false;const cost=3*(c.training[id]+1);if(c.marks<cost)return false;c.marks-=cost;c.training[id]++;save();updateHUD();return true;}
+function claimPrestigeGoal(id){const c=p.career.prestige;if(!running||p.hp<=0||!c.rank||!Object.hasOwn(PRESTIGE_GOALS,id)||c.claimed[id]||prestigeProgress(PRESTIGE_GOALS[id])<PRESTIGE_GOALS[id].need)return false;c.claimed[id]=true;c.marks+=PRESTIGE_RULES.goalReward;save();updateHUD();return true;}
+function prestigeKill(enemy){if(prestigeRank()&&enemy.type==='stone'&&enemyLevel(enemy)>=95)p.career.prestige.metins++;}
+function prestigeDungeonReward(boss){const r=dungeonRun(),c=p.career.prestige;if(!r?.prestigeTier||boss.dungeonRunId!==r.id)return;const key=r.dungeon+':'+r.prestigeTier;c.clears[key]=(c.clears[key]||0)+1;c.bosses[r.dungeon]=(c.bosses[r.dungeon]||0)+1;c.marks+=r.prestigeTier;}
+function enterPrestigeTrial(id){return enterDungeon(id,'mythic',true);}
+function dungeonCombatDifficulty(r=dungeonRun()){const base=DUNGEON_DIFFICULTIES[r.difficulty],tier=r.prestigeTier||0;return tier?{...base,hp:base.hp*(1+tier*.5),damage:base.damage*(1+tier*.2),reward:base.reward+tier}:base;}
+function prestigeDungeonPulse(){const r=dungeonRun(),boss=mobs.find(m=>m.dungeonBoss&&m.hp>0);if(!r?.prestigeTier||!r.unlocked||!boss)return;const n=r.prestigePulse=(r.prestigePulse||0)+1,damage=dungeonAttackBase(r)*dungeonCombatDifficulty(r).damage*.5;if(n%2)makeDungeonHazard('ring',boss.x,boss.y,damage,'arcane',{inner:100,radius:350,delay:1.8,duration:2});else makeDungeonHazard('line',boss.x,boss.y,damage,'arcane',{angle:Math.atan2(p.y-boss.y,p.x-boss.x),length:700,width:50,delay:1.8,duration:2});}
+function validatePrestige(data){const c=data.career.prestige;if(c===undefined)return;assertCharacterObject(c,'prestíž');if(c.schema!==1)characterDataError('verzia prestíže.');assertCharacterNumber(c.rank,'stupeň prestíže',0,5,true);if(c.rank&&data.level!==99)characterDataError('úroveň prestíže.');for(const field of ['marks','metins'])assertCharacterNumber(c[field],field,0,1e12,true);for(const field of ['clears','bosses','uniques','claimed','training'])assertCharacterObject(c[field],field);
+ for(const [id,n]of Object.entries(c.clears)){const parts=id.split(':');if(parts.length!==2||!Object.hasOwn(DUNGEONS,parts[0])||!/^([1-5])$/.test(parts[1])||Number(parts[1])>c.rank)characterDataError('prestížna výzva.');assertCharacterNumber(n,'počet výziev',1,1e12,true);}
+ for(const [id,n]of Object.entries(c.bosses)){if(!Object.hasOwn(DUNGEONS,id))characterDataError('prestížny boss.');assertCharacterNumber(n,'počet bossov',1,1e12,true);}
+ for(const [id,v]of Object.entries(c.uniques))if(!Object.hasOwn(DUNGEON_UNIQUES,id)||v!==true)characterDataError('unikát prestíže.');for(const [id,v]of Object.entries(c.claimed))if(!Object.hasOwn(PRESTIGE_GOALS,id)||v!==true)characterDataError('odmena prestíže.');for(const [id,n]of Object.entries(c.training)){if(!Object.hasOwn(PRESTIGE_TRAINING,id))characterDataError('pasívna prestíž.');assertCharacterNumber(n,'stupeň pasívu',0,10,true);}for(const id of Object.keys(PRESTIGE_TRAINING))if(c.training[id]===undefined)characterDataError('chýbajúci pasív prestíže.');if(!c.rank&&(c.marks||c.metins||Object.keys(c.clears).length||Object.keys(c.bosses).length||Object.keys(c.claimed).length||Object.values(c.training).some(Boolean)))characterDataError('neaktívna prestíž.');
+}
+
+function refinePrestigeAffix(id){
+ if(typeof id!=='string')return false;const [slot,stat]=id.split(':'),c=p.career.prestige,item=p.equipped[slot];
+ if(!running||p.hp<=0||c.rank<3||!Object.hasOwn(EQUIPMENT,slot)||!Object.hasOwn(ITEM_AFFIXES,stat)||item?.rarity!==5||item.generationVersion!==ITEM_GENERATION.version)return false;
+ const affix=item.affixes.find(a=>a.stat===stat);if(!affix||affix.roll>=100)return false;const cost=5+Math.floor(affix.roll/20);if(c.marks<cost)return false;
+ c.marks-=cost;affix.roll=Math.min(100,affix.roll+5);item.stats[stat]=affixValue(stat,item.tier,item.rarity,affix.roll);save();updateHUD();return true;
+}
+
+function dungeonAttackBase(r=dungeonRun()){return r.prestigeTier?Math.max(300,DUNGEONS[r.dungeon].attack):DUNGEONS[r.dungeon].attack;}
 
 
 // src/js/systems/biology.js
@@ -1928,11 +2005,11 @@ function validateEconomyProfile(data) {
 function initializeDungeons(){p.career.dungeons??={schema:1,serial:0,clears:{},pity:{},run:null};}
 function dungeonRun(){return p.career?.dungeons?.run||null;}
 function dungeonLevel(id,difficulty){return Math.min(99,DUNGEONS[id].level+DUNGEON_DIFFICULTIES[difficulty].level);}
-function configureDungeonMap(){const r=dungeonRun();if(!r)return;const d=DUNGEONS[r.dungeon];Object.assign(MAPS.dungeon,{name:d.name,desc:d.enemy+' · '+d.boss,level:dungeonLevel(r.dungeon,r.difficulty),enemyLevel:dungeonLevel(r.dungeon,r.difficulty),skin:d.skin,boss:d.boss,mob:d.enemy,ground:d.ground,accent:d.color,scale:1+d.level/10});}
+function configureDungeonMap(){const r=dungeonRun();if(!r)return;const d=DUNGEONS[r.dungeon];Object.assign(MAPS.dungeon,{name:d.name,desc:d.enemy+' · '+d.boss,level:r.prestigeTier?99:dungeonLevel(r.dungeon,r.difficulty),enemyLevel:r.prestigeTier?99:dungeonLevel(r.dungeon,r.difficulty),skin:d.skin,boss:d.boss,mob:d.enemy,ground:d.ground,accent:d.color,scale:1+d.level/10});}
 function createDungeonEnemy(role,index,x,y){
- const r=dungeonRun(),d=DUNGEONS[r.dungeon],diff=DUNGEON_DIFFICULTIES[r.difficulty],level=dungeonLevel(r.dungeon,r.difficulty),boss=role==='boss',seal=role==='seal';
- const hp=Math.round((boss?d.hp:seal?180+level*10:100+level*10)*diff.hp);
- return {type:boss?'boss':'wolf',skin:d.skin,name:boss?d.boss:seal?'Pečať '+(index+1):d.enemy,dungeonId:r.dungeon,dungeonRunId:r.id,dungeonRole:role,dungeonBoss:boss,dungeonSeal:seal,noRespawn:true,spawnId:'dungeon:'+r.id+':'+role+':'+index,spawnPointId:'dungeon:'+r.id+':'+role+':'+Math.floor(index/4),spawnSlot:index,level,variant:'normal',area:'northwest',x,y,homeX:x,homeY:y,hp,max:hp,baseMax:hp,attackScale:(d.attack*diff.damage)/9,damageType:d.type,baseAttack:(d.attack*diff.damage)/9,speedScale:1,cd:2,hit:0,windup:0,dead:0,stun:0,slow:0,engaged:0,taunt:0,roamWait:2,skillContributors:[],dots:[],attackStep:0,attackPlan:null,phaseMask:0,resistances:{[d.type]:.25,lightning:-.15}};
+ const r=dungeonRun(),d=DUNGEONS[r.dungeon],diff=dungeonCombatDifficulty(r),level=r.prestigeTier?99:dungeonLevel(r.dungeon,r.difficulty),boss=role==='boss',seal=role==='seal';
+ const hp=Math.round((boss?(r.prestigeTier?Math.max(42000,d.hp):d.hp):seal?180+level*10:100+level*10)*diff.hp);
+ return {type:boss?'boss':'wolf',skin:d.skin,name:boss?(r.prestigeTier?'Vzácny '+d.boss:d.boss):seal?'Pečať '+(index+1):d.enemy,dungeonId:r.dungeon,dungeonRunId:r.id,dungeonRole:role,dungeonBoss:boss,dungeonSeal:seal,noRespawn:true,spawnId:'dungeon:'+r.id+':'+role+':'+index,spawnPointId:'dungeon:'+r.id+':'+role+':'+Math.floor(index/4),spawnSlot:index,level,variant:boss&&r.prestigeTier?'rare':'normal',area:'northwest',x,y,homeX:x,homeY:y,hp,max:hp,baseMax:hp,attackScale:(dungeonAttackBase(r)*diff.damage)/9,damageType:d.type,baseAttack:(dungeonAttackBase(r)*diff.damage)/9,speedScale:1,cd:2,hit:0,windup:0,dead:0,stun:0,slow:0,engaged:0,taunt:0,roamWait:2,skillContributors:[],dots:[],attackStep:0,attackPlan:null,phaseMask:0,resistances:{[d.type]:.25,lightning:-.15}};
 }
 function hydrateDungeonPopulation(old){
  if(old?.mobs?.length)return old.mobs.map(m=>JSON.parse(JSON.stringify(m)));
@@ -1942,23 +2019,24 @@ function hydrateDungeonPopulation(old){
  for(let i=0;i<3;i++)list.push(createDungeonEnemy('seal',i,...seals[i]));
  list.push(createDungeonEnemy('boss',0,900,330));return list;
 }
-function enterDungeon(id,difficulty='normal'){
+function enterDungeon(id,difficulty='normal',prestige=false){
+ if(prestige&&(p.level!==99||!prestigeRank()||difficulty!=='mythic'))return false;
  if(!Object.hasOwn(DUNGEONS,id)||!Object.hasOwn(DUNGEON_DIFFICULTIES,difficulty)||!running||dungeonRun()||p.career.endgame.run||p.level<dungeonLevel(id,difficulty)||!canTravel())return false;
  const d=DUNGEONS[id];if(!canPayRecipe(d.cost))return false;
  snapshotMap();pay(d.cost);const c=p.career.dungeons;
- c.run={id:++c.serial,dungeon:id,difficulty,unlocked:false,cleared:false,rewarded:false,time:0,hazardTimer:8,hazards:[]};
+ c.run={id:++c.serial,dungeon:id,difficulty,unlocked:false,cleared:false,rewarded:false,time:0,hazardTimer:8,hazards:[],...(prestige?{prestigeTier:prestigeRank(),prestigePulse:0}:{})};
  delete p.worldStates.dungeon;configureDungeonMap();loadMap('dungeon',true);Object.assign(p,MAPS.dungeon.entry);cam.x=p.x;cam.y=p.y;closeModal();updateHUD();save();return true;
 }
 function dungeonUnlocked(){const r=dungeonRun();if(!r)return false;if(!r.unlocked&&!mobs.some(m=>(m.dungeonRole==='seal'||m.dungeonRole==='guard')&&m.hp>0))r.unlocked=true;return r.unlocked;}
 function dungeonBossReward(boss){
  const r=dungeonRun();if(!r||r.rewarded||boss.dungeonRunId!==r.id)return;
- const c=p.career.dungeons,d=DUNGEONS[r.dungeon],diff=DUNGEON_DIFFICULTIES[r.difficulty],key=r.dungeon+':'+r.difficulty;
- r.rewarded=true;r.cleared=true;r.hazards=[];c.clears[key]=(c.clears[key]||0)+1;
+ const c=p.career.dungeons,d=DUNGEONS[r.dungeon],diff=dungeonCombatDifficulty(r),key=r.dungeon+':'+r.difficulty;
+ r.rewarded=true;r.cleared=true;r.hazards=[];prestigeDungeonReward(boss);c.clears[key]=(c.clears[key]||0)+1;
  const unique=DUNGEON_UNIQUES[d.unique],rarity=r.difficulty==='normal'?1:r.difficulty==='mythic'&&boss.level>=50?4:2;
  const item=generateEquipmentItem(unique.slot,rarity,boss.level);item.name=unique.name;item.uniqueId=d.unique;item.bonus+=unique.bonus;item.special=['Výlučná korisť: '+d.name];spawnGroundDrop({kind:'gear',item},boss);
  dropMaterial('shards',(5+Math.floor(d.level/5))*diff.reward,boss);
  if(d.endgame||r.difficulty!=='normal')dropMaterial('primal',diff.reward,boss);
- if(d.endgame){const chance=r.difficulty==='mythic'?.08:r.difficulty==='hard'?.03:0;let mythic=false;if(chance){c.pity[key]=(c.pity[key]||0)+1;mythic=c.pity[key]>=DUNGEON_RULES.mythicPity||rand()<chance;if(mythic)c.pity[key]=0;}
+ if(d.endgame||r.prestigeTier){const chance=r.prestigeTier?.08+.02*r.prestigeTier:r.difficulty==='mythic'?.08:r.difficulty==='hard'?.03:0;let mythic=false;if(chance){c.pity[key]=(c.pity[key]||0)+1;mythic=c.pity[key]>=DUNGEON_RULES.mythicPity||rand()<chance;if(mythic)c.pity[key]=0;}
   const rare=generateEquipmentItem(Object.keys(EQUIPMENT)[Math.floor(rand()*Object.keys(EQUIPMENT).length)],mythic?5:4,boss.level);spawnGroundDrop({kind:'gear',item:rare},boss);
  }
  if(r.dungeon==='crypt')dropMaterial('keys',1,boss);
@@ -1976,8 +2054,8 @@ function makeDungeonHazard(kind,x,y,damage,type,extra={}){const r=dungeonRun();i
 function hazardContains(h,entity=p){const dx=entity.x-h.x,dy=entity.y-h.y,d=Math.hypot(dx,dy);if(h.kind==='ring')return d>=h.inner&&d<=h.radius;if(h.kind==='line'){const along=dx*Math.cos(h.angle)+dy*Math.sin(h.angle),side=Math.abs(-dx*Math.sin(h.angle)+dy*Math.cos(h.angle));return along>=0&&along<=h.length&&side<=h.width;}return d<h.radius;}
 function updateDungeon(dt,safe){
  const r=dungeonRun();if(!r||r.cleared)return;r.time+=dt;dungeonUnlocked();
- const d=DUNGEONS[r.dungeon],diff=DUNGEON_DIFFICULTIES[r.difficulty];r.hazardTimer-=dt;
- if(r.hazardTimer<=0){r.hazardTimer=d.endgame?9:14;if(!safe){if(r.dungeon==='frost')makeDungeonHazard('frost',p.x,p.y,d.attack*.3*diff.damage,'physical',{radius:125,duration:4});else makeDungeonHazard('circle',p.x,p.y,d.attack*.4*diff.damage,d.type,{radius:d.endgame?130:100});}}
+ const d=DUNGEONS[r.dungeon],diff=dungeonCombatDifficulty(r);r.hazardTimer-=dt;
+ if(r.hazardTimer<=0){r.hazardTimer=(d.endgame?9:14)/(1+(r.prestigeTier||0)*.15);if(!safe){prestigeDungeonPulse();if(r.dungeon==='frost')makeDungeonHazard('frost',p.x,p.y,dungeonAttackBase(r)*.3*diff.damage,'physical',{radius:125,duration:4});else makeDungeonHazard('circle',p.x,p.y,dungeonAttackBase(r)*.4*diff.damage,d.type,{radius:d.endgame?130:100});}}
  for(const h of r.hazards){h.age+=dt;if(h.age<h.delay)continue;h.tick=Math.max(0,h.tick-dt);if(!safe&&h.tick<=0&&hazardContains(h)){takeDamage(h.damage,null,h.type);h.tick=1;}}
  r.hazards=r.hazards.filter(h=>h.age<h.delay+h.duration);
 }
@@ -1985,11 +2063,11 @@ function dungeonSpeedFactor(){const r=dungeonRun();return r?.hazards.some(h=>h.k
 function updateDungeonBoss(b,dt,safe){
  const r=dungeonRun();if(!r||!dungeonUnlocked()||r.cleared)return;
  if(safe||active('stealth')){b.attackPlan=null;b.hp=Math.min(b.max,b.hp+b.max*dt*.1);return;}
- const d=DUNGEONS[r.dungeon],diff=DUNGEON_DIFFICULTIES[r.difficulty],ratio=b.hp/b.max;
+ const d=DUNGEONS[r.dungeon],diff=dungeonCombatDifficulty(r),ratio=b.hp/b.max;
  for(const [threshold,bit]of [[.5,1],[.25,2]])if(ratio<=threshold&&!(b.phaseMask&bit)){b.phaseMask|=bit;for(let i=0;i<2;i++){const add=createDungeonEnemy('add',bit*10+i,b.x+(i?100:-100),b.y+100);add.engaged=20;mobs.push(add);}}
  if(b.attackPlan){b.attackPlan.age+=dt;if(b.attackPlan.age>=b.attackPlan.delay){const plan=b.attackPlan;if(hazardContains(plan)&&!safe)takeDamage(plan.damage,b,d.type);if(plan.kind==='line'){b.x=Math.max(80,Math.min(SIZE-80,plan.x+Math.cos(plan.angle)*plan.length));b.y=Math.max(80,Math.min(SIZE-80,plan.y+Math.sin(plan.angle)*plan.length));}b.attackPlan=null;b.cd=ratio<.5?2:3.5;}return;}
  if(b.cd>0)return;
- const step=b.attackStep++%3,angle=Math.atan2(p.y-b.y,p.x-b.x),damage=Math.round(d.attack*diff.damage*(ratio<.25?1.3:1));
+ const step=b.attackStep++%3,angle=Math.atan2(p.y-b.y,p.x-b.x),damage=Math.round(dungeonAttackBase(r)*diff.damage*(ratio<.25?1.3:1));
  if(r.dungeon==='frost'&&step!==2)b.attackPlan={kind:'line',x:b.x,y:b.y,angle,length:Math.min(650,Math.hypot(p.x-b.x,p.y-b.y)+80),width:65,radius:0,age:0,delay:1.3,damage};
  else if(r.dungeon==='abyss'&&step!==1)b.attackPlan={kind:'ring',x:b.x,y:b.y,inner:130,radius:430,age:0,delay:1.6,damage};
  else b.attackPlan={kind:'circle',x:p.x,y:p.y,radius:r.dungeon==='crypt'?130:160,age:0,delay:1.4,damage};
@@ -2002,6 +2080,7 @@ function validateDungeonProfile(data){
  for(const field of ['clears','pity']){assertCharacterObject(c[field],field);for(const [key,value]of Object.entries(c[field])){const [id,difficulty]=key.split(':');if(!Object.hasOwn(DUNGEONS,id)||!Object.hasOwn(DUNGEON_DIFFICULTIES,difficulty)||key!==id+':'+difficulty)characterDataError('záznam dungeonu.');assertCharacterNumber(value,'počet výprav',0,field==='pity'?11:1e12,true);}}
  const r=c.run;if(r==null){if(data.mapId==='dungeon')characterDataError('mapa bez výpravy.');return;}
  assertCharacterObject(r,'výprava dungeonu');if(!Object.hasOwn(DUNGEONS,r.dungeon)||!Object.hasOwn(DUNGEON_DIFFICULTIES,r.difficulty)||data.mapId!=='dungeon'||data.career.endgame.run)characterDataError('stav dungeonu.');
+ if(r.prestigeTier!==undefined){assertCharacterNumber(r.prestigeTier,'stupeň prestížnej výzvy',1,data.career.prestige?.rank||0,true);if(data.level!==99||r.difficulty!=='mythic')characterDataError('prestížna obtiažnosť.');assertCharacterNumber(r.prestigePulse,'cyklus prestížnej mechaniky',0,1e12,true);}
  assertCharacterNumber(r.id,'ID dungeonu',1,c.serial,true);for(const key of ['unlocked','cleared','rewarded'])if(typeof r[key]!=='boolean')characterDataError('stav odmeny dungeonu.');
  assertCharacterNumber(r.time,'čas dungeonu',0,1e12);assertCharacterNumber(r.hazardTimer,'čas mechaniky',-1,15);
  if(r.cleared!==r.rewarded)characterDataError('odmena dungeonu.');if(!Array.isArray(r.hazards)||r.hazards.length>12)characterDataError('mechaniky dungeonu.');
@@ -2406,7 +2485,7 @@ function addGearItem(item) {
   if (!EQUIPMENT[item.slot]) return false;
   const layout = gearLayout([...p.bag, item]);
   if (!layout) return false;
-  item.uid = ++p.inventory.serial; p.bag.push(item); applyGearLayout(layout);trackCollectionGear(); return true;
+  item.uid = ++p.inventory.serial; p.bag.push(item); applyGearLayout(layout);trackCollectionGear();trackPrestigeUniques(); return true;
 }
 
 function finishInventoryChange() {
@@ -3246,7 +3325,7 @@ function enemyResistances(m) {
 
 function playerResistances() {
   const gear=equipmentBonuses(),passive=passiveBonuses();
-  return Object.fromEntries(Object.keys(DAMAGE_TYPES).map(type=>[type,Math.max(-.5,Math.min(.75,(gear[type+'Resist']||0)+(passive.resist[type]||0)))]));
+  return Object.fromEntries(Object.keys(DAMAGE_TYPES).map(type=>[type,Math.max(-.5,Math.min(.75,(gear[type+'Resist']||0)+(passive.resist[type]||0)+(prestigeRank()===5?.05:0)))]));
 }
 
 function resolveEnemyDamage(m,amount,type='physical',penetrated=false) {
@@ -3959,7 +4038,7 @@ function combatManual() {
 // src/js/ui/hud.js
 function toast(t){$('toast').textContent=t;$('toast').style.opacity='1';toastTimer=3;}
 
-function baseHUD(){$('level').textContent='ÚR. '+p.level;$('hpbar').style.width=(p.hp/maxHP()*100)+'%';$('hptext').textContent=Math.ceil(p.hp)+' / '+maxHP();$('xpbar').style.width=(p.level===PROGRESSION.maxLevel?100:p.xp/needXP()*100)+'%';$('xptext').textContent=p.level===PROGRESSION.maxLevel?'MAX · Progresia (P)':p.xp.toLocaleString('sk-SK')+' / '+needXP().toLocaleString('sk-SK')+' EXP';$('gold').textContent=p.gold;$('pots').textContent=p.potions;$('q-wolves').innerHTML=`${p.kills>=5?'◆':'◇'} Poraz príšery <b>${Math.min(p.kills,5)} / 5</b>`;$('q-stones').innerHTML=`${p.stones>=3?'◆':'◇'} Znič kamene osudu <b>${Math.min(p.stones,3)} / 3</b>`;$('claim').hidden=p.claimed||p.kills<5||p.stones<3;if(p.claimed)$('questnote').textContent='✓ Úloha dokončená';$('cooldown').textContent=skillCD>0?Math.ceil(skillCD):'';$('coords').textContent=map().town?'Mesto':isSanctuary(p)?'Bezpečná zóna':map().name;}
+function baseHUD(){$('level').textContent='ÚR. '+p.level;$('hpbar').style.width=(p.hp/maxHP()*100)+'%';$('hptext').textContent=Math.ceil(p.hp)+' / '+maxHP();$('xpbar').style.width=(p.level===PROGRESSION.maxLevel?100:p.xp/needXP()*100)+'%';$('xptext').textContent=p.level===PROGRESSION.maxLevel?'MAX · Prestíž (P)':p.xp.toLocaleString('sk-SK')+' / '+needXP().toLocaleString('sk-SK')+' EXP';$('gold').textContent=p.gold;$('pots').textContent=p.potions;$('q-wolves').innerHTML=`${p.kills>=5?'◆':'◇'} Poraz príšery <b>${Math.min(p.kills,5)} / 5</b>`;$('q-stones').innerHTML=`${p.stones>=3?'◆':'◇'} Znič kamene osudu <b>${Math.min(p.stones,3)} / 3</b>`;$('claim').hidden=p.claimed||p.kills<5||p.stones<3;if(p.claimed)$('questnote').textContent='✓ Úloha dokončená';$('cooldown').textContent=skillCD>0?Math.ceil(skillCD):'';$('coords').textContent=map().town?'Mesto':isSanctuary(p)?'Bezpečná zóna':map().name;}
 
 function updateMapHUD(){$('maptitle').textContent=map().name;$('mapdesc').textContent=map().desc;$('mapregion').textContent='◈ '+map().region;$('maplevel').textContent=map().metinsOnly?'Metiny všetkých úrovní 1–99':'Odporúčaná úroveň '+map().level+'+';$('minimaplabel').textContent=map().name.toUpperCase();}
 
@@ -3968,7 +4047,7 @@ function chooseClass() { return false; }
 function chooseSchool() { return false; }
 function renderClasses() {}
 
-function updateClassHUD(){$('portrait').textContent=({warrior:'侍',ninja:'影',sura:'魔',shaman:'龍'})[p.classId];$('playername').textContent=characterDisplayName(p);$('playerclass').textContent=role().name;school().skills.forEach((s,i)=>{$(i?'skill'+(i+1):'skill').querySelector('small').textContent=s[0];$(i?'skill'+(i+1):'skill').title=`${s[0]} · stupeň ${skillProgress(skillKey(i)).rank} · ${s[3]} many · ${s[2]} s\n${s[6]}`;});$('attack').querySelector('small').textContent=p.classId==='ninja'&&p.schools.ninja==='archery'?'Streľba':p.classId==='shaman'?'Úder vejárom':'Základný útok';}
+function updateClassHUD(){$('portrait').textContent=({warrior:'侍',ninja:'影',sura:'魔',shaman:'龍'})[p.classId];$('playername').textContent=characterDisplayName(p)+prestigeSuffix(p);$('playerclass').textContent=role().name;school().skills.forEach((s,i)=>{$(i?'skill'+(i+1):'skill').querySelector('small').textContent=s[0];$(i?'skill'+(i+1):'skill').title=`${s[0]} · stupeň ${skillProgress(skillKey(i)).rank} · ${s[3]} many · ${s[2]} s\n${s[6]}`;});$('attack').querySelector('small').textContent=p.classId==='ninja'&&p.schools.ninja==='archery'?'Streľba':p.classId==='shaman'?'Úder vejárom':'Základný útok';}
 
 function updateHUD(){baseHUD();$('potion-cooldown').textContent=potionCooldownRemaining()>0?Math.ceil(potionCooldownRemaining()):'';$('potion').title='Elixír · +65 HP · spoločný cooldown 4 s';$('capes').textContent=p.braveryCapes;$('cape-cooldown').textContent=capeCooldown>0?Math.ceil(capeCooldown):'';p.mp=Math.max(0,Math.min(maxMP(),p.mp));$('mpbar').style.width=p.mp/maxMP()*100+'%';$('mptext').textContent=Math.ceil(p.mp)+' / '+maxMP();for(let i=0;i<6;i++)$(i?'cooldown'+(i+1):'cooldown').textContent=spellCD[i]>0?Math.ceil(spellCD[i]):'';$('coords').textContent=map().town?'Mesto · NPC F':isSanctuary(p)?'Bezpečná zóna':farmAreaAt().name+(map().metinsOnly?' · Metiny Lv.':' · Lv.')+farmAreaLevelRange(farmAreaAt()).join('–');$('buffs').textContent=(p.career.alchemy.active?ALCHEMY_PRODUCTS[p.career.alchemy.active.id].name+' '+Math.ceil(p.career.alchemy.active.remaining)+'s · ':'')+Object.entries(buffs).map(([id,t])=>{const s=Object.values(SCHOOLS).flatMap(c=>c.skills).find(s=>s[1]===id);return(s?s[0]:id)+' '+Math.ceil(t)+'s';}).join(' · ');if(p.claimed)$('questnote').textContent='✓ Dokončené · ďalšie úlohy v denníku J';updateCombatHUD();updateCombatAssistHUD();updateHotbarState();updateDungeonHUD();}
 
@@ -4074,6 +4153,25 @@ function biologyJournalCard(){
 }
 
 
+// src/js/ui/prestige.js
+function prestigePanel(){
+ const c=p.career.prestige,next=c.rank+1;
+ const rows=goals=>goals.map(goal=>requirementRow(goal.label,Math.min(prestigeProgress(goal),goal.need),goal.need)).join('');
+ if(!c.rank)return '<h3>Prestíž · úroveň 99</h3><p>Level, výbava aj celý progres zostávajú zachované.</p>'+requirementRow('Úroveň',p.level,99)+'<button class="primary" data-action="prestigeActivate" '+(!prestigeCanChange()?'disabled':'')+'>Aktivovať prestíž I</button><p>Aktivácia mimo boja a výprav. Odmena: +40 HP, 5 znakov prestíže a prestížne dungeony.</p>';
+ return '<h3>Prestíž '+PRESTIGE_RANKS[c.rank].label+' / V</h3><p>Znaky prestíže: '+uiNumber(c.marks)+'</p><div class="career-card"><h4>Trvalé odmeny</h4><p>'+PRESTIGE_RANKS.slice(1,c.rank+1).map(rank=>rank.label+': '+rank.text).join('<br>')+'</p></div>'+(next<=5?'<div class="career-card"><h4>Postup na '+PRESTIGE_RANKS[next].label+'</h4>'+rows(PRESTIGE_REQUIREMENTS[next])+'<p>Odmena: '+PRESTIGE_RANKS[next].text+' · '+next*5+' znakov prestíže</p><button class="primary" data-action="prestigePromote" '+(!prestigeCanChange()||PRESTIGE_REQUIREMENTS[next].some(goal=>prestigeProgress(goal)<goal.need)?'disabled':'')+'>Zvýšiť prestíž</button></div>':'<p>Maximálna prestíž. Ďalšie znaky získavaš vo výzvach.</p>')+
+ '<h3>Prestížne výzvy · stupeň '+PRESTIGE_RANKS[c.rank].label+'</h3><p>Lv.99 · mýtická obtiažnosť s ďalším škálovaním. Po odomknutí bossa sa striedajú prstence a pásy: opusti značku do 1,8 s.</p>'+Object.entries(DUNGEONS).map(([id,d])=>'<article class="career-card"><h4>'+d.name+'</h4><p>Vzácny boss: '+d.boss+' · '+uiNumber(Math.round(Math.max(42000,d.hp)*3*(1+c.rank*.5)))+' HP · základný zásah '+Math.round(Math.max(300,d.attack)*2*(1+c.rank*.2))+' · '+DAMAGE_TYPES[d.type].name+'</p>'+costRequirements(d.cost)+'<p>Odmena: '+c.rank+' znakov prestíže, unikát a bonusová výbava Legendary; namiesto nej Mythic '+Math.round((.08+.02*c.rank)*100)+' %, najneskôr 12. úspech. Počítadlo '+(p.career.dungeons.pity[id+':mythic']||0)+' / 12.</p><button data-prestige-trial="'+id+'" '+(!canTravel()||dungeonRun()||p.career.endgame.run||!canPayRecipe(d.cost)?'disabled':'')+'>Vstúpiť do výzvy</button></article>').join('')+
+ '<h3>Pasívny tréning</h3>'+Object.entries(PRESTIGE_TRAINING).map(([id,t])=>'<article class="career-card"><h4>'+t.name+' · '+c.training[id]+' / 10</h4><p>'+t.text+' za stupeň · cena '+3*(c.training[id]+1)+' znakov prestíže</p><button data-action="prestigeTrain" data-id="'+id+'" '+(c.training[id]>=10||c.marks<3*(c.training[id]+1)?'disabled':'')+'>Trénovať</button></article>').join('')+
+ prestigeRefinementPanel()+
+ '<h3>Endgame ciele</h3><p>Za každý cieľ: '+PRESTIGE_RULES.goalReward+' znakov prestíže, raz za postavu.</p>'+Object.entries(PRESTIGE_GOALS).map(([id,g])=>'<article class="career-card">'+rows([g])+'<button data-action="prestigeClaim" data-id="'+id+'" '+(c.claimed[id]||prestigeProgress(g)<g.need?'disabled':'')+'>'+(c.claimed[id]?'✓ Odmena získaná':'Vyzdvihnúť odmenu')+'</button></article>').join('');
+}
+function prestigeEmblemSVG(data){const rank=prestigeRank(data);if(!rank)return '';const spec=PRESTIGE_RANKS[rank];return '<g data-prestige-rank="'+rank+'" transform="translate(180 40)" aria-hidden="true"><circle r="24" fill="#17282b" stroke="'+spec.color+'" stroke-width="3"/><path d="m-19-13-5-13 14 7 10-13 10 13 14-7-5 13" fill="none" stroke="'+spec.color+'" stroke-width="2"/><text text-anchor="middle" y="7" fill="'+spec.color+'" font-size="21">'+spec.label+'</text></g>';}
+function drawPrestigeEmblem(x,y){const rank=prestigeRank();if(!rank)return;const spec=PRESTIGE_RANKS[rank];ctx.save();ctx.strokeStyle=spec.color+'99';ctx.lineWidth=1+rank*.2;ctx.beginPath();ctx.ellipse(x,y+4,27+rank*2,11+rank,0,0,Math.PI*2);ctx.stroke();text('P '+spec.label,x,y-98,spec.color,10);ctx.restore();}
+
+function prestigeRefinementPanel(){
+ const c=p.career.prestige;return '<h3>Zdokonaľovanie Mythic bonusov</h3><p>Od prestíže III. Vybraný existujúci bonus: kvalita +5, najviac 100; kombinácia bonusov a vylepšenie zostávajú.</p>'+Object.entries(p.equipped).filter(([,item])=>item?.rarity===5&&item.generationVersion===ITEM_GENERATION.version).map(([slot,item])=>'<article class="career-card"><h4>'+escapeHTML(item.name)+'</h4>'+item.affixes.map(affix=>'<p>'+ITEM_STATS[affix.stat]+' · kvalita '+affix.roll+' / 100'+(affix.roll<100?' → '+Math.min(100,affix.roll+5)+' · cena '+(5+Math.floor(affix.roll/20))+' znakov prestíže':' · maximum')+'</p><button data-action="prestigeRefine" data-id="'+slot+':'+affix.stat+'" '+(c.rank<3||affix.roll>=100||c.marks<5+Math.floor(affix.roll/20)?'disabled':'')+'>Zdokonaliť bonus</button>').join('')+'</article>').join('');
+}
+
+
 // src/js/ui/career.js
 const forgeOptions={};
 function costLabel(cost) {
@@ -4134,7 +4232,7 @@ function careerSpecialization() {
 
 function careerEndgame() {
   const end = p.career.endgame, run = end.run;
-  return `<p>Vyžaduje úroveň 35 a 3 kľúče. Cieľ: 20 príšer a 1 boss. Kľúč: každý 3. boss. Vyšší stupeň zvyšuje silu nepriateľov aj odmenu.</p>
+  return `<button id="open-prestige">Prestíž a endgame ciele · úroveň 99</button><p>Vyžaduje úroveň 35 a 3 kľúče. Cieľ: 20 príšer a 1 boss. Kľúč: každý 3. boss. Vyšší stupeň zvyšuje silu nepriateľov aj odmenu.</p>
     ${run ? `<div class="career-card"><h3>Aktívna trhlina · stupeň ${run.tier}</h3><p>Príšery ${Math.min(20, run.kills)} / 20 · boss ${Math.min(1, run.bosses)} / 1<br>Odmena: ${10 + run.tier * 3} úlomkov</p><button class="primary" data-action="claimRift" ${run.kills < 20 || run.bosses < 1 ? 'disabled' : ''}>Dokončiť a vyzdvihnúť odmenu</button><button class="secondary" data-action="abandon">Opustiť bez odmeny · kľúče sa nevrátia</button></div>` : `<div class="career-card"><h3>Ďalší stupeň ${Math.min(PROGRESSION.maxRiftTier, end.highest + 1)}</h3><p>Najvyšší dokončený: ${end.highest} · vstup mimo boja.</p>${costRequirements({keys:3})}<button class="primary" data-action="enter" ${p.level < 35 || p.career.materials.keys < 3 ? 'disabled' : ''}>Vstúpiť · 3 kľúče</button></div>`}
     <div class="career-card"><h3>Relikviár · ${end.paragon} / ${PROGRESSION.maxParagon}</h3><p>Trvalý bonus: +${end.paragon * 2} útok a +${end.paragon * 5} zdravie.</p>${costRequirements({shards:25*(end.paragon+1)**2})}<button class="primary" data-action="paragon" ${p.level < 35 || end.paragon >= PROGRESSION.maxParagon || !canPayRecipe({shards:25*(end.paragon+1)**2}) ? 'disabled' : ''}>Posilniť relikviár</button></div>`;
 }
@@ -4146,17 +4244,20 @@ function careerPanel(tab = careerTab) {
     skills: ['Schopnosti', careerSkills], biology: ['Biológ', careerBiology],
     forge: ['Vylepšovanie', careerForge], crafting: ['Výroba', () => craftingRecipesPanel('crafting')], alchemy: ['Alchýmia', () => craftingRecipesPanel('alchemy') + careerAlchemy()],
     collection: ['Relikvie', careerCollection], specialization: ['Špecializácia', careerSpecialization],
-    dungeons: ['Dungeony', dungeonContent], endgame: ['Endgame', careerEndgame]
+    prestige: ['Prestíž', prestigePanel], dungeons: ['Dungeony', dungeonContent], endgame: ['Endgame', careerEndgame]
   };
   if(tab!==careerTab)craftingFilter='all';
   careerTab = tabs[tab] ? tab : 'overview';
   modal(`<span class="eyebrow">PROGRESIA · P</span><h2>Progresia</h2><nav class="career-tabs" aria-label="Systémy progresie">${Object.entries(tabs).map(([id, [name]]) => `<button data-career-tab="${id}" aria-pressed="${careerTab === id}">${name}</button>`).join('')}</nav><div class="career-body">${careerTab==='alchemy'?'<button id="alchemy-market">Obchod alchymistu</button>':''}${tabs[careerTab][1]()}</div><p id="career-message" role="status"></p>`,{key:'career:'+careerTab});
   document.querySelectorAll('[data-career-tab]').forEach(button => button.onclick = () => careerPanel(button.dataset.careerTab));
   if($('craft-filter')) $('craft-filter').onchange=event=>{craftingFilter=event.target.value;careerPanel(careerTab);};
+  if(careerTab==='endgame')$('open-prestige').onclick=()=>careerPanel('prestige');
   if(careerTab==='alchemy')$('alchemy-market').onclick=()=>marketPanel('alchemist');
+  document.querySelectorAll('[data-prestige-trial]').forEach(button=>button.onclick=()=>{if(!enterPrestigeTrial(button.dataset.prestigeTrial))toast('Výzva nie je dostupná. Skontroluj prestíž, vstupné a boj.');});
   bindDungeonActions();
   if(careerTab==='discovery')bindDiscoveryUI();
   const actions = {
+    prestigeActivate:activatePrestige,prestigePromote:promotePrestige,prestigeTrain:trainPrestige,prestigeClaim:claimPrestigeGoal,prestigeRefine:refinePrestigeAffix,
     train: id => trainAttribute(id), skill: id => upgradeSkill(id), bio: completeBiology,
     recipe: craftRecipe, product: id => useAlchemyProduct(id, true), enhance: id => enhanceEquipment(id,forgeOptions[id]||{}), forgeSupport: craftForgeSupport, craft: id => craftGem(id), gem: id => upgradeGem(id),
     spec: id => specialize(id), spectrain: trainSpecialization, enter: enterRift,
@@ -4222,7 +4323,7 @@ let dungeonAbandonPending=false;
 function dungeonContent(){
  const c=p.career.dungeons,r=dungeonRun();
  if(r){const d=DUNGEONS[r.dungeon],guards=mobs.filter(m=>m.dungeonRole==='guard'),seals=mobs.filter(m=>m.dungeonSeal),boss=mobs.find(m=>m.dungeonBoss);
-  return `<section class="dungeon-panel"><h3>${d.name} · ${DUNGEON_DIFFICULTIES[r.difficulty].name}</h3><p>${d.mechanic}</p><div class="requirements">${requirementRow('Porazení strážcovia',guards.filter(m=>m.hp<=0).length,guards.length)}${requirementRow('Zničené pečate',seals.filter(m=>m.hp<=0).length,3)}${requirementRow('Boss',r.cleared?1:0,1)}</div><p>${r.cleared?'Dokončené. Nezdvihnutá korisť sa pri návrate prenesie do Mesta.':dungeonUnlocked()?'Boss je odomknutý. Značky na zemi ukazujú miesto a čas úderu.':'Boss je chránený. Poraz všetkých strážcov a znič tri pečate.'}</p><p>Boss: ${boss?Math.ceil(boss.hp)+' / '+boss.max+' HP':'—'}. Vstupné sa nevracia.</p>${r.cleared?'<button class="primary" data-dungeon-exit>Vrátiť sa do Mesta</button>':dungeonAbandonPending?'<div class="delete-confirm"><p>Opustiť nedokončený dungeon? Vstupné sa nevráti; získaná korisť ostane zachovaná.</p><button data-dungeon-cancel>Zostať</button><button class="danger" data-dungeon-exit>Potvrdiť odchod</button></div>':'<button data-dungeon-abandon>Opustiť dungeon…</button>'}</section>`;
+  return `<section class="dungeon-panel"><h3>${d.name} · ${DUNGEON_DIFFICULTIES[r.difficulty].name}${r.prestigeTier?' · Prestíž '+PRESTIGE_RANKS[r.prestigeTier].label:''}</h3><p>${r.prestigeTier?d.mechanic.split(' Odporúčaná')[0]+' Prestíž Lv.99: dodatočné prstence a pásy zasiahnu po 1,8 s.':d.mechanic}</p><div class="requirements">${requirementRow('Porazení strážcovia',guards.filter(m=>m.hp<=0).length,guards.length)}${requirementRow('Zničené pečate',seals.filter(m=>m.hp<=0).length,3)}${requirementRow('Boss',r.cleared?1:0,1)}</div><p>${r.cleared?'Dokončené. Nezdvihnutá korisť sa pri návrate prenesie do Mesta.':dungeonUnlocked()?'Boss je odomknutý. Značky na zemi ukazujú miesto a čas úderu.':'Boss je chránený. Poraz všetkých strážcov a znič tri pečate.'}</p><p>Boss: ${boss?Math.ceil(boss.hp)+' / '+boss.max+' HP':'—'}. Vstupné sa nevracia.</p>${r.cleared?'<button class="primary" data-dungeon-exit>Vrátiť sa do Mesta</button>':dungeonAbandonPending?'<div class="delete-confirm"><p>Opustiť nedokončený dungeon? Vstupné sa nevráti; získaná korisť ostane zachovaná.</p><button data-dungeon-cancel>Zostať</button><button class="danger" data-dungeon-exit>Potvrdiť odchod</button></div>':'<button data-dungeon-abandon>Opustiť dungeon…</button>'}</section>`;
  }
  return `<section class="dungeon-panel"><h3>Opakovateľné dungeony</h3><p>Vstup mimo boja. Každá výprava má oddelenú lokalitu a novú populáciu; poraz strážcov, znič tri pečate a potom bossa. Nepriatelia sa v jednej výprave neobnovujú.</p><div class="craft-recipes">${Object.entries(DUNGEONS).map(([id,d])=>`<article class="career-card"><h4>${d.name}${d.endgame?' · ENDGAME':''}</h4><p>${d.enemy} · ${d.boss}</p><p>${d.mechanic}</p><p>Unikát: <b>${DUNGEON_UNIQUES[d.unique].name}</b> pri každom zabití bossa. Lepšie obtiažnosti zvyšujú HP, poškodenie, raritu a materiálové odmeny.</p>${costRequirements(d.cost)}${Object.entries(DUNGEON_DIFFICULTIES).map(([difficulty,spec])=>{const level=dungeonLevel(id,difficulty),key=id+':'+difficulty,reason=p.career.endgame.run?'Najprv dokonči trhlinu.':p.level<level?'Vyžaduje úroveň '+level+'.':!canPayRecipe(d.cost)?'Chýbajú materiály alebo Yang.':!canTravel()?'Najprv ukonči boj.':'';return `<div class="dungeon-difficulty"><b>${spec.name} · Lv.${level}</b><small>Boss ${uiNumber(Math.round(d.hp*spec.hp))} HP · poškodenie ×${spec.damage} · dokončenia ${c.clears[key]||0}</small><button data-dungeon-enter="${id}" data-difficulty="${difficulty}" ${reason?'disabled':''}>Vstúpiť</button>${reason?'<small>'+reason+'</small>':''}${d.endgame?'<p>Bonusová výbava: Legendary. '+(difficulty==='normal'?'Mythic nie je v tejto obtiažnosti.':'Namiesto nej Mythic '+(difficulty==='hard'?'3':'8')+' %; zaručená najneskôr pri 12. úspechu od poslednej Mythic. Počítadlo '+(c.pity[key]||0)+' / 12.')+'</p>':''}</div>`;}).join('')}</article>`).join('')}</div></section>`;
 }
@@ -4243,7 +4344,7 @@ function characterAvatar(record) {
   const robe=cls==='shaman',hood=cls==='ninja',sura=cls==='sura';
   const defaultWeapon=(!hood||school==='archery'||gear.weapon)?school==='archery'?'<path d="M222 190Q307 284 229 385M226 194l3 184" fill="none" stroke="'+gold+'" stroke-width="10"/>':robe?'<path d="m230 260-18-97q59-9 82 40Z" fill="#d0b47b" stroke="#f7dd9f" stroke-width="4"/><path d="m230 260 7-92m-7 92 30-79m-30 79 52-62" stroke="#865c4a" stroke-width="3"/>':'<path d="m238 315 17-166 12-28 8 31-23 165Z" fill="#d3e2db" stroke="#eef7e9" stroke-width="2"/><path d="m220 312 47 5m-26-1-5 35" stroke="'+gold+'" stroke-width="9"/>':hood?'<path d="m233 290 8-99 11 35-9 65m-119 5-25-78-2 41 17 40" stroke="#acb6ac" stroke-width="6" fill="none"/>':'';
   const weapon=gear.weapon?'<g data-worn-slot="weapon" transform="translate(215 '+(gear.weapon.weaponKind==='bow'?176:gear.weapon.weaponKind==='fan'?105:119)+') rotate(7) scale(.85 2.1)">'+equipmentModelSVG(gear.weapon)+'</g>':defaultWeapon;
-  return '<svg class="roster-avatar" viewBox="0 0 360 490" role="img" aria-label="'+CLASSES[cls].name+' · aktuálna výbava"><ellipse cx="180" cy="451" rx="114" ry="22" fill="#071410" opacity=".65"/><ellipse class="avatar-halo" cx="180" cy="270" rx="132" ry="165" fill="none" stroke="'+color+'" opacity=".15"/><path d="M128 176 83 398 148 378 183 203 231 409 275 410 233 180Z" fill="'+(sura?'#352447':hood?'#153f36':'#513e34')+'" opacity=".9"/><path d="m151 332-12 112 30 1 15-99 10 99 31-1-13-112" fill="#273934" stroke="#637367" stroke-width="3"/><path d="m137 422-7 31 37-1 3-29m23 0 5 29 37 1-13-31" fill="'+('#3b3c32')+'" stroke="#b9a77a" stroke-width="3"/><path d="m132 179-23 94 28 7 21-78m58-22 31 94-27 7-26-80" fill="'+(robe?'#c0b496':metal)+'" stroke="'+gold+'" stroke-width="4"/>'+(robe?'<path d="m141 178-16 230 57-13 55 14-20-229-39-13Z" fill="#bcae8a" stroke="#e6d6aa" stroke-width="4"/><path d="m176 183-13 213 27-10 2-201" fill="#9a5650"/>':'<path d="m139 180-5 133 47 33 45-34-10-132-37-17Z" fill="'+metal+'" stroke="'+gold+'" stroke-width="4"/><path d="m145 192 34 17 31-17-4 84-28 27-29-29Z" fill="'+(sura?'#51405e':hood?'#2f5547':'#657d70')+'" stroke="'+color+'" stroke-width="3"/><path d="m144 295 67-1 4 18-73 2Z" fill="#493e2f" stroke="'+gold+'" stroke-width="3"/>')+'<path d="m164 157 0 26 29 0-2-27" fill="#b89979"/><ellipse cx="178" cy="127" rx="30" ry="40" fill="#c8af8c"/>'+(hood?'<path d="m145 132-3-43 35-22 34 22 3 45-22-19-33 0Z" fill="#244c40" stroke="#739986" stroke-width="3"/><path d="m148 134 59 0-13 27-33 0Z" fill="#193c32"/>':'<path d="m147 124-5-34 20-19 33 1 20 25-7 38-17-38-31 6Z" fill="'+(sura?'#30263b':'#303a32')+'"/><path d="m163 126 9 0m16 0 8 0" stroke="#4d4637" stroke-width="3"/>')+(sura?'<path class="avatar-runes" d="m114 217-14 76 22 15 13-83" stroke="#c98cec" stroke-width="12" fill="none"/><path d="m110 255 15-3m-18 20 15-3" stroke="#f0c7ff" stroke-width="3"/>':'') + wornEquipmentSVG(gear,PORTRAIT_EQUIPMENT)+weapon+'<circle cx="179" cy="304" r="9" fill="'+gold+'"/><path d="m176 298 6 7-8 3Z" fill="#6a4a36"/></svg>';
+  return '<svg class="roster-avatar" viewBox="0 0 360 490" role="img" aria-label="'+CLASSES[cls].name+' · aktuálna výbava'+prestigeSuffix(record.data)+'">'+prestigeEmblemSVG(record.data)+'<ellipse cx="180" cy="451" rx="114" ry="22" fill="#071410" opacity=".65"/><ellipse class="avatar-halo" cx="180" cy="270" rx="132" ry="165" fill="none" stroke="'+color+'" opacity=".15"/><path d="M128 176 83 398 148 378 183 203 231 409 275 410 233 180Z" fill="'+(sura?'#352447':hood?'#153f36':'#513e34')+'" opacity=".9"/><path d="m151 332-12 112 30 1 15-99 10 99 31-1-13-112" fill="#273934" stroke="#637367" stroke-width="3"/><path d="m137 422-7 31 37-1 3-29m23 0 5 29 37 1-13-31" fill="'+('#3b3c32')+'" stroke="#b9a77a" stroke-width="3"/><path d="m132 179-23 94 28 7 21-78m58-22 31 94-27 7-26-80" fill="'+(robe?'#c0b496':metal)+'" stroke="'+gold+'" stroke-width="4"/>'+(robe?'<path d="m141 178-16 230 57-13 55 14-20-229-39-13Z" fill="#bcae8a" stroke="#e6d6aa" stroke-width="4"/><path d="m176 183-13 213 27-10 2-201" fill="#9a5650"/>':'<path d="m139 180-5 133 47 33 45-34-10-132-37-17Z" fill="'+metal+'" stroke="'+gold+'" stroke-width="4"/><path d="m145 192 34 17 31-17-4 84-28 27-29-29Z" fill="'+(sura?'#51405e':hood?'#2f5547':'#657d70')+'" stroke="'+color+'" stroke-width="3"/><path d="m144 295 67-1 4 18-73 2Z" fill="#493e2f" stroke="'+gold+'" stroke-width="3"/>')+'<path d="m164 157 0 26 29 0-2-27" fill="#b89979"/><ellipse cx="178" cy="127" rx="30" ry="40" fill="#c8af8c"/>'+(hood?'<path d="m145 132-3-43 35-22 34 22 3 45-22-19-33 0Z" fill="#244c40" stroke="#739986" stroke-width="3"/><path d="m148 134 59 0-13 27-33 0Z" fill="#193c32"/>':'<path d="m147 124-5-34 20-19 33 1 20 25-7 38-17-38-31 6Z" fill="'+(sura?'#30263b':'#303a32')+'"/><path d="m163 126 9 0m16 0 8 0" stroke="#4d4637" stroke-width="3"/>')+(sura?'<path class="avatar-runes" d="m114 217-14 76 22 15 13-83" stroke="#c98cec" stroke-width="12" fill="none"/><path d="m110 255 15-3m-18 20 15-3" stroke="#f0c7ff" stroke-width="3"/>':'') + wornEquipmentSVG(gear,PORTRAIT_EQUIPMENT)+weapon+'<circle cx="179" cy="304" r="9" fill="'+gold+'"/><path d="m176 298 6 7-8 3Z" fill="#6a4a36"/></svg>';
 }
 function characterBackdrop() { return '<svg class="character-scenery" viewBox="0 0 1300 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="realm-sky" x2="0" y2="1"><stop stop-color="#1e3939"/><stop offset="1" stop-color="#0a1b19"/></linearGradient><radialGradient id="realm-moon"><stop stop-color="#efd8a2" stop-opacity=".5"/><stop offset="1" stop-color="#d5e6c8" stop-opacity="0"/></radialGradient></defs><path fill="url(#realm-sky)" d="M0 0h1300v720H0Z"/><circle cx="740" cy="180" r="210" fill="url(#realm-moon)"/><circle cx="740" cy="160" r="55" fill="#aabfb0" opacity=".15"/><path d="m0 360 200-240 150 210 155-200 220 260 140-190 190 220 145-160 100 180v280H0Z" fill="#314a42" opacity=".4"/><path d="m0 410 190-100 130 150 160-140 210 150 160-120 190 120 160-130 100 70v310H0Z" fill="#0d2520"/><path d="M520 430v-170h30v-25h-58l127-35 80 35h-55v25h29v170m140 0v-170h30v-25h-58l127-35 80 35h-55v25h29v170" fill="#78917a" opacity=".17"/><path d="M450 510h550l150 210H180Z" fill="#31483a" opacity=".2"/><path d="M0 600q300-80 600-20t700-15v155H0" fill="#071410"/></svg>'; }
 
@@ -4260,7 +4361,7 @@ function characterEquipmentSummary(record) {
 function renderCharacterScreen() {
   characterDraft=null;$('intro').inert=false;document.body.classList.add('character-select');setCharacterScreenMode(true);
   const list=listCharacters(),record=characterStore.account.profiles[characterStore.account.selectedId]||list[0];
-  $('intro').innerHTML=characterBackdrop()+'<div class="roster-shell"><div class="roster-heading"><div><h2>Výber postavy</h2></div><span class="roster-count">'+list.length+' / '+CHARACTER_RULES.maxCharacters+' POSTÁV</span></div><div id="roster-message" class="roster-message" role="status">'+escapeHTML(characterStore.error||characterStore.writeError)+'</div><div class="roster-layout"><aside class="roster-sidebar"><div class="character-list">'+(list.length?list.map(c=>'<button class="character-card '+(record?.id===c.id?'selected':'')+'" data-character="'+c.id+'" aria-pressed="'+(record?.id===c.id)+'"><span class="class-crest" style="color:'+CLASSES[c.classId].color+'">'+({warrior:'侍',ninja:'影',sura:'魔',shaman:'龍'}[c.classId])+'</span><span><b>'+escapeHTML(characterDisplayName(c))+'</b><small>'+CLASSES[c.classId].name+' · Úroveň '+c.data.level+'</small><em>'+escapeHTML(MAPS[c.data.mapId]?.name||'Údolie')+'</em></span></button>').join(''):'<div class="roster-empty"><span>◇</span><h3>Žiadne postavy</h3></div>')+'</div><button id="create-character" class="roster-secondary" '+(list.length>=CHARACTER_RULES.maxCharacters||characterStore.error?'disabled':'')+'>+ Vytvoriť postavu</button><div class="roster-backups"><button id="export-characters" '+(characterStore.error&&!list.length?'disabled':'')+'>Exportovať postavy</button><button id="import-characters">Importovať postavy</button><input type="file" id="character-import-file" accept=".json,application/json" hidden></div><button id="download-safety" class="roster-safety" hidden>Záloha pred posledným importom</button></aside><div class="roster-stage">'+(record?'<div class="stage-runes"></div>'+characterAvatar(record)+'<div class="stage-caption"><span class="eyebrow">'+CLASSES[record.classId].name+' · '+escapeHTML(SCHOOLS[record.data.schools?.[record.classId]]?.name||'')+'</span><h2>'+escapeHTML(characterDisplayName(record))+'</h2><p>ÚROVEŇ '+record.data.level+'</p></div>':'<div class="empty-stage"><div class="stage-runes"></div><span>✧</span></div>')+'</div><section class="roster-detail">'+(record?'<div class="roster-stats"><div><span>Úroveň</span><b>'+record.data.level+'</b></div><div><span>Yang</span><b>'+record.data.gold.toLocaleString('sk-SK')+'</b></div><div><span>EXP</span><b>'+record.data.xp.toLocaleString('sk-SK')+'</b></div><div><span>Inventár</span><b>'+record.data.bag.length+' predmetov</b></div><div><span>Biológia</span><b>'+(record.data.career?.biology?.stage||0)+' / '+BIOLOGY.length+'</b></div><div><span>Úspechy</span><b>'+Object.values(record.data.achievements||{}).filter(Boolean).length+' / '+Object.keys(CHARACTER_ACHIEVEMENTS).length+'</b></div></div><h4>Aktuálna výbava</h4>'+characterEquipmentSummary(record)+'<p class="roster-dates">Vytvorená: '+new Date(record.createdAt).toLocaleDateString('sk-SK')+'<br>Posledné hranie: '+(record.lastPlayedAt?new Date(record.lastPlayedAt).toLocaleString('sk-SK'):'Ešte nehraná')+'</p><button id="character-details" class="roster-secondary">Informácie a progres</button>':'')+'<div class="roster-play"><button id="start" class="roster-primary" '+(!record||characterStore.error?'disabled':'')+'>Hrať <span>→</span></button><button id="delete-character" class="roster-delete" '+(!record?'disabled':'')+'>Vymazať postavu</button></div></section></div></div>';
+  $('intro').innerHTML=characterBackdrop()+'<div class="roster-shell"><div class="roster-heading"><div><h2>Výber postavy</h2></div><span class="roster-count">'+list.length+' / '+CHARACTER_RULES.maxCharacters+' POSTÁV</span></div><div id="roster-message" class="roster-message" role="status">'+escapeHTML(characterStore.error||characterStore.writeError)+'</div><div class="roster-layout"><aside class="roster-sidebar"><div class="character-list">'+(list.length?list.map(c=>'<button class="character-card '+(record?.id===c.id?'selected':'')+'" data-character="'+c.id+'" aria-pressed="'+(record?.id===c.id)+'"><span class="class-crest" style="color:'+CLASSES[c.classId].color+'">'+({warrior:'侍',ninja:'影',sura:'魔',shaman:'龍'}[c.classId])+'</span><span><b>'+escapeHTML(characterDisplayName(c))+'</b><small>'+CLASSES[c.classId].name+' · Úroveň '+c.data.level+prestigeSuffix(c.data)+'</small><em>'+escapeHTML(MAPS[c.data.mapId]?.name||'Údolie')+'</em></span></button>').join(''):'<div class="roster-empty"><span>◇</span><h3>Žiadne postavy</h3></div>')+'</div><button id="create-character" class="roster-secondary" '+(list.length>=CHARACTER_RULES.maxCharacters||characterStore.error?'disabled':'')+'>+ Vytvoriť postavu</button><div class="roster-backups"><button id="export-characters" '+(characterStore.error&&!list.length?'disabled':'')+'>Exportovať postavy</button><button id="import-characters">Importovať postavy</button><input type="file" id="character-import-file" accept=".json,application/json" hidden></div><button id="download-safety" class="roster-safety" hidden>Záloha pred posledným importom</button></aside><div class="roster-stage">'+(record?'<div class="stage-runes"></div>'+characterAvatar(record)+'<div class="stage-caption"><span class="eyebrow">'+CLASSES[record.classId].name+' · '+escapeHTML(SCHOOLS[record.data.schools?.[record.classId]]?.name||'')+'</span><h2>'+escapeHTML(characterDisplayName(record))+'</h2><p>ÚROVEŇ '+record.data.level+prestigeSuffix(record.data)+'</p></div>':'<div class="empty-stage"><div class="stage-runes"></div><span>✧</span></div>')+'</div><section class="roster-detail">'+(record?'<div class="roster-stats"><div><span>Úroveň</span><b>'+record.data.level+'</b></div><div><span>Yang</span><b>'+record.data.gold.toLocaleString('sk-SK')+'</b></div><div><span>EXP</span><b>'+record.data.xp.toLocaleString('sk-SK')+'</b></div><div><span>Inventár</span><b>'+record.data.bag.length+' predmetov</b></div><div><span>Biológia</span><b>'+(record.data.career?.biology?.stage||0)+' / '+BIOLOGY.length+'</b></div><div><span>Úspechy</span><b>'+Object.values(record.data.achievements||{}).filter(Boolean).length+' / '+Object.keys(CHARACTER_ACHIEVEMENTS).length+'</b></div></div><h4>Aktuálna výbava</h4>'+characterEquipmentSummary(record)+'<p class="roster-dates">Vytvorená: '+new Date(record.createdAt).toLocaleDateString('sk-SK')+'<br>Posledné hranie: '+(record.lastPlayedAt?new Date(record.lastPlayedAt).toLocaleString('sk-SK'):'Ešte nehraná')+'</p><button id="character-details" class="roster-secondary">Informácie a progres</button>':'')+'<div class="roster-play"><button id="start" class="roster-primary" '+(!record||characterStore.error?'disabled':'')+'>Hrať <span>→</span></button><button id="delete-character" class="roster-delete" '+(!record?'disabled':'')+'>Vymazať postavu</button></div></section></div></div>';
   $('intro').scrollTop=0;window.scrollTo?.(0,0);resize();
   document.querySelectorAll('[data-character]').forEach(button=>button.onclick=()=>{try{selectCharacter(button.dataset.character);}catch(error){rosterMessage(error.message);}});
   $('create-character').onclick=()=>{characterDraft={name:'',classId:'warrior',schoolId:'body'};renderCharacterCreation();};
@@ -4378,7 +4479,7 @@ function drawWeaponUpgrade(item,model){
 
 
 // src/js/render/character.js
-function hero(){const{x,y}=screen(p.x,p.y),moving=playerMoving,step=moving?Math.sin(clock*12)*4:0,cls=p.classId,color=role().color;ctx.save();if(active('stealth'))ctx.globalAlpha=.35;shadow(x,y);if(active('aura')||active('enchanted')||active('guard')||active('armor')||active('darkGuard')||active('bless')||active('reflect')){ellipse(x,y+2,30+Math.sin(clock*4)*3,13,color+'35');ctx.strokeStyle=color+'99';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(x,y-23,25,38,0,0,Math.PI*2);ctx.stroke();}if(active('spirit')){const a=clock*3;ellipse(x+Math.cos(a)*35,y-30+Math.sin(a)*18,6,9,'#f3b565');ellipse(x+Math.cos(a)*35,y-30+Math.sin(a)*18,3,5,'#ffe0a8');}ctx.save();if(Math.cos(face)<0){ctx.translate(x*2,0);ctx.scale(-1,1);}line(x-5,y-12,x-7,y+step,'#293634',cls==='ninja'?4:6);line(x+5,y-12,x+7,y-step,'#293634',cls==='ninja'?4:6);const cast=castPose>0?Math.sin(castPose/.6*Math.PI):0;
+function hero(){const{x,y}=screen(p.x,p.y),moving=playerMoving,step=moving?Math.sin(clock*12)*4:0,cls=p.classId,color=role().color;ctx.save();if(active('stealth'))ctx.globalAlpha=.35;shadow(x,y);drawPrestigeEmblem(x,y);if(active('aura')||active('enchanted')||active('guard')||active('armor')||active('darkGuard')||active('bless')||active('reflect')){ellipse(x,y+2,30+Math.sin(clock*4)*3,13,color+'35');ctx.strokeStyle=color+'99';ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(x,y-23,25,38,0,0,Math.PI*2);ctx.stroke();}if(active('spirit')){const a=clock*3;ellipse(x+Math.cos(a)*35,y-30+Math.sin(a)*18,6,9,'#f3b565');ellipse(x+Math.cos(a)*35,y-30+Math.sin(a)*18,3,5,'#ffe0a8');}ctx.save();if(Math.cos(face)<0){ctx.translate(x*2,0);ctx.scale(-1,1);}line(x-5,y-12,x-7,y+step,'#293634',cls==='ninja'?4:6);line(x+5,y-12,x+7,y-step,'#293634',cls==='ninja'?4:6);const cast=castPose>0?Math.sin(castPose/.6*Math.PI):0;
 if(cls==='warrior'){polygon([[x-12,y-33],[x-18,y+2],[x+3,y-8],[x+6,y-29]],'#9b5241');polygon([[x-12,y-32],[x-10,y-11],[x+11,y-11],[x+13,y-32],[x,y-37]],'#a2ad9b','#d3d3ad');line(x-10,y-23,x+10,y-23,'#c8b889',3);ellipse(x-14,y-30,7,6,'#889581');ellipse(x+14,y-30,7,6,'#889581');}
 else if(cls==='ninja'){polygon([[x-10,y-32],[x-8,y-10],[x+8,y-10],[x+10,y-32],[x,y-37]],'#38594b','#7c9a71');polygon([[x-9,y-30],[x-16,y-7],[x-3,y-14],[x+4,y-29]],'#233d35');line(x-8,y-15,x+8,y-15,'#a09367',3);line(x-14,y-28,x-19,y-16,'#668f73',4);}
 else if(cls==='sura'){polygon([[x-11,y-34],[x-12,y-9],[x+12,y-9],[x+10,y-34]],'#513e69','#a48ba9');polygon([[x-10,y-28],[x-8,y-14],[x+8,y-14],[x+8,y-28]],'#947998');line(x-13,y-29,x-19,y-14-cast*14,'#8a4eb0',7);ellipse(x-19,y-15-cast*14,10+Math.sin(clock*5)*2,9,'#bd7fe34a');for(let i=0;i<3;i++)line(x-21+i*3,y-15-cast*14,x-24+i*3,y-7-cast*14,'#c89ce9',1.5);}

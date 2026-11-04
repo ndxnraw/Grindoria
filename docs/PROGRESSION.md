@@ -86,3 +86,7 @@ Automatické testy overujú krivku, ochranu pred opakovanými odmenami, zdroje a
 ## Boj od 0.10.0
 
 Školy majú pasívne stupne na úrovniach 10, 25, 50 a 75. Nevyžadujú knihy ani aktívne body; prax a knihy naďalej zvyšujú aktívne schopnosti. Výbava môže dopĺňať typové odolnosti a kritický zásah. Pozri [COMBAT.md](COMBAT.md).
+
+## Prestíž po úrovni 99
+
+Prestíž I–V zachová level aj výbavu a odomkne nové výzvy, pasívy, odmeny a zdokonaľovanie Mythic bonusov. Podmienky, zdroje znakov, bestiár a endgame ciele: [PRESTIGE.md](PRESTIGE.md).

@@ -12,7 +12,7 @@ function hit(m, amount, type='physical',penetrated=false) {
     if(m.dungeonSeal){dungeonUnlocked();return actual;}
     if (m.type === 'boss') p.bossKills++; else p[m.type === 'stone' ? 'stones' : 'kills']++;
     recordCharacterKill(m);
-    const gained = enemyXP(m); careerKill(m);dropForgeSupplies(m);dropCraftMaterials(m);
+    const gained = enemyXP(m); careerKill(m);prestigeKill(m);dropForgeSupplies(m);dropCraftMaterials(m);
     if (m.type === 'stone') { m.metinCombat = 0; m.metinWaveTimer = 0; dropMetinLoot(m);for(const guard of mobs.filter(guard=>guard.hp>0&&guard.metinParentId===m.spawnId&&guard.metinGeneration===m.metinGeneration))hit(guard,guard.hp,'arcane',true); }
     else {
       farmBonusLoot(m);

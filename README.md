@@ -44,6 +44,8 @@ Zlato a zásoby sa pripíšu priamo, bez predmetu na zemi. Výbava a relikvie zo
 - Tréning, schopnosti, osem biologických výskumov, alchýmia, relikvie, špecializácia a trhliny. [Biológ](docs/BIOLOGY.md). [Progresia](docs/PROGRESSION.md).
 - Automierenie pri útoku, Autospell v boji s označeným cieľom a Autoelixíry pod 45 % HP. Podrobnosti v bojovom manuáli.
 
+- Prestíž I–V od úrovne 99: nové výzvy, pasívne bonusy, emblémy a zdokonaľovanie Mythic bonusov bez resetu postavy. [Prestíž a endgame](docs/PRESTIGE.md).
+
 ## Vývoj
 
 Node.js 22+; bez externých balíčkov.

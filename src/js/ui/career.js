@@ -57,7 +57,7 @@ function careerSpecialization() {
 
 function careerEndgame() {
   const end = p.career.endgame, run = end.run;
-  return `<p>Vyžaduje úroveň 35 a 3 kľúče. Cieľ: 20 príšer a 1 boss. Kľúč: každý 3. boss. Vyšší stupeň zvyšuje silu nepriateľov aj odmenu.</p>
+  return `<button id="open-prestige">Prestíž a endgame ciele · úroveň 99</button><p>Vyžaduje úroveň 35 a 3 kľúče. Cieľ: 20 príšer a 1 boss. Kľúč: každý 3. boss. Vyšší stupeň zvyšuje silu nepriateľov aj odmenu.</p>
     ${run ? `<div class="career-card"><h3>Aktívna trhlina · stupeň ${run.tier}</h3><p>Príšery ${Math.min(20, run.kills)} / 20 · boss ${Math.min(1, run.bosses)} / 1<br>Odmena: ${10 + run.tier * 3} úlomkov</p><button class="primary" data-action="claimRift" ${run.kills < 20 || run.bosses < 1 ? 'disabled' : ''}>Dokončiť a vyzdvihnúť odmenu</button><button class="secondary" data-action="abandon">Opustiť bez odmeny · kľúče sa nevrátia</button></div>` : `<div class="career-card"><h3>Ďalší stupeň ${Math.min(PROGRESSION.maxRiftTier, end.highest + 1)}</h3><p>Najvyšší dokončený: ${end.highest} · vstup mimo boja.</p>${costRequirements({keys:3})}<button class="primary" data-action="enter" ${p.level < 35 || p.career.materials.keys < 3 ? 'disabled' : ''}>Vstúpiť · 3 kľúče</button></div>`}
     <div class="career-card"><h3>Relikviár · ${end.paragon} / ${PROGRESSION.maxParagon}</h3><p>Trvalý bonus: +${end.paragon * 2} útok a +${end.paragon * 5} zdravie.</p>${costRequirements({shards:25*(end.paragon+1)**2})}<button class="primary" data-action="paragon" ${p.level < 35 || end.paragon >= PROGRESSION.maxParagon || !canPayRecipe({shards:25*(end.paragon+1)**2}) ? 'disabled' : ''}>Posilniť relikviár</button></div>`;
 }
@@ -69,17 +69,20 @@ function careerPanel(tab = careerTab) {
     skills: ['Schopnosti', careerSkills], biology: ['Biológ', careerBiology],
     forge: ['Vylepšovanie', careerForge], crafting: ['Výroba', () => craftingRecipesPanel('crafting')], alchemy: ['Alchýmia', () => craftingRecipesPanel('alchemy') + careerAlchemy()],
     collection: ['Relikvie', careerCollection], specialization: ['Špecializácia', careerSpecialization],
-    dungeons: ['Dungeony', dungeonContent], endgame: ['Endgame', careerEndgame]
+    prestige: ['Prestíž', prestigePanel], dungeons: ['Dungeony', dungeonContent], endgame: ['Endgame', careerEndgame]
   };
   if(tab!==careerTab)craftingFilter='all';
   careerTab = tabs[tab] ? tab : 'overview';
   modal(`<span class="eyebrow">PROGRESIA · P</span><h2>Progresia</h2><nav class="career-tabs" aria-label="Systémy progresie">${Object.entries(tabs).map(([id, [name]]) => `<button data-career-tab="${id}" aria-pressed="${careerTab === id}">${name}</button>`).join('')}</nav><div class="career-body">${careerTab==='alchemy'?'<button id="alchemy-market">Obchod alchymistu</button>':''}${tabs[careerTab][1]()}</div><p id="career-message" role="status"></p>`,{key:'career:'+careerTab});
   document.querySelectorAll('[data-career-tab]').forEach(button => button.onclick = () => careerPanel(button.dataset.careerTab));
   if($('craft-filter')) $('craft-filter').onchange=event=>{craftingFilter=event.target.value;careerPanel(careerTab);};
+  if(careerTab==='endgame')$('open-prestige').onclick=()=>careerPanel('prestige');
   if(careerTab==='alchemy')$('alchemy-market').onclick=()=>marketPanel('alchemist');
+  document.querySelectorAll('[data-prestige-trial]').forEach(button=>button.onclick=()=>{if(!enterPrestigeTrial(button.dataset.prestigeTrial))toast('Výzva nie je dostupná. Skontroluj prestíž, vstupné a boj.');});
   bindDungeonActions();
   if(careerTab==='discovery')bindDiscoveryUI();
   const actions = {
+    prestigeActivate:activatePrestige,prestigePromote:promotePrestige,prestigeTrain:trainPrestige,prestigeClaim:claimPrestigeGoal,prestigeRefine:refinePrestigeAffix,
     train: id => trainAttribute(id), skill: id => upgradeSkill(id), bio: completeBiology,
     recipe: craftRecipe, product: id => useAlchemyProduct(id, true), enhance: id => enhanceEquipment(id,forgeOptions[id]||{}), forgeSupport: craftForgeSupport, craft: id => craftGem(id), gem: id => upgradeGem(id),
     spec: id => specialize(id), spectrain: trainSpecialization, enter: enterRift,

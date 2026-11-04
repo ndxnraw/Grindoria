@@ -10,6 +10,19 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.24.0] - 2026-11-04
+
+### Added
+- Prestíž I–V po úrovni 99 bez resetu levelu, výbavy alebo progresu; rôznorodé podmienky postupu a jednorazové odmeny.
+- Prestížne dungeony s nepriateľmi Lv.99, vzácnymi bossmi, vyššou odolnosťou, odmenami a novými prstencovými a pásovými mechanikami.
+- Znaky prestíže, tri pasívne tréningy, deväť endgame cieľov a deterministické zdokonaľovanie Mythic bonusov od prestíže III.
+- Farebné emblémy a označenia postavy v hernom svete, HUD aj výbere postáv.
+- Kompatibilné ukladanie, validácia a prenos prestíže v zálohách; 18 integračných testov.
+
+### Changed
+
+### Fixed
+
 ## [0.23.0] - 2026-11-04
 
 ### Added
@@ -451,7 +464,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.23.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.24.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -478,3 +491,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.21.0]: https://github.com/ndxnraw/Grindoria/compare/v0.20.0...v0.21.0
 [0.22.0]: https://github.com/ndxnraw/Grindoria/compare/v0.21.0...v0.22.0
 [0.23.0]: https://github.com/ndxnraw/Grindoria/compare/v0.22.0...v0.23.0
+[0.24.0]: https://github.com/ndxnraw/Grindoria/compare/v0.23.0...v0.24.0

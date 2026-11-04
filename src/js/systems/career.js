@@ -33,6 +33,7 @@ function initializeCareer() {
   initializeCrafting();
   initializeEconomy();
   initializeDungeons();
+  initializePrestige();
   p.level = Math.max(1, Math.min(PROGRESSION.maxLevel, p.level));
   if (p.level === PROGRESSION.maxLevel) p.xp = 0;
   // World difficulty changed; preserve death timers/positions while scaling HP proportionally.
@@ -62,6 +63,7 @@ function careerBonuses() {
   add({ attack: p.career.endgame.paragon * 2, hp: p.career.endgame.paragon * 5 });
   add(alchemyBonuses());
   add(discoveryBonuses());
+  add(prestigeBonuses());
   return b;
 }
 
