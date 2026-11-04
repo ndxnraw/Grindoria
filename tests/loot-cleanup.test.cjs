@@ -34,17 +34,27 @@ test('expiry survives save, travel and reload; legacy loot gets one finite lifet
   assert(run('Number.isFinite(migrated[0].expiresAt)'));assert.equal(run('again[0].expiresAt'),run('migrated[0].expiresAt'));
 });
 
-test('ordinary gear drops are 12 percent, elites 45 percent, while rare enemies and bosses retain rewards', () => {
+test('gear drops are 6 percent, elites 20 percent, rares 60 percent and bosses retain guaranteed rewards', () => {
   const { run } = createGame();
-  for(const [variant,chance] of [['normal',.12],['elite',.45]]){
+  for(const [variant,chance] of [['normal',.06],['elite',.2],['rare',.6]]){
     run('drops.length=0;var sample={type:"wolf",variant:"'+variant+'",level:1,x:400,y:400};');
     run('rand=()=>'+chance+';dropFarmEquipment(sample);');assert.equal(run('drops.length'),0);
     run('rand=()=>'+(chance-.00001)+';dropFarmEquipment(sample);');assert.equal(run('drops.length'),1);
   }
-  run('rand=()=>.99;dropFarmEquipment({...sample,variant:"rare"});dropFarmEquipment({...sample,type:"boss"});');assert.equal(run('drops.length'),3);
+  run('rand=()=>.99;dropFarmEquipment({...sample,variant:"rare"});dropFarmEquipment({...sample,type:"boss"});');assert.equal(run('drops.length'),2);
 });
 
 test('expired loot is pruned from inactive map snapshots and stored temple loot',()=>{
   const {run}=createGame();run('p.worldStates.desert={mobs:[],drops:[{kind:"gold",count:2,x:400,y:400,expiresAt:1}]};p.career.normalTemple={drops:[{kind:"gear",item:{slot:"weapon"},expiresAt:1}]};save();');
   assert.equal(run('p.worldStates.desert.drops.length'),0);assert.equal(run('p.career.normalTemple.drops.length'),0);
+});
+
+test('Metin guards use their own two-percent gear chance rather than ordinary or rare monster odds',()=>{
+ const {run}=createGame();run('running=true;p.level=40;var guard={type:"wolf",skin:"wolf",variant:"rare",level:40,metinParentId:"test:stone",x:400,y:1400};');
+ run('rand=()=>.02;dropFarmEquipment(guard);dropCatalogLoot(guard);');assert.equal(run('drops.filter(d=>d.kind==="gear").length'),0);
+ run('rand=()=>.01999;dropFarmEquipment(guard);');assert.equal(run('drops.filter(d=>d.kind==="gear").length'),1);
+ run('drops.length=0;p.level=50;rand=()=>0;dropFarmEquipment(guard);');assert.equal(run('drops.length'),0);
+});
+test('destroying a Metin does not multiply its gear reward through defeated summoned guards',()=>{
+ const {run}=createGame();run('running=true;loadMap("suterland",true);p.level=35;var stone=mobs.find(m=>m.level===35);p.x=stone.x-60;p.y=stone.y;rand=()=>.03;spawnMetinGuards(stone);var guards=mobs.filter(m=>m.metinParentId===stone.spawnId);drops.length=0;hit(stone,1e9);');assert(run('guards.every(m=>m.hp===0)'));assert.equal(run('drops.filter(d=>d.kind==="gear").length'),1);run('hit(stone,1e9);');assert.equal(run('drops.filter(d=>d.kind==="gear").length'),1);
 });

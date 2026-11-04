@@ -31,7 +31,7 @@ Bežný skupinový slot pri prvom vytvorení a po každom skutočnom respawne m�
 
 Každá oblasť má aj jeden samostatný bod vzácnej hliadky. Hliadka sa obnovuje po 180 sekundách a vyberá vzácny variant s 15 %, elitný s 35 %, inak bežný. Kamene sa obnovujú po 18 sekundách, boss po 40 sekundách. Časovače bežia v aktívnom čase mapy, rovnako ako v predchádzajúcej verzii.
 
-Primeraná bežná príšera má **12 %** šancu na výbavu, elita **45 %**. Vzácny variant a boss výbavu zaručia; od 0.16.0 sa rarita samostatne vyberá podľa zdroja. Tabuľky a úrovňové hranice sú v [RARITIES.md](RARITIES.md). Primeraná elita pridá rudu a esenciu, primeraný vzácny nepriateľ aj prach, knihu a ďalšiu rudu. Bossovia a vzácne príšery dopĺňajú aj plášte.
+Primeraná bežná príšera má **6 %** šancu na výbavu, elita **20 %**, vzácny variant **60 %** a privolaný obranca Metinu **2 %**. Boss výbavu zaručí; od 0.16.0 sa rarita samostatne vyberá podľa zdroja. Tabuľky a úrovňové hranice sú v [RARITIES.md](RARITIES.md). Primeraná elita pridá rudu a esenciu, primeraný vzácny nepriateľ aj prach, knihu a ďalšiu rudu. Bossovia a vzácne príšery dopĺňajú aj plášte.
 
 Všetky EXP odmeny stále používajú rozdiel úrovní a percentuálne limity z [PROGRESSION.md](PROGRESSION.md). Ani vzácny slabý cieľ nemôže obísť nulovú EXP odmenu alebo neobmedzene vytvárať rozvojové materiály.
 

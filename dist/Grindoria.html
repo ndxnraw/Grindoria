@@ -229,7 +229,7 @@ body.started{background:#10140f;overflow:hidden}body.started>header,body.started
 .game-window .item-tooltip .stat-same,.game-window .item-tooltip .stat-same b{color:#aaa796!important}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Schopnosti <kbd>4</kbd></button><button id="journal">Úlohy <kbd>N</kbd></button><button id="help">Pomoc <kbd>H</kbd></button><button id="desktop-updates" hidden>Aktualizácie</button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.34.0</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Schopnosti <kbd>4</kbd></button><button id="journal">Úlohy <kbd>N</kbd></button><button id="help">Pomoc <kbd>H</kbd></button><button id="desktop-updates" hidden>Aktualizácie</button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.34.1</b></span></header>
 <main><div class="world-title"><div><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Divoký vlk · Strážca pralesa</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
 <section id="game-shell" class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb kliknutím na zem, WASD alebo šípkami, výber cieľa kliknutím, nasledovanie a útok druhým klikom na rovnaký cieľ, smerový útok medzerníkom, schopnosti 1 až 6, liečenie 7, korisť ľavým kliknutím alebo Y v okolí, zlato a zásoby automaticky."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
 <div class="hud player"><div id="portrait" class="portrait">侍</div><div><div class="player-name"><b id="playername">Pútnik</b><small id="playerclass" hidden>Bojovník</small> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 154 skúseností</small></div></div>
@@ -646,7 +646,7 @@ const METIN_GUARDS = [
   { max: 105, skin: 'demon', name: 'Démonický obranca' }
 ];
 
-for(const type of Object.values(METIN_TYPES))type.interval=Math.round(type.interval*.55*100)/100;
+for(const type of Object.values(METIN_TYPES))type.interval=Math.round(type.interval*.495*100)/100;
 
 
 // src/js/data/battle.js
@@ -832,7 +832,7 @@ for(const [key,d]of Object.entries(ICONIC_ITEMS))CRAFT_RECIPES['iconic-'+key]={n
 // Content registries contain definitions, never mutable item instances.
 const LOOT_POOLS=Object.create(null);
 function registerLootPool(id,pool){if(Object.hasOwn(LOOT_POOLS,id)||!pool||!Array.isArray(pool.catalog))throw Error('Neplatný loot pool.');for(const e of pool.catalog)if(!ITEM_DEFINITIONS[e.definitionId]||!Number.isFinite(e.chance)||e.chance<0||e.chance>1)throw Error('Neplatný drop.');LOOT_POOLS[id]=pool;}
-const ENEMY_LOOT_DEFAULTS={gear:{normal:.12,elite:.45,rare:1,boss:1},potionChance:.25,gold:{boss:120,min:7,range:7},capes:{boss:3,rare:2,eliteChance:.25,normalChance:.02}};
+const ENEMY_LOOT_DEFAULTS={gear:{normal:.06,elite:.2,rare:.6,boss:1,guard:.02},potionChance:.25,gold:{boss:120,min:7,range:7},capes:{boss:3,rare:2,eliteChance:.25,normalChance:.02}};
 function enemyLootDefaults(){return JSON.parse(JSON.stringify(ENEMY_LOOT_DEFAULTS));}
 for(const skin of ['wolf','scorpion','yeti','demon'])registerLootPool('enemy:'+skin,{...enemyLootDefaults(),catalog:[]});
 for(const id of Object.keys(MAPS))registerLootPool('boss:'+id,{...enemyLootDefaults(),catalog:[]});
@@ -2778,7 +2778,7 @@ function farmBonusLoot(m) {
 function dropFarmEquipment(m) {
   if(!rewardEligible(m))return;
   const rare = m.variant === 'rare', elite = m.variant === 'elite';
-  const chance=m.type==='stone'?1:enemyLootPool(m).gear[m.type==='boss'?'boss':rare?'rare':elite?'elite':'normal'];
+  const chance=m.type==='stone'?1:enemyLootPool(m).gear[m.metinParentId?'guard':m.type==='boss'?'boss':rare?'rare':elite?'elite':'normal'];
   if (chance>=1 || rand() < chance) return spawnGroundDrop({ kind: 'gear', item: makeItem(false, m) }, m);
 }
 

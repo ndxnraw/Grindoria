@@ -285,7 +285,7 @@ function farmBonusLoot(m) {
 function dropFarmEquipment(m) {
   if(!rewardEligible(m))return;
   const rare = m.variant === 'rare', elite = m.variant === 'elite';
-  const chance=m.type==='stone'?1:enemyLootPool(m).gear[m.type==='boss'?'boss':rare?'rare':elite?'elite':'normal'];
+  const chance=m.type==='stone'?1:enemyLootPool(m).gear[m.metinParentId?'guard':m.type==='boss'?'boss':rare?'rare':elite?'elite':'normal'];
   if (chance>=1 || rand() < chance) return spawnGroundDrop({ kind: 'gear', item: makeItem(false, m) }, m);
 }
 

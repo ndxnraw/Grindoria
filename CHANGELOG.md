@@ -10,6 +10,16 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.34.1] - 2026-11-05
+
+### Added
+
+### Changed
+- Vlny obrancov Metinov majú približne o 10 % kratší interval, s pôvodnou veľkosťou a limitmi.
+- Šanca na výbavu z príšer: bežná 6 %, elita 20 %, vzácna 60 %, privolaný obranca Metinu 2 %. Bossovia zostávajú zaručeným zdrojom; dropy samotných Metinov, materiálov, meny a rarity zostávajú zachované.
+
+### Fixed
+
 ## [0.34.0] - 2026-11-05
 
 ### Added
@@ -632,7 +642,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.34.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.34.1...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -671,3 +681,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.33.0]: https://github.com/ndxnraw/Grindoria/compare/v0.32.0...v0.33.0
 [0.33.1]: https://github.com/ndxnraw/Grindoria/compare/v0.33.0...v0.33.1
 [0.34.0]: https://github.com/ndxnraw/Grindoria/compare/v0.33.1...v0.34.0
+[0.34.1]: https://github.com/ndxnraw/Grindoria/compare/v0.34.0...v0.34.1

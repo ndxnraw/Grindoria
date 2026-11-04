@@ -19,4 +19,4 @@ const METIN_GUARDS = [
   { max: 105, skin: 'demon', name: 'Démonický obranca' }
 ];
 
-for(const type of Object.values(METIN_TYPES))type.interval=Math.round(type.interval*.55*100)/100;
+for(const type of Object.values(METIN_TYPES))type.interval=Math.round(type.interval*.495*100)/100;

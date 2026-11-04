@@ -56,7 +56,7 @@ run('p.level=99;enemy.level=1;before=drops.length;dropCatalogLoot(enemy);');asse
 test('retired item catalog cannot be opened from overview',()=>{const {run,elements}=createGame();run('running=true;careerPanel();');assert.equal(run('careerPanel("items")'),false);assert(!elements.get('modalcontent').innerHTML.includes('data-career-tab="items"'));assert.equal(run('typeof itemCatalogPanel'),'undefined');});
 
 test('each enemy pool can tune its gear odds without changing another species',()=>{
-const {run}=createGame();run('LOOT_POOLS["enemy:wolf"].gear.normal=0;');assert.equal(run('LOOT_POOLS["enemy:scorpion"].gear.normal'),.12);
+const {run}=createGame();run('LOOT_POOLS["enemy:wolf"].gear.normal=0;');assert.equal(run('LOOT_POOLS["enemy:scorpion"].gear.normal'),.06);
 run('rand=()=>.001;var before=drops.length;dropFarmEquipment({type:"wolf",skin:"wolf",level:1,x:p.x,y:p.y});');assert.equal(run('drops.length'),run('before'));
 });
 test('canonical corrupted imports fail atomically while name-resolved copies get disjoint item identities',()=>{

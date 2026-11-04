@@ -39,7 +39,7 @@ Migrácia bežných máp zachová mŕtve sloty, zostávajúci respawn, pomer HP,
 
 Obyčajná generovaná výbava má požadovaný level zdroja, najviac 99. Už sa nezaokrúhľuje na päťlevelové pásma. Pomenované zbrane majú vlastné definované požiadavky; úloha Prvý strážca vždy dáva Epic alebo lepší predmet Lv.8. Rovnaká úroveň zdroja dáva rovnaký základ výbavy bez ohľadu na mapu.
 
-Šanca výbavy z primeraného cieľa: bežný 12 %, elita 45 %, vzácny a boss 100 %. Bossovia nedávajú Common; Legendary je dostupná od zdroja Lv.50 a Mythic od Lv.75. Presné rozdelenie je v [RARITIES.md](RARITIES.md). Neprimerane slabé bežné ciele neposkytujú výbavu, liečivé elixíry ani progresné materiály; biologické vzorky a kľúče si zachovávajú svoje výnimky.
+Šanca výbavy z primeraného cieľa: bežný 6 %, elita 20 %, vzácny 60 %, privolaný obranca Metinu 2 %, boss 100 %. Bossovia nedávajú Common; Legendary je dostupná od zdroja Lv.50 a Mythic od Lv.75. Presné rozdelenie je v [RARITIES.md](RARITIES.md). Neprimerane slabé bežné ciele neposkytujú výbavu, liečivé elixíry ani progresné materiály; biologické vzorky a kľúče si zachovávajú svoje výnimky.
 
 Nová zbraň +2 poskytuje začiatok bez preskočenia celej kováčskej krivky. Starý pôvodný štartovací kus +9 sa jednorazovo zmení na +2, zachová identitu aj povolanie. Ostatné vlastnené predmety sa nevyhadzujú ani neprehadzujú.
 

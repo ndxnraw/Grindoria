@@ -6,14 +6,14 @@ Grindoria má osem pôvodných vektorových modelov Metinov: prasknutý obelisk,
 
 | Typ | Úrovne v Šuterlande | Obtiažnosť | Obrancovia vo vlne | Interval |
 | --- | --- | --- | ---: | ---: |
-| Metin praskliny | 1–9 | Ľahký | 2 | 2,64 s |
-| Metin šeliem | 10–19 | Ľahký | 2 | 2,42 s |
-| Metin púšte | 20–34 | Stredný | 3 | 2,2 s |
-| Metin mrazu | 35–49 | Stredný | 3 | 1,98 s |
-| Metin plameňa | 50–64 | Ťažký | 4 | 1,76 s |
-| Metin búrky | 65–79 | Ťažký | 4 | 1,6 s |
-| Metin prázdnoty | 80–94 | Veľmi ťažký | 5 | 1,43 s |
-| Metin skazy | 95–99 | Legendárny | 5 | 1,27 s |
+| Metin praskliny | 1–9 | Ľahký | 2 | 2,38 s |
+| Metin šeliem | 10–19 | Ľahký | 2 | 2,18 s |
+| Metin púšte | 20–34 | Stredný | 3 | 1,98 s |
+| Metin mrazu | 35–49 | Stredný | 3 | 1,78 s |
+| Metin plameňa | 50–64 | Ťažký | 4 | 1,58 s |
+| Metin búrky | 65–79 | Ťažký | 4 | 1,44 s |
+| Metin prázdnoty | 80–94 | Veľmi ťažký | 5 | 1,29 s |
+| Metin skazy | 95–99 | Legendárny | 5 | 1,14 s |
 
 Štyri pôvodné bojové mapy si ponechávajú osem kameňov na mapu. Údolie používa prasklinu a šelmy, púšť pieskový typ a šelmy, hory mráz a búrku, chrám plameň a prázdnotu. Ich úrovne naďalej vychádzajú z miestnej oblasti. Rozsahy v tabuľke určujú rozdelenie typov v Šuterlande, neobmedzujú miestne varianty na ostatných mapách.
 
@@ -98,3 +98,5 @@ Od 0.16.0 stĺpec prémiovej tabuľky určuje miešanie šiestich rarít, nie v�
 Primeraný Metin od Lv.35 má navyše 8 % šancu na kameň duše pre štúdium Veľmajstra. Relikvie už nepadajú.
 
 Od 0.34.0 sú Metiny približne 2,5× až 3,1× odolnejšie než vo verzii 0.33.1. Napríklad Lv.1: 964 HP, Lv.40: 26 903 HP, Lv.99: 260 420 HP. Pancier, odolnosti a dropy sa nemenia. `METIN_RULES.schema = 3` pri načítaní zachová percento zostávajúceho života, smrť, čas obnovy aj generáciu obrancov; prepočet sa neopakuje. Platí aj pre vzácne udalostné Metiny s násobkom 2,4× a pre škálované trhliny. Atlas je v P, cestovanie sa otvára aj Tab.
+
+Od 0.34.1 sú intervaly vĺn približne o 10 % kratšie. Prvá vlna zostáva po 0,1 s; limit 8 živých obrancov na kameň a 60 na mapu sa nemení. Obranca má 2 % šancu na výbavu, bez doplnkových katalógových zbraní. Samotné Metiny majú pôvodné šance na výbavu, materiály a knihy.

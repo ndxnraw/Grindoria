@@ -149,3 +149,8 @@ test('the Atlas and travel menu expose Šuterland and every type-specific loot c
   assert.equal(run('metinPercent(.025)'), '2,5 %');
   for(const name of ['Metin praskliny','Metin skazy','Kamene vylepšenia','Yang','Kováčsky prach'])assert(html.includes(name));
 });
+
+test('all Metin types summon their next wave on the slightly shorter interval without changing wave size',()=>{
+ const {run}=createGame();run('running=true;loadMap("suterland",true);');
+ for(const type of Object.keys(run('METIN_TYPES'))){run(`loadMap("suterland",true);var stone=mobs.find(m=>m.metinType==='${type}'),spec=METIN_TYPES['${type}'];mobs.length=0;mobs.push(stone);p.x=stone.x-60;p.y=stone.y;registerMetinAttack(stone);updateMetins(.1,false);`);assert.equal(run('stone.metinGuardSerial'),run('spec.wave'));run('mobs.filter(m=>m.metinParentId).forEach(m=>{m.hp=0;m.dead=0;});updateMetins(spec.interval-.01,false);');assert.equal(run('stone.metinGuardSerial'),run('spec.wave'));run('updateMetins(.02,false);');assert.equal(run('stone.metinGuardSerial'),run('spec.wave*2'));assert(run('mobs.filter(m=>m.metinParentId&&m.hp>0).length<=METIN_RULES.maxGuards'));}
+});
