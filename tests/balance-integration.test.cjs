@@ -58,7 +58,7 @@ test('quest reward level is independent of the claim map and crafting previews u
 });
 test('real combat cooldowns persist across sessions and combat items cannot heal a paused fight',()=>{
  const g=createGame();g.run('running=true;p.level=35;loadMap("temple",true);p.hp=maxHP();p.mp=maxMP();var stone=mobs.find(m=>m.type==="stone");p.x=stone.x-80;p.y=stone.y;target=stone;castSkill(0);var hp=stone.hp;inventory();p.hp=1;var count=p.potions;');
- assert(!g.run('drinkPotion(true)'));assert.equal(g.run('p.potions'),g.run('count'));
+ assert.equal(g.run('paused'),false);g.run('paused=true;');assert(!g.run('drinkPotion(true)'));assert.equal(g.run('p.potions'),g.run('count'));
  g.run('returnToCharacters();playCharacter();');assert.equal(g.run('spellCD[0]'),7);assert.equal(g.run('mobs.find(m=>m.spawnId===stone.spawnId).hp'),g.run('hp'));
  g.run('closeModal();');assert(g.run('drinkPotion()'));assert(g.run('p.hp>65'));
 });

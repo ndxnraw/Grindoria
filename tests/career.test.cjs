@@ -166,7 +166,7 @@ test('every progression panel opens and the entire career persists in the save',
   const { run, elements, saved } = createGame();
   run('running=true;');
   for (const tab of ['overview', 'training', 'skills', 'biology', 'forge', 'alchemy', 'collection', 'specialization', 'endgame']) {
-    run(`careerPanel('${tab}');`); assert.equal(elements.get('modal').hidden, false); assert.match(elements.get('modalcontent').innerHTML, /Progresia/);
+    run(`careerPanel('${tab}');`); assert.equal(elements.get('modal').hidden, false); assert.equal(run('gameWindows.has("career:'+tab+'")'),true);assert.equal(run('paused'),false);
   }
   run('p.career.materials.books=8;p.career.alchemy.equipped.ruby=2;p.career.biology.stage=1;save();');
   const reload = createGame(readSavedProfile(saved));

@@ -2,9 +2,9 @@
 
 ## Pohyb a zameranie
 
-WASD a šípky ovládajú pohyb. Klik do voľného priestoru zruší označenie; neútočí ani nevytvára bod presunu. Bez cieľa sa orientácia a čelný výsek útoku priebežne riadia kurzorom. Základný útok zblízka navyše pokrýva kruh 62 jednotiek okolo postavy; do 95 zostáva čelný výsek. Základný šíp má pri dopade okolie 65 jednotiek s 65 % poškodenia pre vedľajšie ciele. Jeden útok nezasiahne ten istý cieľ dvakrát. Medzerník opakuje základný útok; úspešný zásah označí živý cieľ bez zapnutia nasledovania.
+WASD a šípky ovládajú pohyb. Klik do voľného priestoru zruší označenie a začne chôdzu na kliknuté miesto; neútočí. WASD, šípky alebo Esc túto chôdzu zrušia. Bez cieľa sa orientácia a čelný výsek útoku priebežne riadia kurzorom. Základný útok zblízka navyše pokrýva kruh 62 jednotiek okolo postavy; do 95 zostáva čelný výsek. Základný šíp má pri dopade okolie 65 jednotiek s 65 % poškodenia pre vedľajšie ciele. Jeden útok nezasiahne ten istý cieľ dvakrát. Medzerník opakuje základný útok; úspešný zásah označí živý cieľ bez zapnutia nasledovania.
 
-Klik na živého nepriateľa alebo Metin uloží jeho referenciu a otvorí údaje. Druhý klik na ten istý cieľ zapne nasledovanie a automatický útok, bez časového limitu dvojkliku. Postava sleduje aktuálnu polohu, zastaví vo vzdialenosti 76 jednotiek (luk 420) a útočí v dosahu 95 (luk 500). Prsteň aj panel so zdravím označujú cieľ. WASD, šípky, Esc, smrť cieľa, jeho odstránenie, zmena mapy alebo strata zamerania okna zastavia nasledovanie. Respawn rovnakého objektu ho znovu neoznačí. V otvorenom paneli je simulácia pozastavená.
+Klik na živého nepriateľa alebo Metin uloží jeho referenciu a otvorí údaje. Druhý klik na ten istý cieľ zapne nasledovanie a automatický útok, bez časového limitu dvojkliku. Postava sleduje aktuálnu polohu, zastaví vo vzdialenosti 76 jednotiek (luk 420) a útočí v dosahu 95 (luk 500). Prsteň aj panel so zdravím označujú cieľ. WASD, šípky, Esc, smrť cieľa, jeho odstránenie, zmena mapy alebo strata zamerania okna zastavia nasledovanie. Respawn rovnakého objektu ho znovu neoznačí. Otvorené vrstvy nepozastavia simuláciu.
 
 Klik na korisť má prednosť pred bojom. Zlato a zásoby sa automaticky zbierajú, Y berie dostupnú korisť do 180 jednotiek bez kurzora. F otvorí obchod, M cestovanie; pohyb kliknutím na obchodníka sa nepoužíva.
 
@@ -150,7 +150,7 @@ Bojový rytmus potrebuje tri skutočné základné zásahy do rovnakého cieľa,
 
 ## Animácie, ukladanie a overenie
 
-Každá zo 48 aktivácií vykresľuje vlastný znak školy a slotu spolu s účinkom útoku, podporou či strelou. Mana sa odpočíta iba pri úspešnej aktivácii, cooldown klesá v aktívnej simulácii a stupeň schopnosti ho skracuje podľa existujúcej progresie. K otvorí knihu s účelmi, nákladmi a pasívnym bonusom; C bojový manuál a aktuálne odolnosti hráča.
+Každá zo 48 aktivácií vykresľuje vlastný znak školy a slotu spolu s účinkom útoku, podporou či strelou. Mana sa odpočíta iba pri úspešnej aktivácii, cooldown klesá v aktívnej simulácii a stupeň schopnosti ho skracuje podľa existujúcej progresie. V otvorí knihu s účelmi, nákladmi a pasívnym bonusom; jej tlačidlo otvorí bojový manuál a odolnosti. C patrí Postave a K automatickému boju.
 
 Uložené vybavenie a progres ostávajú kompatibilné. Súbežné poškodenia sa pri snímkovaní hlboko kopírujú, aby neaktívna mapa nezdieľala časovače s aktívnou. Cieľ, kombo, rozletené strely a animácie sa neukladajú.
 
@@ -168,6 +168,6 @@ Autospell používa existujúce castSkill, skutočné cooldowny, dosah a cenu ma
 
 Pred začatím hry, pri pauze, smrti, v bezpečnej zóne, pri strate zamerania okna alebo skrytom tabe asistencia nič nové nezosiela. Po návrate do aktívneho okna pokračuje. Esc pri zavretom paneli zruší cieľ aj oba prepínače a uloží vypnutý stav. Esc v natívnom fullscreene navyše ukončí celú obrazovku. Pri browserovom fullscreene môže prvý Esc spracovať sám prehliadač.
 
-Hotbar po použití schopnosti, elixíru či plášťa vráti fokus Canvasu bez posunu stránky. Medzerník počas hry funguje aj pri zameranom tlačidle; bežné písanie v textovom poli a klávesy dialógu pri pauze zostávajú natívne.
+Hotbar po použití schopnosti, elixíru či plášťa vráti fokus Canvasu bez posunu stránky. Medzerník v hernom svete opakuje útok; pri práci vo vrstve neútočí. Písanie v textovom poli a Ctrl/Meta/Alt kombinácie zostávajú natívne.
 
-Autoelixíry pod 45 % HP spotrebujú jeden elixír a doplnia najviac 65 HP. Spoločný cooldown 4 sekundy platí pre E, hotbar, inventár aj automatiku a ukladá sa s postavou. Automatika čaká pri pauze, neaktívnom okne a v bezpečnej zóne; neoživuje. Každý panel sa zatvára aj primárnym kliknutím na pozadie mimo jeho karty.
+Autoelixíry pod 45 % HP spotrebujú jeden elixír a doplnia 65 HP alebo 25 % maxima, podľa vyššej hodnoty. Spoločný cooldown 4 sekundy platí pre 7 / F7, hotbar, inventár aj automatiku a ukladá sa s postavou. Automatika čaká pri pauze, neaktívnom okne a v bezpečnej zóne; neoživuje. × alebo skratka zatvorí konkrétnu vrstvu; Esc vrchnú. Klik medzi oknami ovláda svet.

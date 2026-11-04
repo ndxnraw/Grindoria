@@ -44,7 +44,7 @@ Korisť padá fyzicky pri bossovi. Plný batoh ju nepredá ani nezmaže. Pri ná
 
 ## Stav a overenie
 
-`p.career.dungeons` obsahuje schému, sériu, počty dokončení, pity a aktuálnu výpravu. `worldStates.dungeon` uchováva nepriateľov, HP, fázy a plánovaný útok. Výprava uchováva čas a aktívne polia. Panely pozastavia všetky tieto časovače. Načítanie obnoví aj mŕtve jednotky bez respawnu. Postavy majú oddelené výpravy; starým profilom sa doplní prázdny stav. Pôvodné trhliny zostávajú kompatibilné.
+`p.career.dungeons` obsahuje schému, sériu, počty dokončení, pity a aktuálnu výpravu. `worldStates.dungeon` uchováva nepriateľov, HP, fázy a plánovaný útok. Výprava uchováva čas a aktívne polia. Časovače pokračujú aj pri otvorených vrstvách rozhrania. Načítanie obnoví aj mŕtve jednotky bez respawnu. Postavy majú oddelené výpravy; starým profilom sa doplní prázdny stav. Pôvodné trhliny zostávajú kompatibilné.
 
 Validácia importu kontroluje lokalitu, obtiažnosť, populáciu, identitu výpravy, jediného bossa, tri pečate, odomknutie, stav odmeny, geometriu útokov, unikáty a pity. Dungeony zdieľajú pôvodný pohyb nepriateľov, boj, odolnosti, zásoby, korisť, výbavu, renderer a uloženie; nepridávajú druhý inventár ani výpočet poškodenia.
 

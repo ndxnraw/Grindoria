@@ -10,7 +10,7 @@
 - Korisť ďalej než 360 jednotiek má farebnú značku rarity. V blízkosti alebo pod kurzorom sa zobrazí jej vlastná ikona. Tooltipy, názvy, zbieranie, dosahy a expirácie zostávajú rovnaké.
 - Expirácia veľkého množstva dropov a odobratie automatických zásob používajú lineárnu kompakciu v pôvodnom poradí.
 - Výber najbližšieho cieľa a zásah kurzorom používajú jeden priechod bez triedenia. Zhody vzdialeností aj prekrývanie zachovávajú pôvodné poradie.
-- Statický HUD úloh sa neprestavuje opakovane; rovnaké maximá HP/MP sa v jednom obnovení nevypočítavajú viackrát. Herné menu vykresľuje pozadie najviac 10-krát za sekundu; aktívna hra každý snímok.
+- Statický HUD úloh sa neprestavuje opakovane; rovnaké maximá HP/MP sa v jednom obnovení nevypočítavajú viackrát. Výber postavy a skutočne pozastavená simulácia vykresľujú pozadie najviac 10-krát za sekundu; aktívna hra vrátane otvorených vrstiev každý snímok.
 
 Nastavenia výkonu sú v systems/performance.js. Cache a plánovače sú prechodné; neukladajú sa do postáv ani mapových snímok a nevyžadujú migráciu. Mapové načítanie vyčistí AI cache. Mechanické limity populácie, loot, odmeny, šance, cooldowny, AI aggro a uložený progres sa nemenia.
 

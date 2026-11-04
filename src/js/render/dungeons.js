@@ -28,7 +28,7 @@ function drawDungeonEnemy(m){
   else{for(const side of [-1,1])polygon([[side*15,-20],[side*80,-100],[side*63,-25],[side*25,0]],'#68527f',c);ellipse(0,-55,36,55,'#352a4e');ellipse(0,-80,26,17,c);ellipse(0,-80,10,14,'#f5e3bb');ellipse(0,-80,4,11,'#261a36');for(let i=0;i<3;i++){const a=clock*.7+i*Math.PI*2/3;ellipse(Math.cos(a)*60,-80+Math.sin(a)*24,5,7,c);}}
   if(m.attackPlan){ctx.strokeStyle='#fff3c9';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,-65,48+Math.sin(clock*16)*3,0,Math.PI*2);ctx.stroke();}ctx.restore();
  }
- text(m.name,x,y-(m.dungeonSeal?96:178),d.color,m.dungeonSeal?11:16);
+ if(!keys.Alt)text(m.name,x,y-(m.dungeonSeal?96:178),d.color,m.dungeonSeal?11:16);
  ctx.fillStyle='#101a22';ctx.fillRect(x-45,y-(m.dungeonSeal?88:165),90,5);ctx.fillStyle=d.color;ctx.fillRect(x-45,y-(m.dungeonSeal?88:165),90*m.hp/m.max,5);
  if(m.dungeonBoss&&m.attackPlan)text('ÚTOK ZA '+Math.max(0,m.attackPlan.delay-m.attackPlan.age).toFixed(1)+' s',x,y-199,'#ffe4b2',12);
  if(m.dungeonBoss&&!dungeonUnlocked())text('ZNIČ STRÁŽCOV A 3 PEČATE',x,y-145,'#f6dba9',10);

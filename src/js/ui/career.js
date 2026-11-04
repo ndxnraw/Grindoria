@@ -16,7 +16,7 @@ function careerOverview() {
 }
 
 function careerTraining() {
-  return `<p>Úroveň: +3 body vo Výbave (I). Tréning: zlato a pečate; pečať za každého 5. primeraného nepriateľa.</p>${Object.entries({ strength: 'Sila', vitality: 'Vitalita', dexterity: 'Obratnosť', intelligence: 'Inteligencia' }).map(([id, name]) => {
+  return `<p>Úroveň: +3 body v Postave (C). Tréning: zlato a pečate; pečať za každého 5. primeraného nepriateľa.</p>${Object.entries({ strength: 'Sila', vitality: 'Vitalita', dexterity: 'Obratnosť', intelligence: 'Inteligencia' }).map(([id, name]) => {
     const rank = p.career.training[id];
     return `<div class="career-card"><h3>${name} · ${p[id]}</h3><p>Tréning ${rank} / ${PROGRESSION.maxTraining} · +1 bod za tréning.<br></p>${costRequirements(trainingCost(id))}<button class="primary" data-action="train" data-id="${id}" ${rank >= PROGRESSION.maxTraining || !canPayRecipe(trainingCost(id)) ? 'disabled' : ''}>Trénovať ${name.toLowerCase()}</button></div>`;
   }).join('')}`;
@@ -71,16 +71,16 @@ function careerPanel(tab = careerTab) {
     collection: ['Relikvie', careerCollection], specialization: ['Špecializácia', careerSpecialization],
     events: ['Udalosti', worldEventsPanel], prestige: ['Prestíž', prestigePanel], dungeons: ['Dungeony', dungeonContent], endgame: ['Endgame', careerEndgame]
   };
-  if(tab!==careerTab)craftingFilter='all';
-  careerTab = tabs[tab] ? tab : 'overview';
-  modal(`<span class="eyebrow">PROGRESIA · P</span><h2>Progresia</h2><nav class="career-tabs" aria-label="Systémy progresie">${Object.entries(tabs).map(([id, [name]]) => `<button data-career-tab="${id}" aria-pressed="${careerTab === id}">${name}</button>`).join('')}</nav><div class="career-body">${careerTab==='alchemy'?'<button id="alchemy-market">Obchod alchymistu</button>':''}${tabs[careerTab][1]()}</div><p id="career-message" role="status"></p>`,{key:'career:'+careerTab});
-  document.querySelectorAll('[data-career-tab]').forEach(button => button.onclick = () => careerPanel(button.dataset.careerTab));
-  if($('craft-filter')) $('craft-filter').onchange=event=>{craftingFilter=event.target.value;careerPanel(careerTab);};
-  if(careerTab==='endgame')$('open-prestige').onclick=()=>careerPanel('prestige');
-  if(careerTab==='alchemy')$('alchemy-market').onclick=()=>marketPanel('alchemist');
-  document.querySelectorAll('[data-prestige-trial]').forEach(button=>button.onclick=()=>{if(!enterPrestigeTrial(button.dataset.prestigeTrial))toast('Výzva nie je dostupná. Skontroluj prestíž, vstupné a boj.');});
+  craftingFilter=gameWindows.get('career:'+tab)?.craftingFilter||'all';
+  tab=tabs[tab]?tab:'overview';careerTab=tab;
+  modal(`<span class="eyebrow">PROGRESIA · P</span><h2>${tabs[tab][0]}</h2><details class="system-directory"><summary>Systémy progresie</summary><nav class="career-tabs" aria-label="Systémy progresie">${Object.entries(tabs).map(([id, [name]]) => `<button data-career-tab="${id}" aria-pressed="${tab === id}">${name}</button>`).join('')}</nav></details><div class="career-body">${tab==='alchemy'?'<button id="alchemy-market">Obchod alchymistu</button>':''}${tabs[tab][1]()}</div><p id="career-message" role="status"></p>`,{key:'career:'+tab,refresh:()=>careerPanel(tab)});
+  panelQueryAll('[data-career-tab]').forEach(button => button.onclick = () => careerPanel(button.dataset.careerTab));
+  if($('craft-filter')) $('craft-filter').onchange=event=>{activeGameWindow.craftingFilter=event.target.value;craftingFilter=event.target.value;careerPanel(tab);};
+  if(tab==='endgame')$('open-prestige').onclick=()=>careerPanel('prestige');
+  if(tab==='alchemy')$('alchemy-market').onclick=()=>marketPanel('alchemist');
+  panelQueryAll('[data-prestige-trial]').forEach(button=>button.onclick=()=>{if(!enterPrestigeTrial(button.dataset.prestigeTrial))toast('Výzva nie je dostupná. Skontroluj prestíž, vstupné a boj.');});
   bindDungeonActions();
-  if(careerTab==='discovery')bindDiscoveryUI();
+  if(tab==='discovery')bindDiscoveryUI();
   const actions = {
     prestigeActivate:activatePrestige,prestigePromote:promotePrestige,prestigeTrain:trainPrestige,prestigeClaim:claimPrestigeGoal,prestigeRefine:refinePrestigeAffix,
     train: id => trainAttribute(id), skill: id => upgradeSkill(id), bio: completeBiology,
@@ -88,10 +88,10 @@ function careerPanel(tab = careerTab) {
     spec: id => specialize(id), spectrain: trainSpecialization, enter: enterRift,
     claimRift: () => finishRift(true), abandon: () => finishRift(false), paragon: upgradeParagon
   };
-  document.querySelectorAll('[data-forge-option]').forEach(input=>input.onchange=()=>{(forgeOptions[input.dataset.slot]??={})[input.dataset.forgeOption]=input.checked;careerPanel('forge');});
-  document.querySelectorAll('[data-action]').forEach(button => button.onclick = () => {
+  panelQueryAll('[data-forge-option]').forEach(input=>input.onchange=()=>{(forgeOptions[input.dataset.slot]??={})[input.dataset.forgeOption]=input.checked;careerPanel('forge');});
+  panelQueryAll('[data-action]').forEach(button => button.onclick = () => {
     if (actions[button.dataset.action]?.(button.dataset.id)) {
-      updateClassHUD(); updateHUD(); careerPanel(careerTab);
+      updateClassHUD(); updateHUD(); careerPanel(tab);
       $('career-message').textContent = button.dataset.action==='enhance'?forgeResult.message:characterStore.writeError|| (button.dataset.action==='recipe'?craftingMessage:button.dataset.action==='bio'?biologyMessage:'Uložené.');
     } else if(button.dataset.action==='bio') $('career-message').textContent=biologyMessage||biologyBlockReason();
     else if(button.dataset.action==='recipe') $('career-message').textContent=craftingMessage;

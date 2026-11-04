@@ -10,10 +10,12 @@ function careerBiology(){
  }).join('')+(bio.stage>=BIOLOGY.length?'<p>Všetky výskumy dokončené.</p>':'');
 }
 function refreshBiologyPanel(){
- if(!running||$('modal').hidden||panelState.key!=='career:biology')return;
+ if(!running||!gameWindows.has('career:biology'))return;
+ withGameWindow('career:biology',()=>{
  const status=$('biology-status'),button=$('biology-submit'),reason=biologyBlockReason();
  if(status&&status.textContent!==biologyStatusText())status.textContent=biologyStatusText();
  if(button)button.disabled=!!reason;
+ });
 }
 function biologyJournalCard(){
  const bio=p.career.biology,stage=BIOLOGY[bio.stage];

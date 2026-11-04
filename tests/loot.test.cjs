@@ -29,7 +29,7 @@ test('left click collects its target while Y gathers all landed nearby items wit
   listeners.get('keydown')({ key: 'Y', repeat: false, preventDefault() {} }); assert.equal(run('p.bag.length'), 3);
   assert.equal(run('drops.length'), 2); assert(run('drops.includes(far)&&drops.includes(falling)'));
   assert.equal(run('pickNearbyGroundDrops()'), 0);
-  assert.equal(run('spellKeys[3]'), 'v'); assert.equal(run('spellCD[3]'), 0);
+  assert.equal(run('spellKeys[3]'), '4'); assert.equal(run('spellCD[3]'), 0);
 });
 
 test('full inventory, distance, pause and death leave the item on the ground without converting it to gold', () => {

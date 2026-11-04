@@ -12,7 +12,7 @@ Sólo RPG v prehliadači. Vlastník: [@ndxnraw](https://github.com/ndxnraw).
 
 [Stiahnuť Grindoria.html](https://github.com/ndxnraw/Grindoria/raw/refs/heads/main/dist/Grindoria.html) a otvoriť uložený súbor. Hra nepotrebuje server ani pripojenie. dist/index.html obsahuje rovnakú zostavu pre statický hosting.
 
-Vytvor postavu, vyber povolanie a školu. Dostaneš obyčajnú zbraň +9 pre svoju školu. Povolanie je nemenné. Každá postava má vlastný progres a inventár; predvolený limit je 8 postáv. Mená: 3–16 znakov, písmená, čísla, _ a -, prvý znak písmeno.
+Vytvor postavu, vyber povolanie a školu. Dostaneš obyčajnú zbraň +2 pre svoju školu. Povolanie je nemenné. Každá postava má vlastný progres a inventár; predvolený limit je 8 postáv. Mená: 3–16 znakov, písmená, čísla, _ a -, prvý znak písmeno.
 
 Postavy sa ukladajú automaticky. Tlačidlo Postavy uloží reláciu a otvorí výber. Export obsahuje všetky postavy. Import umožňuje pridať alebo nahradiť zoznam; pred nahradením vznikne bezpečnostná záloha. Vymazanie je nezvratné a vyžaduje celé meno. [Správa postáv](docs/CHARACTERS.md).
 
@@ -24,23 +24,24 @@ Postavy sa ukladajú automaticky. Tlačidlo Postavy uloží reláciu a otvorí v
 | SPACE | Útok; zásah označí nepriateľa |
 | Klik na nepriateľa / Metin | Označiť a zobraziť údaje |
 | Druhý klik na rovnaký cieľ | Nasledovať a automaticky útočiť |
-| Klik do prázdna | Zrušiť cieľ |
-| Q R T V U O | Schopnosti školy |
+| Klik na zem | Chôdza na miesto, zrušenie cieľa |
+| 1–6 / F1–F6 | Schopnosti školy |
 | Y / klik na korisť | Zdvihnúť výbavu a relikvie |
-| E / B | Elixír / Plášť statočnosti |
-| I / K / P | Inventár / schopnosti / progresia |
-| J / M / F | Úlohy / mapy / NPC v Meste |
-| C / ? | Bojový manuál / ovládanie |
+| 7 / F7 · 8 / F8 | Elixír · Plášť statočnosti |
+| C / I / V | Postava / inventár / schopnosti |
+| N / M / F | Úlohy / veľká mapa / blízke NPC v Meste |
+| P / K / H | Progresia / automatický boj / pomoc |
+| Alt (podržať) | Červené mená a úrovne nepriateľov |
 | F10 / ⛶ | Celá obrazovka |
-| Esc | Zavrieť panel; v hre zrušiť cieľ a automatiku |
+| Esc | Zrušiť potvrdenie / zavrieť vrchné okno; bez okien zastaviť automatiku a otvoriť menu |
 
-Cestovanie (M) je dostupné kdekoľvek mimo boja. F otvorí blízke NPC v Meste; na bojových mapách sú malé bezpečné zóny.
+Veľká mapa (M) funguje aj počas boja; cestovanie z nej je dostupné mimo boja. F otvorí blízke NPC v Meste; na bojových mapách sú malé bezpečné zóny.
 
-Zlato a zásoby sa pripíšu priamo, bez predmetu na zemi. Výbava a relikvie zostávajú na zemi do zdvihnutia alebo expirácie. Okná možno zatvoriť kliknutím mimo nich.
+Zlato a zásoby sa pripíšu priamo, bez predmetu na zemi. Výbava a relikvie zostávajú na zemi do zdvihnutia alebo expirácie. Okná sa otvárajú súčasne nad hrou a presúvajú za záhlavie cez Interact.js. − minimalizuje, × zatvorí. Hra pod nimi pokračuje. [Rozhranie](docs/UI.md).
 
 ## Začiatok a loviská
 
-Údolie má pri vstupe bežné príšery Lv.1–2 a nízke Metiny. Ďalšie loviská postupne pokrývajú levely 5–99. Základné útoky zasahujú aj blízke skupiny; obyčajná výbava padá v päťlevelových pásmach. [Vyváženie začiatku](docs/BEGINNER_BALANCE.md).
+Údolie má pri vstupe bežné príšery Lv.1–2 a nízke Metiny. Ďalšie loviská postupne pokrývajú levely 5–99. Základné útoky zasahujú aj blízke skupiny; výbava zodpovedá skutočnej úrovni nepriateľa. [Vyváženie začiatku](docs/BEGINNER_BALANCE.md).
 
 ## Herné systémy
 

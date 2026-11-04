@@ -43,8 +43,8 @@ test('successful submission charges only one sample and fee, and enforces both p
  run('p.career.eligibleKills+=10;');assert(!run('completeBiology()'));run('Date.now=()=>2000000299999;');assert(!run('completeBiology()'));run('Date.now=()=>2000000300000;');assert(run('completeBiology()'));assert.equal(run('p.career.biology.delivered'),2);
 });
 
-test('cooldown survives reload, advances offline, and remains enforceable with an open paused dialog',()=>{
- const g=biologist();g.run('completeBiology();p.career.eligibleKills+=10;careerPanel("biology");save();');assert(g.run('paused'));assert(!g.run('completeBiology()'));
+test('cooldown survives reload, advances offline, and remains enforceable with an open nonmodal window',()=>{
+ const g=biologist();g.run('completeBiology();p.career.eligibleKills+=10;careerPanel("biology");save();');assert.equal(g.run('paused'),false);assert(!g.run('completeBiology()'));
  const next=createEmptyGame({'grindoria-characters-v1':g.saved.get('grindoria-characters-v1')});next.run('Date.now=()=>2000000001000;playCharacter();');assert.equal(next.run('biologyCooldown()'),299);assert(!next.run('completeBiology()'));next.run('Date.now=()=>2000000300000;');assert(next.run('completeBiology()'));
 });
 
@@ -71,6 +71,6 @@ test('old backups migrate additively; malformed timers, sample counters and new 
 
 test('NPC panel shows objectives, exact sources, drop/pity, prices, timers and rewards; timer refresh keeps the same dialog',()=>{
  const {run,elements}=biologist();run('p.career.biology.nextDeliveryAt=Date.now()+1000;careerPanel("biology");');let html=elements.get('modalcontent').innerHTML;for(const text of ['Aktívny výskum','Koncentrovaný jed','Elitné a vzácne škorpióny','20 %','10. vhodné','500','5 min','+12 rýchlosť','biology-submit'])assert(html.includes(text),text);assert.match(html,/biology-submit[^>]+disabled/);
- run('Date.now=()=>2000000001000;refreshBiologyPanel();');assert.equal(elements.get('biology-submit').disabled,false);assert.equal(elements.get('biology-status').textContent,'Možno odovzdať.');assert.equal(elements.get('modalcontent').innerHTML,html);assert(run('paused'));
+ run('Date.now=()=>2000000001000;refreshBiologyPanel();');assert.equal(elements.get('biology-submit').disabled,false);assert.equal(elements.get('biology-status').textContent,'Možno odovzdať.');assert.equal(elements.get('modalcontent').innerHTML,html);assert.equal(run('paused'),false);
  run('closeModal();journal();');assert(elements.get('modalcontent').innerHTML.includes('Biologický výskum'));elements.get('journalBiology').onclick();assert(run('panelState.key==="career:biology"'));
 });

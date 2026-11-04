@@ -3,11 +3,11 @@ const { createGame, readSavedProfile }=require('./helpers/game.cjs');
 
 function arena(run){run('running=true;paused=false;p.x=400;p.y=1400;cam.x=p.x;cam.y=p.y;p.hp=100000;face=0;attackCD=0;castPose=0;combatAim.inside=false;resetCombatFlow();mobs.forEach(m=>{m.hp=0;m.dead=1000;m.dot=null;m.dots=[];});let foe=mobs.find(m=>m.type==="wolf");Object.assign(foe,{x:700,y:1400,homeX:700,homeY:1400,hp:10000,max:10000,skin:"wolf",resistances:{physical:0,piercing:0,fire:0,poison:0,dark:0,lightning:0,arcane:0},engaged:0,taunt:0,cd:2});');}
 
-test('empty terrain clicks cancel selection without attacking or moving',()=>{
+test('empty terrain clicks cancel selection and walk to the clicked point without attacking',()=>{
   const {run,listeners}=createGame();arena(run);run('foe.hp=0;let x=p.x,y=p.y;');
   listeners.get('game:pointerdown')({clientX:850,clientY:350,button:0});
   assert.equal(run('target'),null);assert.equal(run('attackCD'),0);assert.equal(run('effects.length'),0);
-  run('for(let i=0;i<30;i++)update(.05);');assert.equal(run('p.x'),run('x'));assert.equal(run('p.y'),run('y'));
+  run('for(let i=0;i<30;i++)update(.05);');assert(run('p.x>x'));assert(run('Math.abs(p.x-(x+250))<2'));assert.equal(run('p.y'),run('y'));
 });
 
 test('a selected moving enemy is followed at its live position and attacked repeatedly in range',()=>{

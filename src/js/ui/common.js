@@ -16,7 +16,7 @@ function modalFocusToken(){
 }
 function restoreModalFocus(token){
   if(!token)return;
-  const element=token.id?$(token.id):Array.from(document.querySelectorAll('#modalcontent button, #modalcontent input')).find(el=>token.values.every(([key,value])=>el.getAttribute(key)===value));
+  const element=token.id?$(token.id):Array.from(panelQueryAll('button, input')).find(el=>token.values.every(([key,value])=>el.getAttribute(key)===value));
   if(element&&!element.disabled)element.focus({preventScroll:true});
 }
 function setPanelFeedback(id,message){const el=$(id);if(el)el.textContent=message;}

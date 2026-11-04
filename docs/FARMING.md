@@ -53,7 +53,7 @@ Metiny majú vlastné typy, modely, obranu a dropy. Po zásahu privolávajú agr
 
 Základný princíp priťahovania príšer vychádza z [Metin2 Wiki – Bravery Cape](https://en-wiki.metin2.gameforge.com/index.php/Bravery_Cape). Číselné hodnoty nižšie sú vlastným nastavením tejto 2D adaptácie, nie tvrdením o presnom dosahu alebo časovaní originálu.
 
-- **B** alebo tlačidlo s vlajkou použije jeden kus z inventára.
+- **8 / F8** alebo tlačidlo s vlajkou použije jeden kus z inventára.
 - Dosah je **650 herných jednotiek** v kruhu okolo hráča; vizuálna vlna kopíruje tento kruh v perspektíve mapy.
 - Všetky živé pohyblivé príšery v dosahu, vrátane elít, vzácnych a bossa, získajú **18 sekúnd vynúteného prenasledovania**.
 - Príšery skutočne kráčajú k aktuálnej polohe hráča počas účinku aj za hranicou bežného prenasledovania. Plášť nie je teleport ani okamžitý zásah.

@@ -34,13 +34,9 @@ test('potions cannot bypass cooldown through inventory or reloading, and prefere
 test('sustained damage exceeds bounded potion healing and supply exhaustion stops automation',()=>{
  const {run}=createGame();arena(run);run('var now=100000;Date.now=()=>now;p.combatAssist.autoPotion=true;p.potions=2;p.hp=1;for(var i=0;i<4;i++){p.hp=1;updateAutoPotion();now+=4000;}');assert.equal(run('p.potions'),0);assert.equal(run('p.hp'),1);
 });
-test('all modal backdrops dismiss only on primary outside clicks and never attack through to the canvas',()=>{
- const {run,listeners,elements}=createGame();arena(run);
- for(const panel of ['inventory','spellbook','journal','careerPanel','travelMenu']){
-  run(panel+'();');assert.equal(run('paused'),true);const click=listeners.get('modal:click');
-  click({target:elements.get('modalcard'),button:0,preventDefault(){},stopPropagation(){}});assert.equal(run('paused'),true);
-  click({target:elements.get('modal'),button:2,preventDefault(){},stopPropagation(){}});assert.equal(run('paused'),true);
-  let stopped=false;click({target:elements.get('modal'),button:0,preventDefault(){},stopPropagation(){stopped=true}});
-  assert(stopped);assert.equal(run('paused'),false);assert.equal(elements.get('modal').hidden,true);assert.equal(run('attackCD'),0);
- }
+test('game windows coexist without pausing, while closing one preserves its neighbors',()=>{
+ const {run,elements}=createGame();arena(run);
+ for(const panel of ['inventory','spellbook','journal','careerPanel','travelMenu']){run(panel+'();');assert.equal(run('paused'),false);assert.equal(elements.get('modal').hidden,false);assert.equal(run('attackCD'),0);}
+ assert.equal(run('gameWindows.size'),5);run('closeModal();');assert.equal(run('gameWindows.size'),4);assert.equal(elements.get('modal').hidden,false);
+ run('closeAllGameWindows();');assert.equal(run('gameWindows.size'),0);assert.equal(elements.get('modal').hidden,true);assert.equal(run('paused'),false);
 });

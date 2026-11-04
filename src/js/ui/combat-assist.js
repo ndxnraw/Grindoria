@@ -5,6 +5,7 @@ function updateCombatAssistHUD() {
     button.textContent = label + ': ' + (enabled ? 'ZAP' : 'VYP');
     button.disabled = !running || paused;
   }
+  const active=Object.values(p.combatAssist||{}).some(value=>value===true);$('auto-hunt').setAttribute('aria-pressed',String(active));$('auto-hunt').title='Automatický boj · K · '+(active?'zapnutý':'vypnutý');
 }
 
 function hotbarAction(action) {

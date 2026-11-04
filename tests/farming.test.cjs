@@ -79,10 +79,10 @@ test('cape cannot be used while paused, dead, before starting or inside sanctuar
   run('save();'); const reload = createGame(readSavedProfile(saved)); assert.equal(reload.run('p.braveryCapes'), 0);
 });
 
-test('B and the action button use the same cape logic and the shop restocks finite stacks', () => {
+test('8 and the action button use the same cape logic and the shop restocks finite stacks', () => {
   const { run, listeners, elements } = createGame();
   run('running=true;p.x=400;p.y=400;');
-  listeners.get('keydown')({ key: 'b', repeat: false, target: { tagName: 'CANVAS' }, preventDefault() {} });
+  listeners.get('keydown')({ key: '8', repeat: false, target: { tagName: 'CANVAS' }, preventDefault() {} });
   assert.equal(run('p.braveryCapes'), 9);
   run('capeCooldown=0;'); elements.get('bravery').onclick(); assert.equal(run('p.braveryCapes'), 8);
   run('loadMap("town",true);p.x=NPCS.merchant.x;p.y=NPCS.merchant.y;p.gold=99;'); assert.equal(run('buyBraveryCapes()'), false); assert.equal(run('p.gold'), 99);

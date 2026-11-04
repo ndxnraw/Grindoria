@@ -54,7 +54,7 @@ function drawMetin(stone) {
   const scale=metinModelScale(stone);
   shadow(x,y,1.5*scale);ellipse(x,y,44*scale,17*scale,spec.glow+(stone.metinCombat>0?'44':'20'));
   ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);drawMetinModel(spec.model,stone.rareMetin?'#93688e':spec.color,stone.rareMetin?'#f3a4dd':spec.glow,stone.hit>0);ctx.restore();
-  text(stone.name||spec.name,x,y-135*scale,spec.glow,10);
+  if(!keys.Alt)text(stone.name||spec.name,x,y-135*scale,spec.glow,10);
 
   if(stone.hp<stone.max||Math.hypot(stone.x-p.x,stone.y-p.y)<230){
     ctx.fillStyle='#161c1d';ctx.fillRect(x-33,y-112*scale,66,5);ctx.fillStyle=spec.glow;ctx.fillRect(x-33,y-112*scale,66*stone.hp/stone.max,5);

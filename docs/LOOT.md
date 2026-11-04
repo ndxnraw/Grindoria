@@ -12,7 +12,7 @@ Od verzie 0.8.1 platia tieto pravidlá:
 
 Postava musí byť živá a hra nesmie byť pozastavená. Padajúce a vzdialené predmety zostávajú na mieste. Hromadné zbieranie postupuje od najbližších predmetov. Ak sa časť výbavy nezmestí do inventára, zostane na zemi; zbieranie pritom pokračuje pri ďalších predmetoch, ktoré sa zmestia, a pri relikviách. Výbava ani relikvie sa samotnou blízkosťou nezdvihnú. Pravé tlačidlo predmety nezbiera.
 
-Kláves **Y** je vyhradený zbieraniu; štvrtá schopnosť zostáva na **V**. Celá šestica je **Q R T V U O**. Označenie na lište, v návode a knihe schopností je zhodné.
+Kláves **Y** je vyhradený zbieraniu. Šesť schopností používa **1–6 / F1–F6**; **V** otvára ich knihu. Označenie na lište, v návode a knihe schopností je zhodné.
 
 Výbava sa vloží do mriežky, zásoby sa pripočítajú k existujúcemu zásobníku, zlato k peňaženke a relikvia do zbierky. Pri plnom inventári zostane výbava na zemi bez automatického predaja. Zbieranie neznamená automatické nasadenie. Hromadná akcia aktualizuje HUD a uloží stav iba raz za celú dávku.
 

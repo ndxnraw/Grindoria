@@ -1,6 +1,6 @@
 # Inventár a vybavenie
 
-Panel **I** pozastaví hru a otvorí tmavé okno s bronzovým rámovaním. Vlastné vektorové ikony sú vložené priamo v hre, takže fungujú aj v jedinom offline HTML. Rozhranie je inšpirované klasickými MMORPG a nepoužíva pôvodné grafické súbory Metin2.
+Panel **I** otvorí samostatnú presúvateľnú vrstvu s bronzovým rámom; svet aj ostatné otvorené panely zostanú aktívne. Atribúty a bojové hodnoty sú v okne Postava **C**. Vlastné vektorové ikony sú vložené priamo v hre, takže fungujú aj v jedinom offline HTML. Rozhranie je inšpirované klasickými MMORPG a nepoužíva pôvodné grafické súbory Metin2.
 
 ## Mriežka a ovládanie
 
@@ -12,7 +12,7 @@ Panel **I** pozastaví hru a otvorí tmavé okno s bronzovým rámovaním. Vlast
 - **Zoradiť** usporiada výbavu podľa veľkosti, vzácnosti, stupňa a názvu; zásoby podľa názvu. Ak nové rozloženie nemožno umiestniť, pôvodné ostáva zachované.
 - **Predať** prevedie predmet na zlato. **Odstrániť…** vyžaduje samostatné potvrdenie; pri zásobníku možno určiť presný počet kusov.
 
-Elixír možno vypiť aj v otvorenom inventári. Plášť uzavrie inventár a použije sa v hernom svete; rešpektuje ochranu útočiska aj obnovu. Použitie materiálu otvorí príslušnú časť progresie a samo osebe ho nespotrebuje.
+Elixír možno vypiť aj v otvorenom inventári. Plášť sa použije bez zatvorenia vrstvy; rešpektuje ochranu útočiska aj obnovu. Použitie materiálu otvorí príslušnú časť progresie a samo osebe ho nespotrebuje.
 
 ## Sloty a rozmery
 

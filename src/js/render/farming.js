@@ -32,6 +32,7 @@ function mobDraw(m) {
       ctx.fillStyle = v.color; ctx.fillRect(a.x - width / 2, barY, width * m.hp / m.max, 4);
     }
   } else drawMobBase(m);
+  if(keys.Alt)text(enemyName(m)+' · Lv.'+enemyLevel(m),a.x,a.y-(m.type==='boss'?143:m.type==='stone'?115:m.skin==='wolf'?66:98),'#ff6961',11);
   if (m.taunt > 0) text('!', a.x + 25, a.y - (m.type === 'boss' ? 90 : 48), '#ffb987', 17);
 }
 

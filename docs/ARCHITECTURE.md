@@ -40,7 +40,7 @@ Funkcie môžu medzi súbormi volať zdieľané pomenované funkcie. Načítanie
 | `ui/` | Rozhranie, obchod, výbava, úlohy a kniha schopností |
 | `render/` | Vektorové kreslenie prostredia, postáv, príšer a efektov |
 
-`core/runtime.js` používa `requestAnimationFrame` a obmedzuje krok na 50 ms. Pri otvorení herného panelu je simulácia pozastavená. Respawn sa počíta iba počas aktívnej simulácie príslušnej mapy; pri opustení mapy sa jej časovače nezrýchľujú podľa času zariadenia.
+`core/runtime.js` používa `requestAnimationFrame` a obmedzuje krok na 50 ms. Herné panely sú súčasne otvoriteľné vrstvy; simulácia pod nimi pokračuje. Respawn sa počíta iba počas aktívnej simulácie príslušnej mapy; pri opustení mapy sa jej časovače nezrýchľujú podľa času zariadenia.
 
 ## Uložený stav
 
@@ -62,7 +62,7 @@ Plášť je uložený ako stoh `p.braveryCapes`, podobne ako elixíry. Výzva na
 
 `initializeInventory()` beží po migrácii kariéry a pred prvým načítaním mapy. Sloty definuje `data/items.js`; model pracuje s pôvodným batohom a číta množstvá zásob priamo z existujúcich počítadiel. `gearLayout()` najprv overí navrhnuté rozmiestnenie, až potom sa vykoná presun či výmena. `equipmentBonuses()` agreguje všetkých desať slotov do živých výpočtov štatistík. Vlastné SVG ikony sú v `ui/item-icons.js`, rozhranie v `ui/inventory.js`. Podrobnosti: [INVENTORY.md](INVENTORY.md).
 
-Korisť z nepriateľov vytvára `spawnGroundDrop()`. Zlato a zásoby sa pripíšu okamžite cez existujúce počítadlá a malé súhrnné hlásenie. Výbavu a relikvie pridá až úspešný pickUpGroundDrop(); svet posúva ich dopad a aktualizuje náhľad. `render/loot.js` zdieľa SVG ikony inventára cez obrazovú cache. `ui/loot.js` vypočíta rozdiely voči rovnakému slotu a bezpečnú polohu tooltipu. `main.js` smeruje primárny klik na aktuálny hit test, ale Y na hromadné zbieranie v okolí postavy bez kurzora; schopnosti používajú Q R T V U O. Pozri [LOOT.md](LOOT.md).
+Korisť z nepriateľov vytvára `spawnGroundDrop()`. Zlato a zásoby sa pripíšu okamžite cez existujúce počítadlá a malé súhrnné hlásenie. Výbavu a relikvie pridá až úspešný pickUpGroundDrop(); svet posúva ich dopad a aktualizuje náhľad. `render/loot.js` zdieľa SVG ikony inventára cez obrazovú cache. `ui/loot.js` vypočíta rozdiely voči rovnakému slotu a bezpečnú polohu tooltipu. `main.js` smeruje primárny klik na aktuálny hit test, ale Y na hromadné zbieranie v okolí postavy bez kurzora; schopnosti používajú 1–6 alebo F1–F6. Pozri [LOOT.md](LOOT.md).
 
 `configureMetin()` nahradí generické kamene typovanými Metinmi. `restoreMetin()` migruje staré zdravie pomerne a ponechá časovače smrti. `updateMetins()` spravuje časy boja, vlny aj konečnú životnosť posíl; `restoreMetinGuards()` obnoví uložené posily bez nových identít. Posily neprechádzajú bežným respawnom. `metinDamage()` sa uplatní v skutočnom zásahu pred odpočtom zdravia a liečením Sury. `dropMetinLoot()` je jediný predmetový loot pool pri smrti kameňa; všeobecný materiálový drop z kariéry sa preň nepoužíva.
 
@@ -141,6 +141,10 @@ Prechodné plánovanie a indexy sú v systems/performance.js; vykresľovacie cac
 
 `core/storage.js` je transport existujúceho registra. Väčšie účty sa ukladajú po bezstratovo zbalených profiloch s tabuľkovou populáciou; nezmenené profily používajú cache. Malé a staré JSON registre zostávajú čitateľné. Export je štandardný JSON zálohy v2, do 64 MiB. Limit validácie je 3 milióny uzlov, aby pokryl osem plne preskúmaných postáv. Bežné mapové snímky neukladajú dočasné roamingové ciele, aggro, hit animáciu a stun, ktoré sa už predtým resetovali pri hydratácii. Zdravie, pozície, stavy poškodenia, smrti, respawn, Metiny, udalosti a dungeonové attackPlan zostávajú zachované.
 
-Obnova boja ukladá zostávajúce cooldowny schopností, útoku, plášťa a cestovania. Po návrate postavy sa obnovia; offline čas ich neskracuje. Liečenie a odvary cez pozastavený panel vyžadujú ukončený boj. Runtime, štruktúra postáv a prenosné zálohy nepoužívajú druhý inventár ani druhý progres.
+Obnova boja ukladá zostávajúce cooldowny schopností, útoku, plášťa a cestovania. Po návrate postavy sa obnovia; offline čas ich neskracuje. Otvorenie vrstvy nepozastaví boj; liečenie a odvary naďalej rešpektujú zásoby, obnovu a blokovanie skutočne pozastavenej simulácie. Runtime, štruktúra postáv a prenosné zálohy nepoužívajú druhý inventár ani druhý progres.
 
 Automatická korisť aktualizuje živé počítadlá okamžite, ale zlučuje zápisy do pravidelného štvorsekundového autosave. Odchod, pagehide a explicitné dôležité akcie ukladajú naďalej ihneď. Snímkovanie klonuje aktívny profil a zdieľa nemenné neaktívne záznamy; ich zabalený obsah možno znovu použiť bez opakovanej kompresie.
+
+## Vrstvy rozhrania
+
+`ui/windows.js` rozširuje pôvodný vstup modal o register súčasných vrstiev. Interact.js 1.10.27 spravuje dragging záhlaví. Prvky obsahu majú menný priestor; výbery a obsluhy zostávajú v kontexte konkrétneho okna. `ui/desktop-hud.js` zdieľa existujúce atribúty, mapy a asistenciu v paneloch Postava C, Mapa M a Automatický boj K. Pohyb na kliknuté miesto používa runtime clickDestination a pôvodný movePlayer; neukladá ďalšiu súradnicu do profilu. Pozri [UI.md](UI.md).

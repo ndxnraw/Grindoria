@@ -1,5 +1,15 @@
 'use strict';
-const $=id=>document.getElementById(id),canvas=$('game'),mini=$('minimap').getContext('2d');
+let activeGameWindow=null;
+const $=id=>{
+  if(activeGameWindow){
+    if(id==='modalcard')return activeGameWindow.body;
+    if(id==='modalcontent')return activeGameWindow.content;
+    if(id==='close')return activeGameWindow.close;
+    const scoped=activeGameWindow.content.querySelector('[data-ui-id="'+id+'"]');
+    if(scoped)return scoped;
+  }
+  return document.getElementById(id);
+},canvas=$('game'),mini=$('minimap').getContext('2d');
 let ctx=canvas.getContext('2d');
 let SIZE=2000;const SAVE='grindoria-save-v1';
 let W=1200,H=700,dpr=1,running=false,paused=false,last=0,clock=0,target=null,face=0,attackCD=0,skillCD=0,slash=0,ring=0,toastTimer=0,saveTimer=0,sound=false,audio=null;
@@ -14,7 +24,7 @@ function createPlayerState(profile = {}) {
   player.bestiary??={};player.achievements??={};return player;
 }
 let p=createPlayerState();
-const spellKeys=['q','r','t','v','u','o'],buffs={},effects=[],shots=[];
+const spellKeys=['1','2','3','4','5','6'],buffs={},effects=[],shots=[];
 let spellCD=[0,0,0,0,0,0],castPose=0,castStyle='',spiritTick=0;
 const role=()=>CLASSES[p.classId],equippedBonus=slot=>(p.equipped[slot]?.bonus||0)+enhancementBonus(p.equipped[slot]);
 const maxHP=()=>100+(p.level-1)*22+p.vitality*10+role().health+careerBonuses().hp+equipmentBonuses().hp,damage=()=>Math.round((18+(p.level-1)*2+p.strength*3+equipmentBonuses().attack+careerBonuses().attack)*attackPower()*(1+careerBonuses().attackPercent)),defense=()=>equipmentBonuses().defense+Math.floor(p.vitality/3)+armorBonus()+careerBonuses().defense,needXP=()=>xpForLevel(p.level);

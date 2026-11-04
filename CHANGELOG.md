@@ -10,6 +10,21 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.31.0] - 2026-11-04
+
+### Added
+- Nezávislé herné vrstvy s presúvaním cez lokálny Interact.js 1.10.27, minimalizáciou, poradím a zapamätaním polohy; rovnaká správa pre NPC služby.
+- Samostatná Postava C, veľká mapa M, ovládanie automatického boja K a hlavné menu Esc.
+- Regresie súčasných vrstiev, klávesnice a skutočného browserového presúvania vrátane inventára a mobilu.
+
+### Changed
+- Zlatohnedé rámy, kruhová minimapa, kompaktný HUD a osem rýchlych pozícií; schopnosti 1–6/F1–F6, elixír 7/F7 a plášť 8/F8.
+- Klávesy N pre úlohy, H pre pomoc a V pre schopnosti; Alt zobrazí červené mená nepriateľov. Klik na zem vedie postavu na miesto.
+- Vrstvy nepozastavujú hru. Otvorené panely zachovávajú vlastný obsah, posunutie, filtre a obsluhy.
+
+### Fixed
+- Izolácia akcií obchodníka, inventára a progresie pri súčasnom otvorení, samostatné ID a bezpečné formuláre bez aktivácie bojových skratiek.
+
 ## [0.30.0] - 2026-11-04
 
 ### Added
@@ -559,7 +574,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.30.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.31.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -593,3 +608,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.28.0]: https://github.com/ndxnraw/Grindoria/compare/v0.27.0...v0.28.0
 [0.29.0]: https://github.com/ndxnraw/Grindoria/compare/v0.28.0...v0.29.0
 [0.30.0]: https://github.com/ndxnraw/Grindoria/compare/v0.29.0...v0.30.0
+[0.31.0]: https://github.com/ndxnraw/Grindoria/compare/v0.30.0...v0.31.0

@@ -8,9 +8,9 @@ function dungeonContent(){
 }
 function dungeonPanel(){if(!running)return;careerPanel('dungeons');}
 function bindDungeonActions(){
- document.querySelectorAll('[data-dungeon-enter]').forEach(b=>b.onclick=()=>{if(!enterDungeon(b.dataset.dungeonEnter,b.dataset.difficulty))toast('Vstup nie je dostupný. Skontroluj úroveň, vstupné a boj.');});
- document.querySelectorAll('[data-dungeon-exit]').forEach(b=>b.onclick=()=>{if(finishDungeon())dungeonAbandonPending=false;});
- document.querySelectorAll('[data-dungeon-abandon]').forEach(b=>b.onclick=()=>{dungeonAbandonPending=true;dungeonPanel();});
- document.querySelectorAll('[data-dungeon-cancel]').forEach(b=>b.onclick=()=>{dungeonAbandonPending=false;dungeonPanel();});
+ panelQueryAll('[data-dungeon-enter]').forEach(b=>b.onclick=()=>{if(!enterDungeon(b.dataset.dungeonEnter,b.dataset.difficulty))toast('Vstup nie je dostupný. Skontroluj úroveň, vstupné a boj.');});
+ panelQueryAll('[data-dungeon-exit]').forEach(b=>b.onclick=()=>{if(finishDungeon())dungeonAbandonPending=false;});
+ panelQueryAll('[data-dungeon-abandon]').forEach(b=>b.onclick=()=>{dungeonAbandonPending=true;dungeonPanel();});
+ panelQueryAll('[data-dungeon-cancel]').forEach(b=>b.onclick=()=>{dungeonAbandonPending=false;dungeonPanel();});
 }
 function updateDungeonHUD(){const el=$('dungeon-status'),r=dungeonRun();el.hidden=!r;if(!r)return;const guards=mobs.filter(m=>m.dungeonRole==='guard'&&m.hp>0).length,seals=mobs.filter(m=>m.dungeonSeal&&m.hp>0).length;el.textContent=r.cleared?'Dungeon dokončený · korisť pri bossovi · P':'Dungeon · zostáva '+guards+' strážcov · '+seals+' pečatí · '+(r.unlocked?'boss odomknutý':'boss chránený')+' · P';el.onclick=dungeonPanel;}

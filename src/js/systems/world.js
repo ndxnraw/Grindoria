@@ -47,10 +47,10 @@ function loadMap(id, initial=false) {
   clearLootPointer();
   p.x=initial&&Number.isFinite(resumePosition.x)&&resumePosition.x>=45&&resumePosition.x<=SIZE-45?resumePosition.x:cfg.entry.x;
   p.y=initial&&Number.isFinite(resumePosition.y)&&resumePosition.y>=45&&resumePosition.y<=SIZE-45?resumePosition.y:cfg.entry.y;
-  cam.x=p.x;cam.y=p.y;target=null;
+  cam.x=p.x;cam.y=p.y;target=null;clickDestination=null;
   shots.length=0; effects.length=0; particles.length=0; lastMiniMapPaint=-Infinity;
   Object.keys(buffs).forEach(k=>delete buffs[k]);
   updateMapHUD();
-  if(!initial){closeModal();save();toast(cfg.name+'\nOdporúčaná úroveň '+cfg.level+'+');}
+  if(!initial){for(const key of [...gameWindows.keys()])if(key.startsWith('market:')||['career:biology','career:forge','career:crafting','career:alchemy','travel','large-map'].includes(key))closeModal(key);save();toast(cfg.name+'\nOdporúčaná úroveň '+cfg.level+'+');}
   return true;
 }

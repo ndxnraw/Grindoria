@@ -1,12 +1,13 @@
 const combatAim = { inside: false, clientX: 0, clientY: 0 };
 let playerMoving = false;
+let clickDestination=null;
 const combatSelection = { following: false, clickTarget: null, doubleReady: false };
 
 function selectedEnemy() {
   return target && mobs.includes(target) && target.hp > 0 ? target : null;
 }
 
-function clearCombatTarget() { target = null; combatSelection.following = false; combatSelection.clickTarget = null; combatSelection.doubleReady = false; combatAssist.fightTarget = null; combatAssist.fightTime = 0; $('target-panel').hidden = true; }
+function clearCombatTarget() { clickDestination=null;target = null; combatSelection.following = false; combatSelection.clickTarget = null; combatSelection.doubleReady = false; combatAssist.fightTarget = null; combatAssist.fightTime = 0; $('target-panel').hidden = true; }
 
 function setCombatPointer(event) {
   combatAim.inside = true; combatAim.clientX = event.clientX; combatAim.clientY = event.clientY;
@@ -63,7 +64,7 @@ function basicAttackRange() { return rangedBasic()?BATTLE.rangedRange:BATTLE.mel
 
 function selectCombatTarget(enemy, follow = false) {
   if(!enemy||enemy.hp<=0||!mobs.includes(enemy))return false;
-  target=enemy; combatSelection.following=follow; updateFacing(); updateCombatHUD();
+  clickDestination=null;target=enemy; combatSelection.following=follow; updateFacing(); updateCombatHUD();
   if(follow&&Math.hypot(enemy.x-p.x,enemy.y-p.y)<=basicAttackRange())attack();
   return true;
 }
@@ -76,7 +77,7 @@ function handleCombatClick(event) {
   if(loot){combatSelection.clickTarget=null;combatSelection.doubleReady=false;pickUpGroundDrop(loot.id);canvas.focus();return;}
   const enemy=enemyAtPointer(lootPointer.x,lootPointer.y);
   if(enemy){combatSelection.doubleReady=combatSelection.clickTarget===enemy;combatSelection.clickTarget=enemy;selectCombatTarget(enemy,combatSelection.doubleReady);}
-  else{clearCombatTarget();combatAssist.aimTime=0;updateFacing();}
+  else{clearCombatTarget();const at=cursorWorld();clickDestination={x:Math.max(45,Math.min(SIZE-45,at.x)),y:Math.max(45,Math.min(SIZE-45,at.y))};combatAssist.aimTime=0;updateFacing();}
   canvas.focus();
 }
 
@@ -106,6 +107,7 @@ function updatePlayerControl(dt) {
   const dx=(keys.d||keys.ArrowRight?1:0)-(keys.a||keys.ArrowLeft?1:0),dy=(keys.s||keys.ArrowDown?1:0)-(keys.w||keys.ArrowUp?1:0);
   if(dx||dy){clearCombatTarget();movePlayer(dx,dy,speedValue()*dt);if(!combatAim.inside)face=Math.atan2(dy,dx);}
   else{
+    if(clickDestination){const dx=clickDestination.x-p.x,dy=clickDestination.y-p.y,d=Math.hypot(dx,dy);if(d<2)clickDestination=null;else{face=Math.atan2(dy,dx);movePlayer(dx,dy,Math.min(d,speedValue()*dt));}return;}
     const enemy=selectedEnemy();
     if(enemy&&combatSelection.following){
       if(isSanctuary(enemy)){clearCombatTarget();return;}

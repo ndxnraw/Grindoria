@@ -18,7 +18,7 @@ function confirmInventoryDrop(count=1){
 }
 function handleInventoryOutsideDrop(event){
   if(!inventoryDrag)return false;
-  const rect=$('modalcard').getBoundingClientRect();
+  const rect=(gameWindows.get('inventory')?.node||$('modalcard')).getBoundingClientRect();
   if(event.clientX>=rect.left&&event.clientX<=rect.right&&event.clientY>=rect.top&&event.clientY<=rect.bottom)return false;
   event.preventDefault();event.stopPropagation?.();
   const id=inventoryDrag.id;inventoryDrag=null;
