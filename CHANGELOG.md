@@ -5,11 +5,24 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+## [0.23.0] - 2026-11-04
+
+### Added
+- Štyri pokročilé biologické výskumy Lv.40–85, vlastné vzorky a ikony, zdroje z elít, vzácnych príšer a bossov, šance a zaručené dropy.
+- Trvalé bonusy zdravia, obrany, útoku, sily kúziel a rýchlosti pohybu.
+- Uložené intervaly odovzdávania 5–30 minút s odpočtom aj v otvorenom okne, biologický výskum v denníku a 13 integračných testov.
 - Bestiár objavených nepriateľov s pôvodnými modelmi, atribútmi, výskytom, známymi dropmi a počtami porazených.
 - Bossové trofeje, štyri rarity výbavy, tri skryté lokality a sedem jednorazových zbierkových odmien s trvalými bonusmi.
 - Oddelený postup postáv, spätná kompatibilita uloženia a validácia objavovania pri importe.
 
 ### Changed
+- Základné biologické vzorky každá 4./6./8./10. príšera podľa mapy; zachované pôvodné etapy, odmeny, poplatky a progres.
+- Aditívne rozšírenie existujúceho ukladania a záloh o vzácne vzorky, čas odovzdania a čítač zaručeného dropu.
 
 ### Fixed
 
@@ -438,7 +451,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.22.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.23.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -464,3 +477,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.20.0]: https://github.com/ndxnraw/Grindoria/compare/v0.19.0...v0.20.0
 [0.21.0]: https://github.com/ndxnraw/Grindoria/compare/v0.20.0...v0.21.0
 [0.22.0]: https://github.com/ndxnraw/Grindoria/compare/v0.21.0...v0.22.0
+[0.23.0]: https://github.com/ndxnraw/Grindoria/compare/v0.22.0...v0.23.0

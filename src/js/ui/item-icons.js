@@ -5,6 +5,10 @@ function itemIcon(item, empty = false) {
   const gold = empty ? '#766c58' : '#d8ad5c', dark = empty ? '#403d34' : '#444c52';
   const gem = empty ? '#4b463a' : ['#a24f3f', '#59b4c0', '#bc7bdb'][rarity];
   const shapes = {
+    ancientVenom:'<path d="M24 6h16v14l14 14v20L32 62 10 54V34l14-14Z" fill="#558554" stroke="#d5d288" stroke-width="2"/><path d="m32 27 11 17-11 11-11-11Z" fill="#b5d572"/><path d="M24 8h16m-8 24v16m-5-8h10" stroke="#e5efba" stroke-width="3"/>',
+    frozenMarrow:'<path d="m8 12 11-8 13 12L45 4l11 8-8 17 9 17-12 13-13-9-13 9L7 46l9-17Z" fill="#86c2d0" stroke="#d9edf4" stroke-width="2"/><path d="m32 18 7 14-7 15-7-15Z" fill="#436eab"/><path d="m17 14 10 15-10 17m30-32-10 15 10 17" stroke="#e8f9fa" fill="none"/>',
+    demonHeart:'<path d="M32 16Q8-1 5 21q-4 24 27 41 31-17 27-41Q56-1 32 16Z" fill="#9e475b" stroke="#ebc28a" stroke-width="2"/><path d="m24 9-7-7m24 7 6-7M13 33l11 2 5-13 7 23 5-10 10-3" fill="none" stroke="#f4b36f" stroke-width="3"/>',
+    ancientOrgan:'<path d="m29 3 14 7-2 13q23 8 15 26-12 20-32 10Q3 51 8 30q3-15 21-12Z" fill="#9b779e" stroke="#e6d1a6" stroke-width="2"/><path d="M31 9v24m0-7 13 10-5 14m-9-18L18 43l7 9" fill="none" stroke="#e8b1bb" stroke-width="4"/><circle cx="45" cy="44" r="5" fill="#c79cd9"/>',
     herb: '<path d="M30 60V13M30 42Q4 43 9 22q20-1 21 20M30 28Q55 29 55 7q-23 0-25 21" fill="#70a66c" stroke="#d0d9a0" stroke-width="3"/>',
     hide: '<path d="m14 4 17 9L50 4l9 14-10 15 9 21-21-3-9 10-15-12-10 1 10-22-9-11Z" fill="#9d7954" stroke="#d4bc8e" stroke-width="2"/><path d="m22 22 18 20m-19-2 20-17" stroke="#67513c"/>',
     crystal: '<path d="m7 42 11-30 14 8L43 3l15 35-26 24Z" fill="#8ca8d7" stroke="#e0d7f3" stroke-width="2"/><path d="m18 12 9 36L43 3m-11 17 15 27-15 15" fill="none" stroke="#dddaf0"/>',

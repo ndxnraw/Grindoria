@@ -55,7 +55,7 @@ function attackPower(){return (active('aura')||active('enchanted')?1.45:1)*(acti
 
 function armorBonus(){return active('guard')?12:active('armor')?8:0;}
 
-function speedValue(){return dungeonSpeedFactor()*(role().speed+p.dexterity*2+equipmentBonuses().speed)*(active('speed')?1.45:active('berserk')?1.22:1);}
+function speedValue(){return dungeonSpeedFactor()*(role().speed+p.dexterity*2+equipmentBonuses().speed+careerBonuses().speed)*(active('speed')?1.45:active('berserk')?1.22:1);}
 
 function criticalChance(){return Math.min(.8,role().crit+p.dexterity*.01+careerBonuses().crit+equipmentBonuses().crit+passiveBonuses().crit+(active('dragonPower')?.25:0));}
 

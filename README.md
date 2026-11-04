@@ -41,7 +41,7 @@ Zlato a zásoby sa pripíšu priamo, bez predmetu na zemi. Výbava a relikvie zo
 - Desať slotov výbavy, mriežkový inventár a 39 vektorových modelov. [Inventár](docs/INVENTORY.md), [modely](docs/APPEARANCE.md).
 - Kováč v Meste: +0 až +9, materiály, šance, riziko a ochrana. Žiara zbraní od +5. [Vylepšovanie](docs/FORGE.md).
 - Šesť rarít, 20 náhodných bonusov a hodnotenie predmetov. [Rarity](docs/RARITIES.md).
-- Tréning, schopnosti, biológia, alchýmia, relikvie, špecializácia a trhliny. [Progresia](docs/PROGRESSION.md).
+- Tréning, schopnosti, osem biologických výskumov, alchýmia, relikvie, špecializácia a trhliny. [Biológ](docs/BIOLOGY.md). [Progresia](docs/PROGRESSION.md).
 - Automierenie pri útoku, Autospell v boji s označeným cieľom a Autoelixíry pod 45 % HP. Podrobnosti v bojovom manuáli.
 
 ## Vývoj

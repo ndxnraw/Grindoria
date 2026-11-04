@@ -29,6 +29,7 @@ Funkcie môžu medzi súbormi volať zdieľané pomenované funkcie. Načítanie
 | `systems/forge.js` | Rizikové vylepšovanie, ochrana, talizmany, recepty a zdroje pomôcok |
 | `systems/locations.js` | NPC služby, bezpečné zóny, cestovanie mimo boja a migrácia rozmerov máp |
 | `systems/world.js` | Generovanie, cestovanie, snímky máp a uloženie |
+| `systems/biology.js` | Osem biologických etáp, vzorky, pity, čas odovzdávania a trvalé bonusy v existujúcej kariére |
 | `systems/career.js` | EXP ekonomika, migrácia, tréning, schopnosti, biológia, alchýmia, relikvie, špecializácia a expedície |
 | `systems/farming.js` | Skupinové body, varianty, trvalé spawn sloty, respawn, potulovanie, pomoc skupiny, aggro, priestorová mriežka a Plášť statočnosti |
 | `systems/inventory.js` | Rozloženie mriežky, migrácia, presun, nasadenie, bonusy a zásobníky |

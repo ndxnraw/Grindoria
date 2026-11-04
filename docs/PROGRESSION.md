@@ -52,7 +52,7 @@ Každé kúzlo má vlastnú uloženú prax a stupeň. Jedna príšera poskytne p
 
 ### Biologický výskum
 
-Vzorka padá z každého štvrtého bežného nepriateľa danej mapy. Biológ v Meste prijme jednu vzorku a poplatok naraz; ďalšie odovzdanie vyžaduje 10 nových primeraných zabití. Výskumy sa dokončujú postupne:
+Základná vzorka padá z každej 4., 6., 8. alebo 10. príšery podľa mapy. Biológ v Meste prijme jednu vzorku a poplatok naraz; ďalšie odovzdanie vyžaduje 10 nových primeraných zabití. Osem výskumov sa dokončuje postupne; pokročilé etapy Lv.40–85 pridávajú vzácne vzorky a časové intervaly 5–30 minút. Podrobné zdroje, šance, ceny a bonusy: [BIOLOGY.md](BIOLOGY.md). Pôvodné odmeny:
 
 - Údolie, úroveň 1+: 10 vzoriek, +30 zdravie.
 - Púšť, úroveň 5+: 12 vzoriek, +6 útok.

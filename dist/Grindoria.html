@@ -191,7 +191,7 @@ body{font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ui-text)}button,inp
 .discovery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.bestiary-model{display:block;width:220px;height:200px;max-width:100%;margin:auto;background:#101b20;border:1px solid var(--ui-line)}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.22.0</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.23.0</b></span></header>
 <main><div class="world-title"><div><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Divoký vlk · Strážca pralesa</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
 <section id="game-shell" class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb iba WASD alebo šípkami, výber cieľa kliknutím, nasledovanie a útok druhým klikom na rovnaký cieľ, smerový útok medzerníkom, schopnosť Q, liečenie E, korisť ľavým kliknutím alebo Y v okolí, zlato a zásoby automaticky."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
 <div class="hud player"><div id="portrait" class="portrait">侍</div><div><div class="player-name"><b id="playername">Pútnik</b><small id="playerclass" hidden>Bojovník</small> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 60 skúseností</small></div></div>
@@ -328,12 +328,7 @@ const MATERIALS = {
   ember: 'Démonický popol', keys: 'Kľúče trhliny', shards: 'Úlomky relikvie'
 };
 
-const BIOLOGY = [
-  { name: 'Život údolia', map: 'valley', level: 1, item: 'wolf', count: 10, bonus: { hp: 30 }, text: '+30 maximálneho zdravia' },
-  { name: 'Jed púšte', map: 'desert', level: 5, item: 'venom', count: 12, bonus: { attack: 6 }, text: '+6 útok' },
-  { name: 'Odolnosť mrazu', map: 'snow', level: 12, item: 'frost', count: 15, bonus: { defense: 5 }, text: '+5 obrana' },
-  { name: 'Srdce plameňa', map: 'temple', level: 25, item: 'ember', count: 20, bonus: { crit: .04, mp: 30 }, text: '+4 % kritický zásah a +30 mana' }
-];
+
 
 const GEMS = {
   ruby: { name: 'Rubín', text: 'Útok +2 za každú úroveň kameňa na druhú.', color: '#dda092' },
@@ -355,6 +350,26 @@ const SPECIALIZATIONS = {
 };
 
 
+// src/js/data/biology.js
+const BIOLOGY = [
+  { name: 'Život údolia', map: 'valley', level: 1, item: 'wolf', count: 10, bonus: { hp: 30 }, text: '+30 maximálneho zdravia' },
+  { name: 'Jed púšte', map: 'desert', level: 5, item: 'venom', count: 12, bonus: { attack: 6 }, text: '+6 útok' },
+  { name: 'Odolnosť mrazu', map: 'snow', level: 12, item: 'frost', count: 15, bonus: { defense: 5 }, text: '+5 obrana' },
+  { name: 'Srdce plameňa', map: 'temple', level: 25, item: 'ember', count: 20, bonus: { crit: .04, mp: 30 }, text: '+4 % kritický zásah a +30 mana' }
+];
+
+const BIOLOGY_MATERIALS={ancientVenom:'Koncentrovaný jed',frozenMarrow:'Mrazivá dreň',demonHeart:'Démonické srdce',ancientOrgan:'Prastarý orgán'};
+Object.assign(MATERIALS,BIOLOGY_MATERIALS);
+const BIOLOGY_RULES={killGap:10};
+BIOLOGY.forEach((stage,index)=>Object.assign(stage,{id:stage.item,dropEvery:[4,6,8,10][index],cooldown:0,fee:25*(index+1),source:'Príšery danej mapy'}));
+BIOLOGY.push(
+ {id:'ancientVenom',name:'Koncentrácia jedu',map:'desert',level:40,item:'ancientVenom',count:15,bonus:{hp:60,speed:12},text:'+60 zdravie, +12 rýchlosť pohybu',cooldown:300,fee:500,variants:['elite','rare'],chance:.2,pity:10,source:'Elitné a vzácne škorpióny'},
+ {id:'frozenMarrow',name:'Výskum mrazivej drene',map:'snow',level:55,item:'frozenMarrow',count:20,bonus:{hp:120,defense:8},text:'+120 zdravie, +8 obrana',cooldown:600,fee:1000,variants:['elite','rare'],chance:.12,pity:16,source:'Elitní a vzácni yetiovia'},
+ {id:'demonHeart',name:'Výskum démonického srdca',map:'temple',level:70,item:'demonHeart',count:25,bonus:{attack:18,magic:12},text:'+18 útok, +12 sila kúziel',cooldown:1200,fee:2500,variants:['rare'],chance:.08,pity:20,source:'Vzácni chrámoví démoni'},
+ {id:'ancientOrgan',name:'Výskum prastarého orgánu',map:'temple',level:85,item:'ancientOrgan',count:30,bonus:{hp:180,defense:12,speed:8},text:'+180 zdravie, +12 obrana, +8 rýchlosť pohybu',cooldown:1800,fee:5000,boss:true,chance:.05,pity:25,source:'Pán plameňov'}
+);
+
+
 // src/js/data/forge.js
 const FORGE_RULES={
  success:[0,.95,.9,.8,.65,.5,.35,.23,.14,.08],
@@ -367,7 +382,7 @@ Object.assign(MATERIALS,{forgeCore:'Kováčske jadro',smithCharm:'Talizman ková
 // Additive migration for profiles and backups written before forge supplies existed.
 function migrateForgeMaterials(account){
  if(!account?.profiles||typeof account.profiles!=='object')return;
- for(const record of Object.values(account.profiles)){const materials=record?.data?.career?.materials;if(!materials||typeof materials!=='object'||Array.isArray(materials))continue;for(const id of ['forgeCore','smithCharm','protectionScroll',...Object.keys(CRAFT_MATERIALS)])if(!Object.hasOwn(materials,id))materials[id]=0;}
+ for(const record of Object.values(account.profiles)){const materials=record?.data?.career?.materials;if(!materials||typeof materials!=='object'||Array.isArray(materials))continue;for(const id of ['forgeCore','smithCharm','protectionScroll',...Object.keys(CRAFT_MATERIALS),...Object.keys(BIOLOGY_MATERIALS)])if(!Object.hasOwn(materials,id))materials[id]=0;}
 }
 
 
@@ -1037,6 +1052,7 @@ function validateCharacterProfile(record) {
   assertCharacterObject(c.skills,'schopnosti');for(const [key,skill]of Object.entries(c.skills)){if(!Object.hasOwn(ACTIVE_SKILLS,key))characterDataError('schopnosť.');assertCharacterNumber(skill.rank,'stupeň schopnosti',1,PROGRESSION.maxSkillRank,true);assertCharacterNumber(skill.practice,'prax schopnosti');}
   assertCharacterObject(c.training,'tréning');for(const key of ['strength','vitality','dexterity','intelligence'])assertCharacterNumber(c.training[key],'tréning '+key,0,PROGRESSION.maxTraining,true);
   assertCharacterObject(c.biology,'biológia');assertCharacterNumber(c.biology.stage,'stupeň biológie',0,BIOLOGY.length,true);for(const key of ['delivered','nextKill'])assertCharacterNumber(c.biology[key],'biológia '+key,0,1e12,true);
+  for(const key of ['nextDeliveryAt','sampleKills'])if(c.biology[key]!==undefined)assertCharacterNumber(c.biology[key],'biológia '+key,0,key==='nextDeliveryAt'?Number.MAX_SAFE_INTEGER:1e12,true);
   assertCharacterObject(c.alchemy,'alchýmia');for(const key of ['stock','equipped']){assertCharacterObject(c.alchemy[key],'alchýmia '+key);for(const [id,value]of Object.entries(c.alchemy[key])){if(!Object.hasOwn(GEMS,id))characterDataError('alchymistický kameň.');assertCharacterNumber(value,'alchýmia',0,key==='equipped'?PROGRESSION.maxGemRank:1e12,true);}for(const id of Object.keys(GEMS))if(c.alchemy[key][id]===undefined)characterDataError('chýbajúca alchýmia.');}
   assertCharacterObject(c.collection,'zbierka');for(const [id,value]of Object.entries(c.collection))if(!Object.hasOwn(RELICS,id)||typeof value!=='boolean')characterDataError('relikvia zbierky.');
   assertCharacterObject(c.specialization,'špecializácia');if(c.specialization.focus!==null&&!Object.hasOwn(SPECIALIZATIONS,c.specialization.focus))characterDataError('typ špecializácie.');assertCharacterNumber(c.specialization.rank,'stupeň špecializácie',0,PROGRESSION.maxSpecialization,true);assertCharacterNumber(c.specialization.points,'body špecializácie',0,1e12,true);
@@ -1113,7 +1129,7 @@ function frame(t){const dt=Math.min((t-last)/1000,.05);last=t;update(dt);draw();
 function keysClear(){Object.keys(keys).forEach(k=>keys[k]=false);}
 
 function update(dt) {
-  clock+=dt;if(!running||paused)return;travelCombat.time=Math.max(0,travelCombat.time-dt);
+  clock+=dt;refreshBiologyPanel();if(!running||paused)return;travelCombat.time=Math.max(0,travelCombat.time-dt);
   attackCD=Math.max(0,attackCD-dt);slash=Math.max(0,slash-dt);ring=Math.max(0,ring-dt);updateCombatAssistTimers(dt);updateAlchemy(dt);updateEconomy(dt);updateCombat(dt);
   updateDiscovery();updatePlayerControl(dt);if(keys[' '])attack();updateAutoSpell(dt);
   const safe=isSanctuary(p);if(safe){p.hp=Math.min(maxHP(),p.hp+12*dt);p.mp=Math.min(maxMP(),p.mp+dt*10);}
@@ -1195,7 +1211,7 @@ function attackPower(){return (active('aura')||active('enchanted')?1.45:1)*(acti
 
 function armorBonus(){return active('guard')?12:active('armor')?8:0;}
 
-function speedValue(){return dungeonSpeedFactor()*(role().speed+p.dexterity*2+equipmentBonuses().speed)*(active('speed')?1.45:active('berserk')?1.22:1);}
+function speedValue(){return dungeonSpeedFactor()*(role().speed+p.dexterity*2+equipmentBonuses().speed+careerBonuses().speed)*(active('speed')?1.45:active('berserk')?1.22:1);}
 
 function criticalChance(){return Math.min(.8,role().crit+p.dexterity*.01+careerBonuses().crit+equipmentBonuses().crit+passiveBonuses().crit+(active('dragonPower')?.25:0));}
 
@@ -1401,6 +1417,7 @@ function initializeCareer() {
     };
   }
   for (const id of Object.keys(MATERIALS)) p.career.materials[id] ??= 0;
+  initializeBiology();
   initializeDiscovery();
   initializeCrafting();
   initializeEconomy();
@@ -1417,7 +1434,7 @@ function initializeCareer() {
 }
 
 function careerBonuses() {
-  const b = { hp: 0, mp: 0, attack: 0, defense: 0, magic: 0, crit: 0, attackPercent: 0 };
+  const b = { hp: 0, mp: 0, attack: 0, defense: 0, magic: 0, crit: 0, speed: 0, attackPercent: 0 };
   if (!p.career) return b;
   const add = bonus => { for (const [id, amount] of Object.entries(bonus)) b[id] += amount; };
   for (let i = 0; i < p.career.biology.stage; i++) add(BIOLOGY[i].bonus);
@@ -1510,18 +1527,6 @@ function rememberSkill(m, key) {
   if (!m.skillContributors.includes(key)) m.skillContributors.push(key);
 }
 
-function completeBiology() {
-  const bio = p.career.biology, stage = BIOLOGY[bio.stage];
-  if (!stage || p.level < stage.level || !nearNPC('biologist') || p.career.eligibleKills < bio.nextKill || p.career.materials[stage.item] < 1) return false;
-  if (!pay({ [stage.item]: 1, gold: 25 * (bio.stage + 1) })) return false;
-  bio.delivered++; bio.nextKill = p.career.eligibleKills + 10;
-  if (bio.delivered >= stage.count) {
-    bio.stage++; bio.delivered = 0;
-    toast('Biologický výskum dokončený!\nTrvalý bonus: ' + stage.text);
-  }
-  save(); return true;
-}
-
 function craftGem(id) {
   return Object.hasOwn(GEMS, id) && craftRecipe('gem-' + id);
 }
@@ -1561,12 +1566,7 @@ function collectRelic(id) {
 function careerKill(m) {
   const giveMaterial = (id, count = 1) => { if (m.type !== 'stone') dropMaterial(id, count, m); };
   const eligible = rewardEligible(m), c = p.career;
-  // Biological specimens stay available when revisiting lower-level maps.
-  const bio = BIOLOGY.find(b => b.map === p.mapId);
-  if (bio && m.type === 'wolf') {
-    c.samplePity[p.mapId] = (c.samplePity[p.mapId] || 0) + 1;
-    if (c.samplePity[p.mapId] >= 4) { giveMaterial(bio.item); c.samplePity[p.mapId] = 0; }
-  }
+  dropBiologySample(m);
   if (eligible) {
     c.eligibleKills++; giveMaterial('essence', m.type === 'boss' ? 12 : m.type === 'stone' ? 4 : 1);
     if (c.eligibleKills % 5 === 0) { giveMaterial('ore'); giveMaterial('training'); }
@@ -1644,6 +1644,46 @@ function upgradeParagon() {
   end.paragon++; save(); return true;
 }
 
+
+
+// src/js/systems/biology.js
+let biologyMessage='';
+function initializeBiology(){
+ const bio=p.career.biology;bio.nextDeliveryAt??=0;bio.sampleKills??=0;biologyMessage='';
+}
+function biologyCooldown(now=Date.now()){return Math.max(0,Math.ceil(((p.career.biology.nextDeliveryAt||0)-now)/1000));}
+function biologyWaitLabel(seconds){const minutes=Math.floor(seconds/60);return minutes+' min '+String(seconds%60).padStart(2,'0')+' s';}
+function biologyCost(stage=BIOLOGY[p.career.biology.stage]){return stage?{[stage.item]:1,gold:stage.fee}:null;}
+function biologyBlockReason(now=Date.now()){
+ const bio=p.career.biology,stage=BIOLOGY[bio.stage];
+ if(!stage)return 'Výskum dokončený.';
+ if(!running||p.hp<=0)return 'Postava musí byť nažive v hre.';
+ if(p.level<stage.level)return 'Vyžaduje úroveň '+stage.level+'.';
+ if(!nearNPC('biologist'))return 'Odovzdanie: Biológ v Meste.';
+ if(p.career.eligibleKills<bio.nextKill)return 'Zostáva '+(bio.nextKill-p.career.eligibleKills)+' primeraných zabití.';
+ const cooldown=biologyCooldown(now);if(cooldown)return 'Ďalšie odovzdanie o '+biologyWaitLabel(cooldown)+'.';
+ if(p.career.materials[stage.item]<1)return 'Chýba vzorka: '+MATERIALS[stage.item]+'.';
+ if(p.gold<stage.fee)return 'Chýba '+(stage.fee-p.gold)+' Yang.';
+ return '';
+}
+function completeBiology(){
+ biologyMessage=biologyBlockReason();if(biologyMessage)return false;
+ const bio=p.career.biology,stage=BIOLOGY[bio.stage];if(!pay(biologyCost(stage)))return false;
+ bio.delivered++;bio.nextKill=p.career.eligibleKills+BIOLOGY_RULES.killGap;bio.nextDeliveryAt=Date.now()+stage.cooldown*1000;
+ biologyMessage='Vzorka odovzdaná: '+bio.delivered+' / '+stage.count+'.';
+ if(bio.delivered>=stage.count){bio.stage++;bio.delivered=0;bio.sampleKills=0;biologyMessage='Etapa dokončená · '+stage.text;toast(biologyMessage);}
+ save();updateHUD();return true;
+}
+function biologySourceMatches(stage,enemy){
+ return stage.map===p.mapId&&!enemy.metinParentId&&!enemy.dungeonBoss&&!enemy.dungeonSeal&&(stage.boss?enemy.type==='boss':enemy.type==='wolf'&&stage.variants.includes(enemy.variant));
+}
+function dropBiologySample(enemy){
+ const c=p.career,base=BIOLOGY.find(stage=>stage.map===p.mapId&&stage.dropEvery);
+ if(base&&enemy.type==='wolf'){c.samplePity[p.mapId]=(c.samplePity[p.mapId]||0)+1;if(c.samplePity[p.mapId]>=base.dropEvery){dropMaterial(base.item,1,enemy);c.samplePity[p.mapId]=0;}}
+ const stage=BIOLOGY[c.biology.stage];if(!stage||stage.dropEvery||p.level<stage.level||!biologySourceMatches(stage,enemy))return;
+ c.biology.sampleKills=(c.biology.sampleKills||0)+1;
+ if(c.biology.sampleKills>=stage.pity||rand()<stage.chance){dropMaterial(stage.item,1,enemy);c.biology.sampleKills=0;}
+}
 
 
 // src/js/systems/forge.js
@@ -2415,7 +2455,7 @@ function supplyDefinitions() {
   return [
     { id: 'potions', name: 'Liečivý elixír', count: p.potions, icon: 'potion', description: 'Obnoví 65 zdravia. Kláves E. Spoločný cooldown 4 s aj pre Autoelixíry.', action: 'drink' },
     { id: 'braveryCapes', name: 'Plášť statočnosti', count: p.braveryCapes, icon: 'cape', description: 'Privolá pohyblivých nepriateľov v dosahu 650 na 18 sekúnd. Kláves B.', action: 'cape' },
-    ...Object.entries(MATERIALS).map(([id, name]) => ({ id: 'material:' + id, name, count: p.career.materials[id], icon: id, description: ['ore','upgradeStones','forgeCore','smithCharm','protectionScroll'].includes(id)?'Použitie: kováč.':'Materiál na progresiu.', action: 'material', material: id })),
+    ...Object.entries(MATERIALS).map(([id, name]) => ({ id: 'material:' + id, name, count: p.career.materials[id], icon: id, description: BIOLOGY.some(stage=>stage.item===id)?'Odovzdanie: Biológ v Meste.':['ore','upgradeStones','forgeCore','smithCharm','protectionScroll'].includes(id)?'Použitie: kováč.':'Materiál na progresiu.', action: 'material', material: id })),
     ...Object.entries(ALCHEMY_PRODUCTS).map(([id, product]) => ({ id: 'alchemy:' + id, name: product.name, count: p.career.alchemy.products[id], icon: product.icon, description: product.text, action: 'product' })),
     ...Object.entries(GEMS).map(([id, gem]) => ({ id: 'gem:' + id, name: gem.name, count: p.career.alchemy.stock[id], icon: id, description: gem.text + ' Použitie otvorí alchýmiu.', action: 'alchemy' }))
   ];
@@ -3542,7 +3582,8 @@ function journal(){
  if(!running)return;
  const huntTarget=(p.huntClaimed+1)*10;
  const card=(title,objectives,reward,button)=>'<article class="journal-entry"><h3>'+title+'</h3><div class="requirements"><div class="requirement-heading"><span>Cieľ</span><span>Postup / Cieľ</span></div>'+objectives+'</div><p class="quest-reward"><b>Odmena</b> · '+reward+'</p>'+button+'</article>';
- modal('<span class="eyebrow">ÚLOHY · J</span><h2>Denník úloh</h2>'+card('Praskliny v pokoji',requirementRow('Príšery',Math.min(p.kills,5),5)+requirementRow('Kamene',Math.min(p.stones,3),3),'150 Yang + 60 skúseností','<button class="primary" id="journalMain" '+(p.claimed||p.kills<5||p.stones<3?'disabled':'')+'>'+(p.claimed?'✓ Dokončené':'Vyzdvihnúť odmenu')+'</button>')+card('Prvý strážca',requirementRow('Boss · Údolie: odporúčaná úroveň 10+',Math.min(p.bossKills,1),1),'epická výbava + 200 Yang + 80 skúseností','<button class="primary" id="claimBoss" '+(p.bossClaimed||!p.bossKills?'disabled':'')+'>'+(p.bossClaimed?'✓ Dokončené':'Vyzdvihnúť odmenu')+'</button>')+card('Lovec údolia · opakovateľná',requirementRow('Primerané príšery',Math.min(p.career.eligibleKills,huntTarget),huntTarget),'60 Yang + 1 tréningová pečať (bez EXP)','<button class="primary" id="claimHunt" '+(p.career.eligibleKills<huntTarget?'disabled':'')+'>Vyzdvihnúť odmenu</button>'),{key:'journal'});
+ modal('<span class="eyebrow">ÚLOHY · J</span><h2>Denník úloh</h2>'+card('Praskliny v pokoji',requirementRow('Príšery',Math.min(p.kills,5),5)+requirementRow('Kamene',Math.min(p.stones,3),3),'150 Yang + 60 skúseností','<button class="primary" id="journalMain" '+(p.claimed||p.kills<5||p.stones<3?'disabled':'')+'>'+(p.claimed?'✓ Dokončené':'Vyzdvihnúť odmenu')+'</button>')+card('Prvý strážca',requirementRow('Boss · Údolie: odporúčaná úroveň 10+',Math.min(p.bossKills,1),1),'epická výbava + 200 Yang + 80 skúseností','<button class="primary" id="claimBoss" '+(p.bossClaimed||!p.bossKills?'disabled':'')+'>'+(p.bossClaimed?'✓ Dokončené':'Vyzdvihnúť odmenu')+'</button>')+card('Lovec údolia · opakovateľná',requirementRow('Primerané príšery',Math.min(p.career.eligibleKills,huntTarget),huntTarget),'60 Yang + 1 tréningová pečať (bez EXP)','<button class="primary" id="claimHunt" '+(p.career.eligibleKills<huntTarget?'disabled':'')+'>Vyzdvihnúť odmenu</button>')+biologyJournalCard(),{key:'journal'});
+ $('journalBiology').onclick=()=>careerPanel('biology');
  $('journalMain').onclick=()=>{if(p.claimed||p.kills<5||p.stones<3)return;$('claim').onclick();journal();};$('claimBoss').onclick=claimBoss;$('claimHunt').onclick=claimHunt;
 }
 
@@ -3563,6 +3604,10 @@ function itemIcon(item, empty = false) {
   const gold = empty ? '#766c58' : '#d8ad5c', dark = empty ? '#403d34' : '#444c52';
   const gem = empty ? '#4b463a' : ['#a24f3f', '#59b4c0', '#bc7bdb'][rarity];
   const shapes = {
+    ancientVenom:'<path d="M24 6h16v14l14 14v20L32 62 10 54V34l14-14Z" fill="#558554" stroke="#d5d288" stroke-width="2"/><path d="m32 27 11 17-11 11-11-11Z" fill="#b5d572"/><path d="M24 8h16m-8 24v16m-5-8h10" stroke="#e5efba" stroke-width="3"/>',
+    frozenMarrow:'<path d="m8 12 11-8 13 12L45 4l11 8-8 17 9 17-12 13-13-9-13 9L7 46l9-17Z" fill="#86c2d0" stroke="#d9edf4" stroke-width="2"/><path d="m32 18 7 14-7 15-7-15Z" fill="#436eab"/><path d="m17 14 10 15-10 17m30-32-10 15 10 17" stroke="#e8f9fa" fill="none"/>',
+    demonHeart:'<path d="M32 16Q8-1 5 21q-4 24 27 41 31-17 27-41Q56-1 32 16Z" fill="#9e475b" stroke="#ebc28a" stroke-width="2"/><path d="m24 9-7-7m24 7 6-7M13 33l11 2 5-13 7 23 5-10 10-3" fill="none" stroke="#f4b36f" stroke-width="3"/>',
+    ancientOrgan:'<path d="m29 3 14 7-2 13q23 8 15 26-12 20-32 10Q3 51 8 30q3-15 21-12Z" fill="#9b779e" stroke="#e6d1a6" stroke-width="2"/><path d="M31 9v24m0-7 13 10-5 14m-9-18L18 43l7 9" fill="none" stroke="#e8b1bb" stroke-width="4"/><circle cx="45" cy="44" r="5" fill="#c79cd9"/>',
     herb: '<path d="M30 60V13M30 42Q4 43 9 22q20-1 21 20M30 28Q55 29 55 7q-23 0-25 21" fill="#70a66c" stroke="#d0d9a0" stroke-width="3"/>',
     hide: '<path d="m14 4 17 9L50 4l9 14-10 15 9 21-21-3-9 10-15-12-10 1 10-22-9-11Z" fill="#9d7954" stroke="#d4bc8e" stroke-width="2"/><path d="m22 22 18 20m-19-2 20-17" stroke="#67513c"/>',
     crystal: '<path d="m7 42 11-30 14 8L43 3l15 35-26 24Z" fill="#8ca8d7" stroke="#e0d7f3" stroke-width="2"/><path d="m18 12 9 36L43 3m-11 17 15 27-15 15" fill="none" stroke="#dddaf0"/>',
@@ -4005,6 +4050,30 @@ function hotbarAction(action) {
 }
 
 
+// src/js/ui/biology.js
+function biologyDropLabel(stage){return stage.dropEvery?'Každá '+stage.dropEvery+'. príšera':Math.round(stage.chance*100)+' % · zaručene najneskôr '+stage.pity+'. vhodné zabitie';}
+function biologyStatusText(now=Date.now()){
+ const reason=biologyBlockReason(now),wait=biologyCooldown(now);return (reason||'Možno odovzdať.')+(wait&&!reason.startsWith('Ďalšie odovzdanie')?' Ďalšie odovzdanie o '+biologyWaitLabel(wait)+'.':'');
+}
+function careerBiology(){
+ const bio=p.career.biology;
+ return '<p>Biológ · Mesto. Medzi odovzdaniami: '+BIOLOGY_RULES.killGap+' primeraných zabití. Pokročilé vzorky padajú len pre aktívnu etapu od požadovanej úrovne.</p>'+BIOLOGY.map((stage,index)=>{
+  const active=index===bio.stage,completed=index<bio.stage;
+  return '<article class="career-card '+(completed?'completed':'')+'"><h3>'+(completed?'✓ ':active?'Aktívny výskum · ':'')+stage.name+'</h3><p>'+MAPS[stage.map].name+' · vyžaduje úroveň '+stage.level+'<br>'+stage.source+' · '+biologyDropLabel(stage)+'</p>'+requirementRow(MATERIALS[stage.item],completed?stage.count:active?bio.delivered:0,stage.count)+'<p>Trvalý bonus: '+stage.text+(stage.cooldown?'<br>Interval odovzdávania: '+stage.cooldown/60+' min':'')+'</p>'+(active?costRequirements(biologyCost(stage))+'<p id="biology-status" role="status">'+biologyStatusText()+'</p><button id="biology-submit" class="primary" data-action="bio" '+(biologyBlockReason()?'disabled':'')+'>Odovzdať vzorku</button>':completed?'':'<small>Vyžaduje predchádzajúcu etapu.</small>')+'</article>';
+ }).join('')+(bio.stage>=BIOLOGY.length?'<p>Všetky výskumy dokončené.</p>':'');
+}
+function refreshBiologyPanel(){
+ if(!running||$('modal').hidden||panelState.key!=='career:biology')return;
+ const status=$('biology-status'),button=$('biology-submit'),reason=biologyBlockReason();
+ if(status&&status.textContent!==biologyStatusText())status.textContent=biologyStatusText();
+ if(button)button.disabled=!!reason;
+}
+function biologyJournalCard(){
+ const bio=p.career.biology,stage=BIOLOGY[bio.stage];
+ return '<article class="journal-entry"><h3>Biologický výskum'+(stage?' · '+stage.name:'')+'</h3>'+(stage?requirementRow(MATERIALS[stage.item],bio.delivered,stage.count)+'<p>'+MAPS[stage.map].name+' · '+stage.source+' · úroveň '+stage.level+'+</p><p class="quest-reward">Trvalý bonus: '+stage.text+'</p>':'<p>Všetky výskumy dokončené.</p>')+'<button id="journalBiology">Biológ · progres a odovzdanie</button></article>';
+}
+
+
 // src/js/ui/career.js
 const forgeOptions={};
 function costLabel(cost) {
@@ -4018,7 +4087,7 @@ function careerOverview() {
     <div>Výskum <b>${c.biology.stage} / ${BIOLOGY.length}</b></div>
     <div>Relikvie <b>${Object.values(c.collection).filter(Boolean).length} / 4</b></div>
     <div>Trhliny <b>${c.endgame.highest}</b><small>Najvyšší dokončený stupeň</small></div></div>
-    <h3>Trvalé bonusy</h3><p>Útok +${b.attack} · obrana +${b.defense} · zdravie +${b.hp} · mana +${b.mp}<br>Sila kúziel +${b.magic} · kritický zásah +${Math.round(b.crit * 100)} % · útok +${Math.round(b.attackPercent * 100)} %</p>
+    <h3>Trvalé bonusy</h3><p>Útok +${b.attack} · obrana +${b.defense} · zdravie +${b.hp} · mana +${b.mp}<br>Sila kúziel +${b.magic} · rýchlosť pohybu +${b.speed} · kritický zásah +${Math.round(b.crit * 100)} % · útok +${Math.round(b.attackPercent * 100)} %</p>
     <h3>Materiály</h3><div class="material-grid">${Object.entries(MATERIALS).map(([id, name]) => `<div>${name}<b>${c.materials[id].toLocaleString('sk-SK')}</b></div>`).join('')}</div>
     <p>EXP: nepriateľ najviac o 7 úrovní slabší. Prax a bežné materiály: najviac o 5. Vzorky, relikvie a kľúče bez tohto obmedzenia.</p>`;
 }
@@ -4035,12 +4104,6 @@ function careerSkills() {
     const key = skillKey(i), skill = skillProgress(key), rank = skill.rank;
     return `<div class="career-card"><h3>${s[0]} · ${rank >= 20 ? 'Veľmajster' : rank >= 10 ? 'Majster' : 'Stupeň'} ${rank}</h3><p>Prax ${skill.practice} / ${skillPracticeNeeded(rank)} · sila/trvanie +${Math.round((skillFactor(key) - 1) * 100)} % · cooldown − ${rank - 1} %<br>${s[6]}<br></p>${costRequirements(skillCost(key))}<button class="primary" data-action="skill" data-id="${key}" ${rank >= PROGRESSION.maxSkillRank || skill.practice < skillPracticeNeeded(rank) || !canPayRecipe(skillCost(key)) ? 'disabled' : ''}>Študovať schopnosť</button></div>`;
   }).join('')}`;
-}
-
-function careerBiology() {
-  const bio = p.career.biology, stage = BIOLOGY[bio.stage];
-  const waiting = Math.max(0, bio.nextKill - p.career.eligibleKills);
-  return `<p>Biológ · Mesto. Vzorka: každý 4. bežný nepriateľ danej mapy. Medzi odovzdaniami: 10 primeraných zabití. Odmena je trvalá.</p>${BIOLOGY.map((b, i) => `<div class="career-card ${i < bio.stage ? 'completed' : ''}"><h3>${i < bio.stage ? '✓ ' : ''}${b.name}</h3><p>${MAPS[b.map].name} · úroveň ${b.level}+ · ${b.count} vzoriek<br>Trvalá odmena: ${b.text}</p>${i === bio.stage ? `<p>Odovzdané ${bio.delivered} / ${b.count} · v zásobe ${p.career.materials[b.item]}<br>${waiting ? 'Ďalšie odovzdanie: ešte ' + waiting + ' primeraných zabití' : 'Možno odovzdať.'}</p>${costRequirements({[b.item]:1,gold:25*(i+1)})}<button class="primary" data-action="bio" ${p.level < b.level || waiting || p.career.materials[b.item] < 1 || p.gold<25*(i+1) || !nearNPC('biologist') ? 'disabled' : ''}>Odovzdať vzorku</button>` : i > bio.stage ? '<small>Vyžaduje predchádzajúci výskum.</small>' : ''}</div>`).join('')}${!stage ? '<p>Výskum dokončený.</p>' : ''}`;
 }
 
 function careerForge() {
@@ -4103,8 +4166,9 @@ function careerPanel(tab = careerTab) {
   document.querySelectorAll('[data-action]').forEach(button => button.onclick = () => {
     if (actions[button.dataset.action]?.(button.dataset.id)) {
       updateClassHUD(); updateHUD(); careerPanel(careerTab);
-      $('career-message').textContent = button.dataset.action==='enhance'?forgeResult.message:characterStore.writeError|| (button.dataset.action==='recipe'?craftingMessage:'Uložené.');
-    } else if(button.dataset.action==='recipe') $('career-message').textContent=craftingMessage;
+      $('career-message').textContent = button.dataset.action==='enhance'?forgeResult.message:characterStore.writeError|| (button.dataset.action==='recipe'?craftingMessage:button.dataset.action==='bio'?biologyMessage:'Uložené.');
+    } else if(button.dataset.action==='bio') $('career-message').textContent=biologyMessage||biologyBlockReason();
+    else if(button.dataset.action==='recipe') $('career-message').textContent=craftingMessage;
     else $('career-message').textContent = 'Nesplnené podmienky: skontroluj cenu, úroveň a prax. Vstup do trhliny vyžaduje ukončený boj.';
   });
 }

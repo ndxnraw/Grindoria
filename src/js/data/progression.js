@@ -17,12 +17,7 @@ const MATERIALS = {
   ember: 'Démonický popol', keys: 'Kľúče trhliny', shards: 'Úlomky relikvie'
 };
 
-const BIOLOGY = [
-  { name: 'Život údolia', map: 'valley', level: 1, item: 'wolf', count: 10, bonus: { hp: 30 }, text: '+30 maximálneho zdravia' },
-  { name: 'Jed púšte', map: 'desert', level: 5, item: 'venom', count: 12, bonus: { attack: 6 }, text: '+6 útok' },
-  { name: 'Odolnosť mrazu', map: 'snow', level: 12, item: 'frost', count: 15, bonus: { defense: 5 }, text: '+5 obrana' },
-  { name: 'Srdce plameňa', map: 'temple', level: 25, item: 'ember', count: 20, bonus: { crit: .04, mp: 30 }, text: '+4 % kritický zásah a +30 mana' }
-];
+
 
 const GEMS = {
   ruby: { name: 'Rubín', text: 'Útok +2 za každú úroveň kameňa na druhú.', color: '#dda092' },

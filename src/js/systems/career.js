@@ -28,6 +28,7 @@ function initializeCareer() {
     };
   }
   for (const id of Object.keys(MATERIALS)) p.career.materials[id] ??= 0;
+  initializeBiology();
   initializeDiscovery();
   initializeCrafting();
   initializeEconomy();
@@ -44,7 +45,7 @@ function initializeCareer() {
 }
 
 function careerBonuses() {
-  const b = { hp: 0, mp: 0, attack: 0, defense: 0, magic: 0, crit: 0, attackPercent: 0 };
+  const b = { hp: 0, mp: 0, attack: 0, defense: 0, magic: 0, crit: 0, speed: 0, attackPercent: 0 };
   if (!p.career) return b;
   const add = bonus => { for (const [id, amount] of Object.entries(bonus)) b[id] += amount; };
   for (let i = 0; i < p.career.biology.stage; i++) add(BIOLOGY[i].bonus);
@@ -137,18 +138,6 @@ function rememberSkill(m, key) {
   if (!m.skillContributors.includes(key)) m.skillContributors.push(key);
 }
 
-function completeBiology() {
-  const bio = p.career.biology, stage = BIOLOGY[bio.stage];
-  if (!stage || p.level < stage.level || !nearNPC('biologist') || p.career.eligibleKills < bio.nextKill || p.career.materials[stage.item] < 1) return false;
-  if (!pay({ [stage.item]: 1, gold: 25 * (bio.stage + 1) })) return false;
-  bio.delivered++; bio.nextKill = p.career.eligibleKills + 10;
-  if (bio.delivered >= stage.count) {
-    bio.stage++; bio.delivered = 0;
-    toast('Biologický výskum dokončený!\nTrvalý bonus: ' + stage.text);
-  }
-  save(); return true;
-}
-
 function craftGem(id) {
   return Object.hasOwn(GEMS, id) && craftRecipe('gem-' + id);
 }
@@ -188,12 +177,7 @@ function collectRelic(id) {
 function careerKill(m) {
   const giveMaterial = (id, count = 1) => { if (m.type !== 'stone') dropMaterial(id, count, m); };
   const eligible = rewardEligible(m), c = p.career;
-  // Biological specimens stay available when revisiting lower-level maps.
-  const bio = BIOLOGY.find(b => b.map === p.mapId);
-  if (bio && m.type === 'wolf') {
-    c.samplePity[p.mapId] = (c.samplePity[p.mapId] || 0) + 1;
-    if (c.samplePity[p.mapId] >= 4) { giveMaterial(bio.item); c.samplePity[p.mapId] = 0; }
-  }
+  dropBiologySample(m);
   if (eligible) {
     c.eligibleKills++; giveMaterial('essence', m.type === 'boss' ? 12 : m.type === 'stone' ? 4 : 1);
     if (c.eligibleKills % 5 === 0) { giveMaterial('ore'); giveMaterial('training'); }

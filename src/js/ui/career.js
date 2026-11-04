@@ -10,7 +10,7 @@ function careerOverview() {
     <div>Výskum <b>${c.biology.stage} / ${BIOLOGY.length}</b></div>
     <div>Relikvie <b>${Object.values(c.collection).filter(Boolean).length} / 4</b></div>
     <div>Trhliny <b>${c.endgame.highest}</b><small>Najvyšší dokončený stupeň</small></div></div>
-    <h3>Trvalé bonusy</h3><p>Útok +${b.attack} · obrana +${b.defense} · zdravie +${b.hp} · mana +${b.mp}<br>Sila kúziel +${b.magic} · kritický zásah +${Math.round(b.crit * 100)} % · útok +${Math.round(b.attackPercent * 100)} %</p>
+    <h3>Trvalé bonusy</h3><p>Útok +${b.attack} · obrana +${b.defense} · zdravie +${b.hp} · mana +${b.mp}<br>Sila kúziel +${b.magic} · rýchlosť pohybu +${b.speed} · kritický zásah +${Math.round(b.crit * 100)} % · útok +${Math.round(b.attackPercent * 100)} %</p>
     <h3>Materiály</h3><div class="material-grid">${Object.entries(MATERIALS).map(([id, name]) => `<div>${name}<b>${c.materials[id].toLocaleString('sk-SK')}</b></div>`).join('')}</div>
     <p>EXP: nepriateľ najviac o 7 úrovní slabší. Prax a bežné materiály: najviac o 5. Vzorky, relikvie a kľúče bez tohto obmedzenia.</p>`;
 }
@@ -27,12 +27,6 @@ function careerSkills() {
     const key = skillKey(i), skill = skillProgress(key), rank = skill.rank;
     return `<div class="career-card"><h3>${s[0]} · ${rank >= 20 ? 'Veľmajster' : rank >= 10 ? 'Majster' : 'Stupeň'} ${rank}</h3><p>Prax ${skill.practice} / ${skillPracticeNeeded(rank)} · sila/trvanie +${Math.round((skillFactor(key) - 1) * 100)} % · cooldown − ${rank - 1} %<br>${s[6]}<br></p>${costRequirements(skillCost(key))}<button class="primary" data-action="skill" data-id="${key}" ${rank >= PROGRESSION.maxSkillRank || skill.practice < skillPracticeNeeded(rank) || !canPayRecipe(skillCost(key)) ? 'disabled' : ''}>Študovať schopnosť</button></div>`;
   }).join('')}`;
-}
-
-function careerBiology() {
-  const bio = p.career.biology, stage = BIOLOGY[bio.stage];
-  const waiting = Math.max(0, bio.nextKill - p.career.eligibleKills);
-  return `<p>Biológ · Mesto. Vzorka: každý 4. bežný nepriateľ danej mapy. Medzi odovzdaniami: 10 primeraných zabití. Odmena je trvalá.</p>${BIOLOGY.map((b, i) => `<div class="career-card ${i < bio.stage ? 'completed' : ''}"><h3>${i < bio.stage ? '✓ ' : ''}${b.name}</h3><p>${MAPS[b.map].name} · úroveň ${b.level}+ · ${b.count} vzoriek<br>Trvalá odmena: ${b.text}</p>${i === bio.stage ? `<p>Odovzdané ${bio.delivered} / ${b.count} · v zásobe ${p.career.materials[b.item]}<br>${waiting ? 'Ďalšie odovzdanie: ešte ' + waiting + ' primeraných zabití' : 'Možno odovzdať.'}</p>${costRequirements({[b.item]:1,gold:25*(i+1)})}<button class="primary" data-action="bio" ${p.level < b.level || waiting || p.career.materials[b.item] < 1 || p.gold<25*(i+1) || !nearNPC('biologist') ? 'disabled' : ''}>Odovzdať vzorku</button>` : i > bio.stage ? '<small>Vyžaduje predchádzajúci výskum.</small>' : ''}</div>`).join('')}${!stage ? '<p>Výskum dokončený.</p>' : ''}`;
 }
 
 function careerForge() {
@@ -95,8 +89,9 @@ function careerPanel(tab = careerTab) {
   document.querySelectorAll('[data-action]').forEach(button => button.onclick = () => {
     if (actions[button.dataset.action]?.(button.dataset.id)) {
       updateClassHUD(); updateHUD(); careerPanel(careerTab);
-      $('career-message').textContent = button.dataset.action==='enhance'?forgeResult.message:characterStore.writeError|| (button.dataset.action==='recipe'?craftingMessage:'Uložené.');
-    } else if(button.dataset.action==='recipe') $('career-message').textContent=craftingMessage;
+      $('career-message').textContent = button.dataset.action==='enhance'?forgeResult.message:characterStore.writeError|| (button.dataset.action==='recipe'?craftingMessage:button.dataset.action==='bio'?biologyMessage:'Uložené.');
+    } else if(button.dataset.action==='bio') $('career-message').textContent=biologyMessage||biologyBlockReason();
+    else if(button.dataset.action==='recipe') $('career-message').textContent=craftingMessage;
     else $('career-message').textContent = 'Nesplnené podmienky: skontroluj cenu, úroveň a prax. Vstup do trhliny vyžaduje ukončený boj.';
   });
 }

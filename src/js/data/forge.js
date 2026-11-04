@@ -9,6 +9,6 @@ Object.assign(MATERIALS,{forgeCore:'Kováčske jadro',smithCharm:'Talizman ková
 // Additive migration for profiles and backups written before forge supplies existed.
 function migrateForgeMaterials(account){
  if(!account?.profiles||typeof account.profiles!=='object')return;
- for(const record of Object.values(account.profiles)){const materials=record?.data?.career?.materials;if(!materials||typeof materials!=='object'||Array.isArray(materials))continue;for(const id of ['forgeCore','smithCharm','protectionScroll',...Object.keys(CRAFT_MATERIALS)])if(!Object.hasOwn(materials,id))materials[id]=0;}
+ for(const record of Object.values(account.profiles)){const materials=record?.data?.career?.materials;if(!materials||typeof materials!=='object'||Array.isArray(materials))continue;for(const id of ['forgeCore','smithCharm','protectionScroll',...Object.keys(CRAFT_MATERIALS),...Object.keys(BIOLOGY_MATERIALS)])if(!Object.hasOwn(materials,id))materials[id]=0;}
 }
 
