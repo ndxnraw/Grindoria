@@ -27,18 +27,8 @@ test('all combat maps obey their advertised range, produce matching gear and kee
   g.run('var loot=makeItem(false,mobs[0],"weapon");');assert.equal(g.run('loot.requiredLevel'),g.run('Math.min(99,mobs[0].level)'));
  }
 });
-test('all six new bosses drop registered relics and old broken saves and backups recover',()=>{
- for(const id of ['meadow','marsh','quarry','highlands','ruins','wastes']){
-  const g=createGame();g.run(`running=true;loadMap('${id}',true);p.career.relicPity[p.mapId]=9;rand=()=>.99;hit(mobs.find(m=>m.type==='boss'),1e9,'arcane',true);save();exportCharacters();`);
-  assert(g.run('drops.some(d=>d.kind==="relic"&&RELICS[d.relicId])'));
-  const old=readSavedAccount(g.saved),data=old.profiles[old.selectedId].data;
-  data.worldStates[id].drops.find(d=>d.kind==='relic').relicId=id;
-  const next=createEmptyGame({'grindoria-characters-v1':old});assert.equal(next.run('characterStore.error'),'');assert(next.run('playCharacter()'));
-  next.run('exportCharacters();');
-  const backup={format:'grindoria-characters',version:2,account:old};
-  assert(next.run('prepareCharacterImport('+JSON.stringify(JSON.stringify(backup))+').account.order.length>0'));
- }
-});
+test('all six added bosses have usable loot without retired relic drops',()=>{for(const id of ['meadow','marsh','quarry','highlands','ruins','wastes']){const g=createGame();g.run('running=true;loadMap("'+id+'",true);p.level=map().level;rand=()=>0;hit(mobs.find(m=>m.type==="boss"),1e9,"arcane",true);');assert(g.run('drops.every(d=>d.kind!=="relic")'));assert(g.run('p.career.materials.books>0'));g.run('validateCharacterAccount(accountWithActiveSnapshot());');}});
+
 test('world events fit local level ranges and Suterland cannot schedule a targetless bounty',()=>{
  const g=createGame();g.run('running=true;loadMap("suterland",true);');assert(!g.run('startWorldEvent("bounty")'));
  for(const id of ['valley','desert','snow','temple','meadow','marsh','quarry','highlands','ruins','wastes'])for(const type of ['patrol','boss','metin']){
@@ -52,7 +42,7 @@ test('quest reward level is independent of the claim map and crafting previews u
   const g=createGame();g.run(`running=true;loadMap('${id}',true);p.bossKills=1;rand=()=>.5;claimBoss();`);levels.push(g.run('p.bag[0].requiredLevel'));
  }
  assert.deepEqual(levels,[8,8,8]);
- const g=createGame();g.run('running=true;careerPanel("crafting");');const html=g.elements.get('modalcontent').innerHTML;
+ const g=createGame();g.run('running=true;loadMap("town",true);p.x=NPCS.smith.x;p.y=NPCS.smith.y;interactNPC("smith");smithPanel("crafting");');const html=g.elements.get('modalcontent').innerHTML;
  assert(!html.includes('undefined'));assert(html.includes('Rare · požadovaná úroveň 30'));assert(html.includes('Epic · požadovaná úroveň 75'));
  g.run('loadMap("suterland",true);var stone=mobs.find(m=>m.level===99);discoverEnemy(stone);');assert.equal(g.run('p.discovery.seen["metin:doom"].armor'),31);
 });

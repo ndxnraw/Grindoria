@@ -6,15 +6,15 @@ Všetka korisť z nepriateľov a kameňov osudu najprv fyzicky vyletí z porazen
 
 Od verzie 0.8.1 platia tieto pravidlá:
 
-- **Zlato a zásoby** sa pri vytvorení odmeny pripíšu priamo do počítadiel postavy, bez pádu, dosahu a predmetu na zemi. Zahŕňa to elixíry, plášte, materiály, biologické vzorky, kľúče a vyrobené alchymistické kamene. Plná mriežka výbavy ich neblokuje.
-- **Y** jedným stlačením pozbiera **všetky dostupné dopadnuté predmety v rovnakom okolí**, vrátane výbavy a relikvií. Kurzor môže byť kdekoľvek alebo mimo hernej plochy; hover sa nevyžaduje.
+- **Zlato a zásoby** sa pri vytvorení odmeny pripíšu priamo do počítadiel postavy, bez pádu, dosahu a predmetu na zemi. Zahŕňa to elixíry, plášte, materiály, biologické vzorky, kľúče. Plná mriežka výbavy ich neblokuje.
+- **Y** jedným stlačením pozbiera **všetky dostupné dopadnuté predmety v rovnakom okolí**, vrátane výbavy. Kurzor môže byť kdekoľvek alebo mimo hernej plochy; hover sa nevyžaduje.
 - **Ľavé kliknutie** na konkrétny predmet ho naďalej zdvihne samostatne. Dotyk funguje rovnako.
 
-Postava musí byť živá a hra nesmie byť pozastavená. Padajúce a vzdialené predmety zostávajú na mieste. Hromadné zbieranie postupuje od najbližších predmetov. Ak sa časť výbavy nezmestí do inventára, zostane na zemi; zbieranie pritom pokračuje pri ďalších predmetoch, ktoré sa zmestia, a pri relikviách. Výbava ani relikvie sa samotnou blízkosťou nezdvihnú. Pravé tlačidlo predmety nezbiera.
+Postava musí byť živá a hra nesmie byť pozastavená. Padajúce a vzdialené predmety zostávajú na mieste. Hromadné zbieranie postupuje od najbližších predmetov. Ak sa časť výbavy nezmestí do inventára, zostane na zemi; zbieranie pritom pokračuje pri ďalších predmetoch, ktoré sa zmestia,. Výbava sa samotnou blízkosťou nezdvihnú. Pravé tlačidlo predmety nezbiera.
 
 Kláves **Y** je vyhradený zbieraniu. Šesť schopností používa **1–6 / F1–F6**; **V** otvára ich knihu. Označenie na lište, v návode a knihe schopností je zhodné.
 
-Výbava sa vloží do mriežky, zásoby sa pripočítajú k existujúcemu zásobníku, zlato k peňaženke a relikvia do zbierky. Pri plnom inventári zostane výbava na zemi bez automatického predaja. Zbieranie neznamená automatické nasadenie. Hromadná akcia aktualizuje HUD a uloží stav iba raz za celú dávku.
+Výbava sa vloží do mriežky, zásoby sa pripočítajú k existujúcemu zásobníku, zlato k peňaženke. Pri plnom inventári zostane výbava na zemi bez automatického predaja. Zbieranie neznamená automatické nasadenie. Hromadná akcia aktualizuje HUD a uloží stav iba raz za celú dávku.
 
 EXP, počítadlá úloh, prax schopností a body špecializácie sa započítajú pri zabití. Odmeny ručne vyzdvihnutých úloh a ručne dokončených výprav či výroby zostávajú priamou odmenou za túto výslovnú akciu.
 
@@ -30,7 +30,7 @@ Tooltip sa prepočítava pri pohybe kurzora, kamery, postavy, zmene výbavy aj v
 
 ## Despawn
 
-Bežná výbava, zlato a zásoby zmiznú po **180 sekundách od vypadnutia**; výbava Epic, Legendary, Mythic a relikvie po **600 sekundách**. Čas je skutočný čas zariadenia a plynie aj pri pauze, zmene mapy a zatvorenej hre. Čistenie prebehne počas hry, pri uložení a pri načítaní. Predmet sa po expirácii nedá zdvihnúť ani premeniť na zlato.
+Bežná výbava, zlato a zásoby zmiznú po **180 sekundách od vypadnutia**; výbava Epic, Legendary, Mythic po **600 sekundách**. Čas je skutočný čas zariadenia a plynie aj pri pauze, zmene mapy a zatvorenej hre. Čistenie prebehne počas hry, pri uložení a pri načítaní. Predmet sa po expirácii nedá zdvihnúť ani premeniť na zlato.
 
 Pole `expiresAt` sa ukladá spolu s predmetom. Staršia korisť bez časovača dostane konečný limit jednorazovo; ďalšie načítanie ho neobnoví. Čistia sa aj neaktívne mapy a bežný chrám odložený počas trhliny.
 
@@ -46,8 +46,8 @@ Logiku spravuje `systems/loot.js`, vykreslenie `render/loot.js` a tooltipy `ui/l
 
 ## Boj od 0.10.0
 
-Ľavé kliknutie dáva prednosť predmetu na zemi pred označením nepriateľa alebo zrušením cieľa. Zlato a zásoby sa pripisujú priamo; Y do 180 jednotiek zbiera výbavu a relikvie. Pozri [COMBAT.md](COMBAT.md).
+Ľavé kliknutie dáva prednosť predmetu na zemi pred označením nepriateľa alebo zrušením cieľa. Zlato a zásoby sa pripisujú priamo; Y do 180 jednotiek zbiera výbavu. Pozri [COMBAT.md](COMBAT.md).
 
 ## Priame zásoby od 0.17.0
 
-Nové gold/supply odmeny spotrebujú pôvodné náhodné hody na pozíciu, aby sa nezmenila sekvencia RNG a ďalšie dropy. Do drops sa však nevložia: grantAutomaticDrop hneď zmení existujúce počítadlá. flushAutomaticLoot na konci kroku spojí hlásenia, ukáže malý text a uloží kompletný výsledok boja. Staré uložené gold/supply dropy sa pri aktívnom kroku prevedú raz. Výbava a relikvie si zachovávajú pád, dosah, ručné zdvihnutie a expiráciu.
+Nové gold/supply odmeny spotrebujú pôvodné náhodné hody na pozíciu, aby sa nezmenila sekvencia RNG a ďalšie dropy. Do drops sa však nevložia: grantAutomaticDrop hneď zmení existujúce počítadlá. flushAutomaticLoot na konci kroku spojí hlásenia, ukáže malý text a uloží kompletný výsledok boja. Staré uložené gold/supply dropy sa pri aktívnom kroku prevedú raz. Výbava si zachovávajú pád, dosah, ručné zdvihnutie a expiráciu.

@@ -32,7 +32,7 @@ Funkcie môžu medzi súbormi volať zdieľané pomenované funkcie. Načítanie
 | `systems/world.js` | Generovanie, cestovanie, snímky máp a uloženie |
 | `systems/biology.js` | Osem biologických etáp, vzorky, pity, čas odovzdávania a trvalé bonusy v existujúcej kariére |
 | `systems/prestige.js` | Prestíž I–V, míľniky, znaky, pasívy, zdokonaľovanie výbavy a validácia |
-| `systems/career.js` | EXP ekonomika, migrácia, tréning, schopnosti, biológia, alchýmia, relikvie, špecializácia a expedície |
+| `systems/career.js` | EXP ekonomika, migrácia, tréning, schopnosti, biológia, špecializácia a expedície |
 | `systems/farming.js` | Skupinové body, varianty, trvalé spawn sloty, respawn, potulovanie, pomoc skupiny, aggro, priestorová mriežka a Plášť statočnosti |
 | `systems/inventory.js` | Rozloženie mriežky, migrácia, presun, nasadenie, bonusy a zásobníky |
 | `systems/loot.js` | Fyzické dropy, migrácia starých zlatých kôpok a automatické zásoby a hromadné zbieranie |
@@ -62,7 +62,7 @@ Plášť je uložený ako stoh `p.braveryCapes`, podobne ako elixíry. Výzva na
 
 `initializeInventory()` beží po migrácii kariéry a pred prvým načítaním mapy. Sloty definuje `data/items.js`; model pracuje s pôvodným batohom a číta množstvá zásob priamo z existujúcich počítadiel. `gearLayout()` najprv overí navrhnuté rozmiestnenie, až potom sa vykoná presun či výmena. `equipmentBonuses()` agreguje všetkých desať slotov do živých výpočtov štatistík. Vlastné SVG ikony sú v `ui/item-icons.js`, rozhranie v `ui/inventory.js`. Podrobnosti: [INVENTORY.md](INVENTORY.md).
 
-Korisť z nepriateľov vytvára `spawnGroundDrop()`. Zlato a zásoby sa pripíšu okamžite cez existujúce počítadlá a malé súhrnné hlásenie. Výbavu a relikvie pridá až úspešný pickUpGroundDrop(); svet posúva ich dopad a aktualizuje náhľad. `render/loot.js` zdieľa SVG ikony inventára cez obrazovú cache. `ui/loot.js` vypočíta rozdiely voči rovnakému slotu a bezpečnú polohu tooltipu. `main.js` smeruje primárny klik na aktuálny hit test, ale Y na hromadné zbieranie v okolí postavy bez kurzora; schopnosti používajú 1–6 alebo F1–F6. Pozri [LOOT.md](LOOT.md).
+Korisť z nepriateľov vytvára `spawnGroundDrop()`. Zlato a zásoby sa pripíšu okamžite cez existujúce počítadlá a malé súhrnné hlásenie. Výbavu pridá až úspešný pickUpGroundDrop(); svet posúva ich dopad a aktualizuje náhľad. `render/loot.js` zdieľa SVG ikony inventára cez obrazovú cache. `ui/loot.js` vypočíta rozdiely voči rovnakému slotu a bezpečnú polohu tooltipu. `main.js` smeruje primárny klik na aktuálny hit test, ale Y na hromadné zbieranie v okolí postavy bez kurzora; schopnosti používajú 1–6 alebo F1–F6. Pozri [LOOT.md](LOOT.md).
 
 `configureMetin()` nahradí generické kamene typovanými Metinmi. `restoreMetin()` migruje staré zdravie pomerne a ponechá časovače smrti. `updateMetins()` spravuje časy boja, vlny aj konečnú životnosť posíl; `restoreMetinGuards()` obnoví uložené posily bez nových identít. Posily neprechádzajú bežným respawnom. `metinDamage()` sa uplatní v skutočnom zásahu pred odpočtom zdravia a liečením Sury. `dropMetinLoot()` je jediný predmetový loot pool pri smrti kameňa; všeobecný materiálový drop z kariéry sa preň nepoužíva.
 
@@ -113,9 +113,9 @@ Data/rarities.js definuje stabilné ID a poradie šiestich rarít, váhy zdrojov
 Target zostáva referencia na vybraného nepriateľa. Dočasný combatSelection.following povoľuje pohyb a automatické útoky až po dvojkliku. Prvý klik iba zobrazí údaje, SPACE označí skutočne zasiahnutý živý cieľ. Pri zmene mapy, postavy, smrti, pohybe alebo strate fokusu sa stav zruší. Žiadne nové dáta sa neukladajú do profilu.
 
 
-## Výroba a alchýmia od 0.19.0
+## Výroba u kováča
 
-`data/crafting.js` registruje materiály, produkty a 47 receptov. `systems/crafting.js` kontroluje NPC, úroveň, cenu a kapacitu pred výrobou; zdieľa generátor výbavy, materiálové počítadlá, kováčske ceny a alchymistické kamene. `ui/crafting.js` zobrazuje recepty, zásoby a progres. Účinky alchýmie vstupujú cez `careerBonuses()` do existujúcich bojových výpočtov; `updateAlchemy()` beží iba pri aktívnej simulácii. `validateCraftingProfile()` dopĺňa validáciu záloh, migrácia zachováva pôvodné polia. Pozri [CRAFTING.md](CRAFTING.md).
+`data/crafting.js` registruje iba aktívne materiály a kováčske recepty. `systems/crafting.js` overí NPC, úroveň, cenu a kapacitu pred platbou. `ui/services.js` vlastní kováčsky výber a dve samostatné vrstvy; `ui/crafting.js` vykresľuje recepty. Odstránené systémy sa spracujú iba v `core/game-migrations.js`, ktorá zlučuje prax a prevádza staré zásoby pred validáciou. Pozri [CRAFTING.md](CRAFTING.md).
 
 ## NPC ekonomika od 0.20.0
 
@@ -148,3 +148,5 @@ Automatická korisť aktualizuje živé počítadlá okamžite, ale zlučuje zá
 ## Vrstvy rozhrania
 
 `ui/windows.js` rozširuje pôvodný vstup modal o register súčasných vrstiev. Interact.js 1.10.27 spravuje dragging záhlaví. Prvky obsahu majú menný priestor; výbery a obsluhy zostávajú v kontexte konkrétneho okna. `ui/desktop-hud.js` zdieľa existujúce atribúty, mapy a asistenciu v paneloch Postava C, Mapa M a Automatický boj K. Pohyb na kliknuté miesto používa runtime clickDestination a pôvodný movePlayer; neukladá ďalšiu súradnicu do profilu. Pozri [UI.md](UI.md).
+
+Od 0.32.0 majú postavy `career.systemsVersion = 1`. `systems/quests.js` zdieľa definície a stav HUD/denníka; `ui/quests.js` rozdeľuje aktívne a splnené úlohy. `ui/services.js` používa runtime `npcSessions` oddelené od save dát. Nové schopnosti používajú rank 1–41 s jednotnými funkciami označenia, sily a obnovy.

@@ -6,7 +6,7 @@ PC: Progres (P) → Bestiár a zbierky. Klávesy pôvodnej hry zostávajú zacho
 
 Trofeje: štyria pôvodní bossovia a traja dungeonoví bossovia. Dungeonové typy majú samostatné počítadlá. Predchádzajúce spoločné počítadlo boss:dungeon nemožno spätne rozdeliť, preto sa nepoužíva na nové trofeje.
 
-Dlhodobé ciele: 1000 primeraných zabití, všetkých osem Metinov, štyria strážcovia, tri dungeonové trofeje, získaná Rare/Epic/Legendary/Mythic výbava, tri skryté miesta a štyri pôvodné relikvie. Každá dokončená zbierka dáva Yang a trvalý atribútový bonus, vyzdvihnuteľný raz za postavu. Pôvodné relikviové bonusy ostávajú zachované.
+Dlhodobé ciele: 1000 primeraných zabití, všetkých osem Metinov, štyria strážcovia, tri dungeonové trofeje, získaná Rare/Epic/Legendary/Mythic výbava, tri skryté miesta. Každá dokončená zbierka dáva Yang a trvalý atribútový bonus, vyzdvihnuteľný raz za postavu. Cieľ zbierky relikvií je odstránený.
 
 Skryté miesta: kamenné značky v Údolí, Púšti a Horách. Objavenie do 85 jednotiek, oznámenie a trvalý záznam. Neobjavený cieľ v paneli odhalí iba mapu.
 

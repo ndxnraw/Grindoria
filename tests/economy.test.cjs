@@ -12,11 +12,10 @@ test('unavailable, poor, dead, remote and stale transactions leave player unchan
  run('running=true;p.hp=100;p.x=NPCS.merchant.x;p.gold=100000;p.economy.stock["merchant:potions"]=20;'+setup+'var before=JSON.stringify(p);');assert(!run('buyMarketOffer("merchant","potions")'));assert.equal(run('JSON.stringify(p)'),run('before'));}
  run('running=true;p.hp=100;p.x=NPCS.merchant.x;p.economy.stock["merchant:potions"]=20;var before=JSON.stringify(p);');assert(!run('buyMarketOffer("merchant","potions",999,0)'));assert(!run('buyMarketOffer("merchant","potions",25,1)'));assert(!run('buyMarketOffer("merchant","constructor")'));assert.equal(run('JSON.stringify(p)'),run('before'));
 });
-test('specialists have exclusive goods and gate rare materials by character level',()=>{
- const {run}=trader('armsdealer');assert(!run('buyMarketOffer("merchant","forgeCore")'));assert(!run('buyMarketOffer("armsdealer","forgeCore")'));run('p.level=35;');assert(run('buyMarketOffer("armsdealer","forgeCore")'));assert.equal(run('p.career.materials.forgeCore'),1);assert(!run('marketOffers("merchant").some(o=>o.supply==="material:primal")'));assert(run('marketOffers("alchemist").some(o=>o.id==="mana")'));
-});
+test('current traders carry usable supplies and gate rare materials by level',()=>{const {run}=trader('armsdealer');run('p.level=1;');assert(!run('buyMarketOffer("armsdealer","forgeCore")'));assert.equal(run('MARKET_TRADERS.alchemist'),undefined);run('p.x=NPCS.merchant.x;p.y=NPCS.merchant.y;');assert(run('marketOffers("merchant").some(o=>o.supply==="material:herb")'));assert(run('marketOffers("merchant").some(o=>o.supply==="material:dust")'));assert(run('marketOffers("merchant").every(o=>!o.supply?.startsWith("alchemy:"))'));});
+
 test('finite rare offers survive reopening and reload without rerolls, and reject a full bag',()=>{
- const {run,saved}=trader('armsdealer');run('var offers=JSON.stringify(p.economy.rare);for(let i=0;i<90;i++)addGearItem({slot:"bracelet",name:"Test",bonus:1});var before=JSON.stringify(p);');assert(!run('buyMarketOffer("armsdealer","rare-0")'));assert.equal(run('JSON.stringify(p)'),run('before'));
+ const {run,saved}=trader('armsdealer');run('var offers=JSON.stringify(p.economy.rare);for(let i=0;i<p.inventory.pages*INVENTORY.pageSize;i++)addGearItem({slot:"bracelet",name:"Test",bonus:1});var before=JSON.stringify(p);');assert(!run('buyMarketOffer("armsdealer","rare-0")'));assert.equal(run('JSON.stringify(p)'),run('before'));
  run('p.bag=[];');assert(run('buyMarketOffer("armsdealer","rare-0")'));assert.equal(run('p.bag.length'),1);assert(!run('buyMarketOffer("armsdealer","rare-0")'));run('save();');const restored=createGame(null,'grindoria-save-v1',Object.fromEntries(saved));assert.equal(restored.run('p.economy.rare[0].stock'),0);assert.equal(restored.run('p.bag[0].name'),run('p.bag[0].name'));assert.equal(restored.run('p.economy.rare[1].item.name'),run('p.economy.rare[1].item.name'));
 });
 test('restock follows active simulation only, preserves pause and restores finite offers',()=>{
@@ -29,7 +28,7 @@ test('inventory sale requires an NPC and material sales reduce holdings and pric
  const {run}=trader();run('addGearItem({slot:"weapon",name:"Test",value:50});p.x=50;p.y=50;');assert(!run('sellItem(0)'));assert.equal(run('p.bag.length'),1);run('p.x=NPCS.merchant.x;p.y=NPCS.merchant.y;p.career.materials.ore=20;var price=marketMaterialSaleValue("ore","merchant"),gold=p.gold;');assert(run('sellMarketMaterial("merchant","ore",10)'));assert.equal(run('p.gold'),run('gold+price*10'));assert.equal(run('p.career.materials.ore'),10);assert(run('marketMaterialSaleValue("ore","merchant")<=price'));assert(!run('sellMarketMaterial("merchant","keys",1)'));assert(!run('sellMarketMaterial("merchant","ore",-1)'));assert(!run('sellMarketMaterial("merchant","ore",11)'));
 });
 test('buying and immediately reselling every offered material always loses Yang',()=>{
- const {run}=trader();for(const vendor of ['merchant','armsdealer','alchemist'])for(const offer of run(`marketOffers('${vendor}').filter(o=>o.supply?.startsWith('material:'))`)){
+ const {run}=trader();for(const vendor of ['merchant','armsdealer'])for(const offer of run(`marketOffers('${vendor}').filter(o=>o.supply?.startsWith('material:'))`)){
  run(`p.x=NPCS.${vendor}.x;p.y=NPCS.${vendor}.y;p.level=99;p.gold=100000;p.economy.demand.materials=0;var initial=p.gold;`);assert(run(`buyMarketOffer('${vendor}','${offer.id}')`));assert(run(`sellMarketMaterial('${vendor}','${offer.supply.slice(9)}',${offer.count})`));assert(run('p.gold<initial'));
  }
 });
@@ -45,5 +44,5 @@ test('markets remain isolated between characters and do not consume combat rando
  const {run}=trader();run('buyMarketOffer("merchant","ore");var first=characterStore.activeId;returnToCharacters();var other=createCharacter("Obchodnik","ninja");playCharacter(other);');assert.equal(run('p.economy.stock["merchant:ore"]'),12);run('returnToCharacters();playCharacter(first);');assert.equal(run('p.economy.stock["merchant:ore"]'),11);run('rand=()=>{throw Error("combat rng");};updateEconomy(600);');
 });
 test('all merchant screens show prices, stocks, refresh, buyback and specialist service',()=>{
- const {run,elements}=trader();for(const vendor of ['merchant','armsdealer','alchemist']){run(`p.x=NPCS.${vendor}.x;p.y=NPCS.${vendor}.y;marketPanel('${vendor}');`);const html=elements.get('modalcontent').innerHTML;for(const word of ['Yang','zásoba','Obnova','Výkup'])assert(html.includes(word));}assert.match(elements.get('modalcontent').innerHTML,/Alchymistické recepty/);
+ const {run,elements}=trader();for(const vendor of ['merchant','armsdealer']){run(`p.x=NPCS.${vendor}.x;p.y=NPCS.${vendor}.y;marketPanel('${vendor}');`);const html=elements.get('modalcontent').innerHTML;for(const word of ['Yang','zásoba','Obnova','Výkup'])assert(html.includes(word));}assert(!elements.get('modalcontent').innerHTML.includes("Alchymistické recepty"));assert.equal(run("Object.keys(MARKET_TRADERS).length"),2);
 });

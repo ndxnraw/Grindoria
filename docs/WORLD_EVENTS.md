@@ -46,4 +46,4 @@ Definície: data/world-events.js. Plánovanie, odmeny a validácia: systems/worl
 
 ## Lokálne hranice od 0.30.0
 
-Úroveň udalosti neprekročí hornú hranicu mapy. Vzácnosť mení zdravie, poškodenie a odmeny pri rovnakej úrovni. Šuterland povoľuje iba vzácny Metin a skryté ruiny; Žatva materiálov sa tam neplánuje, pretože neobsahuje vhodné voľné príšery. Starý nesplniteľný stav sa pri načítaní zruší bez falošnej odmeny. Bossovia nových máp používajú existujúce registrované relikvie podľa regiónu.
+Úroveň udalosti neprekročí hornú hranicu mapy. Vzácnosť mení zdravie, poškodenie a odmeny pri rovnakej úrovni. Šuterland povoľuje iba vzácny Metin a skryté ruiny; Žatva materiálov sa tam neplánuje, pretože neobsahuje vhodné voľné príšery. Starý nesplniteľný stav sa pri načítaní zruší bez falošnej odmeny. Relikvie sa už v odmenách nepoužívajú. Udalosti nemajú samostatné okno; ich priebeh ukazuje HUD.

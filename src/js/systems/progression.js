@@ -26,6 +26,6 @@ function awardItem(epic=false,source=null){const item=makeItem(epic,source);if(!
 
 function allocate(stat){if(p.points<=0||!['strength','vitality','dexterity','intelligence'].includes(stat))return;p.points--;p[stat]++;if(stat==='vitality')p.hp=Math.min(maxHP(),p.hp+10);updateHUD();save();if(gameWindows.has('inventory'))inventory();if(gameWindows.has('character'))characterPanel();}
 
-function claimBoss(){if(p.bossClaimed||p.bossKills<1)return;p.bossClaimed=true;p.gold+=200;experience(80);awardItem(true,{type:'boss',level:8});save();updateHUD();journal();}
+function claimBoss(){if(p.bossClaimed||p.bossKills<1)return;p.bossClaimed=true;p.gold+=200;experience(80);awardItem(true,{type:'boss',level:8});save();updateHUD();if(gameWindows.has('journal'))journal();}
 
-function claimHunt(){if(p.career.eligibleKills<(p.huntClaimed+1)*10)return;p.huntClaimed++;p.gold+=60;addMaterial('training');save();updateHUD();journal();}
+function claimHunt(){if(p.career.eligibleKills<(p.huntClaimed+1)*10)return;p.huntClaimed++;p.gold+=60;addMaterial('training');save();updateHUD();if(gameWindows.has('journal'))journal();}

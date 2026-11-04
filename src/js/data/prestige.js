@@ -9,15 +9,15 @@ const PRESTIGE_RANKS=[null,
 ];
 const PRESTIGE_TRAINING={vitality:{name:'Odolné telo',text:'+15 HP',bonus:{hp:15}},guard:{name:'Pevná obrana',text:'+1 obrana',bonus:{defense:1}},focus:{name:'Sústredenie',text:'+2 sila kúziel',bonus:{magic:2}}};
 const PRESTIGE_REQUIREMENTS={
- 2:[{metric:'trial',dungeon:'crypt',tier:1,need:1,label:'Prestížna hrobka · stupeň I+'},{metric:'metins',need:5,label:'Metiny Lv.95+ po aktivácii'},{metric:'skills10',need:3,label:'Schopnosti stupňa 10+'}],
- 3:[{metric:'trial',dungeon:'frost',tier:2,need:1,label:'Prestížna pevnosť · stupeň II+'},{metric:'bosses',need:3,label:'Vzácni prestížni bossovia'},{metric:'skills20',need:1,label:'Schopnosť maximálneho stupňa'}],
+ 2:[{metric:'trial',dungeon:'crypt',tier:1,need:1,label:'Prestížna hrobka · stupeň I+'},{metric:'metins',need:5,label:'Metiny Lv.95+ po aktivácii'},{metric:'skills10',need:3,label:'Schopnosti aspoň M1'}],
+ 3:[{metric:'trial',dungeon:'frost',tier:2,need:1,label:'Prestížna pevnosť · stupeň II+'},{metric:'bosses',need:3,label:'Vzácni prestížni bossovia'},{metric:'skills20',need:1,label:'Schopnosť na P'}],
  4:[{metric:'trial',dungeon:'abyss',tier:3,need:1,label:'Prestížna priepasť · stupeň III+'},{metric:'biology',need:8,label:'Dokončené biologické etapy'},{metric:'uniques',need:3,label:'Získané dungeonové unikáty'}],
- 5:[{metric:'trials4',need:3,label:'Rôzne prestížne dungeony · stupeň IV+'},{metric:'bestiary',need:PRESTIGE_BESTIARY_KEYS.length,label:'Druhy porazené v bestiári'},{metric:'skills20',need:6,label:'Maximálne schopnosti aktuálnej školy'},{metric:'weapon9',need:1,label:'Legendary alebo Mythic zbraň +9'}]
+ 5:[{metric:'trials4',need:3,label:'Rôzne prestížne dungeony · stupeň IV+'},{metric:'bestiary',need:PRESTIGE_BESTIARY_KEYS.length,label:'Druhy porazené v bestiári'},{metric:'skills20',need:6,label:'Schopnosti aktuálnej školy na P'},{metric:'weapon9',need:1,label:'Legendary alebo Mythic zbraň +9'}]
 };
 const PRESTIGE_GOALS={
  arsenal:{metric:'arsenal',need:10,label:'Mythic výbava +9 vo všetkých slotoch'},
  perfect:{metric:'perfect',need:1,label:'Mythic predmet s piatimi maximálnymi bonusmi'},
- skills:{metric:'skills20',need:6,label:'Maximálne schopnosti aktuálnej školy'},
+ skills:{metric:'skills20',need:6,label:'Schopnosti aktuálnej školy na P'},
  biology:{metric:'biology',need:8,label:'Dokončená biológia'},
  challenges:{metric:'trials5',need:3,label:'Všetky prestížne dungeony · stupeň V'},
  bosses:{metric:'bossTypes',need:3,label:'Všetci traja vzácni prestížni bossovia'},

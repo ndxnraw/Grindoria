@@ -4,11 +4,26 @@
 
 Rozhranie používa tmavé hnedé povrchy, mosadzné rámy a kompaktnú spodnú lištu podľa vzoru Metin2. HP, mana, úroveň a EXP sú vľavo hore, kruhová minimapa vpravo hore. Osem rýchlych pozícií uprostred spodnej lišty používa 1–8 a F1–F8. Útok SPACE a inventár I sú na jej okrajoch. Existujúce sólo systémy zostávajú zachované.
 
-Postava C, inventár I, schopnosti V, úlohy N, mapa M, automatický boj K, progresia P a pomoc H sú samostatné vrstvy v hernej ploche. Rovnaký správca obsluhuje každého obchodníka, biológa, kováča, alchymistu, výrobné recepty aj ostatné systémy progresie. Otvorenie ďalšej vrstvy nezatvorí predchádzajúce a nepozastaví svet. Klik do sveta medzi oknami ovláda postavu.
+Postava C, inventár I, schopnosti V, úlohy N, mapa M, automatický boj K, progresia P a pomoc H sú samostatné vrstvy v hernej ploche. Rovnaký správca obsluhuje každého obchodníka, biológa, kováča, Dungeon Majstra, výrobné recepty aj ostatné systémy progresie. Otvorenie ďalšej vrstvy nezatvorí predchádzajúce a nepozastaví svet. Klik do sveta medzi oknami ovláda postavu.
 
 Záhlavie presúva okno cez lokálne pribalený **Interact.js 1.10.27**. − minimalizuje na záhlavie, × zatvorí. Rovnaká skratka obnoví minimalizované okno alebo zatvorí otvorené. Kliknuté okno sa dostane navrch; Esc zavrie vrchnú vrstvu. Pozície sa ukladajú oddelene od postáv do `grindoria-ui-windows-v1`. Resize aj fullscreen udržia záhlavia v dosahu. Menu Esc obsahuje obnovenie polôh.
 
 Tab sa pohybuje medzi ovládacími prvkami a vrstvami bez uzamknutia v jednom dialógu. Záhlavie vybrané klávesom Tab možno presúvať šípkami po 20 px; Enter minimalizuje. Polia na písanie a výber zachovajú natívne klávesy. Ctrl/Meta/Alt kombinácie neaktivujú boj. Medzerník pri práci vo vrstve neútočí. Rozpracované vyhodenie alebo odstránenie v aktívnom inventári zruší Esc pred zatvorením okna.
+
+## Rozdelenie systémov od 0.32.0
+
+- C: atribúty, ich tréning, špecializácia, prestíž a trvalé posilnenie.
+- V: jediná kniha schopností vrátane štúdia Normál 1–20, M1–M10, G1–G10 a P.
+- P: prehľad, informácie o predmetoch, bestiár a informačný biologický výskum bez odovzdania.
+- Biológ: po interakcii samostatné okno odovzdávania iba aktuálnej etapy.
+- Kováč: malé menu Vylepšovanie / Výroba; služby nie sú v P.
+- Dungeon Majster: dungeony, prestížne výpravy a trhliny. Aktívna výprava má stavový panel; samostatné okno Endgame neexistuje.
+- N: Aktívne / Splnené. HUD vyberá nasledujúcu úlohu. Udalosti pokračujú v hre bez vlastného okna; cieľ je v HUD a aktívnom denníku.
+- I: päť strán výbavy, zásoby a kompaktné akcie výberu. Náhľad pri myši porovnáva s vybavením. Vyhodenie používa samostatné stredové okno s Enter.
+
+Splniteľné odovzdania, odmeny a vylepšenia majú zelené tlačidlo. Neaktívne tlačidlo zohľadňuje všetky podmienky vrátane vzdialenosti NPC.
+
+Fullscreen v hre vypína F10. Natívna aplikácia na Esc nemení fullscreen; webová verzia žiada `navigator.keyboard.lock(['Escape'])`. Bežný Esc bol overený v Chromiu pri zachovanom fullscreen. Podpora a udelenie oprávnenia závisia od prehliadača; [Chrome ponecháva núdzové podržanie Esc](https://developer.chrome.com/docs/capabilities/web-apis/keyboard-lock#security-considerations). Čakanie na oprávnenie neblokuje F10.
 
 ## Stabilné panely
 
@@ -32,6 +47,6 @@ Pôvodné **Odstrániť…** naďalej znamená trvalé zmazanie a vyžaduje vlas
 
 ## Overenie
 
-`tests/window-controls.test.cjs` preveruje vrstvy, minimalizáciu, skratky, formuláre, súbežné obnovovanie, zmenu postavy a Esc. `tests/ui-standard.test.cjs` zachováva kontroly nákladov, scrollu, potvrdení, vyhodenia a ochrany pred duplikovaním.
+`tests/system-simplification.test.cjs` preveruje migráciu, odstránené systémy, NPC, stupne schopností, úlohy a Enter. `tests/window-controls.test.cjs` preveruje vrstvy, minimalizáciu, skratky, formuláre, súbežné obnovovanie, zmenu postavy a Esc. `tests/ui-standard.test.cjs` zachováva kontroly nákladov, scrollu, potvrdení, vyhodenia a ochrany pred duplikovaním.
 
 `node scripts/ui-smoke.cjs` používa skutočný Chromium a Interact.js z offline zostavy. Vyžaduje Playwright (štandardne modul `playwright`); `PLAYWRIGHT_MODULE` a `BROWSER_EXECUTABLE` môžu ukázať na existujúcu inštaláciu. `UI_SMOKE_OUTPUT` určuje priečinok výsledkov, predvolene `work/ui-smoke`. Test overí presúvanie okna i predmetov, nákup pri súčasne otvorenom biológovi a inventári, filtre receptov, samostatné ID, zachovanie pozícií, formuláre a viewport 390 × 844. Uloží screenshoty a JSON s výsledkami; vyžaduje nulu chýb aj sieťových požiadaviek.

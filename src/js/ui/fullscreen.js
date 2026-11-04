@@ -1,4 +1,5 @@
-const fullscreenState = { active: false, native: false, busy: false };
+let fullscreenLockRequest=0;
+const fullscreenState = { active: false, native: false, busy: false, keyboardLocked: false };
 
 function nativeFullscreenBridge() {
   const api = window.grindoriaDesktop?.fullscreen;
@@ -10,13 +11,15 @@ function syncFullscreen(active, native = false) {
   document.body.classList.toggle('native-fullscreen', native && fullscreenState.active);
   const button = $('fullscreen');
   button.setAttribute('aria-pressed', String(fullscreenState.active));
-  const label = fullscreenState.active ? 'Ukončiť celú obrazovku' : 'Celá obrazovka';
+  const label = fullscreenState.active ? 'Celá obrazovka · ukončiť klávesom F10' : 'Celá obrazovka';
   button.setAttribute('aria-label', label); button.title = label + ' · F10';
   button.textContent = fullscreenState.active ? '⤡' : '⛶';
   keysClear(); clearLootPointer(); resize(); requestAnimationFrame(resize);
 }
 
-function syncBrowserFullscreen() { syncFullscreen(document.fullscreenElement === $('game-shell')); }
+function syncBrowserFullscreen(){const active=document.fullscreenElement===$('game-shell');if(!active)releaseFullscreenKeys();syncFullscreen(active);}
+function releaseFullscreenKeys(){fullscreenLockRequest++;if(typeof navigator!=='undefined')navigator.keyboard?.unlock?.();fullscreenState.keyboardLocked=false;}
+async function lockFullscreenKeys(){const request=++fullscreenLockRequest;try{if(typeof navigator==='undefined'||!navigator.keyboard?.lock)return false;await navigator.keyboard.lock(['Escape']);if(request!==fullscreenLockRequest||!fullscreenState.active)return false;fullscreenState.keyboardLocked=true;return true;}catch{return false;}}
 
 async function setGameFullscreen(wanted) {
   if (fullscreenState.busy) return false;
@@ -27,8 +30,8 @@ async function setGameFullscreen(wanted) {
     else {
       if (wanted) {
         if (typeof $('game-shell').requestFullscreen !== 'function') throw new Error('Fullscreen nie je dostupný.');
-        await $('game-shell').requestFullscreen();
-      } else if (document.fullscreenElement) await document.exitFullscreen();
+        await $('game-shell').requestFullscreen({navigationUI:'hide'});void lockFullscreenKeys();
+      } else if (document.fullscreenElement){releaseFullscreenKeys();await document.exitFullscreen();}
       syncBrowserFullscreen();
     }
     canvas.focus(); return fullscreenState.active === Boolean(wanted);
@@ -37,10 +40,10 @@ async function setGameFullscreen(wanted) {
   } finally { fullscreenState.busy = false; }
 }
 
-function toggleGameFullscreen() { return setGameFullscreen(!fullscreenState.active); }
+function toggleGameFullscreen(source='button'){if(fullscreenState.active&&source!=='F10'){toast('Celú obrazovku ukončíš klávesom F10.');return Promise.resolve(false);}return setGameFullscreen(!fullscreenState.active);}
 
 function initializeFullscreen() {
-  $('fullscreen').onclick = toggleGameFullscreen;
+  $('fullscreen').onclick=()=>toggleGameFullscreen();
   const bridge = nativeFullscreenBridge();
   if (bridge) {
     fullscreenState.native = true;

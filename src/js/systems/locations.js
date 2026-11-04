@@ -10,7 +10,8 @@ function interactNPC(id=null){
  if(!running||p.hp<=0)return false;
  const npc=id?NPCS[id]:Object.values(NPCS).filter(n=>nearNPC(Object.keys(NPCS).find(key=>NPCS[key]===n))).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0];
  if(!npc||p.mapId!==npc.mapId||Math.hypot(p.x-npc.x,p.y-npc.y)>170){toast('Priblíž sa k NPC v Meste.');return false;}
- if(npc.service==='shop')shop();else if(npc.service==='market')marketPanel('armsdealer');else careerPanel(npc.service);return true;
+ const npcId=Object.keys(NPCS).find(key=>NPCS[key]===npc);npcSessions.set(npcId,characterStore.activeId+':'+p.mapId);
+ if(npc.service==='shop')shop();else if(npc.service==='market')marketPanel('armsdealer');else if(npc.service==='forge')smithMenu();else if(npc.service==='biology')biologyNPCPanel();else if(npc.service==='dungeons')dungeonPanel();return true;
 }
 function npcAtPointer(x,y){return Object.entries(NPCS).find(([,npc])=>{if(npc.mapId!==p.mapId)return false;const at=screen(npc.x,npc.y);return Math.abs(x-at.x)<28&&y>at.y-65&&y<at.y+12;})?.[0]||null;}
 function enemyTargetsPlayer(enemy){

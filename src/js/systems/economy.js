@@ -63,8 +63,8 @@ function sellMarketGear(uid,trader=currentTrader()) {
 }
 function marketMaterialSaleValue(id,trader) {
   if(!Object.hasOwn(MARKET_MATERIAL_PRICES,id))return 0;
-  const preferred=trader==='alchemist'&&['herb','extract','dust'].includes(id);
-  return Math.max(1,Math.floor(MARKET_MATERIAL_PRICES[id]*.25*marketFactor('materials')*(preferred?1.1:1)));
+
+  return Math.max(1,Math.floor(MARKET_MATERIAL_PRICES[id]*.25*marketFactor('materials')));
 }
 function sellMarketMaterial(trader,id,count=1) {
   if(!marketCanTrade(trader)||!Number.isSafeInteger(count)||count<1||count>1000)return false;

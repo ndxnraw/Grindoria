@@ -17,7 +17,7 @@ function hydrateDungeonPopulation(old){
 }
 function enterDungeon(id,difficulty='normal',prestige=false){
  if(prestige&&(p.level!==99||!prestigeRank()||difficulty!=='mythic'))return false;
- if(!Object.hasOwn(DUNGEONS,id)||!Object.hasOwn(DUNGEON_DIFFICULTIES,difficulty)||!running||dungeonRun()||p.career.endgame.run||p.level<dungeonLevel(id,difficulty)||!canTravel())return false;
+ if(!nearNPC('dungeonMaster')||!Object.hasOwn(DUNGEONS,id)||!Object.hasOwn(DUNGEON_DIFFICULTIES,difficulty)||!running||dungeonRun()||p.career.endgame.run||p.level<dungeonLevel(id,difficulty)||!canTravel())return false;
  const d=DUNGEONS[id];if(!canPayRecipe(d.cost))return false;
  snapshotMap();pay(d.cost);const c=p.career.dungeons;
  c.run={id:++c.serial,dungeon:id,difficulty,unlocked:false,cleared:false,rewarded:false,time:0,hazardTimer:8,hazards:[],...(prestige?{prestigeTier:prestigeRank(),prestigePulse:0}:{})};
@@ -44,7 +44,7 @@ function finishDungeon(){
  const carried=drops.map(cloneGroundDrop),town=p.worldStates.town||{worldSize:1200,mobs:[],drops:[]};
  if((town.drops?.length||0)+carried.length>5000){toast('Najprv pozbieraj korisť. V Meste je priveľa predmetov.');return false;}
  carried.forEach((drop,i)=>{drop.x=600+(i%7-3)*15;drop.y=720+Math.floor(i/7)%7*10;drop.launchX=drop.x;drop.launchY=drop.y;drop.fallAge=LOOT_RULES.fallDuration;});
- p.worldStates.town={...town,drops:[...(town.drops||[]),...carried]};p.career.dungeons.run=null;delete p.worldStates.dungeon;mobs.length=0;drops.length=0;travelCombat.time=0;loadMap('town');save();return true;
+ p.worldStates.town={...town,drops:[...(town.drops||[]),...carried]};p.career.dungeons.run=null;delete p.worldStates.dungeon;mobs.length=0;drops.length=0;travelCombat.time=0;loadMap('town');p.x=NPCS.dungeonMaster.x;p.y=NPCS.dungeonMaster.y+60;cam.x=p.x;cam.y=p.y;save();return true;
 }
 function makeDungeonHazard(kind,x,y,damage,type,extra={}){const r=dungeonRun();if(r&&r.hazards.length<DUNGEON_RULES.maxHazards)r.hazards.push({kind,x,y,age:0,delay:1.4,duration:3,tick:0,damage,type,radius:110,...extra});}
 function hazardContains(h,entity=p){const dx=entity.x-h.x,dy=entity.y-h.y,d=Math.hypot(dx,dy);if(h.kind==='ring')return d>=h.inner&&d<=h.radius;if(h.kind==='line'){const along=dx*Math.cos(h.angle)+dy*Math.sin(h.angle),side=Math.abs(-dx*Math.sin(h.angle)+dy*Math.cos(h.angle));return along>=0&&along<=h.length&&side<=h.width;}return d<h.radius;}

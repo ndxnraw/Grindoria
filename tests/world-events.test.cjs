@@ -4,7 +4,7 @@ function ready(map='valley'){const g=createGame();g.run('running=true;loadMap("'
 function start(g,type){assert(g.run('startWorldEvent("'+type+'")'));}
 
 test('only overworld combat maps schedule events; town, dungeon and rift keep their original populations',()=>{
- const g=ready();g.run('loadMap("town",true);');assert.equal(g.run('worldEventState'),null);assert(!g.run('startWorldEvent("boss")'));g.run('p.level=35;p.gold=10000;p.career.materials.keys=10;enterDungeon("crypt");');assert.equal(g.run('worldEventState'),null);assert(!g.run('startWorldEvent("patrol")'));g.run('finishDungeon();enterRift();');assert.equal(g.run('worldEventState'),null);assert(!g.run('startWorldEvent("boss")'));
+ const g=ready();g.run('loadMap("town",true);');assert.equal(g.run('worldEventState'),null);assert(!g.run('startWorldEvent("boss")'));g.run('p.level=35;p.gold=10000;p.career.materials.keys=10;enterDungeon("crypt");');assert.equal(g.run('worldEventState'),null);assert(!g.run('startWorldEvent("patrol")'));g.run('finishDungeon();loadMap("town",true);p.x=NPCS.dungeonMaster.x;p.y=NPCS.dungeonMaster.y;enterRift();');assert.equal(g.run('worldEventState'),null);assert(!g.run('startWorldEvent("boss")'));
 });
 
 test('initial delay and subsequent scheduling use active map time, preserve pause and cannot start while dead or inactive',()=>{
@@ -62,7 +62,7 @@ test('travel freezes other maps and does not reroll events or reset their schedu
 });
 
 test('rift snapshots suspend ambient events without erasing or scaling their ordinary-map population',()=>{
- const g=ready('temple');start(g,'boss');g.run('p.level=35;p.career.materials.keys=3;var id=worldEventState.active.id,hp=mobs.find(m=>m.worldEventId).max;');assert(g.run('enterRift()'));assert.equal(g.run('worldEventState'),null);assert(!g.run('mobs.some(m=>m.worldEventId)'));assert(g.run('p.career.normalTemple.events.active.id===id'));g.run('finishRift(false);loadMap("temple");');assert.equal(g.run('worldEventState.active.id'),g.run('id'));assert.equal(g.run('mobs.find(m=>m.worldEventId).max'),g.run('hp'));
+ const g=ready('temple');start(g,'boss');g.run('p.level=35;p.career.materials.keys=3;var id=worldEventState.active.id,hp=mobs.find(m=>m.worldEventId).max;');g.run('snapshotMap();loadMap("town",true);p.x=NPCS.dungeonMaster.x;p.y=NPCS.dungeonMaster.y;');assert(g.run('enterRift()'));assert.equal(g.run('worldEventState'),null);assert(!g.run('mobs.some(m=>m.worldEventId)'));assert(g.run('p.career.normalTemple.events.active.id===id'));g.run('finishRift(false);loadMap("temple");');assert.equal(g.run('worldEventState.active.id'),g.run('id'));assert.equal(g.run('mobs.find(m=>m.worldEventId).max'),g.run('hp'));
 });
 
 test('event state, discovery and history are isolated between characters and survive complete backup import',()=>{
@@ -82,6 +82,4 @@ test('repeated events remain bounded and leave ordinary spawn identities and pop
  const g=ready();g.run('var normal=mobs.length,ids=mobs.map(m=>m.spawnId).join("|");');for(let i=0;i<30;i++){start(g,['patrol','boss','metin','convoy'][i%4]);assert(g.run('mobs.length<=normal+5'));g.run('worldEventState.active.remaining=.01;updateWorldEvents(.02);validateCharacterAccount(accountWithActiveSnapshot());');assert.equal(g.run('mobs.length'),g.run('normal'));assert.equal(g.run('mobs.map(m=>m.spawnId).join("|")'),g.run('ids'));}
 });
 
-test('HUD, journal and event details expose functional objectives, duration, rare chances and actual enemy names',()=>{
- const g=ready();start(g,'boss');g.run('updateHUD();draw();');assert.equal(g.elements.get('world-event-status').hidden,false);g.elements.get('world-event-status').onclick();assert.equal(g.run('panelState.key'),'career:events');for(const text of ['Prastarý strážca','Poraz vzácneho','3,5 %','1 %','Čas udalostí','Objavené ruiny'])assert(g.elements.get('modalcontent').innerHTML.includes(text),text);g.run('closeModal();journal();');g.elements.get('journalEvents').onclick();assert.equal(g.run('panelState.key'),'career:events');
-});
+test('world events keep live objectives in HUD and journal without a separate window',()=>{const g=ready();start(g,'boss');g.run('updateHUD();draw();');assert.equal(g.elements.get('world-event-status').hidden,false);assert.match(g.elements.get('world-event-status').title,/Poraz/);assert.equal(g.elements.get('world-event-status').onclick,null);g.run('journal();');assert.match(g.elements.get('modalcontent').innerHTML,/Prastarý strážca/);assert.equal(g.run('careerPanel("events")'),false);assert.equal(g.run('typeof worldEventsPanel'),'undefined');});

@@ -30,7 +30,7 @@ function inventory() {
   const page = inventoryTab === 'supplies' ? 0 : inventoryPage, offset = page * INVENTORY.pageSize;
   const entries = inventoryTab === 'supplies' ? supplyEntries().map(item => ({ id: item.id, item, kind: 'supply' })) : p.bag.filter(item => Math.floor(item.cell / INVENTORY.pageSize) === page).map(item => ({ id: 'gear:' + item.uid, item, kind: 'gear' }));
   const occupied = p.bag.reduce((n, item) => n + itemSize(item)[0] * itemSize(item)[1], 0);
-  modal(`<section class="inventory-window">${inventoryDropConfirmation()}<header class="inventory-title"><span class="window-sigil">G</span><div><small>${escapeHTML(characterDisplayName(p))} · ${role().name}</small><h2>Výbava a inventár</h2></div><span class="inv-level">ÚR. ${p.level}</span></header>
+  modal(`<section class="inventory-window"><header class="inventory-title"><span class="window-sigil">G</span><div><small>${escapeHTML(characterDisplayName(p))} · ${role().name}</small><h2>Výbava a inventár</h2></div><span class="inv-level">ÚR. ${p.level}</span></header>
     <div class="inventory-columns"><section class="character-panel"><h3>Vybavenie postavy</h3><div class="equipment-board">${equipmentFigure()}${Object.entries(EQUIPMENT).map(([id, spec]) => {
       const item = p.equipped[id];
       return `<button class="equipment-slot slot-${id} ${item ? 'filled rarity-' + item.rarity : ''}" data-equip-slot="${id}" ${item ? `data-entry="equipped:${id}" draggable="true"` : ''} aria-label="${spec.name}${item ? ': ' + escapeHTML(item.name) + ' · ' + rarityName(item.rarity) : ': prázdny slot'}"><span>${itemIcon(item || { slot: id }, !item)}</span><small>${spec.name}</small>${item ? '<i>✓</i>' : ''}</button>`;
@@ -40,12 +40,9 @@ function inventory() {
       const item = entry.item, [w, h] = entry.kind === 'gear' ? itemSize(item) : [1, 1], local = item.cell % INVENTORY.pageSize;
       return `<button class="grid-item rarity-${item.rarity || 0}" draggable="true" data-entry="${entry.id}" aria-label="${escapeHTML(item.name)}${entry.kind === 'gear' ? ' · ' + rarityName(item.rarity) : ''}${entry.kind === 'supply' ? ', ' + item.count + ' kusov' : ', +' + (item.enhance || 0)}" aria-pressed="${inventorySelection === entry.id}" style="grid-column:${local % 5 + 1} / span ${w};grid-row:${Math.floor(local / 5) + 1} / span ${h}">${itemIcon(item)}${entry.kind === 'supply' ? `<b class="stack-count">${item.count}</b>` : `<b class="enhance-count">+${item.enhance || 0}</b>`}</button>`;
     }).join('')}</div><p class="inventory-hint">Presun: potiahni alebo vyber predmet a políčko. Vyhodenie: vytiahni mimo okna a potvrď.</p><div class="inventory-money">◉ <b>${p.gold.toLocaleString('sk-SK')}</b> <small>YANG</small></div></section>
-    <aside class="item-inspector"><span class="eyebrow">PREDMET</span><div id="inventory-detail"></div><p class="inventory-message" id="inventory-message" role="status"></p><div class="inventory-shortcuts"><span>Plášť statočnosti: ${p.braveryCapes} ks · 8 / F8</span><span>Elixíry: ${p.potions} · 7 / F7</span><button id="inv-progress">Progresia · P</button><button id="inv-alchemy">Alchýmia</button><button id="inv-character">Postava · C</button></div></aside></div><div id="item-tooltip" class="item-tooltip" role="tooltip" hidden></div></section>`,{key:'inventory',refresh:inventory});
-  if(inventoryDropPending){$('inv-drop-cancel').onclick=()=>{inventoryDropPending=null;inventory();};$('inv-drop-confirm').onclick=()=>{const entry=inventoryEntry(inventoryDropPending.id),count=entry?.kind==='supply'?Number($('inv-drop-count').value):1;if(confirmInventoryDrop(count))inventory();else $('inv-drop-error').textContent='Vyhodenie sa nepodarilo. Skontroluj počet kusov.';};}
+    <div class="inventory-controls"><div id="inventory-actions" class="inventory-actions"></div><p class="inventory-message" id="inventory-message" role="status"></p></div></div><div id="item-tooltip" class="item-tooltip" role="tooltip" hidden></div></section>`,{key:'inventory',refresh:()=>{if(gameWindows.get('inventory')?.inventorySignature!==inventoryContentSignature())inventory();}});
   $('rarity-guide').onclick=rarityGuide;
-  $('inv-alchemy').onclick=()=>careerPanel('alchemy');$('inv-character').onclick=characterPanel;
   $('inv-sort').onclick = () => { if (sortInventory(inventoryTab)) inventory(); else inventoryMessage('Predmety sa do tohto rozloženia nezmestia.'); };
-  $('inv-progress').onclick = () => careerPanel('overview');
   panelQueryAll('[data-inv-tab]').forEach(button => button.onclick = () => { inventoryTab = button.dataset.invTab; inventorySelection = null; inventoryDeletePending = null; inventory(); });
   panelQueryAll('[data-inv-page]').forEach(button => button.onclick = () => { inventoryPage = Number(button.dataset.invPage); inventory(); });
   panelQueryAll('[data-stat]').forEach(button => button.onclick = () => allocate(button.dataset.stat));
@@ -84,7 +81,7 @@ function inventory() {
     else inventoryMessage('Predmet by presahoval okraj mriežky.');
     inventoryDrag = null;
   };
-  selectInventoryEntry(inventoryEntry(inventorySelection) ? inventorySelection : null);
+  selectInventoryEntry(inventoryEntry(inventorySelection) ? inventorySelection : null);activeGameWindow.inventorySignature=inventoryContentSignature();
 }
 
 function inventoryMessage(message) { $('inventory-message').textContent = message; }
@@ -95,23 +92,15 @@ function selectInventoryEntry(id) {
   renderInventoryDetail();
 }
 
-function renderInventoryDetail() {
-  const entry = inventoryEntry(inventorySelection);
-  if (!entry) { $('inventory-detail').innerHTML = '<div class="empty-inspector">◇<h3>Vyber predmet</h3></div>'; return; }
-  const gear = entry.kind !== 'supply', item = entry.item;
-  $('inventory-detail').innerHTML = itemDescription(entry) + `<div class="item-actions"><button id="inv-use">${entry.kind === 'equipped' ? 'Zložiť výbavu' : gear ? 'Nasadiť' : ['drink', 'cape', 'product'].includes(item.action) ? 'Použiť' : 'Otvoriť progresiu'}</button>${entry.kind === 'gear' ? '<button id="inv-sell" '+(!currentTrader()?'disabled':'')+'>Predať · '+marketGearSaleValue(item)+' Yang</button>'+(!currentTrader()?'<small>Výkup pri obchodníkovi v Meste.</small>':'') : ''}${entry.kind !== 'equipped' ? '<button id="inv-drop">Vyhodiť…</button><button id="inv-delete" class="danger">Odstrániť…</button>' : ''}</div>${inventoryDeletePending === entry.id ? `<div class="delete-confirm"><p>Odstránenie je trvalé. ${gear ? 'Odstrániť tento predmet?' : 'Koľko kusov odstrániť?'}</p>${gear ? '' : `<label>Počet <input id="inv-delete-count" type="number" min="1" max="${item.count}" value="1" step="1"></label>`}<button id="inv-delete-confirm">Potvrdiť odstránenie</button><button id="inv-delete-cancel">Zrušiť</button></div>` : ''}`;
-  $('inv-use').onclick = () => activateInventoryEntry(entry.id);
-  if (entry.kind === 'gear') $('inv-sell').onclick = () => { sellItem(p.bag.findIndex(item => 'gear:' + item.uid === entry.id)); inventorySelection = null; renderInventoryDetail(); };
-  if (entry.kind !== 'equipped') $('inv-drop').onclick=()=>requestInventoryDrop(entry.id);
-  if (entry.kind !== 'equipped') $('inv-delete').onclick = () => { inventoryDeletePending = entry.id; renderInventoryDetail(); };
-  if (inventoryDeletePending === entry.id) {
-    $('inv-delete-cancel').onclick = () => { inventoryDeletePending = null; renderInventoryDetail(); };
-    $('inv-delete-confirm').onclick = () => {
-      const count = gear ? 1 : Number($('inv-delete-count').value);
-      if (deleteInventoryItem(entry.id, count)) { inventorySelection = null; inventoryDeletePending = null; inventory(); }
-      else inventoryMessage('Zadaj platný počet kusov.');
-    };
-  }
+function renderInventoryDetail(){
+ const entry=inventoryEntry(inventorySelection),host=$('inventory-actions');if(!host)return;
+ if(!entry){host.innerHTML='';return;}
+ const gear=entry.kind!=='supply',item=entry.item,usable=gear||['drink','cape'].includes(item.action);
+ host.innerHTML=(usable?'<button id="inv-use">'+(entry.kind==='equipped'?'Zložiť':gear?'Nasadiť':entry.item.action==='drink'||entry.item.action==='cape'?'Použiť':'Materiál')+'</button>':'')+(entry.kind==='gear'?'<button id="inv-sell" '+(!currentTrader()?'disabled':'')+'>Predať · '+marketGearSaleValue(item)+' Yang</button>':'')+(entry.kind!=='equipped'?'<button id="inv-drop">Vyhodiť…</button><button id="inv-delete" class="danger">Odstrániť…</button>':'')+(inventoryDeletePending===entry.id?'<div class="delete-confirm"><p>Odstránenie je trvalé. Táto akcia sa nedá vrátiť.</p>'+(!gear?'<label>Počet <input id="inv-delete-count" type="number" min="1" max="'+item.count+'" value="1"></label>':'')+'<button id="inv-delete-confirm" class="danger">Potvrdiť odstránenie</button><button id="inv-delete-cancel">Zrušiť</button></div>':'');
+ if($('inv-use'))$('inv-use').onclick=()=>activateInventoryEntry(entry.id);
+ if(entry.kind==='gear')$('inv-sell').onclick=()=>{sellItem(p.bag.findIndex(i=>'gear:'+i.uid===entry.id));inventorySelection=null;inventory();};
+ if(entry.kind!=='equipped'){$('inv-drop').onclick=()=>requestInventoryDrop(entry.id);$('inv-delete').onclick=()=>{inventoryDeletePending=entry.id;renderInventoryDetail();};}
+ if(inventoryDeletePending===entry.id){$('inv-delete-cancel').onclick=()=>{inventoryDeletePending=null;renderInventoryDetail();};$('inv-delete-confirm').onclick=()=>{if(deleteInventoryItem(entry.id,gear?1:Number($('inv-delete-count').value))){inventorySelection=null;inventoryDeletePending=null;inventory();}else inventoryMessage('Zadaj platný počet.');};}
 }
 
 function activateInventoryEntry(id) {
@@ -119,8 +108,8 @@ function activateInventoryEntry(id) {
   if (entry.kind === 'gear') { if (!canEquipItem(entry.item)) { inventoryMessage(itemEquipReason(entry.item)); return false; } return equipItem(p.bag.findIndex(item => item.uid === entry.item.uid)); }
   if (entry.kind === 'equipped') { const ok = unequipItem(entry.item.slot); if (!ok) inventoryMessage('V inventári nie je dosť súvislého miesta.'); return ok; }
   const ok = useInventorySupply(id);
-  if (ok && ['drink','product','cape'].includes(entry.item.action)) inventory();
-  if (!ok) inventoryMessage(entry.item.action === 'product' ? 'Účinok už pôsobí, mana je plná alebo ešte beží cooldown.' : entry.item.action === 'drink' ? 'Zdravie je plné alebo elixír nemožno použiť.' : 'Plášť použi mimo bezpečnej zóny a počkaj na obnovenie.');
+  if (ok && ['drink','cape'].includes(entry.item.action)) inventory();
+  if (!ok) inventoryMessage(entry.item.action === 'drink' ? 'Zdravie je plné alebo elixír nemožno použiť.' : 'Plášť použi mimo bezpečnej zóny a počkaj na obnovenie.');
   return ok;
 }
 
@@ -142,7 +131,7 @@ function dropOnEquipment(slot, id) {
 
 function showItemTooltip(id, event) {
   const entry = inventoryEntry(id); if (!entry) return;
-  $('item-tooltip').innerHTML = itemDescription(entry, true); $('item-tooltip').hidden = false; positionItemTooltip(event);
+  $('item-tooltip').innerHTML = entry.kind==='supply'?itemDescription(entry,true):groundDropTooltip({kind:'gear',item:entry.item,x:p.x,y:p.y,fallAge:LOOT_RULES.fallDuration},true); $('item-tooltip').hidden = false; positionItemTooltip(event);
 }
 
 function positionItemTooltip(event) {
@@ -152,3 +141,5 @@ function positionItemTooltip(event) {
   tooltip.style.top = Math.max(8, Math.min(event.clientY + 14, height - rect.height - 12)) + 'px';
 }
 
+
+function inventoryContentSignature(){return JSON.stringify([p.level,p.gold,p.bag,p.equipped,p.potions,p.braveryCapes,p.career.materials,p.inventory.supplyCells,currentTrader()]);}

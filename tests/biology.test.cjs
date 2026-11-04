@@ -4,7 +4,7 @@ function biologist(stage=4){const g=createGame();g.run('running=true;loadMap("to
 
 test('the four original rewards retain their order and completed progress when loading old accounts',()=>{
  const g=biologist(4);g.run('p.career.biology.delivered=0;save();');const account=readSavedAccount(g.saved),id=account.selectedId,bio=account.profiles[id].data.career.biology;delete bio.nextDeliveryAt;delete bio.sampleKills;for(const key of Object.keys(g.run('BIOLOGY_MATERIALS')))delete account.profiles[id].data.career.materials[key];
- const next=createEmptyGame({'grindoria-characters-v1':account});assert.equal(next.run('characterStore.error'),'');assert(next.run('playCharacter()'));assert.equal(next.run('p.career.biology.stage'),4);assert.equal(next.run('p.career.biology.nextDeliveryAt'),0);assert.equal(next.run('p.career.biology.sampleKills'),0);assert.equal(next.run('careerBonuses().hp'),30);assert.equal(next.run('careerBonuses().attack'),6);assert.equal(next.run('careerBonuses().defense'),5);assert.equal(next.run('careerBonuses().crit'),.04);assert.equal(next.run('p.career.materials.ancientVenom'),0);assert.equal(next.run('BIOLOGY.length'),8);
+ const next=createEmptyGame({'grindoria-characters-v1':account});assert.equal(next.run('characterStore.error'),'');assert(next.run('playCharacter()'));assert.equal(next.run('p.career.biology.stage'),4);assert.equal(next.run('p.career.biology.nextDeliveryAt'),0);assert.equal(next.run('p.career.biology.sampleKills'),0);assert.equal(next.run('careerBonuses().hp'),80);assert.equal(next.run('careerBonuses().attack'),12);assert.equal(next.run('careerBonuses().defense'),12);assert.equal(next.run('careerBonuses().crit'),.04);assert.equal(next.run('p.career.materials.ancientVenom'),0);assert.equal(next.run('BIOLOGY.length'),8);
 });
 
 test('normal-map samples become rarer with each initial stage and still drop when the player outlevels the map',()=>{
@@ -15,8 +15,8 @@ test('normal-map samples become rarer with each initial stage and still drop whe
 
 test('advanced samples only come from the current unlocked stage and specified map and enemy variants',()=>{
  const {run}=createGame();run('p.level=40;p.career.biology.stage=4;loadMap("desert",true);rand=()=>0;var m={type:"wolf",variant:"elite",level:10,x:400,y:400};');
- for(const setup of ['p.career.biology.stage=3;','p.level=39;','p.mapId="snow";']){run('p.career.biology.stage=4;p.level=40;p.mapId="desert";'+setup+'dropBiologySample(m);');assert.equal(run('p.career.materials.ancientVenom'),0);}
- run('p.level=40;p.mapId="desert";');for(const extra of ['variant:"normal"','type:"stone"','type:"boss"','metinParentId:"stone"','dungeonBoss:true','dungeonSeal:true']){run('dropBiologySample({...m,'+extra+'});');assert.equal(run('p.career.materials.ancientVenom'),0);}
+ for(const setup of ['p.career.biology.stage=3;','p.level=39;','p.mapId="snow";']){run('p.career.biology.stage=4;p.level=40;p.mapId="quarry";'+setup+'dropBiologySample(m);');assert.equal(run('p.career.materials.ancientVenom'),0);}
+ run('p.level=40;p.mapId="quarry";');for(const extra of ['variant:"normal"','type:"stone"','type:"boss"','metinParentId:"stone"','dungeonBoss:true','dungeonSeal:true']){run('dropBiologySample({...m,'+extra+'});');assert.equal(run('p.career.materials.ancientVenom'),0);}
  run('dropBiologySample(m);');assert.equal(run('p.career.materials.ancientVenom'),1);assert.equal(run('p.career.biology.sampleKills'),0);assert.equal(run('drops.length'),0);
 });
 
@@ -29,23 +29,23 @@ test('each advanced source uses its own chance and finite pity, and wrong source
 });
 
 test('real rare monster death grants a sample once without increasing EXP from a weak enemy',()=>{
- const {run}=createGame();run('running=true;loadMap("temple",true);p.level=70;p.career.biology.stage=6;rand=()=>0;var m=mobs.find(m=>m.type==="wolf");m.variant="rare";m.hp=1;var xp=p.xp;hit(m,999999);');assert.equal(run('p.career.materials.demonHeart'),1);assert.equal(run('p.xp'),run('xp'));run('hit(m,999999);');assert.equal(run('p.career.materials.demonHeart'),1);
+ const {run}=createGame();run('running=true;loadMap("ruins",true);p.level=70;p.career.biology.stage=6;rand=()=>0;var m=mobs.find(m=>m.type==="wolf");m.variant="rare";m.level=50;m.hp=1;var xp=p.xp;hit(m,999999);');assert.equal(run('p.career.materials.demonHeart'),1);assert.equal(run('p.xp'),run('xp'));run('hit(m,999999);');assert.equal(run('p.career.materials.demonHeart'),1);
 });
 
 test('submissions require the NPC, level, living session, one sample, Yang and intervening kills; rejection is atomic',()=>{
- for(const setup of ['running=false;','p.hp=0;','p.x=100;p.y=100;','p.mapId="desert";','p.level=39;','p.career.materials.ancientVenom=0;','p.gold=0;','p.career.biology.nextKill=p.career.eligibleKills+1;','p.career.biology.nextDeliveryAt=Date.now()+10000;']){
+ for(const setup of ['running=false;','p.hp=0;','p.x=100;p.y=100;','p.mapId="quarry";','p.level=39;','p.career.materials.ancientVenom=0;','p.gold=0;','p.career.biology.nextKill=p.career.eligibleKills+1;','p.career.biology.nextDeliveryAt=Date.now()+10000;']){
   const {run}=biologist();run(setup+'var before=JSON.stringify(p);');assert(!run('completeBiology()'));assert.equal(run('JSON.stringify(p)'),run('before'));assert(run('biologyMessage.length>0'));
  }
 });
 
 test('successful submission charges only one sample and fee, and enforces both persisted real-time and kill cooldowns',()=>{
- const {run}=biologist();run('var gold=p.gold,samples=p.career.materials.ancientVenom;');assert(run('completeBiology()'));assert.equal(run('p.gold'),run('gold-500'));assert.equal(run('p.career.materials.ancientVenom'),run('samples-1'));assert.equal(run('p.career.biology.delivered'),1);assert.equal(run('p.career.biology.nextDeliveryAt'),2000000300000);assert.equal(run('biologyCooldown()'),300);
- run('p.career.eligibleKills+=10;');assert(!run('completeBiology()'));run('Date.now=()=>2000000299999;');assert(!run('completeBiology()'));run('Date.now=()=>2000000300000;');assert(run('completeBiology()'));assert.equal(run('p.career.biology.delivered'),2);
+ const {run}=biologist();run('var gold=p.gold,samples=p.career.materials.ancientVenom;');assert(run('completeBiology()'));assert.equal(run('p.gold'),run('gold-200'));assert.equal(run('p.career.materials.ancientVenom'),run('samples-1'));assert.equal(run('p.career.biology.delivered'),1);assert.equal(run('p.career.biology.nextDeliveryAt'),2000000120000);assert.equal(run('biologyCooldown()'),120);
+ run('p.career.eligibleKills+=5;');assert(!run('completeBiology()'));run('Date.now=()=>2000000119999;');assert(!run('completeBiology()'));run('Date.now=()=>2000000120000;');assert(run('completeBiology()'));assert.equal(run('p.career.biology.delivered'),2);
 });
 
 test('cooldown survives reload, advances offline, and remains enforceable with an open nonmodal window',()=>{
- const g=biologist();g.run('completeBiology();p.career.eligibleKills+=10;careerPanel("biology");save();');assert.equal(g.run('paused'),false);assert(!g.run('completeBiology()'));
- const next=createEmptyGame({'grindoria-characters-v1':g.saved.get('grindoria-characters-v1')});next.run('Date.now=()=>2000000001000;playCharacter();');assert.equal(next.run('biologyCooldown()'),299);assert(!next.run('completeBiology()'));next.run('Date.now=()=>2000000300000;');assert(next.run('completeBiology()'));
+ const g=biologist();g.run('completeBiology();p.career.eligibleKills+=5;npcSessions.set("biologist",characterStore.activeId+":"+p.mapId);biologyNPCPanel();save();');assert.equal(g.run('paused'),false);assert(!g.run('completeBiology()'));
+ const next=createEmptyGame({'grindoria-characters-v1':g.saved.get('grindoria-characters-v1')});next.run('Date.now=()=>2000000001000;playCharacter();');assert.equal(next.run('biologyCooldown()'),119);assert(!next.run('completeBiology()'));next.run('Date.now=()=>2000000120000;');assert(next.run('completeBiology()'));
 });
 
 test('completion grants permanent real HP, defense, attack, magic and movement speed exactly once',()=>{
@@ -60,7 +60,7 @@ test('all eight stages finish sequentially and permanent bonuses survive export,
 });
 
 test('characters isolate sample stacks, active stage, pity, delivery timer and permanent bonuses',()=>{
- const {run}=createEmptyGame();run('var a=createCharacter("Prvy","warrior"),b=createCharacter("Druhy","warrior");playCharacter(a);p.career.biology.stage=5;p.career.biology.delivered=3;p.career.biology.sampleKills=7;p.career.biology.nextDeliveryAt=Date.now()+600000;p.career.materials.frozenMarrow=9;returnToCharacters();playCharacter(b);');assert.equal(run('p.career.biology.stage'),0);assert.equal(run('p.career.biology.sampleKills'),0);assert.equal(run('biologyCooldown()'),0);assert.equal(run('p.career.materials.frozenMarrow'),0);assert.equal(run('careerBonuses().speed'),0);run('returnToCharacters();playCharacter(a);');assert.equal(run('p.career.biology.delivered'),3);assert.equal(run('p.career.biology.sampleKills'),7);assert(run('biologyCooldown()>0'));assert.equal(run('p.career.materials.frozenMarrow'),9);assert.equal(run('careerBonuses().speed'),12);
+ const {run}=createEmptyGame();run('var a=createCharacter("Prvy","warrior"),b=createCharacter("Druhy","warrior");playCharacter(a);p.career.biology.stage=5;p.career.biology.delivered=3;p.career.biology.sampleKills=7;p.career.biology.nextDeliveryAt=Date.now()+600000;p.career.materials.frozenMarrow=9;returnToCharacters();playCharacter(b);');assert.equal(run('p.career.biology.stage'),0);assert.equal(run('p.career.biology.sampleKills'),0);assert.equal(run('biologyCooldown()'),0);assert.equal(run('p.career.materials.frozenMarrow'),0);assert.equal(run('careerBonuses().speed'),0);run('returnToCharacters();playCharacter(a);');assert.equal(run('p.career.biology.delivered'),3);assert.equal(run('p.career.biology.sampleKills'),7);assert(run('biologyCooldown()>0'));assert.equal(run('p.career.materials.frozenMarrow'),9);assert.equal(run('careerBonuses().speed'),8);
 });
 
 test('old backups migrate additively; malformed timers, sample counters and new material stocks reject atomically',()=>{
@@ -70,7 +70,7 @@ test('old backups migrate additively; malformed timers, sample counters and new 
 });
 
 test('NPC panel shows objectives, exact sources, drop/pity, prices, timers and rewards; timer refresh keeps the same dialog',()=>{
- const {run,elements}=biologist();run('p.career.biology.nextDeliveryAt=Date.now()+1000;careerPanel("biology");');let html=elements.get('modalcontent').innerHTML;for(const text of ['Aktívny výskum','Koncentrovaný jed','Elitné a vzácne škorpióny','20 %','10. vhodné','500','5 min','+12 rýchlosť','biology-submit'])assert(html.includes(text),text);assert.match(html,/biology-submit[^>]+disabled/);
- run('Date.now=()=>2000000001000;refreshBiologyPanel();');assert.equal(elements.get('biology-submit').disabled,false);assert.equal(elements.get('biology-status').textContent,'Možno odovzdať.');assert.equal(elements.get('modalcontent').innerHTML,html);assert.equal(run('paused'),false);
- run('closeModal();journal();');assert(elements.get('modalcontent').innerHTML.includes('Biologický výskum'));elements.get('journalBiology').onclick();assert(run('panelState.key==="career:biology"'));
+ const {run,elements}=biologist();run('p.career.biology.nextDeliveryAt=Date.now()+1000;npcSessions.set("biologist",characterStore.activeId+":"+p.mapId);biologyNPCPanel();');let html=elements.get('modalcontent').innerHTML;for(const text of ['Koncentrácia jedu','Koncentrovaný jed','Elitní a vzácni kamenní strážcovia','25 %','8. vhodného','200','+8 rýchlosť','biology-submit'])assert(html.includes(text),text);assert.match(html,/biology-submit[^>]+disabled/);
+ run('Date.now=()=>2000000001000;refreshBiologyPanel();');assert.equal(elements.get('biology-submit').disabled,false);assert.equal(elements.get('biology-status').textContent,'');assert.equal(elements.get('modalcontent').innerHTML,html);assert.equal(run('paused'),false);
+ run('closeModal();journal();');assert(elements.get('modalcontent').innerHTML.includes('Biológ ·'));run('careerPanel("biology");');assert(run('panelState.key==="career:biology"'));
 });

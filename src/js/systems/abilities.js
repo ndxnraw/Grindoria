@@ -19,7 +19,7 @@ function castSkill(index) {
   if(kind==='burst'&&p.hp<=maxHP()*.08){toast('Na Životnú silu potrebuješ viac zdravia.');return false;}
   p.mp-=cost;castingSkillKey=key;castingMultiplier=beginSkillFlow(index);
   if(m)rememberSkill(m,key);
-  spellCD[index]=cd*(1-(skillProgress(key).rank-1)*.01);skillCD=spellCD[0];castPose=.6;castStyle=kind;
+  spellCD[index]=cd*(1-skillCooldownReduction(key));skillCD=spellCD[0];castPose=.6;castStyle=kind;
   if(!support){combatAssist.aimTime=.6;travelCombat.time=WORLD_RULES.travelCooldown;}
   animateAbility(index);beep(p.classId==='sura'?160:p.classId==='shaman'?620:320,.17);float(name,p.x,p.y-100,role().color);
   const opts={skillKey:key,type,multiplier:castingMultiplier};

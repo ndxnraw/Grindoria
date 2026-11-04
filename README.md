@@ -26,7 +26,7 @@ Postavy sa ukladajú automaticky. Tlačidlo Postavy uloží reláciu a otvorí v
 | Druhý klik na rovnaký cieľ | Nasledovať a automaticky útočiť |
 | Klik na zem | Chôdza na miesto, zrušenie cieľa |
 | 1–6 / F1–F6 | Schopnosti školy |
-| Y / klik na korisť | Zdvihnúť výbavu a relikvie |
+| Y / klik na korisť | Zdvihnúť výbavu |
 | 7 / F7 · 8 / F8 | Elixír · Plášť statočnosti |
 | C / I / V | Postava / inventár / schopnosti |
 | N / M / F | Úlohy / veľká mapa / blízke NPC v Meste |
@@ -35,9 +35,9 @@ Postavy sa ukladajú automaticky. Tlačidlo Postavy uloží reláciu a otvorí v
 | F10 / ⛶ | Celá obrazovka |
 | Esc | Zrušiť potvrdenie / zavrieť vrchné okno; bez okien zastaviť automatiku a otvoriť menu |
 
-Veľká mapa (M) funguje aj počas boja; cestovanie z nej je dostupné mimo boja. F otvorí blízke NPC v Meste; na bojových mapách sú malé bezpečné zóny.
+Veľká mapa (M) funguje aj počas boja; cestovanie tlačidlom vedľa minimapy je dostupné mimo boja. F otvorí blízke NPC v Meste; na bojových mapách sú malé bezpečné zóny.
 
-Zlato a zásoby sa pripíšu priamo, bez predmetu na zemi. Výbava a relikvie zostávajú na zemi do zdvihnutia alebo expirácie. Okná sa otvárajú súčasne nad hrou a presúvajú za záhlavie cez Interact.js. − minimalizuje, × zatvorí. Hra pod nimi pokračuje. [Rozhranie](docs/UI.md).
+Zlato a zásoby sa pripíšu priamo, bez predmetu na zemi. Výbava zostáva na zemi do zdvihnutia alebo expirácie. Okná sa otvárajú súčasne nad hrou a presúvajú za záhlavie cez Interact.js. − minimalizuje, × zatvorí. Hra pod nimi pokračuje. [Rozhranie](docs/UI.md).
 
 ## Začiatok a loviská
 
@@ -51,7 +51,7 @@ Zlato a zásoby sa pripíšu priamo, bez predmetu na zemi. Výbava a relikvie zo
 - Kováč v Meste: +0 až +9, materiály, šance, riziko a ochrana. Žiara zbraní od +5. [Vylepšovanie](docs/FORGE.md).
 - Spoločný katalóg a stabilné ID predmetov od dropu po výbavu. FMS, Jedovatý meč, RIB, Dýky Čierny list a Vejár jesenného vetra: výroba, dropy a vybrané ponuky zbrojára. [Predmetový model a loot pooly](docs/ITEM_MODEL.md).
 - Šesť rarít, 20 náhodných bonusov a hodnotenie predmetov. [Rarity](docs/RARITIES.md).
-- Tréning, schopnosti, osem biologických výskumov, alchýmia, relikvie, špecializácia a trhliny. [Biológ](docs/BIOLOGY.md). [Progresia](docs/PROGRESSION.md).
+- Atribúty, tréning, špecializácia a prestíž v Postave C; schopnosti 1–20/M1–M10/G1–G10/P v knihe V; osem výskumov u Biológa a výpravy u Dungeon Majstra. [Biológ](docs/BIOLOGY.md). [Progresia](docs/PROGRESSION.md).
 - Automierenie pri útoku, Autospell v boji s označeným cieľom a Autoelixíry pod 45 % HP. Podrobnosti v bojovom manuáli.
 
 - Prestíž I–V od úrovne 99: nové výzvy, pasívne bonusy, emblémy a zdokonaľovanie Mythic bonusov bez resetu postavy. [Prestíž a endgame](docs/PRESTIGE.md).
@@ -83,13 +83,13 @@ Zmeny patria do sekcie Unreleased v [changelogu](CHANGELOG.md). Postup vydania: 
 Hra nepoužíva originálne assety Metin2. Názvy klasických schopností vychádzajú z [Metin2 Wiki](https://en-wiki.metin2.gameforge.com/index.php/Category:Skills). Podrobnosti: [NOTICE.md](NOTICE.md). Licenciu na ďalšie šírenie zdrojov zatiaľ vlastník nezvolil.
 
 
-## Výroba a alchýmia
+## Výroba u kováča
 
-V Progrese (P) otvor Výrobu pri kováčovi alebo Alchýmiu pri alchymistovi v Meste. Obe remeslá majú vlastnú prax, úrovne 1–10 a recepty z materiálov lovu, Metinov a trhlín. [Recepty a pravidlá](docs/CRAFTING.md).
+Klikni na Kováča v Meste a vyber Vylepšovanie alebo Výrobu. Remeslo má vlastnú prax, úrovne 1–10 a recepty z materiálov lovu, Metinov a trhlín. [Recepty a pravidlá](docs/CRAFTING.md).
 
 ## NPC trh
 
-Obchodník, Zbrojár a alchymista v Meste majú konečné zásoby, meniace sa ceny a výkup. Ponuka sa obnovuje každých 10 minút aktívnej hry. [Ekonomika a obchod](docs/ECONOMY.md).
+Obchodník a Zbrojár v Meste majú konečné zásoby, meniace sa ceny a výkup. Ponuka sa obnovuje každých 10 minút aktívnej hry. [Ekonomika a obchod](docs/ECONOMY.md).
 
 ## Ovládanie rozhrania
 
@@ -97,8 +97,10 @@ Panely zachovávajú pozíciu pri nákupe a predaji. Náklady ukazujú Máš / P
 
 ## Dungeony
 
-Mapy (M) → Dungeony alebo Progres (P) → Dungeony. Tri lokality, tri obtiažnosti, vlastné mechaniky bossov a unikátna korisť. Endgame Priepasť ponúka Legendary a Mythic výbavu so zárukou po sérii úspechov. [Pravidlá a odmeny](docs/DUNGEONS.md).
+Klik na Dungeon Majstra v Meste otvorí ponuku dungeonov a trhlín. Tri lokality, tri obtiažnosti, vlastné mechaniky bossov a unikátna korisť. Endgame Priepasť ponúka Legendary a Mythic výbavu so zárukou po sérii úspechov. [Pravidlá a odmeny](docs/DUNGEONS.md).
 
 ## Bestiár a objavovanie
 
 Progres (P) → Bestiár a zbierky: objavení nepriatelia, bossové trofeje, skryté lokality a dlhodobé ciele s trvalými odmenami. [Pravidlá](docs/DISCOVERY.md). Cieľová platforma: PC prehliadač a existujúci Electron obal.
+
+Od 0.32.0: inventár má päť strán po 45 políčok, porovnanie je v náhľade predmetu a vyhodenie potvrdzuje malé stredové okno aj kláves Enter. Dokončené úlohy sú v N → Splnené. [Aktuálne rozdelenie systémov a prevod starých postáv](docs/PROGRESSION.md).

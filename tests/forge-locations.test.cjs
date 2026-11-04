@@ -6,7 +6,7 @@ test('new characters start in the smaller peaceful town with reusable NPC servic
  const {run,elements}=createEmptyGame();run('var id=createCharacter("Novacik","sura");playCharacter(id);');
  assert.equal(run('p.mapId'),'town');assert.equal(run('SIZE'),1200);assert.equal(run('mobs.length'),0);assert.equal(run('spawnPoints.length'),0);assert(run('isSanctuary(p)'));
  assert.equal(run('Object.keys(NPCS).length'),5);run('p.x=NPCS.merchant.x;p.y=NPCS.merchant.y;');assert(run('interactNPC("merchant")'));assert.match(elements.get('modalcontent').innerHTML,/Kúpiť 3 elixíry/);
- run('closeModal();p.x=NPCS.smith.x;p.y=NPCS.smith.y;');assert(run('interactNPC("smith")'));assert.match(elements.get('modalcontent').innerHTML,/Kováč · Mesto/);
+ run('closeModal();p.x=NPCS.smith.x;p.y=NPCS.smith.y;');assert(run('interactNPC("smith")'));assert.match(elements.get('modalcontent').innerHTML,/Vylepšovanie/);
  run('closeModal();p.x=NPCS.biologist.x;p.y=NPCS.biologist.y;');assert(run('interactNPC("biologist")'));assert.match(elements.get('modalcontent').innerHTML,/Biológ/);
  run('closeModal();loadMap("valley");');assert(!run('interactNPC("merchant")'));assert(!run('buyBraveryCapes()'));assert(run('worldObjects().every(o=>!String(o.type).includes("npc"))'));
 });
@@ -95,6 +95,6 @@ test('the second click acts after any delay without a native dblclick and anothe
 });
 
 test('finishing an expedition immediately after its final combat safely returns to town',()=>{
- const {run}=createGame();run('running=true;p.level=35;p.career.materials.keys=3;enterRift();p.career.endgame.run.kills=20;p.career.endgame.run.bosses=1;travelCombat.time=3;');assert(run('finishRift()'));assert.equal(run('p.mapId'),'town');assert.equal(run('mobs.length'),0);assert.equal(run('SIZE'),1200);
+ const {run}=createGame();run('running=true;p.level=35;p.career.materials.keys=3;loadMap("town",true);p.x=NPCS.dungeonMaster.x;p.y=NPCS.dungeonMaster.y;enterRift();p.career.endgame.run.kills=20;p.career.endgame.run.bosses=1;travelCombat.time=3;');assert(run('finishRift()'));assert.equal(run('p.mapId'),'town');assert.equal(run('mobs.length'),0);assert.equal(run('SIZE'),1200);
 });
 

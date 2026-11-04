@@ -22,7 +22,7 @@ test('rejected or unsupported fullscreen leaves real state intact and permits re
   assert.match(elements.get('toast').textContent,/nepodarilo/);assert.equal(run('fullscreenState.busy'),false);
 });
 
-test('native bridge controls Electron fullscreen and Escape exits even before the game starts', async () => {
+test('native bridge controls Electron fullscreen and Escape stays in fullscreen even before the game starts', async () => {
   const { run, elements, listeners }=createGame();let changed;const requests=[];
   run('let nativeClasses={};document.body.classList.toggle=(name,value)=>nativeClasses[name]=value;');
   const bridge={get:async()=>false,onChange:callback=>{changed=callback;return()=>{};},set:async value=>{requests.push(value);changed(value);return value;}};
@@ -30,7 +30,7 @@ test('native bridge controls Electron fullscreen and Escape exits even before th
   elements.get('fullscreen').bridge=bridge;run('window.grindoriaDesktop={fullscreen:$("fullscreen").bridge};initializeFullscreen();');await Promise.resolve();
   assert.equal(await run('toggleGameFullscreen()'),true);assert.equal(run('nativeClasses["native-fullscreen"]'),true);
   listeners.get('keydown')({key:'Escape',repeat:false,preventDefault(){}});await Promise.resolve();
-  assert.equal(run('fullscreenState.active'),false);assert.deepEqual(requests,[true,false]);
+  assert.equal(run('fullscreenState.active'),true);assert.deepEqual(requests,[true]);listeners.get('keydown')({key:'F10',repeat:false,preventDefault(){}});await Promise.resolve();assert.deepEqual(requests,[true,false]);
   changed(true);assert.equal(elements.get('fullscreen').attributes['aria-pressed'],'true');changed(false);assert.equal(run('nativeClasses["native-fullscreen"]'),false);
 });
 
@@ -55,4 +55,26 @@ test('preload exposes only fullscreen methods and strips IPC event objects from 
   vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../desktop/preload.cjs'),'utf8'),{require:name=>{assert.equal(name,'electron');return{contextBridge:bridge,ipcRenderer:ipc};}});
   assert.deepEqual(Object.keys(exposed.fullscreen),['get','set','onChange']);await assert.rejects(exposed.fullscreen.set('yes'));
   let values;const unsubscribe=exposed.fullscreen.onChange((...args)=>values=args);listener({secret:'IPC'},true);assert.deepEqual(values,[true]);unsubscribe();assert.equal(removed,listener);
+});
+
+test('browser Escape lock is acquired and released while only the F10 toggle can exit',async()=>{
+ const {run,elements,listeners}=createGame();let locks=0,unlocks=0;
+ elements.get('fullscreen').keyboard={lock:async keys=>{assert.deepEqual(Array.from(keys),['Escape']);locks++;},unlock(){unlocks++;}};
+ run('globalThis.navigator={keyboard:$("fullscreen").keyboard};');
+ elements.get('game-shell').requestFullscreen=async()=>{run('document.fullscreenElement=$("game-shell");');listeners.get('document:fullscreenchange')();};
+ run('document.exitFullscreen=async()=>{document.fullscreenElement=null;};');
+ assert(await run('setGameFullscreen(true)'));await Promise.resolve();assert.equal(locks,1);assert.equal(run('fullscreenState.keyboardLocked'),true);
+ assert.equal(await run('toggleGameFullscreen()'),false);assert.equal(run('fullscreenState.active'),true);
+ listeners.get('keydown')({key:'Escape',preventDefault(){}});assert.equal(run('fullscreenState.active'),true);
+ assert.equal(await run('toggleGameFullscreen("F10")'),true);assert.equal(run('fullscreenState.active'),false);assert(unlocks>0);
+});
+
+test('pending keyboard permission never blocks F10 and a late grant cannot relock a closed fullscreen',async()=>{
+ const {run,elements,listeners}=createGame();let grant;
+ elements.get('fullscreen').keyboard={lock:()=>new Promise(resolve=>grant=resolve),unlock(){}};
+ run('globalThis.navigator={keyboard:$("fullscreen").keyboard};');
+ elements.get('game-shell').requestFullscreen=async()=>{run('document.fullscreenElement=$("game-shell");');listeners.get('document:fullscreenchange')();};
+ run('document.exitFullscreen=async()=>{document.fullscreenElement=null;};');
+ assert(await run('setGameFullscreen(true)'));assert.equal(run('fullscreenState.busy'),false);
+ assert(await run('toggleGameFullscreen("F10")'));grant();await Promise.resolve();assert.equal(run('fullscreenState.keyboardLocked'),false);assert.equal(run('fullscreenState.active'),false);
 });

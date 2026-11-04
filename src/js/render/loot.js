@@ -1,6 +1,6 @@
 const groundIconCache = new Map(),groundRenderCache=new WeakMap();
 let groundIconBuildsRemaining=Infinity,groundRasterBuildsRemaining=Infinity;
-function groundRenderView(drop){let cached=groundRenderCache.get(drop);const item=drop.item;if(!cached||cached.item!==drop.item||cached.count!==drop.count||cached.kind!==drop.kind||cached.supplyId!==drop.supplyId||cached.relicId!==drop.relicId||cached.enhance!==item?.enhance||cached.rarity!==item?.rarity||cached.modelId!==item?.modelId||cached.name!==item?.name||cached.tier!==item?.tier||cached.bonus!==item?.bonus||cached.affixes!==item?.affixes){cached={enhance:item?.enhance,rarity:item?.rarity,modelId:item?.modelId,name:item?.name,tier:item?.tier,bonus:item?.bonus,affixes:item?.affixes,item:drop.item,count:drop.count,kind:drop.kind,supplyId:drop.supplyId,relicId:drop.relicId,view:groundDropView(drop),key:null};groundRenderCache.set(drop,cached);}return cached;}
+function groundRenderView(drop){let cached=groundRenderCache.get(drop);const item=drop.item;if(!cached||cached.item!==drop.item||cached.count!==drop.count||cached.kind!==drop.kind||cached.supplyId!==drop.supplyId||cached.enhance!==item?.enhance||cached.rarity!==item?.rarity||cached.modelId!==item?.modelId||cached.name!==item?.name||cached.tier!==item?.tier||cached.bonus!==item?.bonus||cached.affixes!==item?.affixes){cached={enhance:item?.enhance,rarity:item?.rarity,modelId:item?.modelId,name:item?.name,tier:item?.tier,bonus:item?.bonus,affixes:item?.affixes,item:drop.item,count:drop.count,kind:drop.kind,supplyId:drop.supplyId,view:groundDropView(drop),key:null};groundRenderCache.set(drop,cached);}return cached;}
 
 function groundIcon(item,knownKey=null) {
   if (typeof Image === 'undefined') return null;
@@ -25,7 +25,7 @@ function drawGroundLoot() {
     const visual = groundDropVisual(drop);
     if (visual.x < -40 || visual.x > W + 40 || visual.y < -65 || visual.y > H + 40) continue;
     const selected=drop.id===hoveredLootId,dx=drop.x-p.x,dy=drop.y-p.y;
-    if(!selected&&dx*dx+dy*dy>PERFORMANCE_RULES.lootDetailRadius**2){ellipse(visual.x,visual.y,5,4,rarityColor(drop.kind==='gear'?drop.item.rarity:drop.kind==='relic'?2:0));continue;}
+    if(!selected&&dx*dx+dy*dy>PERFORMANCE_RULES.lootDetailRadius**2){ellipse(visual.x,visual.y,5,4,rarityColor(drop.kind==='gear'?drop.item.rarity:0));continue;}
     const cached=groundRenderView(drop),item=cached.view; if (!item) continue;
     cached.key??=equipmentAppearance(item)?.key||(item.icon||item.slot)+':'+(item.rarity||0);
     const location = screen(drop.x, drop.y);

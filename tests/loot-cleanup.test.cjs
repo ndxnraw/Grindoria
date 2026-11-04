@@ -13,10 +13,10 @@ test('moving across loot never opens details; only resting on one item for 550 m
   assert.equal(run('pickNearbyGroundDrops()'), 1);
 });
 
-test('all unpicked loot expires, with extra time for epic gear and relics, without awarding anything', () => {
+test('all unpicked loot expires, with extra time for epic gear, without awarding anything', () => {
   const { run } = createGame();
-  run('running=true;p.x=1000;p.y=1160;let now=1000000;Date.now=()=>now;let source={x:400,y:400};for(let payload of [{kind:"gold",count:50},{kind:"supply",supplyId:"potions",count:1},{kind:"gear",item:{slot:"weapon",name:"Meč",rarity:0}},{kind:"gear",item:{slot:"armor",name:"Epické",rarity:2}},{kind:"relic",relicId:"valley",count:1}])spawnGroundDrop(payload,source);let before=JSON.stringify({gold:p.gold,potions:p.potions,bag:p.bag,collection:p.career.collection});now+=180000;updateGroundLoot(.05);');
-  assert.equal(run('drops.length'), 2); assert(run('drops.every(d=>d.kind==="relic"||d.item.rarity===2)'));
+  run('running=true;p.x=1000;p.y=1160;let now=1000000;Date.now=()=>now;let source={x:400,y:400};for(let payload of [{kind:"gold",count:50},{kind:"supply",supplyId:"potions",count:1},{kind:"gear",item:{slot:"weapon",name:"Meč",rarity:0}},{kind:"gear",item:{slot:"armor",name:"Epické",rarity:2}}])spawnGroundDrop(payload,source);let before=JSON.stringify({gold:p.gold,potions:p.potions,bag:p.bag,collection:p.career.collection});now+=180000;updateGroundLoot(.05);');
+  assert.equal(run('drops.length'), 1); assert(run('drops.every(d=>d.item.rarity===2)'));
   run('now+=420000;updateGroundLoot(.05);'); assert.equal(run('drops.length'), 0);
   assert.equal(run('JSON.stringify({gold:p.gold,potions:p.potions,bag:p.bag,collection:p.career.collection})'), run('before'));
 });

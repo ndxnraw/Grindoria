@@ -57,7 +57,7 @@ test('skill practice requires a real eligible kill; repeated hits do not multipl
   run('p.gold=1000;p.career.materials.books=10;'); assert.equal(run('upgradeSkill("body:0")'), false);
   run('skillProgress("body:0").practice=20;');
   assert.equal(run('upgradeSkill("body:0")'), true); assert.equal(run('skillProgress("body:0").rank'), 2);
-  assert.equal(run('p.career.materials.books'), 9); assert.equal(run('p.gold'), 975);
+  assert.equal(run('p.career.materials.books'), 10); assert.equal(run('p.gold'), 980);
   assert.equal(run('upgradeSkill("black:0")'), false);
 });
 
@@ -70,7 +70,7 @@ test('biologist consumes samples, requires farming between submissions and grant
   run('p.x=NPCS.biologist.x;p.y=NPCS.biologist.y;');
   const hp = run('maxHP()');
   for (let i = 1; i < 10; i++) { run(`p.career.eligibleKills=${i * 10};`); assert.equal(run('completeBiology()'), true); }
-  assert.equal(run('p.career.biology.stage'), 1); assert.equal(run('maxHP()'), hp + 30);
+  assert.equal(run('p.career.biology.stage'), 1); assert.equal(run('maxHP()'), hp + 80);
   assert.equal(run('p.career.materials.wolf'), 10);
   assert.equal(run('completeBiology()'), false);
 });
@@ -85,27 +85,9 @@ test('enhancement follows the item across swaps and cannot be bought without ore
   run('equipItem(0);'); assert.equal(run('equippedBonus("weapon")'), 12);
 });
 
-test('alchemy consumes ingredients and fusion stones; all three bonuses can coexist', () => {
-  const { run } = createGame();
-  run('running=true;loadMap("town",true);p.x=NPCS.alchemist.x;p.y=NPCS.alchemist.y;p.gold=10000;Object.assign(p.career.materials,{essence:1000,ore:100,dust:100});');
-  const base = run('damage()');
-  for (const id of ['ruby', 'sapphire', 'jade']) { assert.equal(run(`craftGem('${id}')`), true); assert.equal(run(`upgradeGem('${id}')`), true); }
-  assert.equal(run('damage()'), base + 2); assert.equal(run('careerBonuses().defense'), 1); assert.equal(run('careerBonuses().mp'), 15);
-  assert.equal(run('upgradeGem("ruby")'), false);
-  run('craftGem("ruby");craftGem("ruby");'); assert.equal(run('upgradeGem("ruby")'), true);
-  assert.equal(run('p.career.alchemy.stock.ruby'), 0); assert.equal(run('careerBonuses().attack'), 8);
-  assert.equal(run('craftGem("missing")'), false);
-});
+test('removed alchemy and relic mechanics cannot grant permanent bonuses',()=>{const {run}=createGame();assert.equal(run('typeof upgradeGem'),'undefined');assert.equal(run('typeof collectRelic'),'undefined');assert.equal(run('p.career.alchemy'),undefined);assert.equal(run('p.career.collection'),undefined);assert.equal(run('careerBonuses().attack'),0);});
 
-test('rare collection bonuses do not stack duplicates; guaranteed drops prevent permanent bad luck', () => {
-  const { run } = createGame();
-  run('collectRelic("valley");'); assert.equal(run('careerBonuses().attack'), 3);
-  run('collectRelic("valley");'); assert.equal(run('careerBonuses().attack'), 3); assert.equal(run('p.career.materials.dust'), 10);
-  run('collectRelic("desert");collectRelic("snow");collectRelic("temple");');
-  assert.equal(run('careerBonuses().attack'), 11); assert.equal(run('careerBonuses().hp'), 40);
-  run('delete p.career.collection.valley;p.career.relicPity.valley=9;p.level=99;careerKill({type:"boss",level:6,x:p.x,y:p.y});running=true;let relic=drops.find(d=>d.kind==="relic");relic.fallAge=LOOT_RULES.fallDuration;pickUpGroundDrop(relic.id);');
-  assert.equal(run('p.career.collection.valley'), true);
-});
+test('ordinary bosses reward usable resources and never create retired drops',()=>{const {run}=createGame();run('running=true;rand=()=>0;for(let i=0;i<20;i++)careerKill({type:"boss",level:40,x:400,y:400});');assert(run('p.career.materials.books>0'));assert(run('p.career.materials.soulStones>0'));assert(run('drops.every(d=>d.kind!=="relic")'));});
 
 test('specialization and endgame have separate gates and currencies', () => {
   const { run } = createGame();
@@ -113,7 +95,7 @@ test('specialization and endgame have separate gates and currencies', () => {
   run('p.level=10;'); assert.equal(run('specialize("ravager")'), true); assert.equal(run('specialize("sentinel")'), false);
   assert.equal(run('trainSpecialization()'), true); assert.equal(run('careerBonuses().attackPercent'), .03);
   run('running=true;p.career.materials.keys=6;'); assert.equal(run('enterRift()'), false);
-  run('p.level=35;'); assert.equal(run('enterRift()'), true);
+  run('p.level=35;'); run('loadMap("town",true);p.x=NPCS.dungeonMaster.x;p.y=NPCS.dungeonMaster.y;');assert.equal(run('enterRift()'), true);
   assert.equal(run('p.career.materials.keys'), 3); assert.equal(run('finishRift()'), false);
   assert.equal(run('loadMap("valley")'), false);
   run('for(const m of mobs.filter(m=>m.type==="wolf").slice(0,20))hit(m,999999);hit(mobs.find(m=>m.type==="boss"),999999);');
@@ -144,15 +126,13 @@ test('repeatable quest cannot bypass EXP penalties and capped systems do not con
   assert.equal(run('trainAttribute("strength")'), false); assert.equal(run('p.gold'), 100000);
   run('p.equipped.weapon={slot:"weapon",bonus:10,enhance:9};p.career.materials.ore=10000;');
   assert.equal(run('enhanceEquipment("weapon")'), false); assert.equal(run('p.career.materials.ore'), 10000);
-  run('p.career.alchemy.equipped.ruby=5;p.career.alchemy.stock.ruby=100;');
-  assert.equal(run('upgradeGem("ruby")'), false); assert.equal(run('p.career.alchemy.stock.ruby'), 100);
   run('for(let i=0;i<20000;i++)experience(enemyXP({type:"wolf",level:1}));');
   assert(run('p.level < 10'));
 });
 
 test('an active expedition survives reload and abandoning restores the ordinary map', () => {
   const { run, saved } = createGame();
-  run('running=true;p.level=35;p.career.materials.keys=3;loadMap("temple");let normalHP=mobs[0].max,normalBossHP=mobs.find(m=>m.type==="boss").max;enterRift();hit(mobs[0],999999);save();');
+  run('running=true;p.level=35;p.career.materials.keys=3;loadMap("temple");let normalHP=mobs[0].max,normalBossHP=mobs.find(m=>m.type==="boss").max;loadMap("town",true);p.x=NPCS.dungeonMaster.x;p.y=NPCS.dungeonMaster.y;enterRift();hit(mobs[0],999999);save();');
   assert(run('mobs.find(m=>m.type==="boss").max > normalBossHP'));
   const reload = createGame(readSavedProfile(saved));
   assert.equal(reload.run('p.career.endgame.run.kills'), 1);
@@ -165,11 +145,11 @@ test('an active expedition survives reload and abandoning restores the ordinary 
 test('every progression panel opens and the entire career persists in the save', () => {
   const { run, elements, saved } = createGame();
   run('running=true;');
-  for (const tab of ['overview', 'training', 'skills', 'biology', 'forge', 'alchemy', 'collection', 'specialization', 'endgame']) {
+  for (const tab of ['overview','items','discovery','biology']) {
     run(`careerPanel('${tab}');`); assert.equal(elements.get('modal').hidden, false); assert.equal(run('gameWindows.has("career:'+tab+'")'),true);assert.equal(run('paused'),false);
   }
-  run('p.career.materials.books=8;p.career.alchemy.equipped.ruby=2;p.career.biology.stage=1;save();');
+  run('p.career.materials.books=8;p.career.biology.stage=1;save();');
   const reload = createGame(readSavedProfile(saved));
-  assert.equal(reload.run('p.career.materials.books'), 8); assert.equal(reload.run('careerBonuses().attack'), 8); assert.equal(reload.run('careerBonuses().hp'), 30);
+  assert.equal(reload.run('p.career.materials.books'), 8); assert.equal(reload.run('careerBonuses().attack'), 0); assert.equal(reload.run('careerBonuses().hp'), 80);
 });
 

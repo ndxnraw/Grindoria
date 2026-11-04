@@ -10,7 +10,6 @@ function enemyCombatStats(level,type='wolf',variant='normal'){
   const v=ENEMY_VARIANTS[variant]||ENEMY_VARIANTS.normal,boss=type==='boss';
   return {hp:Math.round(hp*(boss?9*(variant==='rare'?1.6:1):v.hp)),attack:attack*(boss?2.5*(variant==='rare'?1.25:1):v.damage)/(boss?26:9)};
 }
-function bossRelicId(mapId=p.mapId){const regions={meadow:'valley',marsh:'desert',quarry:'snow',highlands:'snow',ruins:'temple',wastes:'temple'};return Object.hasOwn(regions,mapId)?regions[mapId]:Object.hasOwn(RELICS,mapId)?mapId:null;}
 function migrateBalanceProfile(data){
   if(!data?.career||data.career.balanceVersion===2)return;
   const oldNeed=Math.ceil(600*data.level**2.15*(1+.025*(data.level-1)));
@@ -18,17 +17,14 @@ function migrateBalanceProfile(data){
   for(const item of [...(data.bag||[]),...Object.values(data.equipped||{})])if(item&&item.rarity===0&&item.tier===1&&item.enhance===9&&['Začiatočnícky meč','Začiatočnícky luk','Začiatočnícke dýky','Začiatočnícky vejár'].includes(item.name))item.enhance=2;
   data.career.balanceVersion=2;
 }
-function repairLegacyRelics(data){
+function repairLegacyWorld(data){
   for(const state of [...Object.values(data?.worldStates||{}),data?.career?.normalTemple])for(const m of state?.mobs||[])trimEnemySnapshot(m);
   for(const seen of Object.values(data?.discovery?.seen||{}))if(seen?.type==='stone'&&seen.armor===0&&METIN_TYPES[seen.metinType])seen.armor=metinStats(seen.level,seen.metinType).armor;
-  for(const state of [...Object.values(data?.worldStates||{}),data?.career?.normalTemple])for(const drop of state?.drops||[]){
-    if(drop.kind==='relic'&&!Object.hasOwn(RELICS,drop.relicId)){const id=bossRelicId(drop.relicId);if(id)drop.relicId=id;}
-  }
   for(const state of Object.values(data?.worldStates||{}))if(state?.events?.mapId==='suterland'&&state.events.active?.type==='bounty'){state.events.active=null;state.events.nextCheck=120;}
 }
 
 function initializeCareer() {
-  migrateItemProfile(p,p.characterId||'legacy');repairLegacyRelics(p);
+  migrateItemProfile(p,p.characterId||'legacy');repairLegacyWorld(p);migrateGameSystems(p);
   const old = p.career;
   if (!old || old.schema !== PROGRESSION.schema) {
     const progress = Math.max(0, Math.min(.999999, p.xp / (60 + (p.level - 1) * 35)));
@@ -42,13 +38,12 @@ function initializeCareer() {
     }
     p.weapon = 0;
     p.career = {
-      schema: PROGRESSION.schema, balanceVersion: 2,
+      schema: PROGRESSION.schema, balanceVersion: 2, systemsVersion: 1,
       materials: Object.fromEntries(Object.keys(MATERIALS).map(id => [id, 0])),
       eligibleKills: (p.huntClaimed || 0) * 10, training: { strength: 0, vitality: 0, dexterity: 0, intelligence: 0 },
       skills: {}, skillUpgrades: 0,
       biology: { stage: 0, delivered: 0, nextKill: 0 },
-      alchemy: { stock: { ruby: 0, sapphire: 0, jade: 0 }, equipped: { ruby: 0, sapphire: 0, jade: 0 } },
-      collection: {}, relicPity: {}, samplePity: {}, keyPity: 0,
+      samplePity: {}, keyPity: 0,
       specialization: { focus: null, rank: 0, points: 0 },
       endgame: { highest: 0, paragon: 0, run: null }
     };
@@ -78,18 +73,11 @@ function careerBonuses() {
   if (!p.career) return b;
   const add = bonus => { for (const [id, amount] of Object.entries(bonus)) b[id] += amount; };
   for (let i = 0; i < p.career.biology.stage; i++) add(BIOLOGY[i].bonus);
-  const gems = p.career.alchemy.equipped;
-  add({ attack: 2 * gems.ruby ** 2, mp: 15 * gems.sapphire, magic: 2 * gems.sapphire, hp: 10 * gems.jade, defense: gems.jade });
-  const relics = Object.keys(p.career.collection).filter(id => p.career.collection[id] && RELICS[id]);
-  relics.forEach(id => add(RELICS[id].bonus));
-  if (relics.length >= 2) add({ defense: 2 });
-  if (relics.length === 4) add({ attack: 8, hp: 15 });
   const spec = p.career.specialization;
   if (spec.focus === 'ravager') add({ attackPercent: .015 * spec.rank, crit: .005 * spec.rank });
   if (spec.focus === 'sentinel') add({ hp: 15 * spec.rank, defense: 2 * spec.rank });
   if (spec.focus === 'mystic') add({ magic: 4 * spec.rank, mp: 8 * spec.rank });
   add({ attack: p.career.endgame.paragon * 2, hp: p.career.endgame.paragon * 5 });
-  add(alchemyBonuses());
   add(discoveryBonuses());
   add(prestigeBonuses());
   return b;
@@ -148,9 +136,13 @@ function skillProgress(key) {
   return p.career.skills[key] ??= { rank: 1, practice: 0 };
 }
 
-function skillPracticeNeeded(rank) { return Math.ceil(10 * rank ** 1.15); }
-function skillFactor(key) { return 1 + ((skillProgress(key)?.rank || 1) - 1) * .04; }
-function skillCost(key) { const rank = skillProgress(key).rank; return { books: Math.ceil(rank / 3), gold: 25 * rank * rank }; }
+function skillRankShort(rank){return rank<=20?String(rank):rank<=30?'M'+(rank-20):rank<=40?'G'+(rank-30):'P';}
+function skillRankLabel(rank){return (rank<=20?'Normál ':rank<=30?'Majster ':rank<=40?'Veľmajster ':'Perfektný majster ')+skillRankShort(rank);}
+function skillPowerSteps(rank){return rank<=20?(rank-1)*.5:rank<=30?10+rank-21:rank<=40?20+(rank-31)*1.5:35;}
+function skillPracticeNeeded(rank){return rank<=20?10+rank*2:rank<=30?50+(rank-20)*4:90+(rank-30)*8;}
+function skillFactor(key){return 1+skillPowerSteps(skillProgress(key)?.rank||1)*.04;}
+function skillCooldownReduction(key){return Math.min(.35,skillPowerSteps(skillProgress(key)?.rank||1)*.01);}
+function skillCost(key){const rank=skillProgress(key).rank;if(rank>=41)return {};if(rank<20)return {gold:20*rank};if(rank<30)return {books:1+Math.floor((rank-20)/2),gold:500+250*(rank-20)};return {soulStones:1+Math.floor((rank-30)/2),gold:2500*(rank-29)};}
 
 function upgradeSkill(key) {
   const skill = skillProgress(key);
@@ -168,19 +160,6 @@ function rememberSkill(m, key) {
   if (!m.skillContributors.includes(key)) m.skillContributors.push(key);
 }
 
-function craftGem(id) {
-  return Object.hasOwn(GEMS, id) && craftRecipe('gem-' + id);
-}
-
-function upgradeGem(id) {
-  if (!GEMS[id]) return false;
-  const alchemy = p.career.alchemy, rank = alchemy.equipped[id], stones = rank ? 2 ** rank : 1;
-  if (rank >= PROGRESSION.maxGemRank || alchemy.stock[id] < stones) return false;
-  if (!pay(rank ? { dust: 5 * rank, gold: 100 * rank * rank } : {})) return false;
-  alchemy.stock[id] -= stones; alchemy.equipped[id]++;
-  save(); return true;
-}
-
 function specialize(id) {
   const spec = p.career.specialization;
   if (!SPECIALIZATIONS[id] || p.level < 10 || spec.focus || spec.points < 3) return false;
@@ -194,16 +173,6 @@ function trainSpecialization() {
   spec.points -= spec.rank + 1; spec.rank++; save(); return true;
 }
 
-function collectRelic(id) {
-  if (!RELICS[id]) return;
-  if (p.career.collection[id]) addMaterial('dust', 10);
-  else {
-    p.career.collection[id] = true;
-    float('RELIKVIA · ' + RELICS[id].name, p.x, p.y - 130, '#dbaff0', true);
-    toast('Vzácna relikvia: ' + RELICS[id].name + '\nTrvalý bonus: ' + RELICS[id].text);
-  }
-}
-
 function careerKill(m) {
   const giveMaterial = (id, count = 1) => { if (m.type !== 'stone') dropMaterial(id, count, m); };
   const eligible = rewardEligible(m), c = p.career;
@@ -212,6 +181,7 @@ function careerKill(m) {
     c.eligibleKills++; giveMaterial('essence', m.type === 'boss' ? 12 : m.type === 'stone' ? 4 : 1);
     if (c.eligibleKills % 5 === 0) { giveMaterial('ore'); giveMaterial('training'); }
     if (m.type === 'stone' || m.type === 'boss') { giveMaterial('books'); giveMaterial('dust', m.type === 'boss' ? 5 : 1); }
+    if(enemyLevel(m)>=35&&m.type==='boss'&&rand()<.2)giveMaterial('soulStones');
     const used = new Set(m.skillContributors || []);
     school().skills.forEach((s, i) => { if (active(s[1])) used.add(skillKey(i)); });
     for (const key of used) {
@@ -225,9 +195,7 @@ function careerKill(m) {
   if (m.type === 'boss'&&!m.dungeonBoss) {
     c.keyPity++;
     if (c.keyPity >= 3) { giveMaterial('keys'); c.keyPity = 0; }
-    c.relicPity[p.mapId] = (c.relicPity[p.mapId] || 0) + 1;
-    const relicId=bossRelicId();
-    if (relicId&&(rand() < .08 || c.relicPity[p.mapId] >= 10)) { spawnGroundDrop({ kind: 'relic', relicId, count: 1 }, m); c.relicPity[p.mapId] = 0; }
+
   }
   const run = c.endgame.run;
   if (run?.active && p.mapId === 'temple' && m.riftId === run.id) {
@@ -248,7 +216,7 @@ function rebalanceEnemy(m, cfg, index) {
 
 function enterRift() {
   const end = p.career.endgame;
-  if (p.level < 35 || end.run || dungeonRun() || !canTravel()) return false;
+  if (!nearNPC('dungeonMaster') || p.level < 35 || end.run || dungeonRun() || !canTravel()) return false;
   if (!pay({ keys: 3 })) return false;
   const tier = Math.min(PROGRESSION.maxRiftTier, end.highest + 1);
   loadMap('temple');
@@ -278,7 +246,7 @@ function finishRift(claim = true) {
   delete p.career.normalTemple;
   // Do not overwrite the ordinary snapshot with expedition enemies on exit.
   mobs.length = 0; drops.length = 0; Object.assign(p,MAPS[p.mapId].entry);
-  travelCombat.time=0;loadMap('town'); save(); return true;
+  travelCombat.time=0;loadMap('town');p.x=NPCS.dungeonMaster.x;p.y=NPCS.dungeonMaster.y+60;cam.x=p.x;cam.y=p.y;save(); return true;
 }
 
 function upgradeParagon() {

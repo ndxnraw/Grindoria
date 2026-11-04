@@ -166,7 +166,7 @@ Tri prepínače nad hotbarom sú nezávislé a ukladajú sa do p.combatAssist; s
 
 Autospell používa existujúce castSkill, skutočné cooldowny, dosah a cenu many. Vyžaduje živý ručne označený cieľ do 500 jednotiek a skutočný boj s ním v posledných 8 sekundách. Samotné približovanie sa k vzdialenému cieľu nestačí; neoznačené ciele, pokojové liečenie a buffovanie automatiku nespúšťajú. Rotuje šesť schopností s odstupom 0,8 s, čaká na dokončenie animácie a uprednostní dostupné dokončenie komba. Aktívne aury neopakuje. Vyliečenie uprednostní pod 65 % maximálneho zdravia; Životnú silu nespustí pri 35 % alebo menej. Výpady a kotúľanie môžu premiestniť postavu rovnako ako pri ručnom použití. Nedostupné schopnosti preskočí bez opakovaných hlášok o mane.
 
-Pred začatím hry, pri pauze, smrti, v bezpečnej zóne, pri strate zamerania okna alebo skrytom tabe asistencia nič nové nezosiela. Po návrate do aktívneho okna pokračuje. Esc pri zavretom paneli zruší cieľ aj oba prepínače a uloží vypnutý stav. Esc v natívnom fullscreene navyše ukončí celú obrazovku. Pri browserovom fullscreene môže prvý Esc spracovať sám prehliadač.
+Pred začatím hry, pri pauze, smrti, v bezpečnej zóne, pri strate zamerania okna alebo skrytom tabe asistencia nič nové nezosiela. Po návrate do aktívneho okna pokračuje. Esc pri zavretom paneli zruší cieľ aj oba prepínače a uloží vypnutý stav. Fullscreen ukončí F10. Webová verzia zachytáva bežný Esc cez podporovaný Keyboard Lock; núdzové podržanie Esc zostáva v réžii prehliadača.
 
 Hotbar po použití schopnosti, elixíru či plášťa vráti fokus Canvasu bez posunu stránky. Medzerník v hernom svete opakuje útok; pri práci vo vrstve neútočí. Písanie v textovom poli a Ctrl/Meta/Alt kombinácie zostávajú natívne.
 

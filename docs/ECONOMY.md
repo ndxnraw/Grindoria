@@ -1,6 +1,6 @@
 # Ekonomika a NPC trh
 
-Yang je hlavná mena; existujúce uložené `gold` zostáva tým istým počítadlom. Trh otvoríš cez F alebo klik pri NPC v Meste. Obchodník predáva základné zásoby, Zbrojár materiály a vzácnu výbavu. Pri alchymistovi otvor Progres → Alchýmia → Obchod alchymistu. Recepty ostávajú dostupné v pôvodnej službe.
+Yang je hlavná mena; existujúce uložené `gold` zostáva tým istým počítadlom. Trh otvoríš cez F alebo klik pri NPC v Meste. Obchodník predáva základné zásoby, Zbrojár materiály a vzácnu výbavu. Recepty a vylepšovanie otvára Kováč vlastným výberom služby.
 
 ## Ponuka
 
@@ -11,10 +11,8 @@ Yang je hlavná mena; existujúce uložené `gold` zostáva tým istým počíta
 | Obchodník, Zbrojár | 5 rúd | 100 Yang / 12 u každého |
 | Obchodník | 3 kože | 90 Yang / 8 |
 | Obchodník | 5 esencií | 150 Yang / 8 |
-| Alchymista | 5 bylín | 100 Yang / 10 |
-| Alchymista | 3 prachy | 240 Yang / 5 |
-| Alchymista | Extrakt | 180 Yang / 4 |
-| Alchymista | Elixír many | 140 Yang / 6 |
+| Obchodník | 5 bylín | 100 Yang / 10 |
+| Obchodník | 3 kováčske prachy | 240 Yang / 5 |
 | Zbrojár | 2 kryštály od Lv.20 | 500 Yang / 3 |
 | Zbrojár | Kováčske jadro od Lv.35 | 6000 Yang / 1 |
 | Zbrojár | 2 kusy vzácnej výbavy | 1 kus každej ponuky |
@@ -29,15 +27,15 @@ Trh má tri skupiny: zásoby, materiály a výbava. Dopyt každej skupiny je cel
 
 Cena používa `clamp(1 + dopyt × 0,04 + trend, 0,65, 1,6)`. Prvý cyklus nemá trend; v ďalších sa pohybuje deterministicky od −10 % do +10 %. Nákupné ceny sa zaokrúhľujú nahor, výkupné nadol. Dopyt sa znižuje predajom, preto opakovaný predaj rovnakého typu zhoršuje výkup.
 
-Obnova nastáva každých 600 sekúnd aktívnej simulácie: doplnia sa zásoby, vznikne nová vzácna ponuka a dopyt sa zníži na polovicu smerom k nule. Počas panelov, výberu postáv alebo vypnutej hry čas neplynie. Hodiny zariadenia nemajú na obnovu vplyv. Ponuka a zostávajúci čas sú uložené samostatne pre každú postavu.
+Obnova nastáva každých 600 sekúnd aktívnej simulácie: doplnia sa zásoby, vznikne nová vzácna ponuka a dopyt sa zníži na polovicu smerom k nule. Otvorené vrstvy čas nezastavia; počas výberu postáv a vypnutej hry čas neplynie. Hodiny zariadenia nemajú na obnovu vplyv. Ponuka a zostávajúci čas sú uložené samostatne pre každú postavu.
 
 ## Výkup a význam farmenia
 
-Všetci traja obchodníci vykupujú výbavu z batohu. Nasadenú výbavu treba najprv zložiť. Základný výkup generovaných predmetov zostáva 25 % odhadu podľa rarity, úrovne, kvality hodov, synergií a vylepšenia. Staré predmety používajú pôvodnú základnú cenu. Na výsledok pôsobí cenový faktor; Zbrojár navyše platí +10 %. Výkup v inventári funguje len v dosahu obchodníka, aktuálna cena je na tlačidle.
+Obaja obchodníci vykupujú výbavu z batohu. Nasadenú výbavu treba najprv zložiť. Základný výkup generovaných predmetov zostáva 25 % odhadu podľa rarity, úrovne, kvality hodov, synergií a vylepšenia. Staré predmety používajú pôvodnú základnú cenu. Na výsledok pôsobí cenový faktor; Zbrojár navyše platí +10 %. Výkup v inventári funguje len v dosahu obchodníka, aktuálna cena je na tlačidle.
 
-Materiály vykupované trhom: ruda, koža, byliny, esencia, prach, extrakt, kryštál a kováčske jadro. Základný výkup je 25 % jednotkovej základnej nákupnej ceny. Alchymista platí +10 % za byliny, extrakt a prach. Panely umožňujú predať 1 alebo 10 kusov a ukazujú skutočnú cenu.
+Materiály vykupované trhom: ruda, koža, byliny, esencia, prach, kryštál a kováčske jadro. Základný výkup je 25 % jednotkovej základnej nákupnej ceny. Panely umožňujú predať 1 alebo 10 kusov a ukazujú skutočnú cenu.
 
-Kľúče, jadrá trhlín, úlomky relikvií, tréningové pečate, biologické vzorky a knihy sa nedajú kupovať ani premeniť na Yang cez tento trh. Obmedzené zásoby kryštálov a kováčskych jadier dopĺňajú lov; nenahrádzajú dlhodobé farmenie. Bežné nákupy slúžia ako Yang sink. Nákup a okamžitý spätný predaj pri trhových cenách vždy stráca Yang.
+Kľúče, jadrá trhlín, úlomky trhlín, tréningové pečate, biologické vzorky a knihy sa nedajú kupovať ani premeniť na Yang cez tento trh. Obmedzené zásoby kryštálov a kováčskych jadier dopĺňajú lov; nenahrádzajú dlhodobé farmenie. Bežné nákupy slúžia ako Yang sink. Nákup a okamžitý spätný predaj pri trhových cenách vždy stráca Yang.
 
 ## Bezpečnosť a uloženie
 

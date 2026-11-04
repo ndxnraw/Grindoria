@@ -55,10 +55,4 @@ test('ground icon cache keys distinguish same rarity gear by model, level and en
  assert.notEqual(run('groundIcon(a).src'),run('groundIcon(b).src'));assert.notEqual(run('groundIcon(a).src'),run('groundIcon(c).src'));
  run('for(var i=0;i<300;i++)groundIcon({...a,name:"Variant "+i});');assert(run('groundIconCache.size<=256'));assert(run('appearanceCache.size<=256'));
 });
-test('all supplies, gems and four relics use distinct geometry; relic drops resolve the correct icon',()=>{
- const {run}=createGame();const svg=new Set();
- for(const id of [...Object.keys(run('MATERIALS')),'potion','cape','ruby','sapphire','jade','relic-valley','relic-desert','relic-snow','relic-temple']) {
-  const body=run('itemIcon({icon:"'+id+'"})').replace(/#[0-9a-f]{3,8}/gi,'COLOR');assert(!svg.has(body),id);svg.add(body);
- }
- for(const id of Object.keys(run('RELICS')))assert.equal(run('groundDropView({kind:"relic",relicId:"'+id+'"}).icon'),'relic-'+id);
-});
+test('all active supplies use distinct geometry and retired item definitions are absent',()=>{const {run}=createGame();const svg=new Set();for(const id of [...Object.keys(run('MATERIALS')),'potion','cape']){const body=run('itemIcon({icon:"'+id+'"})').replace(/#[0-9a-f]{3,8}/gi,'COLOR');assert(!svg.has(body),id);svg.add(body);}assert(run('Object.keys(ITEM_DEFINITIONS).every(id=>!id.startsWith("gem:")&&!id.startsWith("relic:")&&!id.startsWith("alchemy:"))'));});

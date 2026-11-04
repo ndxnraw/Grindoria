@@ -1,4 +1,4 @@
-// Requires Playwright; PLAYWRIGHT_MODULE and BROWSER_EXECUTABLE may select local installs.
+// Requires Playwright; optional paths reuse an existing browser installation.
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
 const path=require('node:path'),fs=require('node:fs'),assert=require('node:assert/strict');
 (async()=>{
@@ -7,87 +7,52 @@ const path=require('node:path'),fs=require('node:fs'),assert=require('node:asser
  const report={browser:browser.version(),errors:[],externalRequests:[]};
  try{
   const context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage();
+  try{await context.grantPermissions(['keyboard-lock']);report.keyboardPermission=true;}catch{report.keyboardPermission=false;}
   page.on('pageerror',e=>report.errors.push(e.message));page.on('request',r=>{if(/^https?:/.test(r.url()))report.externalRequests.push(r.url());});
   await page.goto('file://'+path.resolve(__dirname,'../dist/Grindoria.html'));
-  await page.evaluate(()=>{createCharacter('Rozhranie','warrior');playCharacter();p.level=10;p.points=27;p.gold=10000;p.hp=maxHP();p.mp=maxMP();addGearItem(generateEquipmentItem('armor',1,10));save();});
-  for(const key of ['c','i','n','h'])await page.keyboard.press(key);
-  assert.equal(await page.evaluate(()=>gameWindows.size),4);assert.equal(await page.evaluate(()=>paused),false);
-  await page.keyboard.press('i');assert.equal(await page.evaluate(()=>gameWindows.size),3);await page.keyboard.press('i');
-  await page.evaluate(()=>frontGameWindow(gameWindows.get('character'),true));
-  const character=page.locator('[data-window-key="character"]'),bar=character.locator('.window-titlebar');
-  const before=await character.boundingBox(),handle=await bar.boundingBox();
-  await page.mouse.move(handle.x+85,handle.y+15);await page.mouse.down();await page.mouse.move(handle.x+255,handle.y+85,{steps:14});await page.mouse.up();
-  const after=await character.boundingBox();assert(after.x>before.x+140);assert(after.y>before.y+50);
-  report.drag={before:{x:before.x,y:before.y},after:{x:after.x,y:after.y}};
-  await character.locator('.window-minimize').click();assert.equal(await character.locator('.window-body').isVisible(),false);
-  await page.keyboard.press('c');assert.equal(await character.locator('.window-body').isVisible(),true);
-  const initialStrength=await page.evaluate(()=>p.strength);await character.locator('[data-character-stat="strength"]').click();assert.equal(await page.evaluate(()=>p.strength),initialStrength+1);
-  // Two service layers and inventory retain independent handlers and IDs.
-  await page.evaluate(()=>{closeAllGameWindows();p.x=NPCS.merchant.x;p.y=NPCS.merchant.y;marketPanel('merchant');careerPanel('biology');inventory();});
-  await page.evaluate(()=>frontGameWindow(gameWindows.get('career:biology')));
-  const hoverItem=page.locator('[data-window-key="inventory"] .grid-item').first();
-  await hoverItem.hover();assert(await page.locator('[data-window-key="inventory"] [data-ui-id="item-tooltip"]').isVisible());
-  assert.equal(await page.evaluate(()=>panelState.key),'career:biology');
-  await page.mouse.move(700,450);
-  const oldPots=await page.evaluate(()=>p.potions);
-  await page.locator('[data-window-key="market:merchant"] [data-market-buy="potions"]').evaluate(b=>b.click());
-  assert.equal(await page.evaluate(()=>p.potions),oldPots+3);assert.equal(await page.evaluate(()=>gameWindows.size),3);
-  await page.evaluate(()=>{withGameWindow('inventory',()=>{$('modalcard').scrollTop=150;inventory();});});
-  assert.equal(await page.evaluate(()=>gameWindows.get('inventory').body.scrollTop),150);
-  await page.locator('[data-window-key="career:biology"] .system-directory summary').evaluate(b=>b.click());
-  await page.locator('[data-window-key="career:biology"] [data-career-tab="forge"]').evaluate(b=>b.click());
-  assert.equal(await page.evaluate(()=>gameWindows.has('career:forge')&&gameWindows.has('career:biology')),true);
+  await page.evaluate(()=>{createCharacter('Aktualizacia','warrior');playCharacter();p.level=40;p.points=117;p.gold=1000000;p.hp=maxHP();p.mp=maxMP();for(const id of Object.keys(MATERIALS))p.career.materials[id]=1000;p.career.crafting.xp=4500;save();});
+  async function npc(id){await page.evaluate(id=>{closeAllGameWindows();loadMap('town',true);p.x=NPCS[id].x;p.y=NPCS[id].y+65;cam.x=p.x;cam.y=p.y;},id);const at=await page.evaluate(id=>screen(NPCS[id].x,NPCS[id].y),id);await page.mouse.click(at.x,at.y-30);}
+  await npc('smith');assert(await page.locator('[data-window-key="npc:smith-menu"]').isVisible());
+  await page.locator('[data-ui-id="smith-forge"]').click();assert(await page.locator('[data-window-key="npc:forge"]').isVisible());
+  await page.locator('[data-window-key="npc:smith-menu"] .window-titlebar').click({position:{x:15,y:10}});await page.locator('[data-ui-id="smith-craft"]').click();
+  assert.equal(await page.evaluate(()=>gameWindows.has('npc:forge')&&gameWindows.has('npc:crafting')),true);
+  for(const tab of ['training','skills','forge','crafting','alchemy','collection','specialization','events','prestige','dungeons','endgame'])assert.equal(await page.evaluate(tab=>careerPanel(tab),tab),false);
+  await page.keyboard.press('c');const character=page.locator('[data-window-key="character"]');const before=await character.boundingBox(),bar=await character.locator('.window-titlebar').boundingBox();
+  await page.mouse.move(bar.x+80,bar.y+15);await page.mouse.down();await page.mouse.move(bar.x+230,bar.y+75,{steps:12});await page.mouse.up();const after=await character.boundingBox();assert(after.x>before.x+100);report.drag={before:{x:before.x,y:before.y},after:{x:after.x,y:after.y}};
+  await character.locator('[data-character-stat="strength"]').click();assert.equal(await page.evaluate(()=>p.strength),1);
+  await page.evaluate(()=>{p.career.specialization.points=5;characterPanel('specialization');});await character.locator('[data-action="spec"][data-id="sentinel"]').click();assert.equal(await page.evaluate(()=>p.career.specialization.focus),'sentinel');
+  await page.evaluate(()=>{p.level=99;characterPanel('prestige');});await character.locator('[data-action="prestigeActivate"]').click();assert.equal(await page.evaluate(()=>prestigeRank()),1);assert.equal(await character.locator('[data-prestige-trial]').count(),0);
+  await page.evaluate(()=>{closeAllGameWindows();skillProgress('body:0').rank=20;skillProgress('body:0').practice=1000;spellbook();});
+  const upgrade=page.locator('[data-upgrade-skill="body:0"]');await upgrade.click();assert.equal(await page.evaluate(()=>skillRankShort(skillProgress('body:0').rank)),'M1');
+  for(const [rank,label]of [[30,'G1'],[40,'P']]){await page.evaluate(rank=>{skillProgress('body:0').rank=rank;skillProgress('body:0').practice=1000;spellbook();},rank);await upgrade.click();assert.equal(await page.evaluate(()=>skillRankShort(skillProgress('body:0').rank)),label);}
+  assert.equal(await upgrade.count(),0);await page.screenshot({path:path.join(output,'skill-book.png')});
+  await npc('biologist');const bio=page.locator('[data-window-key="npc:biology"]');assert(await bio.isVisible());
+  await page.evaluate(()=>careerPanel('biology'));assert.equal(await page.locator('[data-window-key="career:biology"] [data-ui-id="biology-submit"]').count(),0);
+  await page.evaluate(()=>frontGameWindow(gameWindows.get('npc:biology')));const submit=bio.locator('[data-ui-id="biology-submit"]');assert.equal(await submit.isEnabled(),true);report.readyButton=await submit.evaluate(el=>({color:getComputedStyle(el).color,background:getComputedStyle(el).backgroundImage}));assert.match(report.readyButton.background,/53, 92, 53/);
+  await submit.click();assert.equal(await page.evaluate(()=>p.career.biology.delivered),1);assert.equal(await submit.isEnabled(),false);await page.screenshot({path:path.join(output,'biology.png')});
+  await page.evaluate(()=>{closeAllGameWindows();p.kills=5;p.stones=3;updateHUD();journal();});await page.locator('[data-quest-claim="opening"]').click();assert.equal(await page.locator('#quest-title').textContent(),'Prvý strážca');await page.locator('[data-quest-tab="completed"]').click();assert.match(await page.locator('[data-window-key="journal"]').textContent(),/Praskliny v pokoji/);assert.equal(await page.locator('[data-window-key="journal"] [data-quest-claim]').count(),0);await page.screenshot({path:path.join(output,'completed-quests.png')});
+  await page.evaluate(()=>{closeAllGameWindows();addGearItem(generateEquipmentItem('armor',1,35));inventory();characterPanel();});
+  assert.equal(await page.locator('[data-inv-page]').count(),5);assert.equal(await page.locator('.item-inspector').count(),0);
+  const uid=await page.evaluate(()=>p.bag[0].uid),gear=page.locator('[data-window-key="inventory"] [data-entry="gear:'+uid+'"]');
+  await gear.hover();assert(await page.locator('[data-window-key="inventory"] .loot-comparison').isVisible());assert.equal(await page.evaluate(()=>panelState.key),'character');
+  await page.evaluate(()=>frontGameWindow(gameWindows.get('inventory')));await gear.dragTo(page.locator('[data-window-key="inventory"] [data-cell="33"]'));assert.notEqual(await page.evaluate(()=>p.bag[0].cell),0);
+  await gear.dragTo(page.locator('[data-window-key="inventory"] [data-equip-slot="armor"]'));assert.equal(await page.evaluate(()=>p.equipped.armor.uid),uid);await page.locator('[data-window-key="inventory"] [data-equip-slot="armor"]').dblclick();assert.equal(await page.evaluate(()=>p.equipped.armor),null);
+  await page.evaluate(()=>requestInventoryDrop('gear:'+p.bag[0].uid));const confirmation=page.locator('[data-window-key="inventory-drop"]');const rect=await confirmation.boundingBox();assert(rect.width<=380);assert(Math.abs(rect.x+rect.width/2-720)<3);await page.screenshot({path:path.join(output,'discard.png')});await page.keyboard.press('Enter');assert.equal(await page.evaluate(()=>p.bag.length),0);assert.equal(await confirmation.count(),0);assert(await page.locator('[data-window-key="inventory"]').isVisible());
+  await page.evaluate(()=>{inventoryTab='supplies';inventory();requestInventoryDrop('material:ore');});const oldOre=await page.evaluate(()=>p.career.materials.ore);await page.locator('[data-window-key="inventory-drop"] input').fill('3');await page.keyboard.press('Enter');assert.equal(await page.evaluate(()=>p.career.materials.ore),oldOre-3);
+  await page.evaluate(()=>{closeAllGameWindows();keys.d=true;characterPanel();keys.d=true;refreshOpenGameWindows(2);});assert.equal(await page.evaluate(()=>keys.d),true);await page.evaluate(()=>keysClear());
+  await npc('dungeonMaster');const master=page.locator('[data-window-key="npc:dungeons"]');assert(await master.isVisible());await master.locator('[data-dungeon-enter="crypt"][data-difficulty="normal"]').click();assert.equal(await page.evaluate(()=>p.mapId),'dungeon');assert(await page.locator('[data-window-key="dungeon-run"]').isVisible());
+  await page.locator('[data-dungeon-abandon]').click();await page.locator('[data-dungeon-exit]').click();assert.equal(await page.evaluate(()=>p.mapId),'town');assert(await page.evaluate(()=>nearNPC('dungeonMaster')));
+  await npc('dungeonMaster');await page.locator('[data-ui-id="master-rifts"]').click();await page.locator('[data-window-key="npc:rifts"] [data-action="enter"]').click();assert.equal(await page.evaluate(()=>!!p.career.endgame.run),true);await page.locator('#dungeon-status').click();await page.locator('[data-window-key="rift-run"] [data-action="abandon"]').click();assert.equal(await page.evaluate(()=>p.mapId),'town');
+  await page.evaluate(()=>{closeAllGameWindows();});const travel=page.locator('#travel');report.travel=await travel.boundingBox();const minimap=await page.locator('#minimap').boundingBox();assert(Math.abs(report.travel.x-minimap.x)<25);await travel.click();assert(await page.locator('[data-window-key="travel"]').isVisible());
+  await page.evaluate(()=>closeAllGameWindows());await page.keyboard.press('F10');await page.waitForTimeout(400);report.fullscreen=await page.evaluate(()=>({active:fullscreenState.active,lockSupported:typeof navigator.keyboard?.lock==='function',locked:fullscreenState.keyboardLocked}));assert.equal(report.fullscreen.active,true);
+  await page.keyboard.press('c');await page.keyboard.press('Escape');assert.equal(await page.evaluate(()=>gameWindows.has('character')),false);report.fullscreen.afterEscape=await page.evaluate(()=>fullscreenState.active);if(report.fullscreen.locked)assert.equal(report.fullscreen.afterEscape,true);
+  if(await page.evaluate(()=>fullscreenState.active))await page.keyboard.press('F10');assert.equal(await page.evaluate(()=>fullscreenState.active),false);
+  await page.evaluate(()=>{closeAllGameWindows();inventoryTab='gear';inventory();characterPanel('stats');});await page.screenshot({path:path.join(output,'desktop.png')});
+  await page.evaluate(()=>{save();});await page.reload();await page.evaluate(()=>{playCharacter();characterPanel();});assert.equal(Math.round((await character.boundingBox()).x),Math.round(after.x));
+  await page.setViewportSize({width:390,height:844});await page.evaluate(()=>{closeAllGameWindows();inventory();characterPanel('stats');largeMapPanel();});await page.screenshot({path:path.join(output,'mobile.png')});
+  report.mobile=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth,windows:[...gameWindows.values()].map(w=>({key:w.key,width:w.node.getBoundingClientRect().width,x:w.node.getBoundingClientRect().x}))}));assert.equal(report.mobile.overflow,false);for(const w of report.mobile.windows)assert(w.x>=0&&w.width<=390&&w.x+w.width<=391);
+  await page.evaluate(()=>{closeModal('large-map');closeModal('character');frontGameWindow(gameWindows.get('inventory'));});await page.screenshot({path:path.join(output,'mobile-inventory.png')});const inv=await page.locator('[data-window-key="inventory"] .window-body').evaluate(el=>({width:el.clientWidth,content:el.scrollWidth}));assert(inv.content<=inv.width+1);
   const ids=await page.locator('[id]').evaluateAll(nodes=>nodes.map(n=>n.id));assert.equal(new Set(ids).size,ids.length);
-  await page.evaluate(()=>{careerPanel('crafting');activeGameWindow.craftingFilter='weapon';careerPanel('crafting');careerPanel('alchemy');activeGameWindow.craftingFilter='materials';careerPanel('alchemy');refreshOpenGameWindows(2);});
-  assert.equal(await page.locator('[data-window-key="career:crafting"] select').inputValue(),'weapon');
-  assert.equal(await page.locator('[data-window-key="career:alchemy"] select').inputValue(),'materials');
-  await page.evaluate(()=>{closeAllGameWindows();inventory();});
-  const armorId=await page.evaluate(()=>p.bag[0].uid);
-  const gear=page.locator('[data-window-key="inventory"] [data-entry="gear:'+armorId+'"]');
-  const oldCell=await page.evaluate(()=>p.bag[0].cell);
-  await gear.dragTo(page.locator('[data-window-key="inventory"] [data-cell="33"]'));
-  assert.notEqual(await page.evaluate(()=>p.bag[0].cell),oldCell);
-  await gear.dragTo(page.locator('[data-window-key="inventory"] [data-equip-slot="armor"]'));
-  assert.equal(await page.evaluate(()=>p.equipped.armor?.uid),armorId);
-  await page.locator('[data-window-key="inventory"] [data-equip-slot="armor"]').dblclick();
-  assert.equal(await page.evaluate(uid=>p.bag.some(i=>i.uid===uid),armorId),true);
-  assert.equal(await page.evaluate(()=>p.equipped.armor),null);
-  await page.evaluate(()=>requestInventoryDrop('gear:'+p.bag[0].uid));
-  const bagSize=await page.evaluate(()=>p.bag.length);await page.keyboard.press('Escape');assert.equal(await page.evaluate(()=>inventoryDropPending),null);assert.equal(await page.evaluate(()=>p.bag.length),bagSize);assert(await page.locator('[data-window-key="inventory"]').isVisible());
-  // The world continues beneath layers; live refresh never clears held movement keys.
-  await page.evaluate(()=>{closeAllGameWindows();characterPanel();inventory();keys.d=true;refreshOpenGameWindows(2);});
-  assert.equal(await page.evaluate(()=>keys.d),true);await page.evaluate(()=>keysClear());
-  await page.screenshot({path:path.join(output,'desktop.png')});
-  await page.evaluate(()=>{closeAllGameWindows();p.x=600;p.y=600;cam.x=p.x;cam.y=p.y;});
-  const x=await page.evaluate(()=>p.x);await page.mouse.click(970,700);await page.waitForTimeout(350);
-  assert(await page.evaluate(()=>p.x)>x);assert.equal(await page.evaluate(()=>target),null);
-  await page.keyboard.press('w');assert.equal(await page.evaluate(()=>clickDestination),null);
-  await page.keyboard.press('Escape');assert.equal(await page.evaluate(()=>gameWindows.has('system-menu')),true);await page.keyboard.press('Escape');
-  await page.evaluate(()=>{loadMap('valley',true);p.x=1000;p.y=1600;cam.x=p.x;cam.y=p.y;p.mp=maxMP();spellCD.fill(0);window.recordedSlots=[];window.actualCast=castSkill;castSkill=i=>{recordedSlots.push(i);return actualCast(i);};});
-  await page.keyboard.press('1');assert.equal(await page.evaluate(()=>spellCD[0]>0),true);
-  await page.keyboard.press('F2');assert.deepEqual(await page.evaluate(()=>recordedSlots),[0,1]);
-  await page.keyboard.press('v');assert.equal(await page.evaluate(()=>gameWindows.has('spellbook')),true);assert.deepEqual(await page.evaluate(()=>recordedSlots),[0,1]);
-  await page.keyboard.down('Alt');assert.equal(await page.evaluate(()=>keys.Alt),true);await page.keyboard.up('Alt');assert.equal(await page.evaluate(()=>keys.Alt),false);
-  await page.evaluate(()=>{travelCombat.time=5;});await page.keyboard.press('m');assert(await page.locator('[data-window-key="large-map"]').isVisible());
-  await page.evaluate(()=>{p.x=1200;drawLargeMap(true);});assert.match(await page.locator('[data-window-key="large-map"] [data-ui-id="atlas-position"]').textContent(),/1200/);
-  // Editing a real numeric confirmation field never casts skills or opens windows.
-  await page.evaluate(()=>{inventoryTab='supplies';inventory();requestInventoryDrop('material:ore');});
-  // Choose an existing supply if no ore is carried.
-  await page.evaluate(()=>{if(!inventoryDropPending)requestInventoryDrop('potions');});
-  const input=page.locator('[data-window-key="inventory"] input[type=number]');
-  assert.equal(await input.count(),1);await input.focus();const windowCount=await page.evaluate(()=>gameWindows.size);await page.keyboard.press('m');await page.keyboard.press('1');assert.equal(await page.evaluate(()=>gameWindows.size),windowCount);assert.deepEqual(await page.evaluate(()=>recordedSlots),[0,1]);
-  await page.evaluate(()=>{closeAllGameWindows();loadMap('town',true);save();});await page.reload();await page.evaluate(()=>{playCharacter();characterPanel();});
-  assert.equal(Math.round((await character.boundingBox()).x),Math.round(after.x));
-  await page.setViewportSize({width:390,height:844});await page.evaluate(()=>{closeAllGameWindows();inventory();characterPanel();largeMapPanel();});
-  await page.screenshot({path:path.join(output,'mobile.png')});
-  report.mobile=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth,windows:[...gameWindows.values()].map(w=>({key:w.key,x:w.node.getBoundingClientRect().x,width:w.node.getBoundingClientRect().width,y:w.node.getBoundingClientRect().y}))}));
-  assert.equal(report.mobile.overflow,false);for(const w of report.mobile.windows){assert(w.x>=0);assert(w.width<=390);assert(w.x+w.width<=391);assert(w.y<690);}
-  report.windowCount=await page.evaluate(()=>gameWindows.size);
-  await page.evaluate(()=>{closeModal('large-map');closeModal('character');frontGameWindow(gameWindows.get('inventory'));});
-  await page.screenshot({path:path.join(output,'mobile-inventory.png')});
-  report.mobileInventory=await page.locator('[data-window-key="inventory"] .window-body').evaluate(el=>({width:el.clientWidth,contentWidth:el.scrollWidth}));
-  assert(report.mobileInventory.contentWidth<=report.mobileInventory.width+1);
-  assert.deepEqual(report.errors,[]);assert.deepEqual(report.externalRequests,[]);
-  fs.writeFileSync(path.join(output,'results.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
+  assert.deepEqual(report.errors,[]);assert.deepEqual(report.externalRequests,[]);fs.writeFileSync(path.join(output,'results.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

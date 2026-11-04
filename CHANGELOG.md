@@ -10,6 +10,27 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.32.0] - 2026-11-04
+
+### Added
+- Dungeon Majster v Meste, samostatné ponuky NPC a kompaktné potvrdenie vyhodenia s Enter.
+- Stupne schopností Normál 1–20, M1–M10, G1–G10 a P vrátane kníh, kameňov duše a jednotného škálovania.
+- Migračné a integračné regresie odstránených systémov, úloh, NPC, inventára a zachytenia Esc.
+
+### Changed
+- Atribúty, tréning, špecializácia a prestíž patria do Postavy; štúdium schopností priamo do knihy V.
+- Biologický prehľad ukazuje iba aktuálnu etapu; odovzdávanie je v osobitnej službe Biológa. Odmeny, mapy zdrojov, ceny a intervaly zodpovedajú požadovaným úrovniam.
+- Progresia bez duplicít a služieb NPC. Výroba a vylepšovanie cez výber Kováča; dungeony a trhliny u Dungeon Majstra.
+- Inventár s piatimi stranami, porovnaním pri náhľade a kompaktnými akciami. Splnené úlohy sa presunú do histórie a HUD vyberie ďalšiu.
+- Splniteľné akcie sú zelené, cestovanie je pri minimape a bežný Esc neukončuje podporovaný fullscreen; F10 zostáva dostupné aj pri čakaní na oprávnenie.
+
+### Removed
+- Alchýmia, Alchymista, odvary, drahokamy a celý systém relikvií. Stará prax a zásoby sa jednorazovo prevedú bez resetu postavy.
+- Samostatné okná Atribúty, Schopnosti, Udalosti a Endgame v Progresii; udalosti naďalej prebiehajú.
+
+### Fixed
+- Zámena účelu informačných panelov a služieb, neprimerané zdroje pokročilého výskumu a nejednoznačné potvrdenia inventára.
+
 ## [0.31.0] - 2026-11-04
 
 ### Added
@@ -574,7 +595,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.31.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.32.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -609,3 +630,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.29.0]: https://github.com/ndxnraw/Grindoria/compare/v0.28.0...v0.29.0
 [0.30.0]: https://github.com/ndxnraw/Grindoria/compare/v0.29.0...v0.30.0
 [0.31.0]: https://github.com/ndxnraw/Grindoria/compare/v0.30.0...v0.31.0
+[0.32.0]: https://github.com/ndxnraw/Grindoria/compare/v0.31.0...v0.32.0

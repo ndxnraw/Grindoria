@@ -1,6 +1,6 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const {createGame,readSavedAccount}=require('./helpers/game.cjs');
-function ready(){const g=createGame();g.run('running=true;loadMap("town",true);p.level=99;p.gold=100000;p.career.materials.keys=100;p.hp=maxHP();p.mp=maxMP();');return g;}
+function ready(){const g=createGame();g.run('running=true;loadMap("town",true);p.x=NPCS.dungeonMaster.x;p.y=NPCS.dungeonMaster.y;p.level=99;p.gold=100000;p.career.materials.keys=100;p.hp=maxHP();p.mp=maxMP();');return g;}
 function unlock(run){run('for(const m of mobs.filter(m=>!m.dungeonBoss))hit(m,1e9,"arcane",true);dungeonUnlocked();travelCombat.time=0;');}
 test('three dungeons and three difficulties have distinct enemies, mechanics, scaling and dedicated map',()=>{
  const {run}=ready();for(const id of ['crypt','frost','abyss'])for(const difficulty of ['normal','hard','mythic']){
@@ -21,7 +21,7 @@ test('travel and legacy expeditions cannot overlap a dungeon',()=>{
  const {run}=ready();assert(run('enterDungeon("crypt")'));assert(!run('loadMap("valley")'));assert(!run('enterRift()'));assert(!run('enterDungeon("frost")'));assert(run('finishDungeon()'));assert(run('enterRift()'));assert(!run('enterDungeon("crypt")'));assert(run('finishRift(false)'));
 });
 test('normal overworld snapshots are preserved and uncollected dungeon drops move to town exactly once',()=>{
- const {run}=ready();run('loadMap("valley",true);mobs[0].hp=1;snapshotMap();var saved=JSON.stringify(p.worldStates.valley);enterDungeon("crypt");spawnGroundDrop({kind:"gear",item:generateEquipmentItem("weapon",1,20)},p);var id=drops[0].id;');assert(run('finishDungeon()'));assert.equal(run('JSON.stringify(p.worldStates.valley)'),run('saved'));assert.equal(run('drops.filter(d=>d.id===id).length'),1);assert(!run('finishDungeon()'));run('save();loadMap("valley",true);');assert.equal(run('mobs[0].hp'),1);
+ const {run}=ready();run('loadMap("valley",true);mobs[0].hp=1;snapshotMap();var saved=JSON.stringify(p.worldStates.valley);loadMap("town",true);p.x=NPCS.dungeonMaster.x;p.y=NPCS.dungeonMaster.y;enterDungeon("crypt");spawnGroundDrop({kind:"gear",item:generateEquipmentItem("weapon",1,20)},p);var id=drops[0].id;');assert(run('finishDungeon()'));assert.equal(run('JSON.stringify(p.worldStates.valley)'),run('saved'));assert.equal(run('drops.filter(d=>d.id===id).length'),1);assert(!run('finishDungeon()'));run('save();loadMap("valley",true);');assert.equal(run('mobs[0].hp'),1);
 });
 test('each boss announces a real avoidable attack, honors safe zone and uses distinct geometry',()=>{
  const shapes=[];for(const id of ['crypt','frost','abyss']){const {run}=ready();run(`enterDungeon('${id}');`);unlock(run);run('p.x=900;p.y=700;var boss=mobs.find(m=>m.dungeonBoss);boss.cd=0;updateDungeonBoss(boss,.01,false);var plan=JSON.stringify(boss.attackPlan),hp=p.hp;');shapes.push(run('boss.attackPlan.kind'));assert(run('boss.attackPlan.delay>=1'));run('updateDungeonBoss(boss,.5,false);');assert.equal(run('p.hp'),run('hp'));
@@ -61,7 +61,7 @@ test('older profiles migrate and characters keep independent runs, clears and pi
  run('enterDungeon("crypt");var first=characterStore.activeId;returnToCharacters();var other=createCharacter("Vyprava","ninja");playCharacter(other);');assert.equal(run('dungeonRun()'),null);run('returnToCharacters();playCharacter(first);');assert.equal(run('dungeonRun().dungeon'),'crypt');
 });
 test('all new models, grounds, telegraphs and dungeon panels render with real configuration',()=>{
- const {run,elements}=ready();run('dungeonPanel();');assert.match(elements.get('modalcontent').innerHTML,/Priepasť/);assert.match(elements.get('modalcontent').innerHTML,/12/);for(const id of ['crypt','frost','abyss']){run(`enterDungeon('${id}');draw();dungeonPanel();`);assert.match(elements.get('modalcontent').innerHTML,/Pečate|pečate/);assert(run('finishDungeon()'));}
+ const {run,elements}=ready();run('interactNPC("dungeonMaster");dungeonPanel();');assert.match(elements.get('modalcontent').innerHTML,/Priepasť/);assert.match(elements.get('modalcontent').innerHTML,/12/);for(const id of ['crypt','frost','abyss']){run(`enterDungeon('${id}');draw();dungeonPanel();`);assert.match(elements.get('modalcontent').innerHTML,/Pečate|pečate/);assert(run('finishDungeon()'));}
 });
 
 test('completed dungeons can be repeated with new identities and independent fresh loot',()=>{

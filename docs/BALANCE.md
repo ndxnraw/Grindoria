@@ -39,7 +39,7 @@ Migrácia bežných máp zachová mŕtve sloty, zostávajúci respawn, pomer HP,
 
 Obyčajná generovaná výbava má požadovaný level zdroja, najviac 99. Už sa nezaokrúhľuje na päťlevelové pásma. Pomenované zbrane majú vlastné definované požiadavky; úloha Prvý strážca vždy dáva Epic alebo lepší predmet Lv.8. Rovnaká úroveň zdroja dáva rovnaký základ výbavy bez ohľadu na mapu.
 
-Šanca výbavy z primeraného cieľa: bežný 12 %, elita 45 %, vzácny a boss 100 %. Bossovia nedávajú Common; Legendary je dostupná od zdroja Lv.50 a Mythic od Lv.75. Presné rozdelenie je v [RARITIES.md](RARITIES.md). Neprimerane slabé bežné ciele neposkytujú výbavu, liečivé elixíry ani progresné materiály; biologické vzorky, zbierkové relikvie a kľúče si zachovávajú svoje výnimky.
+Šanca výbavy z primeraného cieľa: bežný 12 %, elita 45 %, vzácny a boss 100 %. Bossovia nedávajú Common; Legendary je dostupná od zdroja Lv.50 a Mythic od Lv.75. Presné rozdelenie je v [RARITIES.md](RARITIES.md). Neprimerane slabé bežné ciele neposkytujú výbavu, liečivé elixíry ani progresné materiály; biologické vzorky a kľúče si zachovávajú svoje výnimky.
 
 Nová zbraň +2 poskytuje začiatok bez preskočenia celej kováčskej krivky. Starý pôvodný štartovací kus +9 sa jednorazovo zmení na +2, zachová identitu aj povolanie. Ostatné vlastnené predmety sa nevyhadzujú ani neprehadzujú.
 
@@ -47,13 +47,13 @@ Vylepšenia majú vlastné jednotky podľa slotu. Talizman +9 pridáva 6,5 perce
 
 Výroba elixírov po 6 kusoch stojí 1 bylinu a 10 Yang. Desať plášťov stojí 1 kožu, 1 esenciu a 20 Yang. Pri základných cenách surovín to znamená 5 Yang za vyrobený elixír a 8 Yang za plášť; priamy nákup stojí približne 8,33 a 10 Yang. Zásoby, dopyt a remeselná prax naďalej ovplyvňujú rozhodnutie.
 
-Relikviár stojí 25 × ďalší stupeň úlomkov, spolu 31 875 za stupne 1–50. Schopnosť vyžaduje `ceil(10 × rank^1.15)` praxe. Liečivý elixír obnoví vyššiu z hodnôt 65 HP / 25 % maxima, mana elixír 80 MP / 30 % maxima. Spoločný cooldown zostáva štyri sekundy.
+Trvalé posilnenie v Postave stojí 25 × ďalší stupeň úlomkov, spolu 31 875 za stupne 1–50. Prax schopností a postup M/G/P sú uvedené v [PROGRESSION.md](PROGRESSION.md). Liečivý elixír obnoví vyššiu z hodnôt 65 HP / 25 % maxima. Spoločný cooldown zostáva štyri sekundy.
 
 ## Boj, zbierky a uloženie
 
 Pozastavený súboj nemožno využiť na bezpečné pitie alebo odvary; spotrebný predmet v otvorenom paneli vyžaduje ukončený boj. Mimo boja zostáva použitie cez inventár dostupné. Prepnutie postavy zachová zostávajúce cooldowny schopností, základného útoku, plášťa a cestovania.
 
-Úplný prestížny bestiár zahŕňa 25 typov vrátane šiestich bossov nových máp. Ich relikvie sú priradené k štyrom existujúcim regionálnym zbierkam; staré neplatné dropy sa opravia pri načítaní alebo importe. Rozhranie receptov používa rovnaké definície ako výroba a bestiár zobrazuje skutočný pancier Metinu.
+Úplný prestížny bestiár zahŕňa 25 typov vrátane šiestich bossov nových máp. Odstránené relikvie sa pri načítaní alebo importe jednorazovo prevedú na Yang. Rozhranie receptov používa rovnaké definície ako výroba a bestiár zobrazuje skutočný pancier Metinu.
 
 Lokálne úložisko balí profily a opakujúce sa polia populácií bez straty hodnôt. Neuchováva údaje obyčajnej AI, ktoré sa pri načítaní aj predtým resetovali. Zostávajúce HP, súradnice, smrť, respawn, poškodzujúce stavy, korisť, udalosti a dungeonové útoky sa zachovajú. Záloha je štandardný JSON pôvodného formátu v2; načítajú sa aj pôvodné nezbalené registre.
 

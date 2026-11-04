@@ -51,6 +51,6 @@ function loadMap(id, initial=false) {
   shots.length=0; effects.length=0; particles.length=0; lastMiniMapPaint=-Infinity;
   Object.keys(buffs).forEach(k=>delete buffs[k]);
   updateMapHUD();
-  if(!initial){for(const key of [...gameWindows.keys()])if(key.startsWith('market:')||['career:biology','career:forge','career:crafting','career:alchemy','travel','large-map'].includes(key))closeModal(key);save();toast(cfg.name+'\nOdporúčaná úroveň '+cfg.level+'+');}
+  if(!initial){npcSessions.clear();for(const key of [...gameWindows.keys()])if(key.startsWith('market:')||key.startsWith('npc:')||['travel','large-map','inventory-drop','dungeon-run','rift-run'].includes(key))closeModal(key);save();toast(cfg.name+'\nOdporúčaná úroveň '+cfg.level+'+');}
   return true;
 }

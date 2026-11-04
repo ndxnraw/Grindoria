@@ -6,7 +6,7 @@ Od 0.15.0 zdieľajú ikony, korisť na zemi, portrét a postava rovnakú vektoro
 
 Desať slotov má po tri odlišné siluety podľa rodiny existujúcich názvov. Deväť ďalších modelov tvorí tri varianty dvojdýk, lukov a vejárov; spolu 39 základných modelov. Päť samostatných modelov klasických zbraní rozširuje katalóg na 44; definície a získavanie sú v [ITEM_MODEL.md](ITEM_MODEL.md). Nové zbrane dostávajú typ podľa povolania a školy bez zmeny bojových pravidiel. Staré zbrane ostávajú mečmi.
 
-Úroveň 1–99 mení kovanie v piatich stupňoch. Základný bonus pridáva rytiny. Vylepšenia +1 až +9 pridávajú kamene; od +6 aj svetelný lem vo svete. Identické kópie majú rovnaký vzhľad, nezávislý od ID, inventárnej pozície alebo opätovného načítania. Alchymistické kamene a štyri relikvie majú samostatné tvary.
+Úroveň 1–99 mení kovanie v piatich stupňoch. Základný bonus pridáva rytiny. Vylepšenia +1 až +9 pridávajú kamene; od +6 aj svetelný lem vo svete. Identické kópie majú rovnaký vzhľad, nezávislý od ID, inventárnej pozície alebo opätovného načítania.
 
 ## Vrstvy postavy
 
@@ -24,6 +24,6 @@ Staré predmety nepotrebujú prepis: chýbajúci typ zbrane znamená pôvodný m
 
 ## Overenie
 
-Osem testov v tests/appearance.test.cjs kontroluje odlišnosť siluet, všetky vrstvy postavy, okamžité nasadenie a odloženie, rovnaké cesty v Canvas a SVG, smerovanie, staré profily, generované zbrane, bezpečné rozšírenie registra, cache a relikvie.
+Osem testov v tests/appearance.test.cjs kontroluje odlišnosť siluet, všetky vrstvy postavy, okamžité nasadenie a odloženie, rovnaké cesty v Canvas a SVG, smerovanie, staré profily, generované zbrane, bezpečné rozšírenie registra a cache aktívnych predmetov.
 
 Od 0.16.0 má šesť rarít vlastné materiály a farby. Uncommon pridáva zelené kovanie, Legendary zlaté a Mythic ružové koruny a runy. Náhodné bonusy majú vlastné drobné runové značky. Pozri [RARITIES.md](RARITIES.md).

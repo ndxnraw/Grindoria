@@ -4,11 +4,11 @@ Panel **I** otvorí samostatnú presúvateľnú vrstvu s bronzovým rámom; svet
 
 ## Mriežka a ovládanie
 
-- **Predmety:** dve strany po 5 × 9 políčok, spolu 90. Viacpolíčkový predmet nemôže presahovať okraj ani prechádzať medzi stranami.
-- **Zásoby:** samostatná mriežka pre elixíry, plášte, materiály a vyrobené alchymistické kamene. Každý typ tvorí jeden zásobník bez limitu 200 kusov; zobrazuje skutočné uložené množstvo.
+- **Predmety:** päť strán po 5 × 9 políčok, spolu 225. Viacpolíčkový predmet nemôže presahovať okraj ani prechádzať medzi stranami.
+- **Zásoby:** samostatná mriežka pre elixíry, plášte, materiály. Každý typ tvorí jeden zásobník bez limitu 200 kusov; zobrazuje skutočné uložené množstvo.
 - Presunutie myšou alebo výber predmetu a následné kliknutie na prázdne políčko zmení jeho pozíciu. Výmena dvoch predmetov je možná, ak sa oba zmestia na nové miesto.
 - Presunutie na zodpovedajúci slot alebo **Nasadiť** vybaví postavu. **Zložiť výbavu** vráti predmet do batohu, iba ak má dosť súvislého miesta.
-- Dvojklik predmet použije alebo nasadí. Detail a tooltip ukazujú názov, vzácnosť, stupeň, vylepšenie, rozmery, bonusy a predajnú cenu. Na dotyku tieto informácie zostávajú v paneli detailu.
+- Dvojklik predmet použije alebo nasadí. Náhľad pri myši alebo zameraní ukazuje názov, vzácnosť, stupeň, vylepšenie, rozmery, bonusy a predajnú cenu. Náhľad porovnáva bonusy s aktuálne nasadeným predmetom rovnako ako pri koristi. Samostatný panel Predmet v inventári neexistuje.
 - **Zoradiť** usporiada výbavu podľa veľkosti, vzácnosti, stupňa a názvu; zásoby podľa názvu. Ak nové rozloženie nemožno umiestniť, pôvodné ostáva zachované.
 - **Predať** prevedie predmet na zlato. **Odstrániť…** vyžaduje samostatné potvrdenie; pri zásobníku možno určiť presný počet kusov.
 
@@ -35,7 +35,7 @@ Bonusy sa počítajú zo skutočne nasadených predmetov pri útoku, kúzlení, 
 
 ## Uloženie a kompatibilita
 
-`p.bag` naďalej obsahuje výbavu, teraz aj trvalé `uid` a počiatočné `cell`. `p.equipped` používa vyššie uvedených desať slotov. `p.inventory` uchováva schému, počet strán, poradové číslo identity a pozície zásobníkov. Počty zásob zostávajú v pôvodných `p.potions`, `p.braveryCapes`, `p.career.materials` a `p.career.alchemy.stock`; nejde o druhé kópie tých istých zdrojov.
+`p.bag` naďalej obsahuje výbavu, teraz aj trvalé `uid` a počiatočné `cell`. `p.equipped` používa vyššie uvedených desať slotov. `p.inventory` uchováva schému, počet strán, poradové číslo identity a pozície zásobníkov. Počty zásob zostávajú v pôvodných `p.potions`, `p.braveryCapes`, `p.career.materials`; nejde o druhé kópie tých istých zdrojov.
 
 Migrácia zachová mená, bonusy, vzácnosť aj vylepšenia starých predmetov a rozloží ich do mriežky. Ak starý batoh potrebuje viac miesta, dostane dodatočné strany; predmety sa nevymažú ani automaticky nepredajú. Bežný nový drop strany nepridáva. Pri plnom batohu zostáva korisť z nepriateľa alebo kameňa na zemi, bez automatického predaja. Podrobnosti ručného zbierania opisuje [LOOT.md](LOOT.md). Výslovne vyzdvihnuté odmeny úloh naďalej používajú pôvodné pravidlo náhrady za plný batoh.
 
@@ -56,3 +56,5 @@ Každý katalógový predmet má odlišnú siluetu podľa rodiny a typu. Nasaden
 ## Rarity a bonusy
 
 Tlačidlo Rarity otvorí šance a pravidlá generovania. Nové predmety zobrazujú kvalitu náhodných bonusov, trhový odhad a skutočný výkup obchodníka. Triedenie rešpektuje poradie šiestich rarít; porovnanie zahŕňa aj nové bonusy. Pozri [RARITIES.md](RARITIES.md).
+
+Vyhodenie otvorí samostatné kompaktné okno v strede hernej plochy. Enter potvrdí aj zadané množstvo; Esc alebo Zrušiť nič nespotrebujú. Výbava sa prenesie až po potvrdení a staré potvrdenie pre inú mapu či postavu neplatí.

@@ -25,12 +25,12 @@ const MAP_LOCATIONS={
 };
 for(const [id,d]of Object.entries(EXP_MAPS))MAP_LOCATIONS[id]={safeZone:d.safeZone,entry:d.entry,bossPosition:d.bossPosition,packCount:d.packCount};
 for(const [id,location]of Object.entries(MAP_LOCATIONS)){Object.assign(MAPS[id],location,{size:WORLD_RULES.combatSize});MAPS[id].count=MAPS[id].packCount?MAPS[id].packCount*6+4:0;}
-MAPS.town={name:'Mesto',region:'MESTO',desc:'Obchodník · Zbrojár · Kováč · Biológ · Alchymista',level:1,enemyLevel:1,scale:1,seed:153170,ground:'#667461',patch:'#8f9b8130',path:'#c7b89c77',accent:'#d5c697',water:'#648b96',mob:'Bez nepriateľov',boss:'NPC',skin:'wolf',count:0,packCount:0,metinCount:0,town:true,size:WORLD_RULES.townSize,safeZone:{x:600,y:600,radius:10000},entry:{x:600,y:720}};
+MAPS.town={name:'Mesto',region:'MESTO',desc:'Obchodník · Zbrojár · Kováč · Biológ · Dungeon Majster',level:1,enemyLevel:1,scale:1,seed:153170,ground:'#667461',patch:'#8f9b8130',path:'#c7b89c77',accent:'#d5c697',water:'#648b96',mob:'Bez nepriateľov',boss:'NPC',skin:'wolf',count:0,packCount:0,metinCount:0,town:true,size:WORLD_RULES.townSize,safeZone:{x:600,y:600,radius:10000},entry:{x:600,y:720}};
 const NPCS={
  merchant:{name:'Obchodník',mapId:'town',x:440,y:630,color:'#c8ae75',service:'shop'},
  smith:{name:'Kováč',mapId:'town',x:760,y:630,color:'#b78664',service:'forge'},
  armsdealer:{name:'Zbrojár',mapId:'town',x:230,y:630,color:'#8e9fa6',service:'market'},
- alchemist:{name:'Alchymista',mapId:'town',x:950,y:630,color:'#8979ae',service:'alchemy'},
+ dungeonMaster:{name:'Dungeon Majster',mapId:'town',x:950,y:630,color:'#8979ae',service:'dungeons'},
  biologist:{name:'Biológ',mapId:'town',x:600,y:370,color:'#93b98a',service:'biology'}
 };
 

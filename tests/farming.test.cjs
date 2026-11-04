@@ -87,7 +87,7 @@ test('8 and the action button use the same cape logic and the shop restocks fini
   run('capeCooldown=0;'); elements.get('bravery').onclick(); assert.equal(run('p.braveryCapes'), 8);
   run('loadMap("town",true);p.x=NPCS.merchant.x;p.y=NPCS.merchant.y;p.gold=99;'); assert.equal(run('buyBraveryCapes()'), false); assert.equal(run('p.gold'), 99);
   run('p.gold=100;'); assert.equal(run('buyBraveryCapes()'), true); assert.equal(run('p.braveryCapes'), 18); assert.equal(run('p.gold'), 0);
-  run('inventory();'); assert.match(elements.get('modalcontent').innerHTML, /Plášť statočnosti: 18 ks/);
+  run('inventory();'); assert.equal(run('supplyEntries().find(e=>e.id==="braveryCapes").count'),18);assert(!elements.get('modalcontent').innerHTML.includes('item-inspector'));
 });
 
 test('spawn slots repeatedly replenish in place, reroll variants and clear old combat effects', () => {
@@ -133,7 +133,7 @@ test('enemies route around sanctuary and protected attacks cannot farm from insi
 
 test('large packs can be simulated without unbounded spawning or breaking the rift snapshot', () => {
   const { run, saved } = createGame();
-  run('running=true;p.level=35;p.career.materials.keys=3;loadMap("temple");let normal=mobs[0].max;enterRift();let count=mobs.length;for(const m of mobs){m.hp=0;m.dead=0;}for(let i=0;i<100;i++)update(.05);save();');
+  run('running=true;p.level=35;p.career.materials.keys=3;loadMap("temple");let normal=mobs[0].max;loadMap("town",true);p.x=NPCS.dungeonMaster.x;p.y=NPCS.dungeonMaster.y;enterRift();let count=mobs.length;for(const m of mobs){m.hp=0;m.dead=0;}for(let i=0;i<100;i++)update(.05);save();');
   assert.equal(run('mobs.length'), run('count')); assert.equal(run('mobs.length'), 421);
   assert(run('mobs.every(m=>m.riftId===p.career.endgame.run.id)'));
   const reload = createGame(readSavedProfile(saved));
@@ -142,7 +142,7 @@ test('large packs can be simulated without unbounded spawning or breaking the ri
 
 test('an already active sparse 0.4 expedition remains intact until its normal map is upgraded on exit', () => {
   const { run, saved } = createGame();
-  run('running=true;p.level=35;p.career.materials.keys=3;loadMap("temple");enterRift();p.career.endgame.run.kills=7;save();');
+  run('running=true;p.level=35;p.career.materials.keys=3;loadMap("temple");loadMap("town",true);p.x=NPCS.dungeonMaster.x;p.y=NPCS.dungeonMaster.y;enterRift();p.career.endgame.run.kills=7;save();');
   const old = readSavedProfile(saved);
   function sparse(state) {
     delete state.spawnSchema;

@@ -133,11 +133,11 @@ function dropMetinLoot(stone) {
     const [chance, min, max] = pool[id];
     if (rand() < chance) dropMaterial(id, metinLootAmount(min, max), stone);
   }
+  if(stone.level>=35&&rand()<.08)dropMaterial('soulStones',1,stone);
   const [extra, chance, min, max] = pool.extra;
   if (rand() < chance) dropMaterial(extra, metinLootAmount(min, max), stone);
   if (rand() < pool.gear) {
     const slot=pool.slots[Math.min(pool.slots.length-1,Math.floor(itemRandom()*pool.slots.length))],item=makeItem(false,stone,slot);
     spawnGroundDrop({ kind: 'gear', item }, stone);
   }
-  if (rand() < pool.rare) spawnGroundDrop({ kind: 'relic', relicId: pool.relic, count: 1 }, stone);
 }

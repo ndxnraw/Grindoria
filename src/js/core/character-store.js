@@ -25,7 +25,7 @@ function loadPlayerSave() {
   try {
     const raw=(localStorage.getItem(CHARACTER_RULES.storageKey)??null);characterStore.raw=raw;
     if(raw!==null){
-      const stored=decodeCharacterStorage(raw);migrateForgeMaterials(stored);migrateItemAccount(stored);for(const record of Object.values(stored.profiles||{}))repairLegacyRelics(record.data);validateCharacterAccount(stored);characterStore.account=stored;
+      const stored=decodeCharacterStorage(raw);migrateForgeMaterials(stored);migrateItemAccount(stored);for(const record of Object.values(stored.profiles||{})){repairLegacyWorld(record.data);if(migrateGameSystems(record.data))characterStore.needsMigration=true;}validateCharacterAccount(stored);characterStore.account=stored;
       return stored.selectedId?copyCharacterData(profileIdentity(stored.profiles[stored.selectedId],stored.profiles[stored.selectedId].data)):null;
     }
     const legacy=loadLegacyPlayerSave(),candidates=legacy?[legacy]:[...pendingSaveImports];pendingSaveImports.length=0;
@@ -112,7 +112,7 @@ function clearCharacterSession() {
   for(const id of Object.keys(buffs))delete buffs[id];spellCD.fill(0);attackCD=0;skillCD=0;castPose=0;castStyle='';spiritTick=0;capeCooldown=0;saveTimer=0;slash=0;ring=0;
   for(const slot of Object.keys(forgeOptions))delete forgeOptions[slot];forgeResult=null;
   craftingFilter='all';craftingMessage='';marketMessage='';
-  closeAllGameWindows();clickDestination=null;
+  closeAllGameWindows();clickDestination=null;npcSessions.clear();characterTab='stats';journalTab='active';
   inventoryTab='gear';inventoryPage=0;inventorySelection=null;inventoryDrag=null;inventoryDeletePending=null;inventoryDropPending=null;panelState.key=null;dungeonAbandonPending=false;careerTab='overview';
   combatAssist.timer=0;combatAssist.nextSkill=0;combatAssist.fightTarget=null;combatAssist.fightTime=0;combatAssist.aimTime=0;combatAssist.focused=true;
 }
@@ -158,7 +158,7 @@ function prepareCharacterImport(text) {
     for(const source of data.characters){assertCharacterObject(source,'profil starej zálohy');assertCharacterObject(source.data,'údaje starej zálohy');const record=copyCharacterData(source);record.isGM??=false;record.lastPlayedAt??=null;record.data.characterId=record.id;record.data.name=record.name;record.data.isGM=record.isGM;record.data.bestiary??={};record.data.achievements??={};if(Object.hasOwn(account.profiles,record.id))throw new Error('Duplicitné ID v zálohe.');account.order.push(record.id);account.profiles[record.id]=record;}
     account.selectedId=account.order[0]||null;data={...data,version:CHARACTER_RULES.backupVersion,account};
   }
-  migrateForgeMaterials(data.account);migrateItemAccount(data.account);for(const record of Object.values(data.account?.profiles||{}))repairLegacyRelics(record.data);validateCharacterAccount(data.account);return {account:copyCharacterData(data.account),baseRaw:characterStore.raw};
+  migrateForgeMaterials(data.account);migrateItemAccount(data.account);for(const record of Object.values(data.account?.profiles||{})){repairLegacyWorld(record.data);migrateGameSystems(record.data);}validateCharacterAccount(data.account);return {account:copyCharacterData(data.account),baseRaw:characterStore.raw};
 }
 function remapImportedCharacterReferences(value,idMap) {
   if(!value||typeof value!=='object')return;

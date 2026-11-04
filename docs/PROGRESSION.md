@@ -1,86 +1,40 @@
-# Dlhodobá progresia
+# Progresia a schopnosti
 
-Panel **Progres (P)** spája deväť ciest rozvoja. Všetky sú funkčné v sólo offline hre; priebežne sa ukladajú do existujúceho uloženého postupu. Nevyžadujú účet ani reálny denný časovač.
+Progresia P obsahuje prehľad, katalóg predmetov, bestiár a informácie o aktuálnom biologickom výskume. Prideľovanie bodov, platený tréning, špecializácia a prestíž sú v Postave C. Schopnosti sa študujú priamo v knihe V. Kováč a Dungeon Majster otvárajú svoje služby až po interakcii v Meste.
 
-## EXP a levelovanie
+## Levely a atribúty
 
-Základné EXP bežného nepriateľa úrovne L sú `max(6, floor(6 × L^1.15))`. Ďalší level stojí `ceil(základné EXP × (24 + 1,6 × L))`.
+Maximum je 99. Potrebné EXP = `ceil(baseEnemyXP(L) × (24 + 1,6L))`, základ obyčajnej príšery = `max(6, floor(6L^1,15))`. Primeraný level vychádza približne na 26–181 obyčajných protivníkov. Typ, varianta a rozdiel levelov menia odmenu; slabý cieľ o 8 úrovní nedáva EXP. Viac v [BALANCE.md](BALANCE.md).
 
-| Úroveň | Potrebné EXP | EXP za rovnaký bežný cieľ | Takéto zabitia na ďalší level |
-|---|---:|---:|---:|
-| 1 | 154 | 6 | 26 |
-| 5 | 1 216 | 38 | 32 |
-| 10 | 3 360 | 84 | 40 |
-| 20 | 10 528 | 188 | 56 |
-| 35 | 28 560 | 357 | 80 |
-| 60 | 79 800 | 665 | 120 |
-| 98 | 211 356 | 1 169 | 181 |
+Každý level dáva tri voľné body. Postava C prideľuje body do sily, vitality, obratnosti a inteligencie; tá istá vrstva obsahuje rozbalený platený tréning. Jeho cena zostáva `3 + tréningový stupeň` pečatí a `100 × (stupeň + 1)` Yang, maximum 20 tréningov pre každý atribút. Za každý piaty primeraný kill padne pečať a ruda.
 
-Silnejší cieľ dáva najviac +50 % za rozdiel úrovní; slabší postupne menej a od rozdielu 8 nedáva EXP. Násobky: Metin 3×, boss 12×, elita 1,8×, vzácny variant 3,2×, obranca Metinu navyše 0,35×. Limit odmeny z jedného cieľa je 6 % potrebných EXP pri bežnej príšere, 8 % pri elite, 12 % pri vzácnej príšere alebo Metine a 35 % pri bossovi. Plošné útoky a varianty preto zrýchľujú reálne tempo oproti tabuľke.
+## Jedna kniha schopností
 
-Maximum je 99. Nový level dáva tri body atribútov a obnoví zdravie aj manu. Opakovateľný lov dáva Yang a pečať bez dodatočných EXP. Jednorazové úlohy naďalej dávajú 60 a 80 EXP; odmena Prvého strážcu má pevnú úroveň 8 bez ohľadu na miesto vyzdvihnutia.
-
-Staré profily zachovajú level a pomer EXP k ďalšiemu levelu; migrácia sa vykoná raz. Nepripisuje spätne levely. Úrovne máp, sila protivníkov a testovanie sú v [BALANCE.md](BALANCE.md).
-
-## Paralelné cesty
-
-| Systém | Čo farmiť | Výsledok |
+| Stupeň | Číselný rozsah uloženého ranku | Označenie |
 | --- | --- | --- |
-| Level | Primeraných a silnejších protivníkov | Body vlastností, zdravie a mana |
-| Tréning atribútov | Pečate z každého piateho primeraného zabitia, zlato | Až 20 dodatočných bodov každého atribútu bez zvýšenia levelu |
-| Schopnosti | Zabitia po zásahu kúzlom alebo pri aktívnej aure, knihy z kameňov/bossov | Stupne 1–20, silnejšie útoky/liečenie alebo dlhšie aury a kratšia obnova |
-| Biológ | Vzorky konkrétnych máp a primerané zabitia medzi odovzdaniami | Štyri trvalé bonusy za dokončený výskum |
-| Vybavenie | Predmety zo silnejších nepriateľov, rudu, zlato a od +4 kamene vylepšenia | Bonus podľa sily zdroja a vylepšenie konkrétneho predmetu až na +9 |
-| Alchýmia | Esenciu, rudu, prach a zlato | Tri súčasne aktívne kamene, výrobu a fúziu až na stupeň 5 |
-| Relikvie | Bossov štyroch oblastí | Unikátne bonusy a setové odmeny; duplikáty sú prach |
-| Špecializácia | Body za primeraných bossov a každé tri vylepšenia schopností | Trvalú voľbu z troch smerov, každý do stupňa 10 |
-| Endgame | Kľúče z bossov a silnejúce expedície | Až 100 stupňov trhlín, úlomky a relikviár do stupňa 50 |
+| Normál | 1–20 | 1–20 |
+| Majster | 21–30 | M1–M10 |
+| Veľmajster | 31–40 | G1–G10 |
+| Perfektný majster | 41 | P |
 
-Primeraný cieľ je najviac o 5 úrovní slabší než hráč. Len taký poskytuje prax, esenciu, rudu, tréningové pečate, knihy a špecializačné body. Biologické vzorky, vzácne relikvie a kľúče zostávajú dostupné aj pri návrate do slabších oblastí, ale nedávajú náhradné EXP.
+Kniha V ukazuje účinok, manu, aktuálny cooldown, kombo, prax, cenu a tlačidlo vylepšenia. Samostatné okno Schopnosti v Progresii neexistuje. P je konečné a ďalšie pokusy nič nespotrebujú.
 
-### Schopnosti
+Prax sa pripíše pri primeranom zabití, najviac raz za danú schopnosť a nepriateľa; boss dáva 4 jednotky. Aktívne aury sa započítajú, kúzlenie do prázdna nie. Požadovaná prax pri ranku r: Normál `10 + 2r`, Majster `50 + 4(r − 20)`, Veľmajster `90 + 8(r − 30)`. Požiadavky neklesnú pri prechode medzi stupňami.
 
-Každé kúzlo má vlastnú uloženú prax a stupeň. Jedna príšera poskytne prax danej schopnosti najviac raz, až po porážke; kúzlenie do prázdna ani opakovanie zásahov nepridáva ďalšiu prax. Boss dáva 4 jednotky praxe. Liečivé a podporné schopnosti môžu označiť blízkeho protivníka; aktivovaná aura sa započíta pri primeranom zabití.
+Pred M1 stojí tréning `20r` Yang. Prechod 20 → M1 a štúdium Majstra používajú knihy: `1 + floor((r − 20)/2)` a `500 + 250(r − 20)` Yang. Od prechodu M10 → G1 sa používajú kamene duše: `1 + floor((r − 30)/2)` a `2500(r − 29)` Yang. Prax sa spotrebuje iba pri úspešnom štúdiu. Knihy pochádzajú z primeraných bossov a Metinov. Kamene duše: boss Lv.35+ 20 %, Metin Lv.35+ 8 %; platí primeranosť cieľa.
 
-Štúdium vyžaduje `ceil(10 × rank^1.15)` praxe, `ceil(rank/3)` kníh a `25 × rank²` zlata. Každý stupeň pridáva 4 % sily útočných/liečivých kúziel alebo trvania aury a skracuje obnovu o 1 %. Stupeň 10 je Majster, 20 Veľmajster. Odmeny sa nedajú opakovane získať zabitím už mŕtveho nepriateľa.
+Sila a trvanie rastú od 1× po 2,4× na P. Obnova sa skracuje najviac o 35 %; mana sa nemení. Stupne, prax a cooldowny zostávajú samostatné pre každú postavu a školu. Každé tretie úspešné štúdium naďalej dáva bod špecializácie.
 
-### Biologický výskum
+## Biológ a výpravy
 
-Základná vzorka padá z každej 4., 6., 8. alebo 10. príšery podľa mapy. Biológ v Meste prijme jednu vzorku a poplatok naraz; ďalšie odovzdanie vyžaduje 10 nových primeraných zabití. Osem výskumov sa dokončuje postupne; pokročilé etapy Lv.40–85 pridávajú vzácne vzorky a časové intervaly 5–30 minút. Podrobné zdroje, šance, ceny a bonusy: [BIOLOGY.md](BIOLOGY.md). Pôvodné odmeny:
+P → Biologický výskum je iba informácia o aktuálnej etape. Odovzdanie je výlučne v samostatnej službe po kliknutí na Biológa alebo F pri NPC. Zdroje, odmeny a intervaly sú v [BIOLOGY.md](BIOLOGY.md).
 
-- Údolie, úroveň 1+: 10 vzoriek, +30 zdravie.
-- Púšť, úroveň 5+: 12 vzoriek, +6 útok.
-- Hory, úroveň 12+: 15 vzoriek, +5 obrana.
-- Chrám, úroveň 25+: 20 vzoriek, +4 % kritický zásah a +30 mana.
+Vylepšovanie a výrobu ponúkne Kováč v malom výbere služby. Dungeony, prestížne výpravy a trhliny ponúka Dungeon Majster. Aktívna výprava má vlastný stavový panel na dokončenie či odchod. Samostatné okno Endgame neexistuje. Trvalé posilnenie za úlomky trhlín je v Postave C → Prestíž, dostupné od Lv.35. [DUNGEONS.md](DUNGEONS.md), [PRESTIGE.md](PRESTIGE.md).
 
-### Výbava a alchýmia
+## Odstránené systémy a staré postavy
 
-Kováč v Meste vylepšuje nasadenú výbavu +0 až +9. Náklady rastú, neúspech môže znížiť stupeň alebo zničiť predmet; pomôcky menia šancu a ochranu. Tabuľky a ceny: [FORGE.md](FORGE.md). Bonus aj stupeň zostávajú s predmetom pri výmene.
+Alchýmia, Alchymista a zbierka relikvií sú odstránené z hry vrátane produktov, bonusov a dropov. Kováčsky prach zostáva materiálom výroby; liečivé elixíry vyrába Kováč. Samostatné alchymistické remeslo, odvary, drahokamy ani ich fúzie neexistujú.
 
-Základný alchymistický kameň stojí 30 esencie, 3 rudy a 100 zlata. Prvý sa nasadí zo zásoby; ďalšia fúzia potrebuje `2^rank` základných kameňov, `5 × rank` prachu a `100 × rank²` zlata. Rubín pridáva útok, zafír manu a silu kúziel, jadeit zdravie a obranu.
+Migrácia označená `career.systemsVersion = 1` spracuje aj neaktívne profily a prenosné zálohy. Zachová level, výbavu, voľné body, atribúty, výskum, špecializáciu, prestíž a výpravy. Prax odstráneného remesla pripočíta k výrobe, najviac po jej limit 4500. Odstránené zásoby premení raz na Yang: kameň 100 za kus, nasadený stupeň podľa investovaných `2^stupeň − 1` kameňov; mana 70, odvar sily 40, odolnosti 50, vitality 75, koncentrát 400, extrakt 45 a vlastnená relikvia 150. Stará relikvia na zemi sa zmení na 150 Yang so zachovanou expiráciou. Celkové Yang rešpektuje existujúci limit 10¹².
 
-### Relikvie a špecializácia
-
-Boss má 8 % šancu na relikviu svojej mapy; najneskôr desiaty boss od posledného dropu ju zaručí. Duplikát pridá 10 prachu a neopakuje trvalý bonus. Dve rôzne relikvie poskytujú navyše +2 obranu; všetky štyri navyše +8 útok a +15 zdravie.
-
-Od úrovne 10 a za 3 špecializačné body si hráč vedome zvolí trvalú cestu: Ničiteľ (útok/kritické zásahy), Ochranca (zdravie/obrana) alebo Mystik (sila kúziel/mana). Voľba sa v tejto verzii nedá resetovať. Ďalší stupeň stojí `rank+1` bodov.
-
-### Trhliny
-
-Vstup od úrovne 35 mimo boja stojí 3 kľúče; každý tretí boss zanechá kľúč. Expedícia používa oddelený stav chrámu. Treba poraziť 20 príšer a jedného bossa; odmena je `10 + tier × 3` úlomkov a odomknutie ďalšieho stupňa. Počas expedície sa nedá normálne cestovať; opustenie ju ukončí bez odmeny a bez vrátenia kľúčov.
-
-Stupeň zvyšuje životy, poškodenie aj úroveň nepriateľov. Aktívna expedícia prežije uloženie a načítanie; po ukončení sa obnoví pôvodný stav bežného chrámu. Relikviár stojí `25 × nextRank` úlomkov a pridáva trvalo +2 útok a +5 zdravie za stupeň.
-
-## Migrácia a limity overenia
-
-Postup používa kľúč `grindoria-save-v1`. Pri prvom načítaní nového systému sa zachová level a percentuálny postup k ďalšiemu. Staré globálne kováčske bonusy sa prevedú na aktuálne nasadenú zbraň bez straty ich hodnoty. Uložené mapy dostanú nové úrovne a silu nepriateľov pri zachovaní pomeru životov a časovačov.
-
-Automatické testy overujú krivku, ochranu pred opakovanými odmenami, zdroje a ceny jednotlivých ciest, skutočný účinok bonusov, migráciu a expedície. Čísla sú východiskové nastavenie pre dlhodobé farmenie; tempo celej ekonomiky ešte vyžaduje dlhšie hranie a spätnú väzbu. Hra je lokálna a uložený súbor si hráč môže upraviť; nejde o serverovú ochranu proti podvádzaniu.
-
-## Boj od 0.10.0
-
-Školy majú pasívne stupne na úrovniach 10, 25, 50 a 75. Nevyžadujú knihy ani aktívne body; prax a knihy naďalej zvyšujú aktívne schopnosti. Výbava môže dopĺňať typové odolnosti a kritický zásah. Pozri [COMBAT.md](COMBAT.md).
-
-## Prestíž po úrovni 99
-
-Prestíž I–V zachová level aj výbavu a odomkne nové výzvy, pasívy, odmeny a zdokonaľovanie Mythic bonusov. Podmienky, zdroje znakov, bestiár a endgame ciele: [PRESTIGE.md](PRESTIGE.md).
+Staré schopnosti 1–9 prejdú na Normál `2r − 1`, 10–19 na M1–M10 a starý rank 20 na G1. Migrácia sa neopakuje. Výbava ani level sa pri tejto zmene neresetujú.

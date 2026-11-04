@@ -7,7 +7,7 @@ function withGameWindow(key,action){
   const entry=gameWindows.get(key);if(!entry)return;
   const previous=activeGameWindow;
   activeGameWindow=entry;panelState.key=key;
-  try{return action(entry);}finally{activeGameWindow=previous&&gameWindows.has(previous.key)?previous:activeGameWindow&&gameWindows.has(activeGameWindow.key)?activeGameWindow:null;panelState.key=activeGameWindow?.key||null;}
+  try{return action(entry);}finally{activeGameWindow=activeGameWindow&&activeGameWindow!==entry&&gameWindows.has(activeGameWindow.key)?activeGameWindow:previous&&gameWindows.has(previous.key)?previous:activeGameWindow&&gameWindows.has(activeGameWindow.key)?activeGameWindow:null;panelState.key=activeGameWindow?.key||null;}
 }
 function frontGameWindow(entry,focus=false){
   activeGameWindow=entry;panelState.key=entry.key;
@@ -69,7 +69,7 @@ function modal(html,options={}){
   let entry=gameWindows.get(key);const same=!!entry;
   if(!entry)entry=createGameWindow(key,title);
   const expanded=[...entry.content.querySelectorAll('details')].map(el=>el.open);
-  const feedback=refreshingGameWindows?['career-message','inventory-message'].map(id=>[id,entry.content.querySelector('[data-ui-id="'+id+'"]')?.textContent]):[];
+  const feedback=refreshingGameWindows?['inventory-message','smith-message','character-message','skill-message','biology-message'].map(id=>[id,entry.content.querySelector('[data-ui-id="'+id+'"]')?.textContent]):[];
   const scroll=entry.body.scrollTop||0,focus=same&&entry.node.contains(document.activeElement)?modalFocusToken():null;
   activeGameWindow=entry;panelState.key=key;
   entry.refresh=options.refresh||entry.refresh;
@@ -87,6 +87,7 @@ function modal(html,options={}){
 }
 function closeModal(key=activeGameWindow?.key){
   const entry=gameWindows.get(key);if(!entry)return;
+  if(key==='inventory'&&gameWindows.has('inventory-drop'))closeModal('inventory-drop');if(key==='inventory-drop')inventoryDropPending=null;
   entry.drag?.unset();entry.node.remove();gameWindows.delete(key);
   if(key==='inventory'){inventoryDropPending=null;inventoryDeletePending=null;inventoryDrag=null;}
   const top=[...gameWindows.values()].sort((a,b)=>Number(b.node.style.zIndex)-Number(a.node.style.zIndex))[0];
@@ -106,7 +107,8 @@ function refreshOpenGameWindows(dt){
 }
 function initializeGameWindows(){
   window.addEventListener('pointerup',()=>windowPointerHeld=false);window.addEventListener('pointercancel',()=>windowPointerHeld=false);window.addEventListener('blur',()=>windowPointerHeld=false);
-  for(const [id,icon,key,label]of [['career','◇','P','Progresia'],['travel','⌖','M','Veľká mapa'],['spellbook','✧','V','Schopnosti'],['journal','▤','N','Úlohy'],['help','?','H','Pomoc'],['desktop-updates','↓','','Aktualizácie']]){const button=$(id);button.title=label+(key?' · '+key:'');button.setAttribute('aria-label',button.title);button.innerHTML='<span>'+icon+'</span><kbd>'+key+'</kbd>';$('game-toolbar').appendChild(button);}
+  for(const [id,icon,key,label]of [['career','◇','P','Progresia'],['spellbook','✧','V','Schopnosti'],['journal','▤','N','Úlohy'],['help','?','H','Pomoc'],['desktop-updates','↓','','Aktualizácie']]){const button=$(id);button.title=label+(key?' · '+key:'');button.setAttribute('aria-label',button.title);button.innerHTML='<span>'+icon+'</span><kbd>'+key+'</kbd>';$('game-toolbar').appendChild(button);}
+  const travel=$('travel');travel.className='minimap-travel';travel.innerHTML='↗';travel.title='Cestovanie';travel.setAttribute('aria-label','Cestovanie');document.querySelector('.hud.map').appendChild(travel);
   try{const saved=JSON.parse(localStorage.getItem('grindoria-ui-windows-v1')||'{}');if(saved&&typeof saved==='object')for(const [key,value]of Object.entries(saved))if(!['__proto__','constructor','prototype'].includes(key)&&Number.isFinite(value?.x)&&Number.isFinite(value?.y))windowLayout[key]={x:value.x,y:value.y};}catch{}
   window.addEventListener('resize',()=>{for(const entry of gameWindows.values())clampGameWindow(entry);});
   $('game-shell').addEventListener('dragover',event=>{if(inventoryDrag&&!gameWindows.get('inventory')?.node.contains(event.target))event.preventDefault();});

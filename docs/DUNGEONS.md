@@ -1,6 +1,6 @@
 # Dungeony a bossovia
 
-Dungeony otvor cez Mapy (M) → Dungeony alebo Progres (P) → Dungeony. Vstup vyžaduje živú postavu, ukončený boj, príslušnú úroveň a vstupné. Jedna postava môže mať naraz jednu výpravu; dungeon a pôvodná trhlina sa nedajú kombinovať.
+Dungeony otvor kliknutím na Dungeon Majstra v Meste alebo F v jeho blízkosti. Vstup vyžaduje živú postavu, ukončený boj, príslušnú úroveň a vstupné. Jedna postava môže mať naraz jednu výpravu; dungeon a pôvodná trhlina sa nedajú kombinovať.
 
 ## Lokality
 
@@ -49,3 +49,5 @@ Korisť padá fyzicky pri bossovi. Plný batoh ju nepredá ani nezmaže. Pri ná
 Validácia importu kontroluje lokalitu, obtiažnosť, populáciu, identitu výpravy, jediného bossa, tri pečate, odomknutie, stav odmeny, geometriu útokov, unikáty a pity. Dungeony zdieľajú pôvodný pohyb nepriateľov, boj, odolnosti, zásoby, korisť, výbavu, renderer a uloženie; nepridávajú druhý inventár ani výpočet poškodenia.
 
 Regresie: `tests/dungeons.test.cjs`. Ceny, HP a šance sú v `data/dungeons.js`; balans vyžaduje ďalšie hranie s reálnymi buildmi.
+
+Vstup do novej výpravy vyžaduje živú postavu pri Dungeon Majstrovi, úroveň, vstupné a ukončený boj. Aktívny stavový panel zostáva dostupný v samotnom dungeone na dokončenie či odchod. Návrat umiestni postavu pri majstrovi v Meste. Trhliny sú druhou službou toho istého NPC.

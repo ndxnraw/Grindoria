@@ -55,9 +55,9 @@ function validateCharacterWorld(state) {
     if(drop.id!==undefined){assertCharacterNumber(drop.id,'ID koristi',1,Number.MAX_SAFE_INTEGER,true);if(dropIds.has(drop.id))characterDataError('duplicitné ID koristi.');dropIds.add(drop.id);}
     if(drop.kind==='gear')validateCharacterItem(drop.item);
     else if(drop.kind==='supply'){
-      const id=drop.supplyId;if(typeof id!=='string'||!(['potions','braveryCapes'].includes(id)||id.startsWith('material:')&&Object.hasOwn(MATERIALS,id.slice(9))||id.startsWith('gem:')&&Object.hasOwn(GEMS,id.slice(4))||id.startsWith('alchemy:')&&Object.hasOwn(ALCHEMY_PRODUCTS,id.slice(8))))characterDataError('neznáma zásoba.');
+      const id=drop.supplyId;if(typeof id!=='string'||!(['potions','braveryCapes'].includes(id)||id.startsWith('material:')&&Object.hasOwn(MATERIALS,id.slice(9))))characterDataError('neznáma zásoba.');
       assertCharacterNumber(drop.count,'počet zásob',1,1e12,true);
-    }else if(drop.kind==='relic'){if(!Object.hasOwn(RELICS,drop.relicId))characterDataError('neznáma relikvia.');}
+    }
     else if(drop.kind==='gold'||drop.kind===undefined)assertCharacterNumber(drop.count??drop.value,'zlato na zemi',1,1e12,true);
     else characterDataError('typ koristi.');
     if(drop.manualPickup!==undefined&&typeof drop.manualPickup!=='boolean')characterDataError('ručné zbieranie koristi.');
@@ -82,7 +82,7 @@ function validateCharacterProfile(record) {
   assertCharacterObject(data.schools,'školy');for(const [id,school]of Object.entries(data.schools))if(SCHOOLS[school]?.classId!==id)characterDataError('neznáma škola.');
   if(SCHOOLS[data.schools[data.classId]]?.classId!==data.classId)characterDataError('chýbajúca škola povolania.');
   assertCharacterObject(data.inventory,'inventár');assertCharacterNumber(data.inventory.pages,'strany inventára',2,100,true);assertCharacterNumber(data.inventory.serial,'séria inventára',0,Number.MAX_SAFE_INTEGER,true);
-  assertCharacterObject(data.inventory.supplyCells,'umiestnenie zásob');for(const [key,cell]of Object.entries(data.inventory.supplyCells)){if(!(['potions','braveryCapes'].includes(key)||key.startsWith('material:')&&Object.hasOwn(MATERIALS,key.slice(9))||key.startsWith('gem:')&&Object.hasOwn(GEMS,key.slice(4))||key.startsWith('alchemy:')&&Object.hasOwn(ALCHEMY_PRODUCTS,key.slice(8))))characterDataError('referencia zásoby v inventári.');assertCharacterNumber(cell,'políčko zásoby',0,44,true);}
+  assertCharacterObject(data.inventory.supplyCells,'umiestnenie zásob');for(const [key,cell]of Object.entries(data.inventory.supplyCells)){if(!(['potions','braveryCapes'].includes(key)||key.startsWith('material:')&&Object.hasOwn(MATERIALS,key.slice(9))))characterDataError('referencia zásoby v inventári.');assertCharacterNumber(cell,'políčko zásoby',0,44,true);}
   if(!Array.isArray(data.bag)||data.bag.length>data.inventory.pages*45)characterDataError('batoh.');assertCharacterObject(data.equipped,'výbava');
   const uids=new Set(),cells=new Set();
   for(const [slot,item]of Object.entries(data.equipped)){if(!Object.hasOwn(EQUIPMENT,slot))characterDataError('slot výbavy.');if(item)validateCharacterItem(item,slot);}
@@ -96,13 +96,12 @@ function validateCharacterProfile(record) {
   const c=data.career;assertCharacterObject(c,'progres');if(c.schema!==PROGRESSION.schema)characterDataError('nepodporovaná verzia progresu.');
   assertCharacterObject(c.materials,'materiály');for(const [key,value]of Object.entries(c.materials)){if(!Object.hasOwn(MATERIALS,key))characterDataError('materiál.');assertCharacterNumber(value,'množstvo materiálu',0,1e12,true);}for(const key of Object.keys(MATERIALS))if(c.materials[key]===undefined)characterDataError('chýbajúci materiál.');
   for(const key of ['eligibleKills','skillUpgrades','keyPity'])assertCharacterNumber(c[key],'progres '+key,0,1e12,true);
-  for(const key of ['relicPity','samplePity']){assertCharacterObject(c[key],key);for(const [id,value]of Object.entries(c[key])){if(!Object.hasOwn(MAPS,id))characterDataError('mapa progresu.');assertCharacterNumber(value,key,0,1e12,true);}}
+  for(const key of ['samplePity']){assertCharacterObject(c[key],key);for(const [id,value]of Object.entries(c[key])){if(!Object.hasOwn(MAPS,id))characterDataError('mapa progresu.');assertCharacterNumber(value,key,0,1e12,true);}}
   assertCharacterObject(c.skills,'schopnosti');for(const [key,skill]of Object.entries(c.skills)){if(!Object.hasOwn(ACTIVE_SKILLS,key))characterDataError('schopnosť.');assertCharacterNumber(skill.rank,'stupeň schopnosti',1,PROGRESSION.maxSkillRank,true);assertCharacterNumber(skill.practice,'prax schopnosti');}
   assertCharacterObject(c.training,'tréning');for(const key of ['strength','vitality','dexterity','intelligence'])assertCharacterNumber(c.training[key],'tréning '+key,0,PROGRESSION.maxTraining,true);
   assertCharacterObject(c.biology,'biológia');assertCharacterNumber(c.biology.stage,'stupeň biológie',0,BIOLOGY.length,true);for(const key of ['delivered','nextKill'])assertCharacterNumber(c.biology[key],'biológia '+key,0,1e12,true);
   for(const key of ['nextDeliveryAt','sampleKills'])if(c.biology[key]!==undefined)assertCharacterNumber(c.biology[key],'biológia '+key,0,key==='nextDeliveryAt'?Number.MAX_SAFE_INTEGER:1e12,true);
-  assertCharacterObject(c.alchemy,'alchýmia');for(const key of ['stock','equipped']){assertCharacterObject(c.alchemy[key],'alchýmia '+key);for(const [id,value]of Object.entries(c.alchemy[key])){if(!Object.hasOwn(GEMS,id))characterDataError('alchymistický kameň.');assertCharacterNumber(value,'alchýmia',0,key==='equipped'?PROGRESSION.maxGemRank:1e12,true);}for(const id of Object.keys(GEMS))if(c.alchemy[key][id]===undefined)characterDataError('chýbajúca alchýmia.');}
-  assertCharacterObject(c.collection,'zbierka');for(const [id,value]of Object.entries(c.collection))if(!Object.hasOwn(RELICS,id)||typeof value!=='boolean')characterDataError('relikvia zbierky.');
+  if(c.systemsVersion!==1||c.alchemy!==undefined||c.collection!==undefined||c.relicPity!==undefined)characterDataError('verzia herných systémov.');
   assertCharacterObject(c.specialization,'špecializácia');if(c.specialization.focus!==null&&!Object.hasOwn(SPECIALIZATIONS,c.specialization.focus))characterDataError('typ špecializácie.');assertCharacterNumber(c.specialization.rank,'stupeň špecializácie',0,PROGRESSION.maxSpecialization,true);assertCharacterNumber(c.specialization.points,'body špecializácie',0,1e12,true);
   assertCharacterObject(c.endgame,'endgame');assertCharacterNumber(c.endgame.highest,'trhliny',0,PROGRESSION.maxRiftTier,true);assertCharacterNumber(c.endgame.paragon,'paragon',0,PROGRESSION.maxParagon,true);
   if(c.endgame.run){const run=c.endgame.run;assertCharacterObject(run,'výprava');assertCharacterNumber(run.id,'ID výpravy',1,Number.MAX_SAFE_INTEGER,true);assertCharacterNumber(run.tier,'stupeň výpravy',1,PROGRESSION.maxRiftTier,true);for(const key of ['kills','bosses'])assertCharacterNumber(run[key],'ciele výpravy',0,1e12,true);if(run.active!==true||data.mapId!=='temple')characterDataError('stav výpravy.');}

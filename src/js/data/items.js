@@ -1,4 +1,4 @@
-const INVENTORY = { schema: 1, columns: 5, rows: 9, pageSize: 45, pages: 2 };
+const INVENTORY = { schema: 1, columns: 5, rows: 9, pageSize: 45, pages: 5 };
 const EQUIPMENT = {
   weapon: { name: 'Zbraň', size: [1, 3], stat: 'attack', base: 4, scale: .6, rare: 9, names: ['Pútnický meč', 'Mesačný meč', 'Dračí meč'] },
   armor: { name: 'Brnenie', size: [2, 3], stat: 'defense', base: 2, scale: .25, rare: 3, names: ['Pútnická zbroj', 'Mesačná zbroj', 'Dračia zbroj'] },

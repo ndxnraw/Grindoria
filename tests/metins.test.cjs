@@ -83,7 +83,7 @@ test('guard caps bound population and expiry grants no rewards; killed guards ne
   assert.equal(run('p.xp'), run('xp')); assert.equal(run('drops.length'), run('dropCount'));
 });
 
-test('every Metin pool covers Yang, materials, books, alchemy, upgrade stones, gear and rare relics on the ground', () => {
+test('every Metin pool covers Yang, materials, books, forge materials, upgrade stones and gear on the ground', () => {
   const { run } = createGame();
   assert.equal(run('new Set(Object.values(METIN_TYPES).map(t=>JSON.stringify(t.loot))).size'), 8);
   for (const id of Object.keys(run('METIN_TYPES'))) {
@@ -91,7 +91,7 @@ test('every Metin pool covers Yang, materials, books, alchemy, upgrade stones, g
     assert(run('p.gold>0'));assert(!run('drops.some(d=>d.kind==="gold")'));
     for (const material of ['ore','books','essence','dust','upgradeStones']) assert(run(`p.career.materials['${material}']>0`), id+': '+material);
     assert(run('drops.some(d=>d.kind==="gear"&&METIN_TYPES[s.metinType].loot.slots.includes(d.item.slot)&&d.item.requiredLevel===s.level)'));
-    assert(run('drops.some(d=>d.kind==="relic"&&d.relicId===METIN_TYPES[s.metinType].loot.relic)'));
+    assert(run('drops.every(d=>d.kind!=="relic")'));
     assert(run('drops.every(d=>d.fallAge===0)')); assert.equal(run('p.bag.length'),0);
   }
 });
@@ -147,5 +147,5 @@ test('the Atlas and travel menu expose Šuterland and every type-specific loot c
   assert.match(elements.get('modalcontent').innerHTML,/Šuterland/); assert.match(elements.get('modalcontent').innerHTML,/Metiny Lv.1–99/);
   elements.get('metinAtlas').onclick(); const html=elements.get('modalcontent').innerHTML;
   assert.equal(run('metinPercent(.025)'), '2,5 %');
-  for(const name of ['Metin praskliny','Metin skazy','Kamene vylepšenia','Yang','Relikvia'])assert(html.includes(name));
+  for(const name of ['Metin praskliny','Metin skazy','Kamene vylepšenia','Yang','Kováčsky prach'])assert(html.includes(name));
 });

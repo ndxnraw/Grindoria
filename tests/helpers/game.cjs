@@ -13,7 +13,7 @@ exports.createGame = function (oldSave, storageKey = 'grindoria-save-v1', additi
   };
   const context = vm.createContext({
     interact:()=>({draggable(){return this;},unset(){}}),
-    document: { createElement: tag=>element('created-'+tag+'-'+(++generated)), getElementById: element, querySelectorAll: () => [], addEventListener: (name, fn) => listeners.set("document:" + name, fn), body: { classList: { add() {}, remove() {}, toggle() {} } } },
+    document: { createElement: tag=>element('created-'+tag+'-'+(++generated)), getElementById: element, querySelector: selector=>element(selector), querySelectorAll: () => [], addEventListener: (name, fn) => listeners.set("document:" + name, fn), body: { classList: { add() {}, remove() {}, toggle() {} } } },
     window: { addEventListener: (name, fn) => listeners.set(name, fn) }, devicePixelRatio: 1,
     localStorage: { getItem: key => saved.get(key), setItem: (key, value) => { if(options.failWrites)throw new Error("quota");saved.set(key, value); }, key: index => [...saved.keys()][index] ?? null, get length() { return saved.size; } },
     requestAnimationFrame() {}, TextEncoder, console

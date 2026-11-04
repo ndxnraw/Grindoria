@@ -1,10 +1,7 @@
 const ITEM_DEFINITIONS=Object.create(null);
-function registerItemDefinition(def){if(!def||typeof def.id!=='string'||!/^[a-zA-Z0-9:_-]+$/.test(def.id)||Object.hasOwn(ITEM_DEFINITIONS,def.id)||!['equipment','material','consumable','gem','relic'].includes(def.type)||typeof def.name!=='string'||def.type==='equipment'&&!Object.hasOwn(EQUIPMENT,def.slot))throw Error('Neplatná alebo duplicitná definícia predmetu.');ITEM_DEFINITIONS[def.id]=Object.freeze({...def});}
+function registerItemDefinition(def){if(!def||typeof def.id!=='string'||!/^[a-zA-Z0-9:_-]+$/.test(def.id)||Object.hasOwn(ITEM_DEFINITIONS,def.id)||!['equipment','material','consumable'].includes(def.type)||typeof def.name!=='string'||def.type==='equipment'&&!Object.hasOwn(EQUIPMENT,def.slot))throw Error('Neplatná alebo duplicitná definícia predmetu.');ITEM_DEFINITIONS[def.id]=Object.freeze({...def});}
 for(const slot of Object.keys(EQUIPMENT))for(const kind of slot==='weapon'?['sword','bow','daggers','fan']:[''])registerItemDefinition({id:'equipment:'+slot+(kind?':'+kind:''),type:'equipment',name:EQUIPMENT[slot].name,slot,weaponKind:kind||undefined,generic:true});
 for(const [id,name]of Object.entries(MATERIALS))registerItemDefinition({id:'material:'+id,type:'material',name,rarity:0,modelId:id});
-for(const [id,g]of Object.entries(GEMS))registerItemDefinition({id:'gem:'+id,type:'gem',name:g.name,rarity:1,modelId:id});
-for(const [id,a]of Object.entries(ALCHEMY_PRODUCTS))registerItemDefinition({id:'alchemy:'+id,type:'consumable',name:a.name,rarity:0,modelId:a.icon});
-for(const [id,r]of Object.entries(RELICS))registerItemDefinition({id:'relic:'+id,type:'relic',name:r.name,rarity:2,modelId:'relic-'+id});
 registerItemDefinition({id:'potions',type:'consumable',name:'Elixír',rarity:0,modelId:'potion'});registerItemDefinition({id:'braveryCapes',type:'consumable',name:'Plášť statočnosti',rarity:0,modelId:'cape'});
 const ICONIC_ITEMS={
  fms:{id:'weapon:fms',name:'Meč splnu (FMS)',level:30,bonus:48,modelId:'fms',classes:['warrior','ninja','sura'],schools:['body','mental','blade','weapon','black'],weaponKind:'sword',baseStats:{attackSpeed:.05}},

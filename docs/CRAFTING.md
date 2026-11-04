@@ -1,54 +1,11 @@
-# Výroba a alchýmia
+# Výroba u kováča
 
-Výroba je v Progrese (P), záložka Výroba, pri kováčovi v Meste. Alchýmia má vlastnú záložku a NPC Alchymista na východnej strane námestia. Recepty možno prezerať kdekoľvek; výroba vyžaduje živú postavu do 170 jednotiek príslušného NPC. Každý recept ukazuje požiadavky, cenu aj vlastné zásoby. Výroba má 100 % úspešnosť.
+Klikni na Kováča v Meste alebo použi F v jeho blízkosti. Malé menu ponúkne Vylepšovanie a Výrobu ako samostatné vrstvy. Progresia P tieto služby neobsahuje. Odchod od NPC zablokuje transakcie; neúspešný pokus nespotrebuje materiály, Yang, miesto ani náhodné hody.
 
-## Progres
+Remeslo má vlastnú prax, úrovne 1–10 a maximum 4500 praxe. Prah úrovne L je `50L(L − 1)`. Recept najmenej o tri úrovne pod remeslom dáva štvrtinu praxe, aspoň 1. Výroba nemení EXP postavy. Výstup vznikne len pri splnení úrovne remesla, úrovne postavy, ceny a kapacity; úspech je 100 %.
 
-Obe remeslá majú samostatnú prax a úrovne 1–10. Úroveň L vyžaduje celkovo `50 × L × (L − 1)` praxe; maximum je 4500. Recepty vyžadujú úrovne 1, 2, 3, 4, 6, 7, 8 alebo 10 podľa výrobku. Od rozdielu troch úrovní dáva starší recept štvrtinu praxe, zaokrúhlenú nadol, najmenej 1. Alchymistické majstrovstvo pridáva +3 maximálnej many za úroveň nad prvou, najviac +27. Samotné zvýšenie maxima manu nedoplní.
+Liečivé elixíry: 6 kusov za 1 bylinu a 10 Yang, remeslo 1. Plášte: 10 kusov za 1 kožu, 1 esenciu a 20 Yang, remeslo 2. Oceľový ingot: 5 rúd a 30 Yang. Kováčsky prach, kryštály a ingrediencie z bossov sa používajú vo vylepšeniach a kováčskych pomôckach. Recepty na jadrá, talizmany, ochranné zvitky, výbavu, kľúče a ikonické zbrane zostávajú v tej istej ponuke.
 
-## Výrobky a recepty
+Základná výbava potrebuje remeslo 1 a postavu Lv.1; pokročilá remeslo 4 / Lv.20 a majstrovská remeslo 8 / Lv.50. Používa ten istý generátor, raritu, affixy, požiadavky a rozmery ako korisť. Plný inventár výrobu zablokuje pred platbou. Rarity a úrovne ikonických predmetov vychádzajú priamo z ich registrovaných definícií.
 
-Register obsahuje 52 receptov vrátane piatich ikonických zbraní:
-
-- 30 kusov výbavy: všetkých desať slotov v troch stupňoch. Základná výbava: remeslo 1, postava 1, Common. Pokročilá: remeslo 4, postava 20, Rare. Majstrovská: remeslo 8, postava 50, Epic a jadro trhliny.
-- Ingot, plášť, kameň vylepšenia, kováčske jadro, talizman kováča, ochranný zvitok a kľúč trhliny.
-- Liečivé elixíry, bylinný extrakt, elixír many, tri základné odvary a koncentrát sily.
-- Tri pôvodné alchymistické kamene za pôvodnú cenu. Fúzia a už nasadené kamene zostávajú zachované.
-
-Výbava používa existujúci generátor, rarity, náhodné bonusy, modely povolaní, inventár a požiadavky na nasadenie. Plný inventár zablokuje výrobu pred spotrebou materiálov, praxe či náhodných hodov. Materiály a produkty sa ukladajú do existujúcich zásobníkov; vyrobená výbava sa nepredáva automaticky.
-
-Presné ceny a prax sú v `src/js/data/crafting.js`. Talizman a zvitok zdieľajú existujúce ceny `FORGE_RULES.recipes`; starý vstup `craftForgeSupport()` deleguje na ten istý receptový systém. Aj tieto recepty teraz vyžadujú príslušnú remeselnú úroveň.
-
-Liečivé elixíry sa vyrábajú po 6 kusoch za 1 bylinu a 10 Yang; plášte po 10 kusoch za 1 kožu, 1 esenciu a 20 Yang. Výroba sa oplatí aj pri kúpe základných surovín. Počas pozastaveného boja nemožno použiť spotrebný predmet; mimo boja zostáva použitie cez inventár dostupné.
-
-## Suroviny
-
-Nové suroviny sa získavajú cez existujúcu okamžitú korisť:
-
-| Zdroj | Odmena |
-| --- | --- |
-| Bežná príšera pri násobku 3 primeraných zabití | 1 bylina pri nepárnom počítadle, inak 1 koža |
-| Primeraný boss | 3 byliny a 2 kože |
-| Primeraný Metin | 1 + ⌊úroveň / 25⌋ surových kryštálov |
-| Primeraný boss patriaci aktívnej trhline | Navyše 1 + ⌊stupeň trhliny / 10⌋ jadier trhliny |
-
-Primeraný cieľ nie je viac než päť úrovní pod hráčom. Privolaní obrancovia neposkytujú nové suroviny. Ingot sa spracuje z rudy; extrakt z bylín a esencie. Kombinácia kryštálov, démonického popola, ľadových jadier a prachu vytvára kováčske jadro. Trojica odvarov sily s ďalšími materiálmi vytvorí koncentrát sily. Smrť zdroja využíva existujúcu ochranu pred opakovanou odmenou.
-
-## Produkty
-
-| Produkt | Účinok |
-| --- | --- |
-| Liečivý elixír | 65 HP alebo 25 % maxima podľa vyššej hodnoty, cooldown 4 s |
-| Elixír many | 80 MP alebo 30 % maxima podľa vyššej hodnoty, spoločný cooldown s liečivým elixírom 4 s |
-| Odvar sily | +4 útok na 120 s |
-| Odvar odolnosti | +4 obrana na 120 s |
-| Odvar vitality | +60 maximálneho zdravia na 120 s, bez doplnenia HP |
-| Koncentrát sily | +10 útok na 180 s |
-
-Produkty sa používajú v Alchýmii alebo v zásobách inventára. Naraz pôsobí jeden odvar; nový ho neprepíše a nespotrebuje sa. Účinok je viditeľný pri ostatných buffoch. Jeho čas sa odpočítava iba počas aktívnej simulácie, pri paneloch stojí, uloží sa s postavou a pri zmene postavy sa neprenáša. Po skončení vitality sa aktuálne HP obmedzí na nové maximum. Elixír many sa pri plnej mane ani počas cooldownu nespotrebuje.
-
-## Ukladanie a kontrola
-
-`p.career.crafting` obsahuje prax a počet výrobkov. Existujúce `p.career.alchemy` sa rozšíri o prax, počet výrobkov, zásobníky produktov a aktívny účinok. Staré profily dostanú iba chýbajúce materiály a polia; pôvodné kamene, fúzie, predmety aj meny zostanú zachované. Import overuje produkty, množstvá, prax a maximálnu dĺžku účinku ešte pred zmenou registra. Každá postava má vlastný progres.
-
-Regresie v `tests/crafting.test.cjs` pokrývajú recepty, všetky sloty a stupne výbavy, plný inventár, zdroje koristi, produkty a ich skutočné bonusy, pauzu, import, migráciu a izoláciu postáv.
+Alchýmia, odvary, mana produkty, fúzie kameňov a Alchymista sú odstránené. Staré zásoby a prax sa prevádzajú jednorazovo podľa [PROGRESSION.md](PROGRESSION.md); žiadny odstránený bonus ďalej nepôsobí.

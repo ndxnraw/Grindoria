@@ -19,13 +19,13 @@ window.addEventListener('keyup',e=>keys[e.key.length===1?e.key.toLowerCase():e.k
 
 function handleGameKeyDown(e) {
   const key=e.key.length===1?e.key.toLowerCase():e.key;
-  if(key==='F10'){e.preventDefault();if(!e.repeat)toggleGameFullscreen();return;}
+  if(key==='F10'){e.preventDefault();if(!e.repeat)toggleGameFullscreen('F10');return;}
+  if(key==='Enter'&&panelState.key==='inventory-drop'){e.preventDefault();if(!e.repeat)confirmPendingInventoryDrop();return;}
   if(key==='Escape'){
-    keysClear();
-    if(panelState.key==='inventory'&&inventoryDropPending){e.preventDefault();inventoryDropPending=null;inventory();return;}
+    e.preventDefault();keysClear();
     if(panelState.key==='inventory'&&inventoryDeletePending){e.preventDefault();inventoryDeletePending=null;renderInventoryDetail();return;}
     if(gameWindows.size){e.preventDefault();closeModal();return;}
-    if(fullscreenState.native&&fullscreenState.active){clearCombatTarget();stopCombatAssist();e.preventDefault();setGameFullscreen(false);return;}
+
     clearCombatTarget();stopCombatAssist();if(running)systemMenu();
     return;
   }
@@ -50,12 +50,12 @@ function handleGameKeyDown(e) {
 
 canvas.addEventListener('pointermove',setCombatPointer);canvas.addEventListener('pointerleave',leaveCombatPointer);window.addEventListener('blur',combatBlur);
 canvas.addEventListener('pointerdown',handleCombatClick);canvas.addEventListener('dblclick',handleCombatDoubleClick);
-$('attack').onclick=()=>hotbarAction(()=>attack());$('skill').onclick=()=>hotbarAction(()=>castSkill(0));$('potion').onclick=()=>hotbarAction(potion);$('inventory').onclick=()=>toggleGameWindow('inventory',inventory);$('claim').onclick=()=>{if(p.claimed||p.kills<5||p.stones<3)return;p.claimed=true;p.gold+=150;experience(60);toast('Úloha dokončená.\n+150 zlata · +60 skúseností');updateHUD();save();};
+$('attack').onclick=()=>hotbarAction(()=>attack());$('skill').onclick=()=>hotbarAction(()=>castSkill(0));$('potion').onclick=()=>hotbarAction(potion);$('inventory').onclick=()=>toggleGameWindow('inventory',inventory);$('claim').onclick=claimTrackedQuest;
 $('sound').onclick=()=>{sound=!sound;$('sound').textContent='Zvuk: '+(sound?'zapnutý':'vypnutý');beep(440);saveGlobalSettings();};document.querySelectorAll('[data-key]').forEach(b=>{b.addEventListener('pointerdown',e=>{e.preventDefault();keys[b.dataset.key]=true;b.setPointerCapture(e.pointerId);});for(const type of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(type,()=>keys[b.dataset.key]=false);});window.addEventListener('pagehide',save);updateHUD();
 
 $('journal').onclick=()=>toggleGameWindow('journal',journal);updateClassHUD();
 
-for(let i=1;i<6;i++)$('skill'+(i+1)).onclick=()=>hotbarAction(()=>castSkill(i));$('travel').onclick=()=>toggleGameWindow('large-map',largeMapPanel);$('spellbook').onclick=()=>toggleGameWindow('spellbook',spellbook);updateHUD();
+for(let i=1;i<6;i++)$('skill'+(i+1)).onclick=()=>hotbarAction(()=>castSkill(i));$('travel').onclick=()=>toggleGameWindow('travel',travelMenu);$('spellbook').onclick=()=>toggleGameWindow('spellbook',spellbook);updateHUD();
 
 $('help').onclick=help; // H also toggles this layer.
 

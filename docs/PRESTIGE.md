@@ -7,10 +7,10 @@ Prestíž sa aktivuje po úrovni 99 cez P → Prestíž, mimo boja a výprav. Le
 | Stupeň | Podmienky postupu | Nový trvalý bonus | Jednorazové znaky |
 |---|---|---|---:|
 | I | Aktivácia na úrovni 99 | +40 HP | 5 |
-| II | Prestížna hrobka I+, 5 Metinov Lv.95+ po aktivácii, tri schopnosti stupňa 10+ | +4 obrana | 10 |
+| II | Prestížna hrobka I+, 5 Metinov Lv.95+ po aktivácii, tri schopnosti aspoň M1 | +4 obrana | 10 |
 | III | Prestížna pevnosť II+, traja prestížni bossovia, jedna maximálna schopnosť | +6 útok, +8 sila kúziel | 15 |
 | IV | Prestížna priepasť III+, všetkých 8 biologických etáp, tri získané dungeonové unikáty | +6 rýchlosť pohybu | 20 |
-| V | Všetky tri prestížne dungeony IV+, 25 porazených druhov bestiára vrátane šiestich nových bossov, všetkých 6 schopností školy na maxime, Legendary alebo Mythic zbraň +9 | +3 % útok, +5 % odolnosť voči všetkým typom poškodenia | 25 |
+| V | Všetky tri prestížne dungeony IV+, 25 porazených druhov bestiára vrátane šiestich nových bossov, všetkých 6 schopností školy na P, Legendary alebo Mythic zbraň +9 | +3 % útok, +5 % odolnosť voči všetkým typom poškodenia | 25 |
 
 Bonusy stupňov sa sčítavajú. Typové odolnosti stále rešpektujú spoločný strop 75 %. Zvýšenie maximálneho HP nepredstavuje liečenie. Stupeň sa už neznižuje. Každý má vlastnú farbu, rímsku číslicu, znak nad postavou, kruh pri nohách a emblém v portréte. Meno a pravidlá jeho validácie sa nemenia.
 
@@ -37,3 +37,5 @@ Všetko patrí do existujúceho profilu p.career.prestige: schema, rank, marks, 
 Staré profily a zálohy bez prestíže sa načítajú s nulovým stupňom a bez spätne pridanej meny. Rozbehnuté pôvodné dungeony zostávajú pôvodné. Export a import prenášajú aj prestíž a rozbehnuté výzvy; neplatné stupne, meny, pasívy, odkazy a výpravy sa odmietnu transakčne. Každá postava má samostatný postup a odmeny.
 
 Definície: data/prestige.js. Pravidlá a validácia: systems/prestige.js. UI, emblémy a ciele: ui/prestige.js. Výpravy rozširujú systems/dungeons.js bez zmeny bežných režimov.
+
+Prestíž a jej akcie sú v Postave C → Prestíž. Vstupy do všetkých výprav ponúka iba Dungeon Majster v Meste; postava pri ňom musí zostať aj pri potvrdení vstupu. P nemá záložky Prestíž, Dungeony ani Endgame.

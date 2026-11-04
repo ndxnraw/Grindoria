@@ -8,14 +8,12 @@ function parsePlayerSave(raw, compatible = false) {
     if(profile.equipped!==undefined&&(!profile.equipped||typeof profile.equipped!=='object'||Array.isArray(profile.equipped)))return null;
     if(profile.worldStates!==undefined){if(!profile.worldStates||typeof profile.worldStates!=='object'||Array.isArray(profile.worldStates))return null;for(const state of Object.values(profile.worldStates))if(!state||!Array.isArray(state.mobs)||!Array.isArray(state.drops))return null;}
     if(profile.career?.schema===PROGRESSION.schema){
-      for(const key of ['materials','training','skills','biology','alchemy','collection','relicPity','samplePity','specialization','endgame'])if(!profile.career[key]||typeof profile.career[key]!=='object')return null;
-      if(!profile.career.alchemy.stock||!profile.career.alchemy.equipped)return null;
+      for(const key of ['materials','training','skills','biology','samplePity','specialization','endgame'])if(!profile.career[key]||typeof profile.career[key]!=='object')return null;
     }
     if (!compatible) return profile;
     // Identify the existing save format by its structure, independently of project names.
     if (!CLASSES[profile.classId] || !MAPS[profile.mapId] || !Array.isArray(profile.bag) || !profile.equipped || !profile.worldStates) return null;
     if (profile.career?.schema !== PROGRESSION.schema || !profile.career.materials || !profile.career.skills || !profile.career.endgame) return null;
-    if (!Object.keys(GEMS).every(id => Number.isInteger(profile.career.alchemy?.equipped?.[id]))) return null;
     if (!Object.entries(profile.schools || {}).every(([id, value]) => SCHOOLS[value]?.classId === id)) return null;
     return profile;
   } catch { return null; }

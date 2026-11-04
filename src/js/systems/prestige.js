@@ -8,7 +8,7 @@ function prestigeProgress(goal){const c=p.career.prestige,gear=Object.values(p.e
  case'trial':return prestigeTrialCount(goal.dungeon,goal.tier);
  case'trials4':case'trials5':return Object.keys(DUNGEONS).filter(id=>prestigeTrialCount(id,goal.metric==='trials4'?4:5)>0).length;
  case'metins':return c.metins;case'bosses':return Object.values(c.bosses).reduce((a,b)=>a+b,0);case'bossTypes':return Object.keys(c.bosses).filter(id=>c.bosses[id]>0).length;
- case'skills10':case'skills20':return school().skills.filter((s,i)=>(p.career.skills[skillKey(i)]?.rank||1)>=(goal.metric==='skills10'?10:20)).length;
+ case'skills10':case'skills20':return school().skills.filter((s,i)=>(p.career.skills[skillKey(i)]?.rank||1)>=(goal.metric==='skills10'?21:41)).length;
  case'biology':return p.career.biology.stage;case'uniques':return Object.keys(c.uniques).length;
  case'bestiary':return PRESTIGE_BESTIARY_KEYS.filter(id=>p.bestiary[id]>0).length;
  case'weapon9':return p.equipped.weapon?.enhance===9&&rarityRank(p.equipped.weapon.rarity)>=4?1:0;

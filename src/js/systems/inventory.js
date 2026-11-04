@@ -121,8 +121,6 @@ function supplyDefinitions() {
     { id: 'potions', name: 'Liečivý elixír', count: p.potions, icon: 'potion', description: 'Obnoví 65 zdravia alebo 25 % maxima, podľa vyššej hodnoty. Kláves 7 / F7. Spoločný cooldown 4 s aj pre Autoelixíry.', action: 'drink' },
     { id: 'braveryCapes', name: 'Plášť statočnosti', count: p.braveryCapes, icon: 'cape', description: 'Privolá pohyblivých nepriateľov v dosahu 650 na 18 sekúnd. Kláves 8 / F8.', action: 'cape' },
     ...Object.entries(MATERIALS).map(([id, name]) => ({ id: 'material:' + id, name, count: p.career.materials[id], icon: id, description: BIOLOGY.some(stage=>stage.item===id)?'Odovzdanie: Biológ v Meste.':['ore','upgradeStones','forgeCore','smithCharm','protectionScroll'].includes(id)?'Použitie: kováč.':'Materiál na progresiu.', action: 'material', material: id })),
-    ...Object.entries(ALCHEMY_PRODUCTS).map(([id, product]) => ({ id: 'alchemy:' + id, name: product.name, count: p.career.alchemy.products[id], icon: product.icon, description: product.text, action: 'product' })),
-    ...Object.entries(GEMS).map(([id, gem]) => ({ id: 'gem:' + id, name: gem.name, count: p.career.alchemy.stock[id], icon: id, description: gem.text + ' Použitie otvorí alchýmiu.', action: 'alchemy' }))
   ].map(entry=>({...stackItemView(entry.id,entry.count),...entry}));
 }
 
@@ -166,8 +164,6 @@ function consumeSupply(id, count) {
   const item = supplyEntries().find(item => item.id === id);
   if (!item || item.count < count) return false;
   if (id.startsWith('material:')) p.career.materials[id.slice(9)] -= count;
-  else if (id.startsWith('gem:')) p.career.alchemy.stock[id.slice(4)] -= count;
-  else if (id.startsWith('alchemy:')) p.career.alchemy.products[id.slice(8)] -= count;
   else p[id] -= count;
   return true;
 }
@@ -184,15 +180,13 @@ function deleteInventoryItem(id, count = 1) {
 function useInventorySupply(id) {
   const item = supplyEntries().find(item => item.id === id);
   if (!item || !running || p.hp <= 0) return false;
-  if (item.action === 'product') return useAlchemyProduct(id.slice(8), true);
-  if (item.material && Object.hasOwn(CRAFT_MATERIALS, item.material)) { careerPanel(['herb','extract','crystal'].includes(item.material) ? 'alchemy' : 'crafting'); return true; }
+  if (item.material && Object.hasOwn(CRAFT_MATERIALS, item.material)) { toast('Výrobu otvoríš u kováča v Meste.'); return true; }
   if (item.action === 'drink') return drinkPotion(true);
   if (item.action === 'cape') {
     if (isSanctuary(p) || capeCooldown > 0) return false;
     return useBraveryCape();
   }
-  const tab = item.action === 'alchemy' || ['dust', 'essence'].includes(item.material) ? 'alchemy' : ['ore','upgradeStones','forgeCore','smithCharm','protectionScroll'].includes(item.material) ? 'forge' : item.material === 'books' ? 'skills' : item.material === 'training' ? 'training' : ['keys', 'shards'].includes(item.material) ? 'endgame' : 'biology';
-  careerPanel(tab); return true;
+  toast('Materiály použiješ u príslušného NPC alebo v okne Postavy.');return false;
 }
 
 function sellItem(index) {

@@ -4,7 +4,7 @@ const lootPointer = { inside: false, x: 0, y: 0, clientX: 0, clientY: 0 };
 let hoveredLootId = null, lootTooltipSignature = '';
 const lootHover = { id: null, elapsed: 0 };
 
-function groundDropLifetime(drop) { return drop.kind === 'relic' || drop.kind === 'gear' && rarityRank(drop.item?.rarity) >= rarityRank(2) ? LOOT_RULES.rareLifetime : LOOT_RULES.lifetime; }
+function groundDropLifetime(drop) { return drop.kind === 'gear' && rarityRank(drop.item?.rarity) >= rarityRank(2) ? LOOT_RULES.rareLifetime : LOOT_RULES.lifetime; }
 function pruneStoredGroundDrops(now = Date.now()) {
   for (const state of [...Object.values(p.worldStates), p.career.normalTemple]) {
     if (!Array.isArray(state?.drops)) continue;
@@ -97,10 +97,6 @@ function groundDropView(drop) {
     const definition = lootSupplyCatalog.get(drop.supplyId);
     return definition ? { ...definition, count: drop.count, rarity: 0, requiredLevel: 1 } : null;
   }
-  if (drop.kind === 'relic' && RELICS[drop.relicId]) {
-    const relic = RELICS[drop.relicId];
-    return { name: relic.name, icon: 'relic-'+drop.relicId, count: 1, rarity: 2, requiredLevel: 1, description: relic.text + (p.career.collection[drop.relicId] ? ' Ďalší exemplár sa po zdvihnutí premení na 10 prachov.' : 'Po zdvihnutí aktivuje trvalý bonus zbierky.') };
-  }
   if (drop.kind === 'gold') return { name: drop.currencyName || 'Zlato', icon: 'gold', count: drop.count, rarity: 0, requiredLevel: 1, description: 'Mena pre obchodníka, kováča a rozvoj postavy.' };
   return null;
 }
@@ -142,8 +138,6 @@ function grantGroundSupply(id, count) {
   if (!Number.isSafeInteger(count) || count < 1) return false;
   let holder, key;
   if (id.startsWith('material:') && MATERIALS[id.slice(9)]) { holder = p.career.materials; key = id.slice(9); }
-  else if (id.startsWith('alchemy:') && Object.hasOwn(ALCHEMY_PRODUCTS,id.slice(8))) { holder = p.career.alchemy.products; key = id.slice(8); }
-  else if (id.startsWith('gem:') && GEMS[id.slice(4)]) { holder = p.career.alchemy.stock; key = id.slice(4); }
   else if (id === 'potions' || id === 'braveryCapes') { holder = p; key = id; }
   else return false;
   if (!Number.isSafeInteger((holder[key] || 0) + count)) return false;
@@ -162,8 +156,7 @@ function pickUpGroundDrop(id, batch = false) {
     if (!addGearItem(cloneGroundDrop(drop).item)) { if (!batch) toast('V inventári nie je dosť miesta. Predmet zostáva na zemi.'); return false; }
   } else if (drop.kind === 'supply') {
     if (!grantGroundSupply(drop.supplyId, drop.count)) return false;
-  } else if (drop.kind === 'relic') collectRelic(drop.relicId);
-  else if (drop.kind === 'gold') {
+  } else if (drop.kind === 'gold') {
     if (!Number.isSafeInteger(drop.count) || drop.count < 1 || !Number.isSafeInteger(p.gold + drop.count)) return false;
     p.gold += drop.count;
   } else return false;

@@ -1,6 +1,6 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const {createGame,createEmptyGame,readSavedProfile,readSavedAccount}=require('./helpers/game.cjs');
-function ready(){const g=createGame();g.run('running=true;loadMap("town",true);p.level=99;p.gold=1000000;p.career.materials.keys=1000;p.hp=maxHP();p.mp=maxMP();');return g;}
+function ready(){const g=createGame();g.run('running=true;loadMap("town",true);p.x=NPCS.dungeonMaster.x;p.y=NPCS.dungeonMaster.y;p.level=99;p.gold=1000000;p.career.materials.keys=1000;p.hp=maxHP();p.mp=maxMP();');return g;}
 function finishTrial(g,id,collect=true){assert(g.run('enterPrestigeTrial("'+id+'")'));g.run('for(const m of [...mobs].filter(m=>!m.dungeonBoss))hit(m,1e9,"arcane",true);dungeonUnlocked();hit(mobs.find(m=>m.dungeonBoss),1e9,"arcane",true);');if(collect)g.run('for(const drop of [...drops]){drop.fallAge=LOOT_RULES.fallDuration;p.x=drop.x;p.y=drop.y;pickUpGroundDrop(drop.id);}');assert(g.run('finishDungeon()'));}
 
 test('prestige activation requires level 99, a living out-of-combat session, and no active expedition',()=>{
@@ -9,7 +9,7 @@ test('prestige activation requires level 99, a living out-of-combat session, and
 });
 
 test('activation retains level, Yang, equipment IDs and affixes, inventory, skills, biology and all existing progress',()=>{
- const g=ready();g.run('addGearItem(generateEquipmentItem("weapon",5,99));equipItem(0);p.equipped.weapon.enhance=9;p.career.biology.stage=8;skillProgress(skillKey(0)).rank=20;var gear=JSON.stringify(p.equipped),careerBefore=JSON.stringify({biology:p.career.biology,skills:p.career.skills,alchemy:p.career.alchemy}),gold=p.gold,hp=maxHP();');assert(g.run('activatePrestige()'));assert.equal(g.run('p.level'),99);assert.equal(g.run('p.gold'),g.run('gold'));assert.equal(g.run('JSON.stringify(p.equipped)'),g.run('gear'));assert.equal(g.run('JSON.stringify({biology:p.career.biology,skills:p.career.skills,alchemy:p.career.alchemy})'),g.run('careerBefore'));assert.equal(g.run('maxHP()-hp'),40);assert.equal(g.run('p.career.prestige.marks'),5);assert(!g.run('activatePrestige()'));assert.equal(g.run('p.career.prestige.marks'),5);
+ const g=ready();g.run('addGearItem(generateEquipmentItem("weapon",5,99));equipItem(0);p.equipped.weapon.enhance=9;p.career.biology.stage=8;skillProgress(skillKey(0)).rank=41;var gear=JSON.stringify(p.equipped),careerBefore=JSON.stringify({biology:p.career.biology,skills:p.career.skills,alchemy:p.career.alchemy}),gold=p.gold,hp=maxHP();');assert(g.run('activatePrestige()'));assert.equal(g.run('p.level'),99);assert.equal(g.run('p.gold'),g.run('gold'));assert.equal(g.run('JSON.stringify(p.equipped)'),g.run('gear'));assert.equal(g.run('JSON.stringify({biology:p.career.biology,skills:p.career.skills,alchemy:p.career.alchemy})'),g.run('careerBefore'));assert.equal(g.run('maxHP()-hp'),40);assert.equal(g.run('p.career.prestige.marks'),5);assert(!g.run('activatePrestige()'));assert.equal(g.run('p.career.prestige.marks'),5);
 });
 
 test('old profiles and backups without prestige load with zero rank and no retrospective challenge currency',()=>{
@@ -39,9 +39,9 @@ test('high Metin counters begin only after activation, reject weaker stones and 
 });
 
 test('promotion requires varied milestones, rejects old low-tier clears, and all five ranks can be earned sequentially',()=>{
- const g=ready();g.run('activatePrestige();');assert(!g.run('promotePrestige()'));finishTrial(g,'crypt');g.run('p.career.prestige.metins=5;for(var i=0;i<3;i++)skillProgress(skillKey(i)).rank=10;');assert(g.run('promotePrestige()'));assert.equal(g.run('prestigeRank()'),2);g.run('skillProgress(skillKey(0)).rank=20;');finishTrial(g,'frost');finishTrial(g,'frost');assert(g.run('promotePrestige()'));assert.equal(g.run('prestigeRank()'),3);
+ const g=ready();g.run('activatePrestige();');assert(!g.run('promotePrestige()'));finishTrial(g,'crypt');g.run('p.career.prestige.metins=5;for(var i=0;i<3;i++)skillProgress(skillKey(i)).rank=21;');assert(g.run('promotePrestige()'));assert.equal(g.run('prestigeRank()'),2);g.run('skillProgress(skillKey(0)).rank=41;');finishTrial(g,'frost');finishTrial(g,'frost');assert(g.run('promotePrestige()'));assert.equal(g.run('prestigeRank()'),3);
  g.run('p.career.biology.stage=8;');finishTrial(g,'abyss');assert(g.run('promotePrestige()'));assert.equal(g.run('prestigeRank()'),4);assert.equal(g.run('prestigeProgress({metric:"trials4"})'),0);
- g.run('for(var i=0;i<6;i++)skillProgress(skillKey(i)).rank=20;for(const id of PRESTIGE_BESTIARY_KEYS)p.bestiary[id]=1;addGearItem(generateEquipmentItem("weapon",4,99));equipItem(p.bag.length-1);p.equipped.weapon.enhance=9;');
+ g.run('for(var i=0;i<6;i++)skillProgress(skillKey(i)).rank=41;for(const id of PRESTIGE_BESTIARY_KEYS)p.bestiary[id]=1;addGearItem(generateEquipmentItem("weapon",4,99));equipItem(p.bag.length-1);p.equipped.weapon.enhance=9;');
  for(const id of ['crypt','frost','abyss'])finishTrial(g,id);assert(g.run('promotePrestige()'));assert.equal(g.run('prestigeRank()'),5);assert(!g.run('promotePrestige()'));assert.equal(g.run('p.level'),99);assert.equal(g.run('playerResistances().physical'),.05);assert.equal(g.run('careerBonuses().attackPercent'),.03);
 });
 
@@ -68,10 +68,7 @@ test('malformed prestige and challenge imports fail transactionally and do not t
  g.run('enterPrestigeTrial("crypt");save();');const bad=JSON.parse(g.run('exportCharacters()'));bad.account.profiles[id].data.career.dungeons.run.prestigeTier=5;assert.throws(()=>g.run('prepareCharacterImport('+JSON.stringify(JSON.stringify(bad))+')'));
 });
 
-test('prestige panel and endgame shortcut have functional goals, requirements and actions',()=>{
- const {run,elements}=ready();run('careerPanel("prestige");');assert(elements.get('modalcontent').innerHTML.includes('Aktivovať prestíž I'));run('closeModal();activatePrestige();careerPanel("prestige");');for(const text of ['Znaky prestíže','Prestížne výzvy','Pasívny tréning','Endgame ciele','1,8 s','data-prestige-trial','data-action="prestigePromote"'])assert(elements.get('modalcontent').innerHTML.includes(text),text);run('careerPanel("endgame");');elements.get('open-prestige').onclick();assert.equal(run('panelState.key'),'career:prestige');
-});
-
+test('prestige actions are integrated into Character and dungeon entries stay with the master',()=>{const {run,elements}=ready();run('characterPanel("prestige");');assert.match(elements.get('modalcontent').innerHTML,/Aktivovať prestíž/);assert.equal(run('careerPanel("prestige")'),false);assert.equal(run('careerPanel("endgame")'),false);run('activatePrestige();characterPanel("prestige");');assert.match(elements.get('modalcontent').innerHTML,/prestigePromote/);assert(!elements.get('modalcontent').innerHTML.includes('data-prestige-trial'));});
 
 test('Mythic refinement is a finite deterministic path to maximum rolls and preserves item identity and affix combination',()=>{
  const g=ready();g.run('activatePrestige();p.career.prestige.rank=3;p.career.prestige.marks=10000;rand=()=>.4;addGearItem(generateEquipmentItem("weapon",5,99));equipItem(0);p.equipped.weapon.enhance=9;var item=p.equipped.weapon,id=item.uid,stats=item.affixes.map(a=>a.stat).join(","),base=item.bonus;');

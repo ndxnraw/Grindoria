@@ -49,10 +49,10 @@ test('equipment clamps current HP and MP on removal without healing through repe
 
 test('a full grid rejects unequipping without losing gear; equal-slot replacement still works', () => {
   const { run } = createGame(); gear(run, 'weapon'); run('equipItem(0);');
-  run('for(let i=0;i<90;i++)addGearItem({name:"Prsteň",slot:"bracelet",bonus:1,value:1});let original=p.equipped.weapon;');
-  assert.equal(run('p.bag.length'), 90); assert.equal(run('unequipItem("weapon")'), false);
-  assert.equal(run('p.equipped.weapon===original'), true); assert.equal(run('p.bag.length'), 90);
-  run('p.bag=[];addGearItem({name:"Nový meč",slot:"weapon",bonus:12,enhance:2});for(let i=0;i<87;i++)addGearItem({name:"Prsteň",slot:"bracelet",bonus:1,value:1});');
+  run('for(let i=0;i<p.inventory.pages*INVENTORY.pageSize;i++)addGearItem({name:"Prsteň",slot:"bracelet",bonus:1,value:1});let original=p.equipped.weapon;');
+  assert.equal(run('p.bag.length'), 225); assert.equal(run('unequipItem("weapon")'), false);
+  assert.equal(run('p.equipped.weapon===original'), true); assert.equal(run('p.bag.length'), 225);
+  run('p.bag=[];addGearItem({name:"Nový meč",slot:"weapon",bonus:12,enhance:2});for(let i=0;i<p.inventory.pages*INVENTORY.pageSize-3;i++)addGearItem({name:"Prsteň",slot:"bracelet",bonus:1,value:1});');
   assert.equal(run('equipItem(0)'), true); assert.equal(run('p.equipped.weapon.name'), 'Nový meč');
   assert(run('p.bag.includes(original)'));
 });
@@ -92,7 +92,7 @@ test('potions can be used in the paused inventory; cape checks sanctuary and ope
 test('delete confirmation preserves items until confirmed and partial stack removal is exact', () => {
   const { run, elements } = createGame(); gear(run, 'weapon'); run('inventory();selectInventoryEntry("gear:"+p.bag[0].uid);');
   elements.get('inv-delete').onclick(); assert.equal(run('p.bag.length'), 1);
-  assert.match(elements.get('inventory-detail').innerHTML, /Odstránenie je trvalé/);
+  assert.match(elements.get('inventory-actions').innerHTML, /Odstránenie je trvalé/);
   elements.get('inv-delete-cancel').onclick(); assert.equal(run('p.bag.length'), 1);
   elements.get('inv-delete').onclick(); elements.get('inv-delete-confirm').onclick(); assert.equal(run('p.bag.length'), 0);
   run('p.potions=10;'); assert.equal(run('deleteInventoryItem("potions",4)'), true); assert.equal(run('p.potions'), 6);
