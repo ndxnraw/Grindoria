@@ -4,6 +4,10 @@
 
 Sólo RPG v prehliadači. Vlastník: [@ndxnraw](https://github.com/ndxnraw).
 
+## Windows EXE
+
+[Stiahnuť inštalátor](https://github.com/ndxnraw/Grindoria/releases/latest). Windows 10/11 x64. Aplikácia pri štarte skontroluje GitHub Releases; stiahnutie a reštart potvrdíš v Aktualizáciách. Pred inštaláciou aktualizácie sa uloží aktívna postava. Bez pripojenia možno hrať offline. Prenos postáv z prehliadača: export/import zálohy. [Desktop, zostavenie a vydávanie](docs/DESKTOP.md).
+
 ## Hranie
 
 [Stiahnuť Grindoria.html](https://github.com/ndxnraw/Grindoria/raw/refs/heads/main/dist/Grindoria.html) a otvoriť uložený súbor. Hra nepotrebuje server ani pripojenie. dist/index.html obsahuje rovnakú zostavu pre statický hosting.
@@ -59,7 +63,7 @@ Vzdialená neaktívna AI má odstupňované aktualizácie; aktívny boj zostáva
 
 ## Vývoj
 
-Node.js 22+; bez externých balíčkov.
+Browser zostava: Node.js 22+. EXE: Node.js 24 a npm ci; Electron a nástroje sú uzamknuté v package-lock.json.
 
 ```sh
 npm start

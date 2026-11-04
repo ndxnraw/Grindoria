@@ -12,7 +12,7 @@ for (const file of files) {
   new Script(read(file), { filename: file });
 }
 new Script(runtimeSource());
-for (const file of ['main.cjs', 'preload.cjs', 'fullscreen.cjs']) new Script(read('desktop/' + file), { filename: 'desktop/' + file });
+for (const file of ['main.cjs', 'preload.cjs', 'fullscreen.cjs', 'updater.cjs', 'protocol.cjs', 'smoke.cjs']) new Script(read('desktop/' + file), { filename: 'desktop/' + file });
 assert(read('src/index.html').includes(`ALPHA ${version}`));
 assert(!/@import|https?:\/\//.test(read('src/styles/main.css')));
 validateChangelog(read('CHANGELOG.md'), version);

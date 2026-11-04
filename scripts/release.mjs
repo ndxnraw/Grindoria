@@ -1,4 +1,4 @@
-import { writeFileSync } from 'node:fs';
+import { writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { root, read, metadata } from './lib/project.mjs';
@@ -15,6 +15,7 @@ try {
   if (tested.status !== 0) throw Error('Tests failed. No release files changed.');
   if (dryRun) { console.log(`Dry run: would prepare ${next}; no files changed.`); process.exit(0); }
   const changes = { 'package.json': JSON.stringify(result.pkg, null, 2) + '\n', 'src/index.html': result.html, 'CHANGELOG.md': result.changelog };
+  if(existsSync(path.join(root,'package-lock.json'))){const lock=JSON.parse(read('package-lock.json'));lock.version=result.pkg.version;if(lock.packages?.[''])lock.packages[''].version=result.pkg.version;changes['package-lock.json']=JSON.stringify(lock,null,2)+'\n';}
   const before = Object.fromEntries(Object.keys(changes).map(file => [file, read(file)]));
   try {
     for (const [file, content] of Object.entries(changes)) writeFileSync(path.join(root, file), content);

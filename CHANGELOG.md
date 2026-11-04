@@ -10,6 +10,22 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.29.0] - 2026-11-04
+
+### Added
+- Windows x64 NSIS EXE cez electron-builder, vlastná ikona, uzamknuté závislosti a balenie celej offline hry.
+- Kontrola stabilných GitHub Releases pri štarte, ručné stiahnutie a uloženie aktívnej postavy pred inštaláciou a reštartom.
+- Offline pokračovanie, priebeh sťahovania, kontrola integrity a úzko obmedzené aktualizačné IPC.
+- GitHub workflow pre zostavenie, test EXE a publikovanie inštalátora, blockmap a latest.yml.
+- Desať regresií aktualizácií a test skutočného zabaleného hosta s oddeleným profilom.
+
+### Changed
+- Stabilný desktopový origin a používateľský profil nezávislý od verzie; existujúce HTML zostáva samostatne hrateľné.
+- Release postup aktualizuje aj package-lock.json.
+
+### Fixed
+- Pri chybe ukladania sa inštalácia aktualizácie nespustí; sieťový problém neblokuje hranie.
+
 ## [0.28.0] - 2026-11-04
 
 ### Added
@@ -525,7 +541,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.28.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.29.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -557,3 +573,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.26.0]: https://github.com/ndxnraw/Grindoria/compare/v0.25.0...v0.26.0
 [0.27.0]: https://github.com/ndxnraw/Grindoria/compare/v0.26.0...v0.27.0
 [0.28.0]: https://github.com/ndxnraw/Grindoria/compare/v0.27.0...v0.28.0
+[0.29.0]: https://github.com/ndxnraw/Grindoria/compare/v0.28.0...v0.29.0

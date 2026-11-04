@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {readFileSync,statSync} from 'node:fs';
+import path from 'node:path';
+import {root,metadata} from './lib/project.mjs';
+const version=metadata().version,name='Grindoria-Setup-'+version+'-x64.exe',dir=path.join(root,'release');
+const exe=readFileSync(path.join(dir,name)),manifest=readFileSync(path.join(dir,'latest.yml'),'utf8');
+assert.equal(exe.subarray(0,2).toString(),'MZ');assert.equal(readFileSync(path.join(dir,'win-unpacked/Grindoria.exe')).subarray(0,2).toString(),'MZ');
+assert(manifest.includes('version: '+version));assert(manifest.includes(name));assert(manifest.includes(createHash('sha512').update(exe).digest('base64')));
+assert(statSync(path.join(dir,name+'.blockmap')).size>0);
+const feed=readFileSync(path.join(dir,'win-unpacked/resources/app-update.yml'),'utf8');
+assert(feed.includes('provider: github'));assert(feed.includes('owner: ndxnraw'));assert(feed.includes('repo: Grindoria'));
+console.log('Verified installer, SHA-512, blockmap and GitHub update feed: '+name);

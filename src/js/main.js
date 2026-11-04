@@ -6,7 +6,7 @@ initializeFarming();
 initializeLoot();
 initializeCharacterAccount();
 $('sound').textContent='Zvuk: '+(sound?'zapnutý':'vypnutý');
-initializeFullscreen();
+initializeFullscreen();initializeDesktopUpdates();
 initializeCombatAssist();
 loadMap(p.mapId,true);
 window.addEventListener('resize',resize);resize();
