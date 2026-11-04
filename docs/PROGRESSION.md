@@ -1,12 +1,12 @@
 # Progresia a schopnosti
 
-Progresia P obsahuje prehľad, katalóg predmetov, bestiár a informácie o aktuálnom biologickom výskume. Prideľovanie bodov, platený tréning, špecializácia a prestíž sú v Postave C. Schopnosti sa študujú priamo v knihe V. Kováč a Dungeon Majster otvárajú svoje služby až po interakcii v Meste.
+Prehľad P obsahuje prehľad, bestiár a Atlas Metinov. Prideľovanie bodov, špecializácia a prestíž sú v Postave C. Schopnosti sa študujú priamo v knihe V. Kováč a Dungeon Majster otvárajú svoje služby až po interakcii v Meste.
 
 ## Levely a atribúty
 
 Maximum je 99. Potrebné EXP = `ceil(baseEnemyXP(L) × (24 + 1,6L))`, základ obyčajnej príšery = `max(6, floor(6L^1,15))`. Primeraný level vychádza približne na 26–181 obyčajných protivníkov. Typ, varianta a rozdiel levelov menia odmenu; slabý cieľ o 8 úrovní nedáva EXP. Viac v [BALANCE.md](BALANCE.md).
 
-Každý level dáva tri voľné body. Postava C prideľuje body do sily, vitality, obratnosti a inteligencie; tá istá vrstva obsahuje rozbalený platený tréning. Jeho cena zostáva `3 + tréningový stupeň` pečatí a `100 × (stupeň + 1)` Yang, maximum 20 tréningov pre každý atribút. Za každý piaty primeraný kill padne pečať a ruda.
+Každý level dáva tri voľné body. Postava C prideľuje body do sily, vitality, obratnosti a inteligencie. Platený tréning za pečate a Yang bol odstránený; predtým získané atribúty zostávajú zachované. Za každý piaty primeraný kill padnú dve rudy. Nové dropy tréningových pečatí nahradili užitočné materiály.
 
 ## Jedna kniha schopností
 
@@ -27,7 +27,7 @@ Sila a trvanie rastú od 1× po 2,4× na P. Obnova sa skracuje najviac o 35 %; m
 
 ## Biológ a výpravy
 
-P → Biologický výskum je iba informácia o aktuálnej etape. Odovzdanie je výlučne v samostatnej službe po kliknutí na Biológa alebo F pri NPC. Zdroje, odmeny a intervaly sú v [BIOLOGY.md](BIOLOGY.md).
+N → Biológ → Podrobnosti výskumu je iba informácia o aktuálnej etape. Odovzdanie je výlučne v samostatnej službe po kliknutí na Biológa alebo F pri NPC. Zdroje, odmeny a intervaly sú v [BIOLOGY.md](BIOLOGY.md).
 
 Vylepšovanie a výrobu ponúkne Kováč v malom výbere služby. Dungeony, prestížne výpravy a trhliny ponúka Dungeon Majster. Aktívna výprava má vlastný stavový panel na dokončenie či odchod. Samostatné okno Endgame neexistuje. Trvalé posilnenie za úlomky trhlín je v Postave C → Prestíž, dostupné od Lv.35. [DUNGEONS.md](DUNGEONS.md), [PRESTIGE.md](PRESTIGE.md).
 
@@ -38,3 +38,7 @@ Alchýmia, Alchymista a zbierka relikvií sú odstránené z hry vrátane produk
 Migrácia označená `career.systemsVersion = 1` spracuje aj neaktívne profily a prenosné zálohy. Zachová level, výbavu, voľné body, atribúty, výskum, špecializáciu, prestíž a výpravy. Prax odstráneného remesla pripočíta k výrobe, najviac po jej limit 4500. Odstránené zásoby premení raz na Yang: kameň 100 za kus, nasadený stupeň podľa investovaných `2^stupeň − 1` kameňov; mana 70, odvar sily 40, odolnosti 50, vitality 75, koncentrát 400, extrakt 45 a vlastnená relikvia 150. Stará relikvia na zemi sa zmení na 150 Yang so zachovanou expiráciou. Celkové Yang rešpektuje existujúci limit 10¹².
 
 Staré schopnosti 1–9 prejdú na Normál `2r − 1`, 10–19 na M1–M10 a starý rank 20 na G1. Migrácia sa neopakuje. Výbava ani level sa pri tejto zmene neresetujú.
+
+## Lovec
+
+Za každých desať primeraných cieľov možno vyzdvihnúť jednu odmenu; prebytočné zabitia sa prenášajú do nasledujúcej úlohy a počítadlo zobrazuje skutočný počet aj po splnení. Pre level L pri vyzdvihnutí: `100 + 25L + L²` Yang a `2 + floor(L/10)` rudy. Každé piate odovzdanie navyše dá `1 + floor(L/30)` kníh, každé desiate aj `1 + floor(L/40)` kameňov vylepšenia. Náhľad zobrazuje presne ďalšiu odmenu. Bez náhradných EXP za slabé ciele. Napríklad Lv.50: 3850 Yang + 7 rudy, každé piate odovzdanie +2 knihy a každé desiate aj +2 kamene.

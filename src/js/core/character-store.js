@@ -113,7 +113,7 @@ function clearCharacterSession() {
   for(const slot of Object.keys(forgeOptions))delete forgeOptions[slot];forgeResult=null;
   craftingFilter='all';craftingMessage='';marketMessage='';
   closeAllGameWindows();clickDestination=null;npcSessions.clear();characterTab='stats';journalTab='active';
-  inventoryTab='gear';inventoryPage=0;inventorySelection=null;inventoryDrag=null;inventoryDeletePending=null;inventoryDropPending=null;panelState.key=null;dungeonAbandonPending=false;careerTab='overview';
+  inventoryTab='gear';inventoryPage=0;inventorySelection=null;inventoryDrag=null;inventoryDropPending=null;panelState.key=null;dungeonAbandonPending=false;careerTab='overview';
   combatAssist.timer=0;combatAssist.nextSkill=0;combatAssist.fightTarget=null;combatAssist.fightTime=0;combatAssist.aimTime=0;combatAssist.focused=true;
 }
 function playCharacter(id = characterStore.account.selectedId) {

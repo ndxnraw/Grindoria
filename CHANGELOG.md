@@ -10,6 +10,21 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.33.0] - 2026-11-05
+
+### Added
+- Regresie rozložení klávesnice, automatického liečenia, odmien Lovca a prevodu zdravia uložených Metinov.
+
+### Changed
+- Hotbar podľa fyzických pozícií 1–8 vrátane slovenskej klávesnice, Tab pre cestovanie a prepínač všetkej automatiky.
+- Automatické elixíry pri chýbajúcom zdraví každé 2 s; ručné použitie bez cooldownu, aj pri zapnutej automatike.
+- Atlas Metinov v P, biologické informácie iba cez N; odstránený katalóg predmetov, platený tréning atribútov, spodné inventárové akcie a nadbytočné prekliky.
+- Lovec zobrazuje skutočný počet zabití a dáva Yang a rudu podľa levelu, knihy za každé piate a kamene za každé desiate odovzdanie.
+- Zdravie Metinov násobené 1,8 + 0,035 × level; staré kamene zachovávajú percento života, zničenie a obrancov.
+
+### Fixed
+- Inventárový náhľad používa farby porovnania ako dropy vrátane nesplneného požadovaného levelu.
+
 ## [0.32.0] - 2026-11-04
 
 ### Added
@@ -595,7 +610,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.32.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.33.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -631,3 +646,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.30.0]: https://github.com/ndxnraw/Grindoria/compare/v0.29.0...v0.30.0
 [0.31.0]: https://github.com/ndxnraw/Grindoria/compare/v0.30.0...v0.31.0
 [0.32.0]: https://github.com/ndxnraw/Grindoria/compare/v0.31.0...v0.32.0
+[0.33.0]: https://github.com/ndxnraw/Grindoria/compare/v0.32.0...v0.33.0

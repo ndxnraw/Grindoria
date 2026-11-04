@@ -53,9 +53,7 @@ assert.equal(run('drops.length-before'),4);assert(!run('drops.slice(before).some
 run('p.level=75;enemy.level=75;before=drops.length;dropCatalogLoot(enemy);');assert.equal(run('drops.length-before'),5);
 run('p.level=99;enemy.level=1;before=drops.length;dropCatalogLoot(enemy);');assert.equal(run('drops.length-before'),0);
 });
-test('catalog is useful UI with requirements, bonuses and acquisition chances',()=>{
-const {run}=createGame();assert.match(run('itemCatalogPanel()'),/Meč splnu.*Vyžaduje úroveň 30/s);assert.match(run('itemCatalogPanel()'),/Jedovatý meč.*2 %/s);
-});
+test('retired item catalog cannot be opened from overview',()=>{const {run,elements}=createGame();run('running=true;careerPanel();');assert.equal(run('careerPanel("items")'),false);assert(!elements.get('modalcontent').innerHTML.includes('data-career-tab="items"'));assert.equal(run('typeof itemCatalogPanel'),'undefined');});
 
 test('each enemy pool can tune its gear odds without changing another species',()=>{
 const {run}=createGame();run('LOOT_POOLS["enemy:wolf"].gear.normal=0;');assert.equal(run('LOOT_POOLS["enemy:scorpion"].gear.normal'),.12);

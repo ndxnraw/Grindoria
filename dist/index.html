@@ -221,16 +221,22 @@ body.started{background:#10140f;overflow:hidden}body.started>header,body.started
 .map #character-menu{left:auto;right:1px}
 .window-layer .game-window [data-discovery-claim]:not(:disabled){background:linear-gradient(#355c35,#203c25)!important;border-color:#8fc178!important;color:#e2ffda!important}
 .window-layer .game-window[data-window-key="npc:smith-menu"]{width:280px}
+
+/* Inventory previews share the drop tooltip palette, including required levels. */
+.game-window .item-tooltip.loot-tooltip{width:340px;overflow:auto;font:11px/1.5 'Segoe UI',sans-serif}
+.game-window .item-tooltip .stat-gain,.game-window .item-tooltip .stat-gain b{color:#9bce85!important}
+.game-window .item-tooltip .stat-loss,.game-window .item-tooltip .stat-loss b{color:#e58f7f!important}
+.game-window .item-tooltip .stat-same,.game-window .item-tooltip .stat-same b{color:#aaa796!important}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Schopnosti <kbd>4</kbd></button><button id="journal">Úlohy <kbd>N</kbd></button><button id="help">Pomoc <kbd>H</kbd></button><button id="desktop-updates" hidden>Aktualizácie</button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.32.0</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Schopnosti <kbd>4</kbd></button><button id="journal">Úlohy <kbd>N</kbd></button><button id="help">Pomoc <kbd>H</kbd></button><button id="desktop-updates" hidden>Aktualizácie</button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.33.0</b></span></header>
 <main><div class="world-title"><div><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Divoký vlk · Strážca pralesa</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
 <section id="game-shell" class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb kliknutím na zem, WASD alebo šípkami, výber cieľa kliknutím, nasledovanie a útok druhým klikom na rovnaký cieľ, smerový útok medzerníkom, schopnosti 1 až 6, liečenie 7, korisť ľavým kliknutím alebo Y v okolí, zlato a zásoby automaticky."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
 <div class="hud player"><div id="portrait" class="portrait">侍</div><div><div class="player-name"><b id="playername">Pútnik</b><small id="playerclass" hidden>Bojovník</small> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 154 skúseností</small></div></div>
 <div class="hud map"><button id="minimap-open" class="minimap-open" type="button" aria-label="Veľká mapa · M">M</button><button id="character-menu" class="fullscreen-control character-return-control" type="button" aria-label="Výber postáv" title="Uložiť a vrátiť sa na výber postáv">♙</button><button id="fullscreen" class="fullscreen-control" type="button" aria-label="Celá obrazovka" aria-pressed="false" title="Celá obrazovka · F10">⛶</button><canvas id="minimap" width="138" height="118"></canvas><span id="minimaplabel">ÚDOLIE TICHÉHO VETRA</span></div>
 <div id="quest-tracker" class="hud quest"><span class="eyebrow">AKTÍVNA ÚLOHA</span><h3 id="quest-title">Praskliny v pokoji</h3><div id="q-wolves">◇ Poraz príšery <b>0 / 5</b></div><div id="q-stones">◇ Znič kamene osudu <b>0 / 3</b></div><button id="claim" hidden>Vyzdvihnúť odmenu</button><small id="questnote">Odmena: 150 zlata + 60 skúseností</small></div>
 <div id="toast" role="status"></div><div id="world-event-status" class="world-event-status" hidden></div><button id="dungeon-status" class="dungeon-status" hidden></button><div id="target-panel" class="hud target-panel" aria-live="off" hidden></div><div id="combat-flow" class="hud combat-flow" aria-live="polite" hidden></div><div id="buffs" class="buffs" aria-live="off"></div><div class="hud location">⌖ &nbsp; <span id="coords">Mesto</span></div>
-<div class="combat-assist" hidden role="group" aria-label="Automatická pomoc v boji"><button id="auto-aim" type="button" aria-pressed="false" title="Pri útoku mieri na najbližšieho nepriateľa do 500 jednotiek. Označený cieľ má prednosť; bez automatickej chôdze.">Automierenie: VYP</button><button id="auto-spell" type="button" aria-pressed="false" title="Iba v boji s označeným nepriateľom alebo Metinom používa schopnosti; rešpektuje manu a cooldowny. Esc vypne pomocníkov.">Autospell: VYP</button><button id="auto-potion" type="button" aria-pressed="false" title="Pod 45 % HP použije zásobu elixíra: +65 HP alebo 25 % maxima podľa vyššej hodnoty, spoločný cooldown 4 s.">Autoelixíry: VYP</button></div>
+<div class="combat-assist" hidden role="group" aria-label="Automatická pomoc v boji"><button id="auto-aim" type="button" aria-pressed="false" title="Pri útoku mieri na najbližšieho nepriateľa do 500 jednotiek. Označený cieľ má prednosť; bez automatickej chôdze.">Automierenie: VYP</button><button id="auto-spell" type="button" aria-pressed="false" title="Iba v boji s označeným nepriateľom alebo Metinom používa schopnosti; rešpektuje manu a cooldowny. Esc vypne pomocníkov.">Autospell: VYP</button><button id="auto-potion" type="button" aria-pressed="false" title="Pri chýbajúcom zdraví použije elixír každé 2 s: +65 HP alebo 25 % maxima. Ručne bez cooldownu.">Autoelixíry: VYP</button></div>
 <div class="hotbar" role="toolbar" aria-label="Rýchle akcie"><button id="attack"><kbd>SPACE</kbd><span>⚔</span><small>Sek mečom</small></button><button id="skill"><kbd>1</kbd><span>✺</span><small>Veterný kruh</small><em id="cooldown"></em></button><button id="skill2"><kbd>2</kbd><span>✧</span><small>Schopnosť</small><em id="cooldown2"></em></button><button id="skill3"><kbd>3</kbd><span>☄</span><small>Schopnosť</small><em id="cooldown3"></em></button><button id="skill4"><kbd>4</kbd><span>◈</span><small>Schopnosť</small><em id="cooldown4"></em></button><button id="skill5"><kbd>5</kbd><span>❖</span><small>Schopnosť</small><em id="cooldown5"></em></button><button id="skill6"><kbd>6</kbd><span>✥</span><small>Schopnosť</small><em id="cooldown6"></em></button><button id="potion"><kbd>7</kbd><span>⚱</span><small>Elixír <b id="pots">5</b></small><em id="potion-cooldown"></em></button><button id="bravery" title="Plášť statočnosti · 8 / F8 · dosah 650 · priťahovanie 18 s"><kbd>8</kbd><span>⚑</span><small>Plášť <b id="capes">10</b></small><em id="cape-cooldown"></em></button><div class="divider"></div><button id="inventory"><kbd>I</kbd><span>▣</span><small>Výbava</small></button></div>
 <nav id="game-toolbar" class="game-toolbar" aria-label="Herné okná"><button id="character-status" title="Postava · C" aria-label="Postava · C"><span>♙</span><kbd>C</kbd></button><button id="auto-hunt" title="Automatický boj · K" aria-label="Automatický boj · K"><span>⚔</span><kbd>K</kbd></button><button id="system-menu" title="Hlavné menu · Esc" aria-label="Hlavné menu · Esc"><span>⚙</span><kbd>Esc</kbd></button></nav><div class="hud wallet"><span>◉</span> <b id="gold">0</b> <small>YANG</small></div>
 <div id="intro" class="character-screen"></div>
@@ -619,15 +625,15 @@ for (let variant=0;variant<3;variant++) {
 
 
 // src/js/data/metins.js
-const METIN_RULES = { schema: 1, combatWindow: 6, firstWave: .1, maxGuards: 8, globalGuards: 60, guardLifetime: 45 };
+const METIN_RULES = { schema: 2, combatWindow: 6, firstWave: .1, maxGuards: 8, globalGuards: 60, guardLifetime: 45 };
 // Loot material entries are [chance, minimum amount, maximum amount].
 const METIN_TYPES = {
   fracture: { name: 'Metin praskliny', levels: [1, 9], model: 'obelisk', difficulty: 'Ľahký', color: '#80728e', glow: '#d6a3e2', hp: 1, armor: 0, interval: 4.8, wave: 2, loot: { yang: [18, 32], ore: [1, 1, 2], books: [.35, 1, 1], essence: [.55, 1, 3], dust: [.2, 1, 2], upgradeStones: [.05, 1, 1], gear: .45, epic: .025, slots: ['weapon', 'bracelet'], extra: ['wolf', .22, 1, 2] } },
-  fang: { name: 'Metin šeliem', levels: [10, 19], model: 'tusks', difficulty: 'Ľahký', color: '#93816a', glow: '#e8c57d', hp: 1.08, armor: .015, interval: 4.4, wave: 2, loot: { yang: [25, 42], ore: [.85, 2, 3], books: [.42, 1, 1], essence: [.6, 2, 4], dust: [.25, 1, 2], upgradeStones: [.08, 1, 1], gear: .5, epic: .04, slots: ['weapon', 'helmet', 'boots'], extra: ['training', .3, 1, 2] } },
+  fang: { name: 'Metin šeliem', levels: [10, 19], model: 'tusks', difficulty: 'Ľahký', color: '#93816a', glow: '#e8c57d', hp: 1.08, armor: .015, interval: 4.4, wave: 2, loot: { yang: [25, 42], ore: [.85, 2, 3], books: [.42, 1, 1], essence: [.6, 2, 4], dust: [.25, 1, 2], upgradeStones: [.08, 1, 1], gear: .5, epic: .04, slots: ['weapon', 'helmet', 'boots'], extra: ['ore', .3, 1, 2] } },
   sand: { name: 'Metin púšte', levels: [20, 34], model: 'pyramid', difficulty: 'Stredný', color: '#a88b58', glow: '#f0d293', hp: 1.17, armor: .025, interval: 4, wave: 3, loot: { yang: [40, 65], ore: [.9, 2, 4], books: [.48, 1, 2], essence: [.7, 2, 5], dust: [.35, 2, 3], upgradeStones: [.12, 1, 1], gear: .55, epic: .06, slots: ['shield', 'belt', 'bracelet'], extra: ['venom', .3, 1, 3] } },
   frost: { name: 'Metin mrazu', levels: [35, 49], model: 'crystals', difficulty: 'Stredný', color: '#6d9ba9', glow: '#b7e5ef', hp: 1.28, armor: .04, interval: 3.6, wave: 3, loot: { yang: [65, 95], ore: [.92, 3, 5], books: [.55, 1, 2], essence: [.75, 3, 6], dust: [.5, 2, 4], upgradeStones: [.16, 1, 2], gear: .6, epic: .08, slots: ['armor', 'necklace', 'earrings'], extra: ['frost', .35, 1, 3] } },
   ember: { name: 'Metin plameňa', levels: [50, 64], model: 'volcano', difficulty: 'Ťažký', color: '#66504b', glow: '#eea068', hp: 1.4, armor: .055, interval: 3.2, wave: 4, loot: { yang: [95, 145], ore: [.95, 3, 6], books: [.6, 1, 3], essence: [.8, 4, 7], dust: [.58, 3, 5], upgradeStones: [.2, 1, 2], gear: .65, epic: .11, slots: ['weapon', 'armor', 'shield'], extra: ['ember', .4, 1, 3] } },
-  storm: { name: 'Metin búrky', levels: [65, 79], model: 'twins', difficulty: 'Ťažký', color: '#507e82', glow: '#93e4dd', hp: 1.5, armor: .07, interval: 2.9, wave: 4, loot: { yang: [140, 210], ore: [.96, 4, 7], books: [.66, 2, 3], essence: [.85, 4, 8], dust: [.65, 3, 6], upgradeStones: [.25, 1, 3], gear: .7, epic: .14, slots: ['boots', 'earrings', 'talisman'], extra: ['training', .5, 2, 4] } },
+  storm: { name: 'Metin búrky', levels: [65, 79], model: 'twins', difficulty: 'Ťažký', color: '#507e82', glow: '#93e4dd', hp: 1.5, armor: .07, interval: 2.9, wave: 4, loot: { yang: [140, 210], ore: [.96, 4, 7], books: [.66, 2, 3], essence: [.85, 4, 8], dust: [.65, 3, 6], upgradeStones: [.25, 1, 3], gear: .7, epic: .14, slots: ['boots', 'earrings', 'talisman'], extra: ['books', .5, 1, 2] } },
   void: { name: 'Metin prázdnoty', levels: [80, 94], model: 'floating', difficulty: 'Veľmi ťažký', color: '#64567e', glow: '#c9a0ef', hp: 1.65, armor: .09, interval: 2.6, wave: 5, loot: { yang: [200, 290], ore: [.98, 5, 8], books: [.72, 2, 4], essence: [.9, 5, 10], dust: [.75, 4, 8], upgradeStones: [.3, 2, 3], gear: .78, epic: .2, slots: ['talisman', 'necklace', 'armor'], extra: ['shards', .1, 1, 2] } },
   doom: { name: 'Metin skazy', levels: [95, 99], model: 'crown', difficulty: 'Legendárny', color: '#5e414c', glow: '#f398ac', hp: 1.8, armor: .11, interval: 2.3, wave: 5, loot: { yang: [280, 420], ore: [1, 6, 10], books: [.8, 3, 5], essence: [.95, 6, 12], dust: [.85, 5, 10], upgradeStones: [.4, 2, 4], gear: .9, epic: .3, slots: ['weapon', 'armor', 'helmet', 'talisman'], extra: ['keys', .12, 1, 2] } }
 };
@@ -688,7 +694,7 @@ const METIN_RESISTS = {
 
 for (const [type, spec] of Object.entries(DAMAGE_TYPES)) ITEM_STATS[type+'Resist']='Odolnosť · '+spec.name;
 
-const POTION_RULES = { heal: 65, cooldown: 4, autoThreshold: .45 };
+const POTION_RULES = { heal: 65, cooldown: 2 };
 
 
 // src/js/data/characters.js
@@ -1118,7 +1124,7 @@ function clearCharacterSession() {
   for(const slot of Object.keys(forgeOptions))delete forgeOptions[slot];forgeResult=null;
   craftingFilter='all';craftingMessage='';marketMessage='';
   closeAllGameWindows();clickDestination=null;npcSessions.clear();characterTab='stats';journalTab='active';
-  inventoryTab='gear';inventoryPage=0;inventorySelection=null;inventoryDrag=null;inventoryDeletePending=null;inventoryDropPending=null;panelState.key=null;dungeonAbandonPending=false;careerTab='overview';
+  inventoryTab='gear';inventoryPage=0;inventorySelection=null;inventoryDrag=null;inventoryDropPending=null;panelState.key=null;dungeonAbandonPending=false;careerTab='overview';
   combatAssist.timer=0;combatAssist.nextSkill=0;combatAssist.fightTarget=null;combatAssist.fightTime=0;combatAssist.aimTime=0;combatAssist.focused=true;
 }
 function playCharacter(id = characterStore.account.selectedId) {
@@ -1480,14 +1486,14 @@ function potion(){return drinkPotion(false);}
 
 function potionCooldownRemaining(now = Date.now()) { return Math.max(0, ((p.potionReadyAt || 0)-now)/1000); }
 
-function drinkPotion(allowPaused=false) {
+function drinkPotion(allowPaused=false, automatic=false) {
   if(!running||(paused&&!allowPaused)||p.hp<=0)return false;
   if(paused&&!canTravel()){toast('Elixír počas boja použi po zavretí okna (E).');return false;}
-  if(potionCooldownRemaining()>0){toast('Elixír bude pripravený o '+Math.ceil(potionCooldownRemaining())+' s.');return false;}
+  if(automatic&&potionCooldownRemaining()>0)return false;
   if(p.potions<=0){toast('Nemáš elixíry. Navštív obchodníka (F).');return false;}
   if(p.hp>=maxHP()){toast('Zdravie máš plné.');return false;}
   const healed=Math.min(potionHealAmount(),maxHP()-p.hp);
-  p.potions--;p.hp+=healed;p.potionReadyAt=Date.now()+POTION_RULES.cooldown*1000;
+  p.potions--;p.hp+=healed;if(automatic)p.potionReadyAt=Date.now()+POTION_RULES.cooldown*1000;
   float('+'+Math.round(healed)+' zdravia',p.x,p.y-65,'#a9e0ac');beep(520,.2);updateHUD();save();return true;
 }
 function potionHealAmount(){return Math.max(POTION_RULES.heal,Math.round(maxHP()*.25));}
@@ -1572,7 +1578,7 @@ function questEntries(){
  {id:'opening',title:'Praskliny v pokoji',completed:p.claimed,goals:[['Poraz príšery',Math.min(p.kills,5),5],['Znič kamene osudu',Math.min(p.stones,3),3]],reward:'150 Yang + 60 EXP',ready:!p.claimed&&p.kills>=5&&p.stones>=3,claim:claimOpeningQuest},
  {id:'boss',title:'Prvý strážca',completed:p.bossClaimed,goals:[['Poraz bossa',Math.min(p.bossKills,1),1]],reward:'epická výbava Lv.8 + 200 Yang + 80 EXP',ready:!p.bossClaimed&&p.bossKills>=1,claim:claimBoss},
  ...(stage?[{id:'biology',title:'Biológ · '+stage.name,completed:false,goals:[['Odovzdaj '+MATERIALS[stage.item],bio.delivered,stage.count]],reward:stage.text,ready:false,minLevel:stage.level,info:'Odovzdanie u biológa v Meste.'}]:[]),
- {id:'hunt',title:'Lovec · opakovateľná',completed:false,goals:[['Primerané ciele',Math.min(p.career.eligibleKills,target),target]],reward:'60 Yang + 1 tréningová pečať',ready:p.career.eligibleKills>=target,claim:claimHunt}
+ {id:'hunt',title:'Lovec · opakovateľná',completed:false,goals:[['Primerané ciele',p.career.eligibleKills,target]],reward:costLabel(huntReward()),ready:p.career.eligibleKills>=target,claim:claimHunt}
  ];
 }
 function trackedQuest(){return questEntries().find(q=>!q.completed&&(!q.minLevel||p.level>=q.minLevel));}
@@ -1611,7 +1617,19 @@ function allocate(stat){if(p.points<=0||!['strength','vitality','dexterity','int
 
 function claimBoss(){if(p.bossClaimed||p.bossKills<1)return;p.bossClaimed=true;p.gold+=200;experience(80);awardItem(true,{type:'boss',level:8});save();updateHUD();if(gameWindows.has('journal'))journal();}
 
-function claimHunt(){if(p.career.eligibleKills<(p.huntClaimed+1)*10)return;p.huntClaimed++;p.gold+=60;addMaterial('training');save();updateHUD();if(gameWindows.has('journal'))journal();}
+// Every ten eligible kills: level-scaled Yang and ore, with study/forge milestones.
+function huntReward(level=p.level,claim=p.huntClaimed+1){
+ const reward={gold:100+25*level+level*level,ore:2+Math.floor(level/10)};
+ if(claim%5===0)reward.books=1+Math.floor(level/30);
+ if(claim%10===0)reward.upgradeStones=1+Math.floor(level/40);
+ return reward;
+}
+function claimHunt(){
+ if(!running||p.hp<=0||p.career.eligibleKills<(p.huntClaimed+1)*10)return false;
+ const reward=huntReward();p.huntClaimed++;p.gold+=reward.gold;
+ for(const [id,count]of Object.entries(reward))if(id!=='gold')addMaterial(id,count);
+ toast('Lovec dokončený.\n'+costLabel(reward));save();updateHUD();if(gameWindows.has('journal'))journal();return true;
+}
 
 
 // src/js/systems/locations.js
@@ -1660,7 +1678,7 @@ function restoreWorldEvents(state,population,prior=[]){
  worldEventState=state?copyCharacterData(state):{schema:1,mapId:p.mapId,seed:appearanceHash((p.characterId||'player')+p.mapId),nextCheck:WORLD_EVENT_RULES.firstCheck,active:null};
  const event=worldEventState.active;if(!event)return;
  const members=prior.filter(m=>m.worldEventId===event.id),parents=new Set(members.filter(m=>m.type==='stone').map(m=>m.spawnId));
- for(const m of prior)if(m.worldEventId===event.id||parents.has(m.metinParentId))population.push({...cloneEnemyState(m),taunt:0,engaged:0,windup:0,stun:0,roamTarget:null,returning:false});
+ for(const m of prior)if(m.worldEventId===event.id||parents.has(m.metinParentId))population.push({...upgradeLegacyMetin(cloneEnemyState(m),{id:m.spawnId}),taunt:0,engaged:0,windup:0,stun:0,roamTarget:null,returning:false});
 }
 function worldEventPosition(){
  let point={x:SIZE/2,y:SIZE/2};
@@ -1926,19 +1944,6 @@ function pay(cost) {
   return true;
 }
 
-function trainingCost(stat) {
-  const rank = p.career.training[stat];
-  return { training: 3 + rank, gold: 100 * (rank + 1) };
-}
-
-function trainAttribute(stat) {
-  if (!Object.hasOwn(p.career.training, stat) || p.career.training[stat] >= PROGRESSION.maxTraining) return false;
-  if (!pay(trainingCost(stat))) return false;
-  p.career.training[stat]++; p[stat]++;
-  if (stat === 'vitality') p.hp = Math.min(maxHP(), p.hp + 10);
-  save(); return true;
-}
-
 function skillKey(index) { return p.schools[p.classId] + ':' + index; }
 
 function skillProgress(key) {
@@ -1990,7 +1995,7 @@ function careerKill(m) {
   dropBiologySample(m);
   if (eligible) {
     c.eligibleKills++; giveMaterial('essence', m.type === 'boss' ? 12 : m.type === 'stone' ? 4 : 1);
-    if (c.eligibleKills % 5 === 0) { giveMaterial('ore'); giveMaterial('training'); }
+    if (c.eligibleKills % 5 === 0) { giveMaterial('ore',2); }
     if (m.type === 'stone' || m.type === 'boss') { giveMaterial('books'); giveMaterial('dust', m.type === 'boss' ? 5 : 1); }
     if(enemyLevel(m)>=35&&m.type==='boss'&&rand()<.2)giveMaterial('soulStones');
     const used = new Set(m.skillContributors || []);
@@ -2765,7 +2770,7 @@ function farmBonusLoot(m) {
   let capes = m.type === 'boss' ? cfg.boss : rare ? cfg.rare : rand() < (elite ? cfg.eliteChance : cfg.normalChance) ? 1 : 0;
   if (capes) spawnGroundDrop({ kind: 'supply', supplyId: 'braveryCapes', count: capes }, m);
   if (!eligible || m.type !== 'wolf') return;
-  if (rare) { dropMaterial('ore', 3, m); dropMaterial('dust', 3, m); dropMaterial('books', 1, m); dropMaterial('training', 1, m); }
+  if (rare) { dropMaterial('ore', 3, m); dropMaterial('dust', 3, m); dropMaterial('books', 1, m); dropMaterial('ore', 1, m); }
   else if (elite) { dropMaterial('ore', 1, m); dropMaterial('essence', 2, m); }
 }
 
@@ -3509,7 +3514,7 @@ function buildSuterlandPoints() {
 
 function metinStats(level, type) {
   const spec = METIN_TYPES[type] || METIN_TYPES.fracture;
-  return { hp: Math.round((180 + level * 28 + level * level * .6) * spec.hp), armor: Math.floor(level * .3 + spec.armor * 20), resistance: Math.min(.5, .04 + level * .0025 + spec.armor) };
+  return { hp: Math.round((180 + level * 28 + level * level * .6) * spec.hp * (1.8 + level * .035)), armor: Math.floor(level * .3 + spec.armor * 20), resistance: Math.min(.5, .04 + level * .0025 + spec.armor) };
 }
 
 function metinModelScale(stone) { return .84 + Math.min(105, stone.level) / 105 * .3; }
@@ -3534,12 +3539,13 @@ function restoreMetin(fresh, prior) {
   if (!prior) return fresh;
   if (prior.metinSchema === METIN_RULES.schema) return { ...fresh, ...prior, dot: prior.dot ? { ...prior.dot } : null, dots:(prior.dots||[]).map(dot=>({...dot})), skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0, metinCombat: Math.max(0, Math.min(METIN_RULES.combatWindow, prior.metinCombat || 0)), metinWaveTimer: Math.max(0, prior.metinWaveTimer || 0) };
   const hpRatio = Math.max(0, Math.min(1, prior.hp / prior.max));
-  return { ...prior, ...fresh, x: prior.x, y: prior.y, homeX: prior.homeX ?? prior.x, homeY: prior.homeY ?? prior.y, hp: prior.hp <= 0 ? 0 : Math.max(1, Math.round(fresh.max * hpRatio)), dead: Math.max(0, prior.dead || 0), cd: prior.cd || 0, dot: prior.dot ? { ...prior.dot } : null, dots:(prior.dots||[]).map(dot=>({...dot})), skillContributors: [...(prior.skillContributors || [])] };
+  return { ...prior, ...fresh, x: prior.x, y: prior.y, homeX: prior.homeX ?? prior.x, homeY: prior.homeY ?? prior.y, hp: prior.hp <= 0 ? 0 : Math.max(1, Math.round(fresh.max * hpRatio)), metinGeneration:prior.metinGeneration||1,metinGuardSerial:prior.metinGuardSerial||0,metinCombat:Math.max(0,Math.min(METIN_RULES.combatWindow,prior.metinCombat||0)),metinWaveTimer:Math.max(0,prior.metinWaveTimer||0),dead: Math.max(0, prior.dead || 0), cd: prior.cd || 0, dot: prior.dot ? { ...prior.dot } : null, dots:(prior.dots||[]).map(dot=>({...dot})), skillContributors: [...(prior.skillContributors || [])] };
 }
 
 function upgradeLegacyMetin(m, point) {
   if (m.type !== 'stone' || m.metinSchema === METIN_RULES.schema) return m;
-  const fresh = configureMetin({ ...m, level: m.baseLevel || m.level || map().enemyLevel + 2 }, point);
+  const fresh = configureMetin({ ...m, level: m.baseLevel || m.level || map().enemyLevel + 2 }, {...point,metinType:m.metinType||point.metinType,metinLevel:m.baseLevel||m.level||point.metinLevel});
+  if(m.rareMetin){fresh.max=Math.round(fresh.max*2.4);fresh.hp=fresh.max;fresh.baseMax=fresh.max;fresh.metinArmor=Math.round(fresh.metinArmor*1.15);}
   const run = p.career.endgame.run;
   if (run && p.mapId === 'temple') applyRiftScaling(fresh, run.tier, run.id);
   return restoreMetin(fresh, m);
@@ -4023,6 +4029,14 @@ function stopCombatAssist() {
   if (enabled) save();
 }
 
+function toggleAllCombatAssist(){
+  if(!running||paused)return false;
+  const enable=!Object.values(p.combatAssist).every(value=>value===true);
+  if(!enable){clearCombatTarget();stopCombatAssist();return false;}
+  for(const key of ['autoAim','autoSpell','autoPotion'])p.combatAssist[key]=true;
+  combatAssist.timer=0;combatAssist.nextSkill=0;updateFacing();updateCombatAssistHUD();save();canvas.focus({preventScroll:true});return true;
+}
+
 function registerPlayerCombat(enemy) {
   if (enemy && enemy.hp > 0 && selectedEnemy() === enemy) { combatAssist.fightTarget = enemy; combatAssist.fightTime = 8; }
 }
@@ -4049,8 +4063,8 @@ function autoSkillReady(index) {
 }
 
 function updateAutoPotion() {
-  if (!p.combatAssist?.autoPotion || !combatAssistAvailable() || p.potions < 1 || potionCooldownRemaining() > 0 || p.hp >= maxHP()*POTION_RULES.autoThreshold) return false;
-  return drinkPotion(false);
+  if (!p.combatAssist?.autoPotion || !combatAssistAvailable() || p.potions < 1 || potionCooldownRemaining() > 0 || p.hp >= maxHP()) return false;
+  return drinkPotion(false,true);
 }
 
 function updateAutoSpell(dt) {
@@ -4099,7 +4113,7 @@ function updateHotbarState(){
     const reason=unavailable?'Hra je pozastavená':cooldown>0?'Obnova '+Math.ceil(cooldown)+' s':p.mp<skill[3]?'Chýba '+Math.ceil(skill[3]-p.mp)+' many':isSanctuary(p)&&!SUPPORT_SKILLS.has(skill[1])?'Mimo bezpečnej zóny':'';
     button.disabled=!!reason;button.title=skill[0]+' · '+skill[3]+' many · '+(reason||'Pripravené');button.setAttribute('aria-label',button.title);
   }
-  $('attack').disabled=unavailable||isSanctuary(p);$('potion').disabled=unavailable||p.potions<1||p.hp>=maxHP()||potionCooldownRemaining()>0;
+  $('attack').disabled=unavailable||isSanctuary(p);$('potion').disabled=unavailable||p.potions<1||p.hp>=maxHP();
   $('bravery').disabled=unavailable||p.braveryCapes<1||capeCooldown>0||isSanctuary(p);$('inventory').disabled=!running;
 }
 
@@ -4196,7 +4210,7 @@ function closeModal(key=activeGameWindow?.key){
   const entry=gameWindows.get(key);if(!entry)return;
   if(key==='inventory'&&gameWindows.has('inventory-drop'))closeModal('inventory-drop');if(key==='inventory-drop')inventoryDropPending=null;
   entry.drag?.unset();entry.node.remove();gameWindows.delete(key);
-  if(key==='inventory'){inventoryDropPending=null;inventoryDeletePending=null;inventoryDrag=null;}
+  if(key==='inventory'){inventoryDropPending=null;inventoryDrag=null;}
   const top=[...gameWindows.values()].sort((a,b)=>Number(b.node.style.zIndex)-Number(a.node.style.zIndex))[0];
   activeGameWindow=top||null;panelState.key=top?.key||null;
   $('modal').hidden=!gameWindows.size;paused=false;updateHotbarState();
@@ -4231,22 +4245,20 @@ function characterPanel(tab=characterTab){
  const values=[['Útok',damage()],['Obrana',defense()],['Zdravie',Math.ceil(p.hp)+' / '+maxHP()],['Mana',Math.ceil(p.mp)+' / '+maxMP()],['Kritický zásah',(criticalChance()*100).toFixed(1)+' %'],['Prenikavý zásah',(penetrationChance()*100).toFixed(1)+' %'],['Rýchlosť útoku','+'+(itemAttackSpeed()*100).toFixed(1)+' %'],['Rýchlosť pohybu',Math.round(speedValue())],['Sila kúziel',p.intelligence*4+careerBonuses().magic+equipmentBonuses().magic]];
  characterTab=['stats','specialization','prestige'].includes(tab)?tab:'stats';tab=characterTab;
  const navigation='<nav class="character-tabs">'+[['stats','Postava'],['specialization','Špecializácia'],['prestige','Prestíž']].map(([id,name])=>'<button data-character-tab="'+id+'" aria-pressed="'+(tab===id)+'">'+name+'</button>').join('')+'</nav>';
- const statsContent='<div class="stat-profile"><span class="stat-portrait">'+({warrior:'侍',ninja:'影',sura:'魔',shaman:'龍'})[p.classId]+'</span><div><b>'+escapeHTML(characterDisplayName(p))+'</b><small>'+role().name+' · '+school().name+'</small><small>Úroveň '+p.level+prestigeSuffix(p)+'</small></div></div><div class="stat-exp"><span>Skúsenosti</span><b>'+uiNumber(p.xp)+' / '+uiNumber(needXP())+'</b><progress max="'+needXP()+'" value="'+(p.level===99?needXP():p.xp)+'"></progress></div><h3>Vlastnosti <small>Voľné body: '+p.points+'</small></h3><div class="attribute-list">'+stats.map(([id,name,abbr])=>'<div><abbr title="'+name+'">'+abbr+'</abbr><span>'+name+'</span><b>'+p[id]+'</b><button data-character-stat="'+id+'" aria-label="Zvýšiť '+name.toLowerCase()+' o bod" '+(!p.points?'disabled':'')+'>+</button></div>').join('')+'</div><h3>Bojové hodnoty</h3><dl class="stat-values">'+values.map(([name,n])=>'<div><dt>'+name+'</dt><dd>'+n+'</dd></div>').join('')+'</dl><div class="ui-actions"><button id="character-inventory">Inventár · I</button><button id="character-resists">Odolnosti a boj</button></div>'+characterTrainingContent();
+ const statsContent='<div class="stat-profile"><span class="stat-portrait">'+({warrior:'侍',ninja:'影',sura:'魔',shaman:'龍'})[p.classId]+'</span><div><b>'+escapeHTML(characterDisplayName(p))+'</b><small>'+role().name+' · '+school().name+'</small><small>Úroveň '+p.level+prestigeSuffix(p)+'</small></div></div><div class="stat-exp"><span>Skúsenosti</span><b>'+uiNumber(p.xp)+' / '+uiNumber(needXP())+'</b><progress max="'+needXP()+'" value="'+(p.level===99?needXP():p.xp)+'"></progress></div><h3>Vlastnosti <small>Voľné body: '+p.points+'</small></h3><div class="attribute-list">'+stats.map(([id,name,abbr])=>'<div><abbr title="'+name+'">'+abbr+'</abbr><span>'+name+'</span><b>'+p[id]+'</b><button data-character-stat="'+id+'" aria-label="Zvýšiť '+name.toLowerCase()+' o bod" '+(!p.points?'disabled':'')+'>+</button></div>').join('')+'</div><h3>Bojové hodnoty</h3><dl class="stat-values">'+values.map(([name,n])=>'<div><dt>'+name+'</dt><dd>'+n+'</dd></div>').join('')+'</dl>';
  modal('<h2>Postava</h2>'+navigation+(tab==='stats'?statsContent:tab==='specialization'?careerSpecialization():prestigePanel()+characterPermanentContent())+'<p id="character-message" role="status"></p>',{key:'character',refresh:()=>characterPanel(tab)});
  panelQueryAll('[data-character-tab]').forEach(button=>button.onclick=()=>characterPanel(button.dataset.characterTab));
  panelQueryAll('[data-character-stat]').forEach(button=>button.onclick=()=>allocate(button.dataset.characterStat));
- if($('character-inventory'))$('character-inventory').onclick=inventory;if($('character-resists'))$('character-resists').onclick=combatManual;
- const actions={spec:specialize,spectrain:trainSpecialization,prestigeActivate:activatePrestige,prestigePromote:promotePrestige,prestigeTrain:trainPrestige,prestigeClaim:claimPrestigeGoal,prestigeRefine:refinePrestigeAffix,paragon:upgradeParagon,train:trainAttribute};
+ const actions={spec:specialize,spectrain:trainSpecialization,prestigeActivate:activatePrestige,prestigePromote:promotePrestige,prestigeTrain:trainPrestige,prestigeClaim:claimPrestigeGoal,prestigeRefine:refinePrestigeAffix,paragon:upgradeParagon};
  panelQueryAll('[data-action]').forEach(button=>button.onclick=()=>{const ok=actions[button.dataset.action]?.(button.dataset.id);characterPanel(tab);$('character-message').textContent=ok?'Uložené.':'Nesplnené podmienky.';});
 }
-function characterTrainingContent(){return '<details class="attribute-training"><summary>Tréning za pečate a Yang</summary>'+Object.entries({strength:'Sila',vitality:'Vitalita',dexterity:'Obratnosť',intelligence:'Inteligencia'}).map(([id,name])=>'<div class="career-card"><b>'+name+' · '+p.career.training[id]+' / '+PROGRESSION.maxTraining+'</b>'+costRequirements(trainingCost(id))+'<button data-action="train" data-id="'+id+'" '+(p.career.training[id]>=PROGRESSION.maxTraining||!canPayRecipe(trainingCost(id))?'disabled':'')+'>Trénovať</button></div>').join('')+'</details>';}
 function characterPermanentContent(){const end=p.career.endgame;return '<details><summary>Trvalé posilnenie · úroveň 35</summary><p>Stupeň '+end.paragon+' / '+PROGRESSION.maxParagon+' · +'+(end.paragon*2)+' útok, +'+(end.paragon*5)+' zdravie</p>'+costRequirements(paragonCost(end.paragon+1))+'<button data-action="paragon" '+(p.level<35||end.paragon>=PROGRESSION.maxParagon||!canPayRecipe(paragonCost(end.paragon+1))?'disabled':'')+'>Posilniť postavu</button></details>';}
 function autoHuntPanel(){
  if(!running)return;
- const options=[['autoAim','Automierenie','Pri útoku mieri na najbližší cieľ do 500. Označený cieľ má prednosť.'],['autoSpell','Automatické schopnosti','V boji používa schopnosti na označený cieľ. Spotrebúva manu a rešpektuje cooldowny.'],['autoPotion','Automatické elixíry','Pod 45 % HP spotrebuje elixír. Obnova 4 s; rovnaká ako pri ručnom použití.']];
- modal('<h2>Automatický boj</h2>'+options.map(([id,name,text])=>'<article class="career-card"><h3>'+name+'</h3><p>'+text+'</p><button data-auto-setting="'+id+'" aria-pressed="'+!!p.combatAssist[id]+'">'+(p.combatAssist[id]?'Zapnuté':'Vypnuté')+'</button></article>').join('')+'<p>Druhý klik na nepriateľa zapne nasledovanie a základný útok. WASD alebo klik na zem ho zrušia. Automatika čaká v bezpečnej zóne a pri neaktívnej hre.</p><button id="stop-auto">Zastaviť všetku automatiku</button>',{key:'auto-hunt',refresh:autoHuntPanel});
+ const options=[['autoAim','Automierenie','Pri útoku mieri na najbližší cieľ do 500. Označený cieľ má prednosť.'],['autoSpell','Automatické schopnosti','V boji používa schopnosti na označený cieľ. Spotrebúva manu a rešpektuje cooldowny.'],['autoPotion','Automatické elixíry','Pri chýbajúcom zdraví použije elixír každé 2 s. Ručné použitie bez cooldownu.']];
+ modal('<h2>Automatický boj</h2>'+options.map(([id,name,text])=>'<article class="career-card"><h3>'+name+'</h3><p>'+text+'</p><button data-auto-setting="'+id+'" aria-pressed="'+!!p.combatAssist[id]+'">'+(p.combatAssist[id]?'Zapnuté':'Vypnuté')+'</button></article>').join('')+'<p>Druhý klik na nepriateľa zapne nasledovanie a základný útok. WASD alebo klik na zem ho zrušia. Automatika čaká v bezpečnej zóne a pri neaktívnej hre.</p><button id="stop-auto">'+(Object.values(p.combatAssist).every(value=>value===true)?'Vypnúť všetku automatiku':'Zapnúť všetku automatiku')+'</button>',{key:'auto-hunt',refresh:autoHuntPanel});
  panelQueryAll('[data-auto-setting]').forEach(button=>button.onclick=()=>{toggleCombatAssist(button.dataset.autoSetting);autoHuntPanel();});
- $('stop-auto').onclick=()=>{clearCombatTarget();stopCombatAssist();autoHuntPanel();};
+ $('stop-auto').onclick=()=>{toggleAllCombatAssist();autoHuntPanel();};
 }
 function systemMenu(){
  if(!running)return;
@@ -4258,8 +4270,8 @@ function systemMenu(){
 }
 function largeMapPanel(){
  if(!running)return;
- modal('<h2>Veľká mapa</h2><div class="atlas-heading"><b>'+escapeHTML(map().name)+'</b><small>'+($('maplevel').textContent)+'</small></div><div class="atlas-map"><canvas id="large-map-canvas" width="480" height="480" aria-label="Mapa lokality. Tvoja poloha, NPC, nepriatelia a udalosti."></canvas></div><div class="atlas-legend"><span><i class="map-player"></i>Ty</span><span><i class="map-npc"></i>NPC</span><span><i class="map-enemy"></i>Nepriateľ</span><span><i class="map-stone"></i>Metin</span><span><i class="map-quest"></i>Úloha / udalosť</span></div><p id="atlas-position"></p><div class="ui-actions"><button id="atlas-quests">Úlohy · N</button></div>',{key:'large-map'});
- $('atlas-quests').onclick=journal;drawLargeMap(true);
+ modal('<h2>Veľká mapa</h2><div class="atlas-heading"><b>'+escapeHTML(map().name)+'</b><small>'+($('maplevel').textContent)+'</small></div><div class="atlas-map"><canvas id="large-map-canvas" width="480" height="480" aria-label="Mapa lokality. Tvoja poloha, NPC, nepriatelia a udalosti."></canvas></div><div class="atlas-legend"><span><i class="map-player"></i>Ty</span><span><i class="map-npc"></i>NPC</span><span><i class="map-enemy"></i>Nepriateľ</span><span><i class="map-stone"></i>Metin</span><span><i class="map-quest"></i>Úloha / udalosť</span></div><p id="atlas-position"></p>',{key:'large-map'});
+ drawLargeMap(true);
 }
 function drawLargeMap(force=false){
  const entry=gameWindows.get('large-map');if(!entry||entry.minimized)return;
@@ -4289,12 +4301,12 @@ function journal(){
  const active=questEntries().filter(q=>!q.completed),done=questEntries().filter(q=>q.completed);
  const bio=p.career.biology;
  for(let i=0;i<bio.stage;i++)done.push({id:'bio-'+i,title:'Biológ · '+BIOLOGY[i].name,completed:true,reward:BIOLOGY[i].text,goals:[]});
- if(p.huntClaimed)done.push({id:'hunts',title:'Lovec · dokončené '+p.huntClaimed+'×',completed:true,reward:'Celkom '+(60*p.huntClaimed)+' Yang + '+p.huntClaimed+' tréningových pečatí',goals:[]});
+ if(p.huntClaimed)done.push({id:'hunts',title:'Lovec · dokončené '+p.huntClaimed+'×',completed:true,reward:'Yang a materiály podľa úrovne pri odovzdaní',goals:[]});
  const entries=journalTab==='completed'?done:active;
  modal('<h2>Úlohy</h2><nav class="quest-tabs"><button data-quest-tab="active" aria-pressed="'+(journalTab==='active')+'">Aktívne · '+active.length+'</button><button data-quest-tab="completed" aria-pressed="'+(journalTab==='completed')+'">Splnené · '+done.length+'</button></nav>'+entries.map(q=>'<article class="journal-entry"><h3>'+q.title+'</h3>'+q.goals.map(([name,have,need])=>requirementRow(name,have,need)).join('')+'<p class="quest-reward">Odmena: '+q.reward+'</p>'+(q.completed?'<small>Splnené</small>':q.id==='biology'?'<p>Úroveň '+q.minLevel+' · '+q.info+'</p><button data-quest-biology>Podrobnosti výskumu</button>':'<button class="primary" data-quest-claim="'+q.id+'" '+(q.ready?'':'disabled')+'>Vyzdvihnúť odmenu</button>')+'</article>').join('')+(journalTab==='active'?worldEventsJournalCard():''),{key:'journal',refresh:journal});
  panelQueryAll('[data-quest-tab]').forEach(button=>button.onclick=()=>{journalTab=button.dataset.questTab;journal();});
  panelQueryAll('[data-quest-claim]').forEach(button=>button.onclick=()=>{const q=questEntries().find(q=>q.id===button.dataset.questClaim);if(q?.ready)q.claim();journal();updateHUD();});
- panelQueryAll('[data-quest-biology]').forEach(button=>button.onclick=()=>careerPanel('biology'));
+ panelQueryAll('[data-quest-biology]').forEach(button=>button.onclick=biologyInfoPanel);
 }
 function updateQuestHUD(){
  const q=trackedQuest(),panel=$('quest-tracker');panel.hidden=!q;if(!q)return;
@@ -4308,9 +4320,9 @@ function updateQuestHUD(){
 // src/js/ui/panels.js
 function shop(){marketPanel('merchant');}
 
-function travelMenu(){if(!running)return;if(dungeonRun()){dungeonPanel();return;}if(p.career.endgame.run){riftPanel();return;}if(!canTravel()){toast('Cestovanie nie je dostupné počas boja.');return;}modal(`<span class="eyebrow">CESTOVANIE</span><h2>Cestovanie</h2><p>Cestovanie mimo boja.</p><div class="map-list">${Object.entries(MAPS).filter(([,c])=>!c.instance).sort(([,a],[,b])=>a.town?-1:b.town?1:a.metinsOnly?(b.metinsOnly?0:1):b.metinsOnly?-1:a.level-b.level).map(([id,c])=>`<button data-map="${id}" class="map-card ${p.mapId===id?'selected':''}" style="--map-color:${c.ground}"><b>${c.name}</b><small>${c.town?c.desc:'Úroveň '+c.level+(c.levelMax?'–'+c.levelMax:'+')+' · '+c.mob+' · '+c.boss}</small>${p.mapId===id?'<span>Aktuálna mapa</span>':''}</button>`).join('')}</div><button class="primary" id="metinAtlas">Atlas Metinov · úrovne, vlny a dropy</button><p id="travelmsg" role="status"></p>`,{key:'travel',refresh:travelMenu});$('metinAtlas').onclick=metinCodex;panelQueryAll('[data-map]').forEach(b=>b.onclick=()=>{if(p.mapId===b.dataset.map)return;if(!canTravel()){$('travelmsg').textContent='Najprv ukonči boj.';return;}loadMap(b.dataset.map);});}
+function travelMenu(){if(!running)return;if(dungeonRun()){dungeonPanel();return;}if(p.career.endgame.run){riftPanel();return;}if(!canTravel()){toast('Cestovanie nie je dostupné počas boja.');return;}modal(`<span class="eyebrow">CESTOVANIE</span><h2>Cestovanie</h2><p>Cestovanie mimo boja.</p><div class="map-list">${Object.entries(MAPS).filter(([,c])=>!c.instance).sort(([,a],[,b])=>a.town?-1:b.town?1:a.metinsOnly?(b.metinsOnly?0:1):b.metinsOnly?-1:a.level-b.level).map(([id,c])=>`<button data-map="${id}" class="map-card ${p.mapId===id?'selected':''}" style="--map-color:${c.ground}"><b>${c.name}</b><small>${c.town?c.desc:'Úroveň '+c.level+(c.levelMax?'–'+c.levelMax:'+')+' · '+c.mob+' · '+c.boss}</small>${p.mapId===id?'<span>Aktuálna mapa</span>':''}</button>`).join('')}</div><p id="travelmsg" role="status"></p>`,{key:'travel',refresh:travelMenu});panelQueryAll('[data-map]').forEach(b=>b.onclick=()=>{if(p.mapId===b.dataset.map)return;if(!canTravel()){$('travelmsg').textContent='Najprv ukonči boj.';return;}loadMap(b.dataset.map);});}
 
-function help(){modal('<h2>Ako hrať</h2><div class="control-guide"><p><kbd>WASD / šípky</kbd> Pohyb · zrušia chôdzu na kliknuté miesto.</p><p><kbd>Ľavý klik</kbd> Zem: chôdza na miesto. Nepriateľ: výber cieľa. Druhý klik zapne nasledovanie a útok. NPC: služba zblízka. Korisť: zdvihnúť.</p><p><kbd>SPACE</kbd> Útok smerom ku kurzoru alebo na označený cieľ.</p><p><kbd>1–6 / F1–F6</kbd> Schopnosti · <kbd>7 / F7</kbd> elixír · <kbd>8 / F8</kbd> plášť.</p><p><kbd>Alt</kbd> Podrž pre červené mená nepriateľov.</p><p><kbd>C</kbd> Postava · <kbd>I</kbd> inventár · <kbd>V</kbd> schopnosti · <kbd>N</kbd> úlohy.</p><p><kbd>M</kbd> Veľká mapa · <kbd>P</kbd> progresia · <kbd>K</kbd> automatický boj · <kbd>H</kbd> pomoc.</p><p><kbd>F</kbd> Najbližšie NPC · <kbd>Y</kbd> korisť v okolí · <kbd>F10</kbd> celá obrazovka.</p><p><kbd>Esc</kbd> Zruší potvrdenie alebo zavrie vrchné okno. Bez okien zastaví chôdzu a automatický boj a otvorí menu.</p><p>Okná: potiahni záhlavie, − minimalizuje, × zatvorí. Záhlavie vybrané klávesom Tab presúvaš šípkami. Rovnaká skratka okno zatvorí. Hra pri otvorených oknách pokračuje.</p></div>',{key:'help'});}
+function help(){modal('<h2>Ako hrať</h2><div class="control-guide"><p><kbd>WASD / šípky</kbd> Pohyb · zrušia chôdzu na kliknuté miesto.</p><p><kbd>Ľavý klik</kbd> Zem: chôdza na miesto. Nepriateľ: výber cieľa. Druhý klik zapne nasledovanie a útok. NPC: služba zblízka. Korisť: zdvihnúť.</p><p><kbd>SPACE</kbd> Útok smerom ku kurzoru alebo na označený cieľ.</p><p><kbd>1–6 / F1–F6</kbd> Schopnosti (horný rad klávesov na každej klávesnici) · <kbd>7 / F7</kbd> elixír · <kbd>8 / F8</kbd> plášť.</p><p><kbd>Alt</kbd> Podrž pre červené mená nepriateľov.</p><p><kbd>C</kbd> Postava · <kbd>I</kbd> inventár · <kbd>V</kbd> schopnosti · <kbd>N</kbd> úlohy.</p><p><kbd>Tab</kbd> Cestovanie · <kbd>M</kbd> Veľká mapa · <kbd>P</kbd> progresia · <kbd>K</kbd> automatický boj · <kbd>H</kbd> pomoc.</p><p><kbd>F</kbd> Najbližšie NPC · <kbd>Y</kbd> korisť v okolí · <kbd>F10</kbd> celá obrazovka.</p><p><kbd>Esc</kbd> Zruší potvrdenie alebo zavrie vrchné okno. Bez okien zastaví chôdzu a automatický boj a otvorí menu.</p><p>Okná: potiahni záhlavie, − minimalizuje, × zatvorí. Zamerané záhlavie presúvaš šípkami. Rovnaká skratka okno zatvorí. Hra pri otvorených oknách pokračuje.</p></div>',{key:'help'});}
 
 function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
@@ -4382,7 +4394,7 @@ function equipmentFigure() {
 
 
 // src/js/ui/inventory.js
-let inventoryTab = 'gear', inventoryPage = 0, inventorySelection = null, inventoryDrag = null, inventoryDeletePending = null;
+let inventoryTab = 'gear', inventoryPage = 0, inventorySelection = null, inventoryDrag = null;
 
 function inventoryEntry(id) {
   if (!id) return null;
@@ -4424,10 +4436,10 @@ function inventory() {
       const item = entry.item, [w, h] = entry.kind === 'gear' ? itemSize(item) : [1, 1], local = item.cell % INVENTORY.pageSize;
       return `<button class="grid-item rarity-${item.rarity || 0}" draggable="true" data-entry="${entry.id}" aria-label="${escapeHTML(item.name)}${entry.kind === 'gear' ? ' · ' + rarityName(item.rarity) : ''}${entry.kind === 'supply' ? ', ' + item.count + ' kusov' : ', +' + (item.enhance || 0)}" aria-pressed="${inventorySelection === entry.id}" style="grid-column:${local % 5 + 1} / span ${w};grid-row:${Math.floor(local / 5) + 1} / span ${h}">${itemIcon(item)}${entry.kind === 'supply' ? `<b class="stack-count">${item.count}</b>` : `<b class="enhance-count">+${item.enhance || 0}</b>`}</button>`;
     }).join('')}</div><p class="inventory-hint">Presun: potiahni alebo vyber predmet a políčko. Vyhodenie: vytiahni mimo okna a potvrď.</p><div class="inventory-money">◉ <b>${p.gold.toLocaleString('sk-SK')}</b> <small>YANG</small></div></section>
-    <div class="inventory-controls"><div id="inventory-actions" class="inventory-actions"></div><p class="inventory-message" id="inventory-message" role="status"></p></div></div><div id="item-tooltip" class="item-tooltip" role="tooltip" hidden></div></section>`,{key:'inventory',refresh:()=>{if(gameWindows.get('inventory')?.inventorySignature!==inventoryContentSignature())inventory();}});
+    <div class="inventory-controls"><p class="inventory-message" id="inventory-message" role="status"></p></div></div><div id="item-tooltip" class="item-tooltip loot-tooltip" role="tooltip" hidden></div></section>`,{key:'inventory',refresh:()=>{if(gameWindows.get('inventory')?.inventorySignature!==inventoryContentSignature())inventory();}});
   $('rarity-guide').onclick=rarityGuide;
   $('inv-sort').onclick = () => { if (sortInventory(inventoryTab)) inventory(); else inventoryMessage('Predmety sa do tohto rozloženia nezmestia.'); };
-  panelQueryAll('[data-inv-tab]').forEach(button => button.onclick = () => { inventoryTab = button.dataset.invTab; inventorySelection = null; inventoryDeletePending = null; inventory(); });
+  panelQueryAll('[data-inv-tab]').forEach(button => button.onclick = () => { inventoryTab = button.dataset.invTab; inventorySelection = null; inventory(); });
   panelQueryAll('[data-inv-page]').forEach(button => button.onclick = () => { inventoryPage = Number(button.dataset.invPage); inventory(); });
   panelQueryAll('[data-stat]').forEach(button => button.onclick = () => allocate(button.dataset.stat));
   panelQueryAll('[data-entry]').forEach(button => {
@@ -4471,20 +4483,8 @@ function inventory() {
 function inventoryMessage(message) { $('inventory-message').textContent = message; }
 
 function selectInventoryEntry(id) {
-  inventorySelection = id; inventoryDeletePending = null;
+  inventorySelection = id;
   panelQueryAll('[data-entry]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.entry === id)));
-  renderInventoryDetail();
-}
-
-function renderInventoryDetail(){
- const entry=inventoryEntry(inventorySelection),host=$('inventory-actions');if(!host)return;
- if(!entry){host.innerHTML='';return;}
- const gear=entry.kind!=='supply',item=entry.item,usable=gear||['drink','cape'].includes(item.action);
- host.innerHTML=(usable?'<button id="inv-use">'+(entry.kind==='equipped'?'Zložiť':gear?'Nasadiť':entry.item.action==='drink'||entry.item.action==='cape'?'Použiť':'Materiál')+'</button>':'')+(entry.kind==='gear'?'<button id="inv-sell" '+(!currentTrader()?'disabled':'')+'>Predať · '+marketGearSaleValue(item)+' Yang</button>':'')+(entry.kind!=='equipped'?'<button id="inv-drop">Vyhodiť…</button><button id="inv-delete" class="danger">Odstrániť…</button>':'')+(inventoryDeletePending===entry.id?'<div class="delete-confirm"><p>Odstránenie je trvalé. Táto akcia sa nedá vrátiť.</p>'+(!gear?'<label>Počet <input id="inv-delete-count" type="number" min="1" max="'+item.count+'" value="1"></label>':'')+'<button id="inv-delete-confirm" class="danger">Potvrdiť odstránenie</button><button id="inv-delete-cancel">Zrušiť</button></div>':'');
- if($('inv-use'))$('inv-use').onclick=()=>activateInventoryEntry(entry.id);
- if(entry.kind==='gear')$('inv-sell').onclick=()=>{sellItem(p.bag.findIndex(i=>'gear:'+i.uid===entry.id));inventorySelection=null;inventory();};
- if(entry.kind!=='equipped'){$('inv-drop').onclick=()=>requestInventoryDrop(entry.id);$('inv-delete').onclick=()=>{inventoryDeletePending=entry.id;renderInventoryDetail();};}
- if(inventoryDeletePending===entry.id){$('inv-delete-cancel').onclick=()=>{inventoryDeletePending=null;renderInventoryDetail();};$('inv-delete-confirm').onclick=()=>{if(deleteInventoryItem(entry.id,gear?1:Number($('inv-delete-count').value))){inventorySelection=null;inventoryDeletePending=null;inventory();}else inventoryMessage('Zadaj platný počet.');};}
 }
 
 function activateInventoryEntry(id) {
@@ -4519,10 +4519,10 @@ function showItemTooltip(id, event) {
 }
 
 function positionItemTooltip(event) {
-  const tooltip = $('item-tooltip'), width = window.innerWidth || W, height = window.innerHeight || H;
-  const rect = tooltip.getBoundingClientRect();
-  tooltip.style.left = Math.max(8, Math.min(event.clientX + 14, width - rect.width - 12)) + 'px';
-  tooltip.style.top = Math.max(8, Math.min(event.clientY + 14, height - rect.height - 12)) + 'px';
+  const tooltip=$('item-tooltip'),width=window.innerWidth||W,height=window.innerHeight||H;
+  tooltip.style.maxHeight=(height-16)+'px';const rect=tooltip.getBoundingClientRect();
+  const position=floatingTooltipPosition(event.clientX,event.clientY,rect.width,rect.height,width,height);
+  tooltip.style.left=position.left+'px';tooltip.style.top=position.top+'px';tooltip.style.maxHeight=position.maxHeight+'px';
 }
 
 
@@ -4609,12 +4609,12 @@ function updateLootHover(dt = 0) {
 // src/js/ui/metins.js
 function metinPercent(value) { return Number((value * 100).toFixed(2)).toLocaleString('sk-SK') + ' %'; }
 
-function metinCodex() {
-  if (!running) return;
-  modal(`<span class="eyebrow">ŠUTERLAND · 1–99</span><h2>Atlas Metinov</h2><p>Šuterland: Metiny 1–99. Útok privoláva obrancov podľa úrovne; prvá vlna za 0,2 s.</p>${Object.entries(METIN_TYPES).map(([id, type]) => {
+function metinCodex(){return careerPanel('metins');}
+function metinCodexContent() {
+  return `<span class="eyebrow">ŠUTERLAND · 1–99</span><p>Šuterland: Metiny 1–99. Útok privoláva obrancov podľa úrovne; prvá vlna za 0,1 s.</p>${Object.entries(METIN_TYPES).map(([id, type]) => {
     const pool = type.loot, example = metinStats(type.levels[0], id);
     return `<section class="career-card metin-card" style="border-left-color:${type.glow}"><h3>${type.name}</h3><p>Úroveň ${type.levels.join('–')} · ${type.difficulty}<br>Vlny: ${type.wave} / ${type.interval.toLocaleString('sk-SK')} s<br>Na Lv.${type.levels[0]}: HP ${example.hp} · pancier ${example.armor} · odolnosť ${Math.round(example.resistance * 100)} %<br>Typy: ${Object.entries(METIN_RESISTS[id]||{}).map(([kind,value])=>DAMAGE_TYPES[kind].name+' '+resistanceText(value)).join(', ')}</p><h4>Dropy</h4><p>Yang: 100 % · ${pool.yang.join('–')} × (1 + úroveň × 0,12)<br>${['ore', 'books', 'essence', 'dust', 'upgradeStones'].map(key => MATERIALS[key] + ': ' + metinPercent(pool[key][0]) + ' · ' + pool[key][1] + '–' + pool[key][2] + ' ks').join('<br>')}<br>Výbava: ${metinPercent(pool.gear)} · ${pool.slots.map(slot => EQUIPMENT[slot].name).join(', ')}<br>Rarity výbavy na Lv.${type.levels[0]}: ${itemRarityChances({type:'stone',metinType:id,level:type.levels[0]}).map(entry=>rarityName(entry.id)+' '+Number((entry.chance*100).toFixed(4)).toLocaleString('sk-SK')+' %').join(', ')}<br>${MATERIALS[pool.extra[0]]}: ${metinPercent(pool.extra[1])}</p></section>`;
-  }).join('')}<p>Drop materiálov a výbavy: kameň najviac o 5 úrovní slabší. Kamene vylepšenia: kováč od +4. Limit obrancov: 8 na kameň, 60 na mapu; po 45 s zmiznú bez odmeny.</p>`);
+  }).join('')}<p>Drop materiálov a výbavy: kameň najviac o 5 úrovní slabší. Kamene vylepšenia: kováč od +4. Limit obrancov: 8 na kameň, 60 na mapu; po 45 s zmiznú bez odmeny.</p>`;
 }
 
 
@@ -4650,15 +4650,13 @@ function spellbook() {
   modal(`<span class="eyebrow">${role().name} · ${school().name}</span><h2>Kniha schopností</h2><div class="spell-list">${school().skills.map((s,i)=>{
     const meta=ACTIVE_SKILLS[skillKey(i)];
     return `<div><kbd>${spellKeys[i].toUpperCase()}</kbd><span><b>${s[0]} · ${skillRankLabel(skillProgress(skillKey(i)).rank)}</b><small>${meta.type?DAMAGE_TYPES[meta.type].name+' poškodenie':'Podporná schopnosť'} · ${s[3]} many · cooldown ${Number((s[2]*(1-skillCooldownReduction(skillKey(i)))).toFixed(2))} s<br>Základný účinok: ${s[6]}<br>Bonus stupňa: +${Math.round((skillFactor(skillKey(i))-1)*100)} % sily / trvania${combo.sequence.includes(i)?'<br>Kombo: '+combo.name:''}</small>${skillUpgradeContent(i)}</span></div>`;
-  }).join('')}</div>${passiveCard()}<section class="career-card"><h3>Kombo · ${combo.name}</h3><p>${combo.sequence.map(i=>'<kbd>'+spellKeys[i].toUpperCase()+'</kbd> '+school().skills[i][0]).join(' → ')}<br>Do ${BATTLE.comboWindow} s · druhá schopnosť +${Math.round(combo.bonus*100)} % poškodenia/liečenia. Neúspešné zoslanie kombo nespotrebuje.</p></section><div class="ui-actions"><button id="combat-guide">Bojový manuál</button></div><p>Knihy: primeraní bossovia a Metiny. Kamene duše: od Lv.35, boss 20 %, Metin 8 %.</p><p>Normál 1–20 → Majster M1–M10 → Veľmajster G1–G10 → Perfektný majster P.</p><p id="skill-message" role="status"></p>`,{key:'spellbook',refresh:spellbook});
-  $('combat-guide').onclick=combatManual;
+  }).join('')}</div>${passiveCard()}<section class="career-card"><h3>Kombo · ${combo.name}</h3><p>${combo.sequence.map(i=>'<kbd>'+spellKeys[i].toUpperCase()+'</kbd> '+school().skills[i][0]).join(' → ')}<br>Do ${BATTLE.comboWindow} s · druhá schopnosť +${Math.round(combo.bonus*100)} % poškodenia/liečenia. Neúspešné zoslanie kombo nespotrebuje.</p></section><details><summary>Bojové pravidlá a odolnosti</summary>${combatRulesContent()}</details><p>Knihy: primeraní bossovia a Metiny. Kamene duše: od Lv.35, boss 20 %, Metin 8 %.</p><p>Normál 1–20 → Majster M1–M10 → Veľmajster G1–G10 → Perfektný majster P.</p><p id="skill-message" role="status"></p>`,{key:'spellbook',refresh:spellbook});
   panelQueryAll('[data-upgrade-skill]').forEach(button=>button.onclick=()=>{const ok=upgradeSkill(button.dataset.upgradeSkill);spellbook();$('skill-message').textContent=ok?'Schopnosť vylepšená.':'Chýba prax, Yang alebo potrebné predmety.';updateClassHUD();});
 }
 
-function combatManual() {
-  if(!running)return;
+function combatRulesContent() {
   const resist=playerResistances();
-  modal(`<span class="eyebrow">ŠKOLA BOJA</span><h2>Bojový manuál</h2><h3>Automatická pomoc</h3><p><b>Automierenie</b> pri útoku mieri na najbližší cieľ do 500; označený má prednosť. <b>Autospell</b> čaruje iba v boji s označeným cieľom, so spotrebou many a cooldownmi. Výpady môžu premiestniť postavu. Automatika čaká pri pauze, neaktívnom okne a v bezpečnej zóne. <b>Autoelixíry:</b> pod 45 % HP, +65 HP alebo 25 % maxima podľa vyššej hodnoty, spotreba 1 kusu. Spoločný cooldown s ručným použitím: 4 s.</p><h3>Typy poškodenia a tvoje odolnosti</h3><div class="battle-type-grid">${Object.entries(DAMAGE_TYPES).map(([id,spec])=>`<div style="border-left-color:${spec.color}"><b>${spec.name}</b><span>${resistanceText(resist[id])}</span></div>`).join('')}</div><p>Obrana: fyzické zásahy 100 %, prierazné 60 %, ostatné 25 %. Kladná odolnosť znižuje poškodenie, záporná zvyšuje. Limity: +75 % / −50 %. Metiny navyše používajú vlastný pancier a základnú odolnosť. Oslabenie Zrušením kúzla znižuje kladné typové odolnosti o 15 percentuálnych bodov a potláča zúrivosť bossa.</p><p>Kritický zásah: 1,8× poškodenie. Prenikavý zásah ignoruje kladné odolnosti a ochranu Metinu, strop šance 50 %. Bonus rýchlosti útoku: najviac 60 %, odstup aspoň 0,16 s. Bonus proti skupine: najviac +100 %. Jed a oheň pôsobia súčasne; rovnaký efekt obnoví trvanie a zachová silnejšiu hodnotu. Základný útok zblízka zasahuje čelný výsek do 95 a celé okolie do 62. Základný šíp zasiahne aj ciele do 65 od dopadu za 65 % poškodenia. Šípy letia priamo; vybrané magické strely sledujú cieľ.</p><p>Zásah vyprovokuje najviac 5 členov skupiny. Plášť pritiahne pohyblivé ciele do 650 na 18 s, spotreba 1 kusu. Bossovia útočia bez vyprovokovania; pod 30 % HP zúria.</p><h3>Kombá</h3>${Object.entries(SCHOOL_COMBOS).map(([id,combo])=>`<div class="career-card"><h3>${combo.name}</h3><p>${SCHOOLS[id].name}: ${combo.sequence.map(i=>SCHOOLS[id].skills[i][0]).join(' → ')}<br>Do 4 s · druhá schopnosť +${Math.round(combo.bonus*100)} % poškodenia/liečenia.</p></div>`).join('')}`);
+  return `<h3>Automatická pomoc</h3><p><b>Automierenie</b> pri útoku mieri na najbližší cieľ do 500; označený má prednosť. <b>Autospell</b> čaruje iba v boji s označeným cieľom, so spotrebou many a cooldownmi. Výpady môžu premiestniť postavu. Automatika čaká pri pauze, neaktívnom okne a v bezpečnej zóne. <b>Autoelixíry:</b> pri chýbajúcom zdraví, +65 HP alebo 25 % maxima podľa vyššej hodnoty, spotreba 1 kusu. Automaticky každé 2 s; ručne bez cooldownu.</p><h3>Typy poškodenia a tvoje odolnosti</h3><div class="battle-type-grid">${Object.entries(DAMAGE_TYPES).map(([id,spec])=>`<div style="border-left-color:${spec.color}"><b>${spec.name}</b><span>${resistanceText(resist[id])}</span></div>`).join('')}</div><p>Obrana: fyzické zásahy 100 %, prierazné 60 %, ostatné 25 %. Kladná odolnosť znižuje poškodenie, záporná zvyšuje. Limity: +75 % / −50 %. Metiny navyše používajú vlastný pancier a základnú odolnosť. Oslabenie Zrušením kúzla znižuje kladné typové odolnosti o 15 percentuálnych bodov a potláča zúrivosť bossa.</p><p>Kritický zásah: 1,8× poškodenie. Prenikavý zásah ignoruje kladné odolnosti a ochranu Metinu, strop šance 50 %. Bonus rýchlosti útoku: najviac 60 %, odstup aspoň 0,16 s. Bonus proti skupine: najviac +100 %. Jed a oheň pôsobia súčasne; rovnaký efekt obnoví trvanie a zachová silnejšiu hodnotu. Základný útok zblízka zasahuje čelný výsek do 95 a celé okolie do 62. Základný šíp zasiahne aj ciele do 65 od dopadu za 65 % poškodenia. Šípy letia priamo; vybrané magické strely sledujú cieľ.</p><p>Zásah vyprovokuje najviac 5 členov skupiny. Plášť pritiahne pohyblivé ciele do 650 na 18 s, spotreba 1 kusu. Bossovia útočia bez vyprovokovania; pod 30 % HP zúria.</p><h3>Kombá</h3>${Object.entries(SCHOOL_COMBOS).map(([id,combo])=>`<div class="career-card"><h3>${combo.name}</h3><p>${SCHOOLS[id].name}: ${combo.sequence.map(i=>SCHOOLS[id].skills[i][0]).join(' → ')}<br>Do 4 s · druhá schopnosť +${Math.round(combo.bonus*100)} % poškodenia/liečenia.</p></div>`).join('')}`;
 }
 
 function skillUpgradeContent(index){const key=skillKey(index),skill=skillProgress(key);if(skill.rank===PROGRESSION.maxSkillRank)return '<p class="skill-perfect">Perfektný majster · maximum</p>';const ready=skill.practice>=skillPracticeNeeded(skill.rank)&&canPayRecipe(skillCost(key));return '<p>Prax '+skill.practice+' / '+skillPracticeNeeded(skill.rank)+'</p>'+costRequirements(skillCost(key))+'<button class="primary" data-upgrade-skill="'+key+'" '+(ready?'':'disabled')+'>Vylepšiť na '+skillRankShort(skill.rank+1)+'</button>';}
@@ -4679,7 +4677,7 @@ function renderClasses() {}
 
 function updateClassHUD(){$('portrait').textContent=({warrior:'侍',ninja:'影',sura:'魔',shaman:'龍'})[p.classId];$('playername').textContent=characterDisplayName(p)+prestigeSuffix(p);$('playerclass').textContent=role().name;school().skills.forEach((s,i)=>{$(i?'skill'+(i+1):'skill').querySelector('small').textContent=s[0];$(i?'skill'+(i+1):'skill').title=`${s[0]} · ${skillRankShort(skillProgress(skillKey(i)).rank)} · ${s[3]} many · ${s[2]} s\n${s[6]}`;});$('attack').querySelector('small').textContent=p.classId==='ninja'&&p.schools.ninja==='archery'?'Streľba':p.classId==='shaman'?'Úder vejárom':'Základný útok';}
 
-function updateHUD(){const health=maxHP(),mana=maxMP();baseHUD(health);$('potion-cooldown').textContent=potionCooldownRemaining()>0?Math.ceil(potionCooldownRemaining()):'';$('potion').title='Elixír · +'+potionHealAmount()+' HP · spoločný cooldown 4 s';$('capes').textContent=p.braveryCapes;$('cape-cooldown').textContent=capeCooldown>0?Math.ceil(capeCooldown):'';p.mp=Math.max(0,Math.min(mana,p.mp));$('mpbar').style.width=p.mp/mana*100+'%';$('mptext').textContent=Math.ceil(p.mp)+' / '+mana;for(let i=0;i<6;i++)$(i?'cooldown'+(i+1):'cooldown').textContent=spellCD[i]>0?Math.ceil(spellCD[i]):'';$('coords').textContent=map().town?'Mesto · NPC F':isSanctuary(p)?'Bezpečná zóna':farmAreaAt().name+(map().metinsOnly?' · Metiny Lv.':' · Lv.')+farmAreaLevelRange(farmAreaAt()).join('–');$('buffs').textContent=Object.entries(buffs).map(([id,t])=>{const s=Object.values(SCHOOLS).flatMap(c=>c.skills).find(s=>s[1]===id);return(s?s[0]:id)+' '+Math.ceil(t)+'s';}).join(' · ');updateCombatHUD();updateCombatAssistHUD();updateHotbarState();updateDungeonHUD();updateWorldEventsHUD();}
+function updateHUD(){const health=maxHP(),mana=maxMP();baseHUD(health);$('potion-cooldown').textContent='';$('potion').title='Elixír · +'+potionHealAmount()+' HP · ručne bez cooldownu';$('capes').textContent=p.braveryCapes;$('cape-cooldown').textContent=capeCooldown>0?Math.ceil(capeCooldown):'';p.mp=Math.max(0,Math.min(mana,p.mp));$('mpbar').style.width=p.mp/mana*100+'%';$('mptext').textContent=Math.ceil(p.mp)+' / '+mana;for(let i=0;i<6;i++)$(i?'cooldown'+(i+1):'cooldown').textContent=spellCD[i]>0?Math.ceil(spellCD[i]):'';$('coords').textContent=map().town?'Mesto · NPC F':isSanctuary(p)?'Bezpečná zóna':farmAreaAt().name+(map().metinsOnly?' · Metiny Lv.':' · Lv.')+farmAreaLevelRange(farmAreaAt()).join('–');$('buffs').textContent=Object.entries(buffs).map(([id,t])=>{const s=Object.values(SCHOOLS).flatMap(c=>c.skills).find(s=>s[1]===id);return(s?s[0]:id)+' '+Math.ceil(t)+'s';}).join(' · ');updateCombatHUD();updateCombatAssistHUD();updateHotbarState();updateDungeonHUD();updateWorldEventsHUD();}
 
 
 
@@ -4770,6 +4768,7 @@ function biologyContent(delivery=false){
  const bio=p.career.biology,stage=BIOLOGY[bio.stage];if(!stage)return '<p>Všetky biologické výskumy sú dokončené.</p>';
  return '<article class="career-card"><h3>'+stage.name+' · '+(bio.stage+1)+' / '+BIOLOGY.length+'</h3><p>'+MAPS[stage.map].name+' · úroveň '+stage.level+'<br>'+stage.source+' · '+biologyDropLabel(stage)+'</p>'+requirementRow('Odovzdané · '+MATERIALS[stage.item],bio.delivered,stage.count)+'<p>Odmena za etapu: '+stage.text+'</p><p id="biology-status" role="status">'+biologyStatusText()+'</p>'+(delivery?costRequirements(biologyCost(stage))+'<p id="biology-block">'+escapeHTML(biologyBlockReason())+'</p><button class="primary" id="biology-submit" '+(biologyBlockReason()?'disabled':'')+'>Odovzdať vzorku</button><p id="biology-message" role="status"></p>':'<p>Vzorky odovzdávaš biológovi v Meste.</p>')+'</article>';
 }
+function biologyInfoPanel(){if(!running)return;modal('<h2>Biologický výskum</h2>'+biologyContent(false),{key:'quest:biology',refresh:biologyInfoPanel});}
 function biologyNPCPanel(){
  if(!running||!npcServiceOpened('biologist')||!gameWindows.has('npc:biology')&&!nearNPC('biologist'))return false;
  modal('<h2>Biológ</h2>'+biologyContent(true),{key:'npc:biology',refresh:biologyNPCPanel});
@@ -4777,7 +4776,7 @@ function biologyNPCPanel(){
 }
 function refreshBiologyPanel(){
  if(!running)return;
- for(const key of ['career:biology','npc:biology'])withGameWindow(key,()=>{const status=$('biology-status');if(status)status.textContent=biologyStatusText();const button=$('biology-submit');if(button)button.disabled=!!biologyBlockReason();const reason=$('biology-block');if(reason)reason.textContent=biologyBlockReason();});
+ for(const key of ['quest:biology','npc:biology'])withGameWindow(key,()=>{const status=$('biology-status');if(status)status.textContent=biologyStatusText();const button=$('biology-submit');if(button)button.disabled=!!biologyBlockReason();const reason=$('biology-block');if(reason)reason.textContent=biologyBlockReason();});
 }
 function biologyJournalCard(){return biologyContent(false);}
 
@@ -4856,20 +4855,14 @@ function costLabel(cost) {
   return Object.entries(cost).map(([id, n]) => n.toLocaleString('sk-SK') + ' ' + (id === 'gold' ? 'Yang' : MATERIALS[id])).join(' · ') || 'bez poplatku';
 }
 
-function careerOverview(){const b=careerBonuses();return '<div class="career-metrics"><div>Úroveň <b>'+p.level+' / 99</b></div><div>Výskum <b>'+p.career.biology.stage+' / '+BIOLOGY.length+'</b></div></div><h3>Trvalé bonusy</h3><p>Útok +'+b.attack+' · obrana +'+b.defense+' · zdravie +'+b.hp+' · mana +'+b.mp+'</p><h3>Materiály</h3><div class="material-grid">'+Object.entries(MATERIALS).map(([id,name])=>'<div>'+name+'<b>'+uiNumber(p.career.materials[id])+'</b></div>').join('')+'</div>';}
+function careerOverview(){const b=careerBonuses();return '<div class="career-metrics"><div>Úroveň <b>'+p.level+' / 99</b></div></div><h3>Trvalé bonusy</h3><p>Útok +'+b.attack+' · obrana +'+b.defense+' · zdravie +'+b.hp+' · mana +'+b.mp+'</p><h3>Materiály</h3><div class="material-grid">'+Object.entries(MATERIALS).map(([id,name])=>'<div>'+name+'<b>'+uiNumber(p.career.materials[id])+'</b></div>').join('')+'</div>';}
 function careerPanel(tab='overview'){
  if(!running)return false;
- const tabs={overview:['Prehľad',careerOverview],items:['Predmety',itemCatalogPanel],discovery:['Bestiár a zbierky',discoveryPanel],biology:['Biologický výskum',()=>biologyContent(false)]};
+ const tabs={overview:['Prehľad',careerOverview],discovery:['Bestiár a zbierky',discoveryPanel],metins:['Atlas Metinov',metinCodexContent]};
  if(!Object.hasOwn(tabs,tab))return false;careerTab=tab;
  modal('<h2>'+tabs[tab][0]+'</h2><nav class="career-tabs">'+Object.entries(tabs).map(([id,[name]])=>'<button data-career-tab="'+id+'" aria-pressed="'+(id===tab)+'">'+name+'</button>').join('')+'</nav>'+tabs[tab][1](),{key:'career:'+tab,refresh:()=>careerPanel(tab)});
  panelQueryAll('[data-career-tab]').forEach(button=>button.onclick=()=>careerPanel(button.dataset.careerTab));if(tab==='discovery')bindDiscoveryUI();return true;
 }
-
-function itemCatalogPanel(){return '<div class="item-catalog">'+Object.entries(ICONIC_ITEMS).map(([key,d])=>{
-const preview={slot:'weapon',name:d.name,modelId:d.modelId,rarity:ITEM_DEFINITIONS[d.id].rarity,tier:d.level,bonus:d.bonus,weaponKind:d.weaponKind};
-const chance=ICONIC_DROP_ENTRIES.find(e=>e.definitionId===d.id).chance;
-return '<div class="career-card">'+itemIcon(preview)+'<h3>'+d.name+'</h3><p>Vyžaduje úroveň '+d.level+' · '+d.classes.map(id=>CLASSES[id].name).join(', ')+'</p><p>Útok +'+d.bonus+' · '+Object.entries(d.baseStats).map(([stat,n])=>ITEM_STATS[stat]+' '+signedItemStat(stat,n)).join(' · ')+'</p><p>Bossovia a Metiny od úrovne '+d.level+': '+(chance*100)+' % za zbraň. Výroba: kováč, remeslo '+CRAFT_RECIPES['iconic-'+key].level+'.'+(['fms','poison'].includes(key)?' Predaj: zbrojár.':'')+'</p></div>';
-}).join('')+'</div>';}
 
 
 // src/js/ui/crafting.js
@@ -5501,7 +5494,6 @@ function handleGameKeyDown(e) {
   if(key==='Enter'&&panelState.key==='inventory-drop'){e.preventDefault();if(!e.repeat)confirmPendingInventoryDrop();return;}
   if(key==='Escape'){
     e.preventDefault();keysClear();
-    if(panelState.key==='inventory'&&inventoryDeletePending){e.preventDefault();inventoryDeletePending=null;renderInventoryDetail();return;}
     if(gameWindows.size){e.preventDefault();closeModal();return;}
 
     clearCombatTarget();stopCombatAssist();if(running)systemMenu();
@@ -5514,13 +5506,14 @@ function handleGameKeyDown(e) {
   if([' ','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(key))e.preventDefault();
   if(key==='Alt'){e.preventDefault();keys.Alt=true;return;}
   // Browser/OS shortcuts retain their meaning, and UI focus never starts an attack.
-  const windows={c:['character',characterPanel],i:['inventory',inventory],m:['large-map',largeMapPanel],n:['journal',journal],h:['help',help],'?':['help',help],v:['spellbook',spellbook],p:['career:overview',()=>careerPanel('overview')],k:['auto-hunt',autoHuntPanel]};
+  const windows={c:['character',characterPanel],i:['inventory',inventory],m:['large-map',largeMapPanel],n:['journal',journal],h:['help',help],'?':['help',help],v:['spellbook',spellbook],p:['career:overview',()=>careerPanel('overview')],k:['auto-hunt',autoHuntPanel],Tab:['travel',travelMenu]};
+  if(key==='Tab'&&e.shiftKey)return;
   if(windows[key]){e.preventDefault();if(!e.repeat)toggleGameWindow(...windows[key]);return;}
   if(key===' '&&e.target?.closest?.('.game-window')){e.preventDefault();return;}
   if(['w','a','s','d','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(key))clearCombatTarget();
   keys[key]=true;if(e.repeat)return;
   if(key==='y'){e.preventDefault();pickNearbyGroundDrops();return;}
-  const quick=/^F([1-8])$/.exec(key),slot=quick?Number(quick[1]):/^[1-8]$/.test(key)?Number(key):0;
+  const quick=/^(?:Digit|Numpad)([1-8])$/.exec(e.code||'')||/^F([1-8])$/.exec(key),slot=quick?Number(quick[1]):/^[1-8]$/.test(key)?Number(key):0;
   if(slot){e.preventDefault();if(slot<=6)castSkill(slot-1);else if(slot===7)potion();else useBraveryCape();return;}
   if(key==='f')interactNPC();
 

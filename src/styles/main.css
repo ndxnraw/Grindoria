@@ -219,3 +219,9 @@ body.started{background:#10140f;overflow:hidden}body.started>header,body.started
 .map #character-menu{left:auto;right:1px}
 .window-layer .game-window [data-discovery-claim]:not(:disabled){background:linear-gradient(#355c35,#203c25)!important;border-color:#8fc178!important;color:#e2ffda!important}
 .window-layer .game-window[data-window-key="npc:smith-menu"]{width:280px}
+
+/* Inventory previews share the drop tooltip palette, including required levels. */
+.game-window .item-tooltip.loot-tooltip{width:340px;overflow:auto;font:11px/1.5 'Segoe UI',sans-serif}
+.game-window .item-tooltip .stat-gain,.game-window .item-tooltip .stat-gain b{color:#9bce85!important}
+.game-window .item-tooltip .stat-loss,.game-window .item-tooltip .stat-loss b{color:#e58f7f!important}
+.game-window .item-tooltip .stat-same,.game-window .item-tooltip .stat-same b{color:#aaa796!important}

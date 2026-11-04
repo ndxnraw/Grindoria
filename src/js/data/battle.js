@@ -42,4 +42,4 @@ const METIN_RESISTS = {
 
 for (const [type, spec] of Object.entries(DAMAGE_TYPES)) ITEM_STATS[type+'Resist']='Odolnosť · '+spec.name;
 
-const POTION_RULES = { heal: 65, cooldown: 4, autoThreshold: .45 };
+const POTION_RULES = { heal: 65, cooldown: 2 };

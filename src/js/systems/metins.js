@@ -23,7 +23,7 @@ function buildSuterlandPoints() {
 
 function metinStats(level, type) {
   const spec = METIN_TYPES[type] || METIN_TYPES.fracture;
-  return { hp: Math.round((180 + level * 28 + level * level * .6) * spec.hp), armor: Math.floor(level * .3 + spec.armor * 20), resistance: Math.min(.5, .04 + level * .0025 + spec.armor) };
+  return { hp: Math.round((180 + level * 28 + level * level * .6) * spec.hp * (1.8 + level * .035)), armor: Math.floor(level * .3 + spec.armor * 20), resistance: Math.min(.5, .04 + level * .0025 + spec.armor) };
 }
 
 function metinModelScale(stone) { return .84 + Math.min(105, stone.level) / 105 * .3; }
@@ -48,12 +48,13 @@ function restoreMetin(fresh, prior) {
   if (!prior) return fresh;
   if (prior.metinSchema === METIN_RULES.schema) return { ...fresh, ...prior, dot: prior.dot ? { ...prior.dot } : null, dots:(prior.dots||[]).map(dot=>({...dot})), skillContributors: [...(prior.skillContributors || [])], stun: 0, windup: 0, taunt: 0, engaged: 0, metinCombat: Math.max(0, Math.min(METIN_RULES.combatWindow, prior.metinCombat || 0)), metinWaveTimer: Math.max(0, prior.metinWaveTimer || 0) };
   const hpRatio = Math.max(0, Math.min(1, prior.hp / prior.max));
-  return { ...prior, ...fresh, x: prior.x, y: prior.y, homeX: prior.homeX ?? prior.x, homeY: prior.homeY ?? prior.y, hp: prior.hp <= 0 ? 0 : Math.max(1, Math.round(fresh.max * hpRatio)), dead: Math.max(0, prior.dead || 0), cd: prior.cd || 0, dot: prior.dot ? { ...prior.dot } : null, dots:(prior.dots||[]).map(dot=>({...dot})), skillContributors: [...(prior.skillContributors || [])] };
+  return { ...prior, ...fresh, x: prior.x, y: prior.y, homeX: prior.homeX ?? prior.x, homeY: prior.homeY ?? prior.y, hp: prior.hp <= 0 ? 0 : Math.max(1, Math.round(fresh.max * hpRatio)), metinGeneration:prior.metinGeneration||1,metinGuardSerial:prior.metinGuardSerial||0,metinCombat:Math.max(0,Math.min(METIN_RULES.combatWindow,prior.metinCombat||0)),metinWaveTimer:Math.max(0,prior.metinWaveTimer||0),dead: Math.max(0, prior.dead || 0), cd: prior.cd || 0, dot: prior.dot ? { ...prior.dot } : null, dots:(prior.dots||[]).map(dot=>({...dot})), skillContributors: [...(prior.skillContributors || [])] };
 }
 
 function upgradeLegacyMetin(m, point) {
   if (m.type !== 'stone' || m.metinSchema === METIN_RULES.schema) return m;
-  const fresh = configureMetin({ ...m, level: m.baseLevel || m.level || map().enemyLevel + 2 }, point);
+  const fresh = configureMetin({ ...m, level: m.baseLevel || m.level || map().enemyLevel + 2 }, {...point,metinType:m.metinType||point.metinType,metinLevel:m.baseLevel||m.level||point.metinLevel});
+  if(m.rareMetin){fresh.max=Math.round(fresh.max*2.4);fresh.hp=fresh.max;fresh.baseMax=fresh.max;fresh.metinArmor=Math.round(fresh.metinArmor*1.15);}
   const run = p.career.endgame.run;
   if (run && p.mapId === 'temple') applyRiftScaling(fresh, run.tier, run.id);
   return restoreMetin(fresh, m);

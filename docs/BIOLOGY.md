@@ -1,6 +1,6 @@
 # Biologický výskum
 
-Progresia P → Biologický výskum a denník N ukazujú aktuálnu etapu bez tlačidla odovzdania. Klik na Biológa v Meste alebo F v jeho blízkosti otvorí samostatnú službu. Každé odovzdanie spotrebuje jednu vzorku a uvedený poplatok. Zelené tlačidlo znamená splnené všetky podmienky vrátane blízkosti NPC, času a intervenujúcich zabití.
+Denník N a jeho Podrobnosti výskumu ukazujú aktuálnu etapu bez tlačidla odovzdania. Klik na Biológa v Meste alebo F v jeho blízkosti otvorí samostatnú službu. Každé odovzdanie spotrebuje jednu vzorku a uvedený poplatok. Zelené tlačidlo znamená splnené všetky podmienky vrátane blízkosti NPC, času a intervenujúcich zabití.
 
 | Etapa | Lv. | Zdroj | Počet | Poplatok za kus | Interval | Trvalá odmena |
 | --- | ---: | --- | ---: | ---: | --- | --- |

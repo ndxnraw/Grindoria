@@ -125,5 +125,5 @@ test('combat UI explains actual passives, damage types, combo sequences and the 
   const {run,elements}=createGame();arena(run);run('selectCombatTarget(foe);updateCombatHUD();');
   assert.equal(elements.get('target-panel').hidden,false);assert.match(elements.get('target-panel').innerHTML,/OZNAČENÝ CIEĽ/);
   run('spellbook();');assert.match(elements.get('modalcontent').innerHTML,/Bojový rytmus/);assert.match(elements.get('modalcontent').innerHTML,/Búrka čepelí/);
-  elements.get('combat-guide').onclick();assert.match(elements.get('modalcontent').innerHTML,/Bojový manuál/);assert.match(elements.get('modalcontent').innerHTML,/Kritický zásah/);
+  run('spellbook();');assert.match(elements.get('modalcontent').innerHTML,/Bojové pravidlá a odolnosti/);assert.match(elements.get('modalcontent').innerHTML,/Kritický zásah/);
 });

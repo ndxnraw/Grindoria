@@ -89,7 +89,7 @@ function closeModal(key=activeGameWindow?.key){
   const entry=gameWindows.get(key);if(!entry)return;
   if(key==='inventory'&&gameWindows.has('inventory-drop'))closeModal('inventory-drop');if(key==='inventory-drop')inventoryDropPending=null;
   entry.drag?.unset();entry.node.remove();gameWindows.delete(key);
-  if(key==='inventory'){inventoryDropPending=null;inventoryDeletePending=null;inventoryDrag=null;}
+  if(key==='inventory'){inventoryDropPending=null;inventoryDrag=null;}
   const top=[...gameWindows.values()].sort((a,b)=>Number(b.node.style.zIndex)-Number(a.node.style.zIndex))[0];
   activeGameWindow=top||null;panelState.key=top?.key||null;
   $('modal').hidden=!gameWindows.size;paused=false;updateHotbarState();

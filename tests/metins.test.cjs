@@ -145,7 +145,7 @@ test('old stones retain HP percentage, death timers and loot while gaining new t
 test('the Atlas and travel menu expose Šuterland and every type-specific loot chance', () => {
   const { run, elements } = createGame(); run('running=true;travelMenu();');
   assert.match(elements.get('modalcontent').innerHTML,/Šuterland/); assert.match(elements.get('modalcontent').innerHTML,/Metiny Lv.1–99/);
-  elements.get('metinAtlas').onclick(); const html=elements.get('modalcontent').innerHTML;
+  assert(!elements.get('modalcontent').innerHTML.includes('metinAtlas'));run('careerPanel("metins");'); const html=elements.get('modalcontent').innerHTML;
   assert.equal(run('metinPercent(.025)'), '2,5 %');
   for(const name of ['Metin praskliny','Metin skazy','Kamene vylepšenia','Yang','Kováčsky prach'])assert(html.includes(name));
 });

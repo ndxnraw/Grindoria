@@ -23,7 +23,6 @@ function handleGameKeyDown(e) {
   if(key==='Enter'&&panelState.key==='inventory-drop'){e.preventDefault();if(!e.repeat)confirmPendingInventoryDrop();return;}
   if(key==='Escape'){
     e.preventDefault();keysClear();
-    if(panelState.key==='inventory'&&inventoryDeletePending){e.preventDefault();inventoryDeletePending=null;renderInventoryDetail();return;}
     if(gameWindows.size){e.preventDefault();closeModal();return;}
 
     clearCombatTarget();stopCombatAssist();if(running)systemMenu();
@@ -36,13 +35,14 @@ function handleGameKeyDown(e) {
   if([' ','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(key))e.preventDefault();
   if(key==='Alt'){e.preventDefault();keys.Alt=true;return;}
   // Browser/OS shortcuts retain their meaning, and UI focus never starts an attack.
-  const windows={c:['character',characterPanel],i:['inventory',inventory],m:['large-map',largeMapPanel],n:['journal',journal],h:['help',help],'?':['help',help],v:['spellbook',spellbook],p:['career:overview',()=>careerPanel('overview')],k:['auto-hunt',autoHuntPanel]};
+  const windows={c:['character',characterPanel],i:['inventory',inventory],m:['large-map',largeMapPanel],n:['journal',journal],h:['help',help],'?':['help',help],v:['spellbook',spellbook],p:['career:overview',()=>careerPanel('overview')],k:['auto-hunt',autoHuntPanel],Tab:['travel',travelMenu]};
+  if(key==='Tab'&&e.shiftKey)return;
   if(windows[key]){e.preventDefault();if(!e.repeat)toggleGameWindow(...windows[key]);return;}
   if(key===' '&&e.target?.closest?.('.game-window')){e.preventDefault();return;}
   if(['w','a','s','d','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(key))clearCombatTarget();
   keys[key]=true;if(e.repeat)return;
   if(key==='y'){e.preventDefault();pickNearbyGroundDrops();return;}
-  const quick=/^F([1-8])$/.exec(key),slot=quick?Number(quick[1]):/^[1-8]$/.test(key)?Number(key):0;
+  const quick=/^(?:Digit|Numpad)([1-8])$/.exec(e.code||'')||/^F([1-8])$/.exec(key),slot=quick?Number(quick[1]):/^[1-8]$/.test(key)?Number(key):0;
   if(slot){e.preventDefault();if(slot<=6)castSkill(slot-1);else if(slot===7)potion();else useBraveryCape();return;}
   if(key==='f')interactNPC();
 

@@ -28,4 +28,16 @@ function allocate(stat){if(p.points<=0||!['strength','vitality','dexterity','int
 
 function claimBoss(){if(p.bossClaimed||p.bossKills<1)return;p.bossClaimed=true;p.gold+=200;experience(80);awardItem(true,{type:'boss',level:8});save();updateHUD();if(gameWindows.has('journal'))journal();}
 
-function claimHunt(){if(p.career.eligibleKills<(p.huntClaimed+1)*10)return;p.huntClaimed++;p.gold+=60;addMaterial('training');save();updateHUD();if(gameWindows.has('journal'))journal();}
+// Every ten eligible kills: level-scaled Yang and ore, with study/forge milestones.
+function huntReward(level=p.level,claim=p.huntClaimed+1){
+ const reward={gold:100+25*level+level*level,ore:2+Math.floor(level/10)};
+ if(claim%5===0)reward.books=1+Math.floor(level/30);
+ if(claim%10===0)reward.upgradeStones=1+Math.floor(level/40);
+ return reward;
+}
+function claimHunt(){
+ if(!running||p.hp<=0||p.career.eligibleKills<(p.huntClaimed+1)*10)return false;
+ const reward=huntReward();p.huntClaimed++;p.gold+=reward.gold;
+ for(const [id,count]of Object.entries(reward))if(id!=='gold')addMaterial(id,count);
+ toast('Lovec dokončený.\n'+costLabel(reward));save();updateHUD();if(gameWindows.has('journal'))journal();return true;
+}

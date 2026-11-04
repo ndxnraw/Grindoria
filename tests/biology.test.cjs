@@ -72,5 +72,5 @@ test('old backups migrate additively; malformed timers, sample counters and new 
 test('NPC panel shows objectives, exact sources, drop/pity, prices, timers and rewards; timer refresh keeps the same dialog',()=>{
  const {run,elements}=biologist();run('p.career.biology.nextDeliveryAt=Date.now()+1000;npcSessions.set("biologist",characterStore.activeId+":"+p.mapId);biologyNPCPanel();');let html=elements.get('modalcontent').innerHTML;for(const text of ['Koncentrácia jedu','Koncentrovaný jed','Elitní a vzácni kamenní strážcovia','25 %','8. vhodného','200','+8 rýchlosť','biology-submit'])assert(html.includes(text),text);assert.match(html,/biology-submit[^>]+disabled/);
  run('Date.now=()=>2000000001000;refreshBiologyPanel();');assert.equal(elements.get('biology-submit').disabled,false);assert.equal(elements.get('biology-status').textContent,'');assert.equal(elements.get('modalcontent').innerHTML,html);assert.equal(run('paused'),false);
- run('closeModal();journal();');assert(elements.get('modalcontent').innerHTML.includes('Biológ ·'));run('careerPanel("biology");');assert(run('panelState.key==="career:biology"'));
+ run('closeModal();journal();');assert(elements.get('modalcontent').innerHTML.includes('Biológ ·'));run('biologyInfoPanel();');assert(run('panelState.key==="quest:biology"'));
 });

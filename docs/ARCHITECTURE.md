@@ -32,7 +32,7 @@ Funkcie môžu medzi súbormi volať zdieľané pomenované funkcie. Načítanie
 | `systems/world.js` | Generovanie, cestovanie, snímky máp a uloženie |
 | `systems/biology.js` | Osem biologických etáp, vzorky, pity, čas odovzdávania a trvalé bonusy v existujúcej kariére |
 | `systems/prestige.js` | Prestíž I–V, míľniky, znaky, pasívy, zdokonaľovanie výbavy a validácia |
-| `systems/career.js` | EXP ekonomika, migrácia, tréning, schopnosti, biológia, špecializácia a expedície |
+| `systems/career.js` | EXP ekonomika, migrácia, schopnosti, biológia, špecializácia a expedície |
 | `systems/farming.js` | Skupinové body, varianty, trvalé spawn sloty, respawn, potulovanie, pomoc skupiny, aggro, priestorová mriežka a Plášť statočnosti |
 | `systems/inventory.js` | Rozloženie mriežky, migrácia, presun, nasadenie, bonusy a zásobníky |
 | `systems/loot.js` | Fyzické dropy, migrácia starých zlatých kôpok a automatické zásoby a hromadné zbieranie |

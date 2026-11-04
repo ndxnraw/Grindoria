@@ -39,10 +39,10 @@ test('world labels contain names while enemy level and Metin protection are kept
 });
 test('all game panels render concise functional copy and retain safety warnings and usable controls',()=>{
  const {run,elements}=createGame();arena(run);
- for(const panel of ['help','spellbook','combatManual','journal','travelMenu','metinCodex','rarityGuide']){run(panel+'();');const html=elements.get('modalcontent').innerHTML;assert(html.length>50);assert(!/<(?:p|small|span)>\s*<\/(?:p|small|span)>/.test(html),panel);run('closeModal();');}
+ for(const panel of ['help','spellbook','journal','travelMenu','metinCodex','rarityGuide']){run(panel+'();');const html=elements.get('modalcontent').innerHTML;assert(html.length>50);assert(!/<(?:p|small|span)>\s*<\/(?:p|small|span)>/.test(html),panel);run('closeModal();');}
  run('help();');const help=elements.get('modalcontent').innerHTML;for(const text of ['SPACE','Druhý klik','Y','Esc'])assert(help.includes(text));assert(!/respawn|1,8|0,55|algo|vlastn.*2D/i.test(help));
- run('combatManual();');assert(!/WASD|F10/.test(elements.get('modalcontent').innerHTML));run('closeModal();spellbook();');assert(!elements.get('modalcontent').innerHTML.includes('Samostatná taktická'));assert(elements.get('modalcontent').innerHTML.includes('cooldown'));
- for(const tab of ['overview','biology','items','discovery']){run('closeModal();careerPanel("'+tab+'");');assert(!elements.get('modalcontent').innerHTML.includes('Level je len jedna cesta'));}
+ assert(!/WASD|F10/.test(run('combatRulesContent()')));run('closeModal();spellbook();');assert(!elements.get('modalcontent').innerHTML.includes('Samostatná taktická'));assert(elements.get('modalcontent').innerHTML.includes('cooldown'));
+ for(const tab of ['overview','metins','discovery']){run('closeModal();careerPanel("'+tab+'");');assert(!elements.get('modalcontent').innerHTML.includes('Level je len jedna cesta'));}
  run('closeModal();returnToCharacters();renderCharacterScreen();');assert.match(elements.get('intro').innerHTML,/Výber postavy/);run('characterDraft={name:"",classId:"warrior",schoolId:"body"};renderCharacterCreation();');assert(!elements.get('intro').innerHTML.includes('[GM]'));assert(!elements.get('intro').innerHTML.includes('2D grafiku'));
  run('showCharacterDeletion(characterStore.account.selectedId);');assert.match(elements.get('modalcontent').innerHTML,/nezvratné/);assert.match(elements.get('modalcontent').innerHTML,/delete-character-name/);
 });

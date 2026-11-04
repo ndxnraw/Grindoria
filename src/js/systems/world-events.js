@@ -9,7 +9,7 @@ function restoreWorldEvents(state,population,prior=[]){
  worldEventState=state?copyCharacterData(state):{schema:1,mapId:p.mapId,seed:appearanceHash((p.characterId||'player')+p.mapId),nextCheck:WORLD_EVENT_RULES.firstCheck,active:null};
  const event=worldEventState.active;if(!event)return;
  const members=prior.filter(m=>m.worldEventId===event.id),parents=new Set(members.filter(m=>m.type==='stone').map(m=>m.spawnId));
- for(const m of prior)if(m.worldEventId===event.id||parents.has(m.metinParentId))population.push({...cloneEnemyState(m),taunt:0,engaged:0,windup:0,stun:0,roamTarget:null,returning:false});
+ for(const m of prior)if(m.worldEventId===event.id||parents.has(m.metinParentId))population.push({...upgradeLegacyMetin(cloneEnemyState(m),{id:m.spawnId}),taunt:0,engaged:0,windup:0,stun:0,roamTarget:null,returning:false});
 }
 function worldEventPosition(){
  let point={x:SIZE/2,y:SIZE/2};

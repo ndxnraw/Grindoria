@@ -31,14 +31,14 @@ function potion(){return drinkPotion(false);}
 
 function potionCooldownRemaining(now = Date.now()) { return Math.max(0, ((p.potionReadyAt || 0)-now)/1000); }
 
-function drinkPotion(allowPaused=false) {
+function drinkPotion(allowPaused=false, automatic=false) {
   if(!running||(paused&&!allowPaused)||p.hp<=0)return false;
   if(paused&&!canTravel()){toast('Elixír počas boja použi po zavretí okna (E).');return false;}
-  if(potionCooldownRemaining()>0){toast('Elixír bude pripravený o '+Math.ceil(potionCooldownRemaining())+' s.');return false;}
+  if(automatic&&potionCooldownRemaining()>0)return false;
   if(p.potions<=0){toast('Nemáš elixíry. Navštív obchodníka (F).');return false;}
   if(p.hp>=maxHP()){toast('Zdravie máš plné.');return false;}
   const healed=Math.min(potionHealAmount(),maxHP()-p.hp);
-  p.potions--;p.hp+=healed;p.potionReadyAt=Date.now()+POTION_RULES.cooldown*1000;
+  p.potions--;p.hp+=healed;if(automatic)p.potionReadyAt=Date.now()+POTION_RULES.cooldown*1000;
   float('+'+Math.round(healed)+' zdravia',p.x,p.y-65,'#a9e0ac');beep(520,.2);updateHUD();save();return true;
 }
 function potionHealAmount(){return Math.max(POTION_RULES.heal,Math.round(maxHP()*.25));}

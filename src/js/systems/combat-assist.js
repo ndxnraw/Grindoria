@@ -41,6 +41,14 @@ function stopCombatAssist() {
   if (enabled) save();
 }
 
+function toggleAllCombatAssist(){
+  if(!running||paused)return false;
+  const enable=!Object.values(p.combatAssist).every(value=>value===true);
+  if(!enable){clearCombatTarget();stopCombatAssist();return false;}
+  for(const key of ['autoAim','autoSpell','autoPotion'])p.combatAssist[key]=true;
+  combatAssist.timer=0;combatAssist.nextSkill=0;updateFacing();updateCombatAssistHUD();save();canvas.focus({preventScroll:true});return true;
+}
+
 function registerPlayerCombat(enemy) {
   if (enemy && enemy.hp > 0 && selectedEnemy() === enemy) { combatAssist.fightTarget = enemy; combatAssist.fightTime = 8; }
 }
@@ -67,8 +75,8 @@ function autoSkillReady(index) {
 }
 
 function updateAutoPotion() {
-  if (!p.combatAssist?.autoPotion || !combatAssistAvailable() || p.potions < 1 || potionCooldownRemaining() > 0 || p.hp >= maxHP()*POTION_RULES.autoThreshold) return false;
-  return drinkPotion(false);
+  if (!p.combatAssist?.autoPotion || !combatAssistAvailable() || p.potions < 1 || potionCooldownRemaining() > 0 || p.hp >= maxHP()) return false;
+  return drinkPotion(false,true);
 }
 
 function updateAutoSpell(dt) {

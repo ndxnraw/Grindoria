@@ -27,6 +27,6 @@ function updateHotbarState(){
     const reason=unavailable?'Hra je pozastavená':cooldown>0?'Obnova '+Math.ceil(cooldown)+' s':p.mp<skill[3]?'Chýba '+Math.ceil(skill[3]-p.mp)+' many':isSanctuary(p)&&!SUPPORT_SKILLS.has(skill[1])?'Mimo bezpečnej zóny':'';
     button.disabled=!!reason;button.title=skill[0]+' · '+skill[3]+' many · '+(reason||'Pripravené');button.setAttribute('aria-label',button.title);
   }
-  $('attack').disabled=unavailable||isSanctuary(p);$('potion').disabled=unavailable||p.potions<1||p.hp>=maxHP()||potionCooldownRemaining()>0;
+  $('attack').disabled=unavailable||isSanctuary(p);$('potion').disabled=unavailable||p.potions<1||p.hp>=maxHP();
   $('bravery').disabled=unavailable||p.braveryCapes<1||capeCooldown>0||isSanctuary(p);$('inventory').disabled=!running;
 }

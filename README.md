@@ -51,8 +51,8 @@ Zlato a zásoby sa pripíšu priamo, bez predmetu na zemi. Výbava zostáva na z
 - Kováč v Meste: +0 až +9, materiály, šance, riziko a ochrana. Žiara zbraní od +5. [Vylepšovanie](docs/FORGE.md).
 - Spoločný katalóg a stabilné ID predmetov od dropu po výbavu. FMS, Jedovatý meč, RIB, Dýky Čierny list a Vejár jesenného vetra: výroba, dropy a vybrané ponuky zbrojára. [Predmetový model a loot pooly](docs/ITEM_MODEL.md).
 - Šesť rarít, 20 náhodných bonusov a hodnotenie predmetov. [Rarity](docs/RARITIES.md).
-- Atribúty, tréning, špecializácia a prestíž v Postave C; schopnosti 1–20/M1–M10/G1–G10/P v knihe V; osem výskumov u Biológa a výpravy u Dungeon Majstra. [Biológ](docs/BIOLOGY.md). [Progresia](docs/PROGRESSION.md).
-- Automierenie pri útoku, Autospell v boji s označeným cieľom a Autoelixíry pod 45 % HP. Podrobnosti v bojovom manuáli.
+- Atribúty, špecializácia a prestíž v Postave C; schopnosti 1–20/M1–M10/G1–G10/P v knihe V; osem výskumov u Biológa a výpravy u Dungeon Majstra. [Biológ](docs/BIOLOGY.md). [Progresia](docs/PROGRESSION.md).
+- Automierenie pri útoku, Autospell v boji s označeným cieľom a Autoelixíry pri chýbajúcom zdraví každé 2 s, ručne bez cooldownu. Podrobnosti v knihe schopností.
 
 - Prestíž I–V od úrovne 99: nové výzvy, pasívne bonusy, emblémy a zdokonaľovanie Mythic bonusov bez resetu postavy. [Prestíž a endgame](docs/PRESTIGE.md).
 

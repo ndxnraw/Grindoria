@@ -4,6 +4,7 @@ function biologyContent(delivery=false){
  const bio=p.career.biology,stage=BIOLOGY[bio.stage];if(!stage)return '<p>Všetky biologické výskumy sú dokončené.</p>';
  return '<article class="career-card"><h3>'+stage.name+' · '+(bio.stage+1)+' / '+BIOLOGY.length+'</h3><p>'+MAPS[stage.map].name+' · úroveň '+stage.level+'<br>'+stage.source+' · '+biologyDropLabel(stage)+'</p>'+requirementRow('Odovzdané · '+MATERIALS[stage.item],bio.delivered,stage.count)+'<p>Odmena za etapu: '+stage.text+'</p><p id="biology-status" role="status">'+biologyStatusText()+'</p>'+(delivery?costRequirements(biologyCost(stage))+'<p id="biology-block">'+escapeHTML(biologyBlockReason())+'</p><button class="primary" id="biology-submit" '+(biologyBlockReason()?'disabled':'')+'>Odovzdať vzorku</button><p id="biology-message" role="status"></p>':'<p>Vzorky odovzdávaš biológovi v Meste.</p>')+'</article>';
 }
+function biologyInfoPanel(){if(!running)return;modal('<h2>Biologický výskum</h2>'+biologyContent(false),{key:'quest:biology',refresh:biologyInfoPanel});}
 function biologyNPCPanel(){
  if(!running||!npcServiceOpened('biologist')||!gameWindows.has('npc:biology')&&!nearNPC('biologist'))return false;
  modal('<h2>Biológ</h2>'+biologyContent(true),{key:'npc:biology',refresh:biologyNPCPanel});
@@ -11,6 +12,6 @@ function biologyNPCPanel(){
 }
 function refreshBiologyPanel(){
  if(!running)return;
- for(const key of ['career:biology','npc:biology'])withGameWindow(key,()=>{const status=$('biology-status');if(status)status.textContent=biologyStatusText();const button=$('biology-submit');if(button)button.disabled=!!biologyBlockReason();const reason=$('biology-block');if(reason)reason.textContent=biologyBlockReason();});
+ for(const key of ['quest:biology','npc:biology'])withGameWindow(key,()=>{const status=$('biology-status');if(status)status.textContent=biologyStatusText();const button=$('biology-submit');if(button)button.disabled=!!biologyBlockReason();const reason=$('biology-block');if(reason)reason.textContent=biologyBlockReason();});
 }
 function biologyJournalCard(){return biologyContent(false);}

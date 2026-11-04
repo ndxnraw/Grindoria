@@ -89,15 +89,7 @@ test('potions can be used in the paused inventory; cape checks sanctuary and ope
   assert.equal(run('p.braveryCapes'), capes - 1); assert.equal(run('paused'), false);
 });
 
-test('delete confirmation preserves items until confirmed and partial stack removal is exact', () => {
-  const { run, elements } = createGame(); gear(run, 'weapon'); run('inventory();selectInventoryEntry("gear:"+p.bag[0].uid);');
-  elements.get('inv-delete').onclick(); assert.equal(run('p.bag.length'), 1);
-  assert.match(elements.get('inventory-actions').innerHTML, /Odstránenie je trvalé/);
-  elements.get('inv-delete-cancel').onclick(); assert.equal(run('p.bag.length'), 1);
-  elements.get('inv-delete').onclick(); elements.get('inv-delete-confirm').onclick(); assert.equal(run('p.bag.length'), 0);
-  run('p.potions=10;'); assert.equal(run('deleteInventoryItem("potions",4)'), true); assert.equal(run('p.potions'), 6);
-  assert.equal(run('deleteInventoryItem("potions",7)'), false); assert.equal(run('p.potions'), 6);
-});
+test('selection has no action menu and stack deletion remains exact at the inventory API',()=>{const {run,elements}=createGame();run('running=true;addGearItem({slot:"bracelet",name:"Naramok",bonus:1});inventory();selectInventoryEntry("gear:"+p.bag[0].uid);');assert(!elements.get('modalcontent').innerHTML.includes('inventory-actions'));assert.equal(run('p.bag.length'),1);run('p.potions=10;');assert(run('deleteInventoryItem("potions",4)'));assert.equal(run('p.potions'),6);assert(!run('deleteInventoryItem("potions",7)'));assert.equal(run('p.potions'),6);});
 
 test('all new slots drop as real equipment and can be enhanced with materials', () => {
   const { run } = createGame();

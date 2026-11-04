@@ -278,7 +278,7 @@ function farmBonusLoot(m) {
   let capes = m.type === 'boss' ? cfg.boss : rare ? cfg.rare : rand() < (elite ? cfg.eliteChance : cfg.normalChance) ? 1 : 0;
   if (capes) spawnGroundDrop({ kind: 'supply', supplyId: 'braveryCapes', count: capes }, m);
   if (!eligible || m.type !== 'wolf') return;
-  if (rare) { dropMaterial('ore', 3, m); dropMaterial('dust', 3, m); dropMaterial('books', 1, m); dropMaterial('training', 1, m); }
+  if (rare) { dropMaterial('ore', 3, m); dropMaterial('dust', 3, m); dropMaterial('books', 1, m); dropMaterial('ore', 1, m); }
   else if (elite) { dropMaterial('ore', 1, m); dropMaterial('essence', 2, m); }
 }
 

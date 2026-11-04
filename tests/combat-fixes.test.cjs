@@ -13,23 +13,20 @@ test('combat authorization expires and cannot transfer to another selected enemy
  run('updateCombatAssistTimers(8.1);');assert.equal(run('selectedCombatEnemy()'),null);
  run('registerPlayerCombat(foe);var other=mobs.find(m=>m!==foe);Object.assign(other,{hp:1000,x:800,y:1400});selectCombatTarget(other);');assert.equal(run('selectedCombatEnemy()'),null);
 });
-test('automatic potions use finite supplies below 45 percent with a shared four second cooldown',()=>{
- const {run}=createGame();arena(run);run('var now=100000;Date.now=()=>now;p.combatAssist.autoPotion=true;p.hp=1;var count=p.potions;updateAutoPotion();');assert.equal(run('p.hp'),66);assert.equal(run('p.potions'),9);assert.equal(run('potionCooldownRemaining()'),4);
- run('p.hp=1;');assert.equal(run('drinkPotion()'),false);assert.equal(run('updateAutoPotion()'),false);
- run('now+=3999;');assert.equal(run('updateAutoPotion()'),false);
- run('now++;');assert.equal(run('drinkPotion()'),true);assert.equal(run('p.hp'),66);assert.equal(run('p.potions'),8);
- run('now+=4000;p.hp=maxHP()*.45;');assert.equal(run('updateAutoPotion()'),false);
- run('p.hp=maxHP()-10;drinkPotion();');assert.equal(run('p.hp'),run('maxHP()'));assert.equal(run('p.potions'),7);
+test('automatic potions restore any missing HP every two seconds while manual potions ignore that timer',()=>{
+ const {run}=createGame();arena(run);run('var now=100000;Date.now=()=>now;p.combatAssist.autoPotion=true;p.hp=maxHP()-1;');assert(run('updateAutoPotion()'));assert.equal(run('p.hp'),run('maxHP()'));assert.equal(run('p.potions'),9);assert.equal(run('potionCooldownRemaining()'),2);
+ run('p.hp=1;');assert(!run('updateAutoPotion()'));assert(run('drinkPotion()'));assert(run('drinkPotion()'));assert.equal(run('p.potions'),7);assert.equal(run('potionCooldownRemaining()'),2);
+ run('p.hp=1;now+=1999;');assert(!run('updateAutoPotion()'));run('now++;');assert(run('updateAutoPotion()'));assert.equal(run('p.potions'),6);assert.equal(run('potionCooldownRemaining()'),2);
 });
 test('automatic potions pause in dialogs, blur, hidden tabs, sanctuary and never revive or create supplies',()=>{
  for(const condition of ['running=false','paused=true','combatAssist.focused=false','document.hidden=true','p.hp=0','p.potions=0','p.x=map().entry.x;p.y=map().entry.y']){
   const {run}=createGame();arena(run);run('p.hp=1;p.combatAssist.autoPotion=true;'+condition+';var health=p.hp,count=p.potions;updateAutoPotion();');assert.equal(run('p.hp'),run('health'),condition);assert.equal(run('p.potions'),run('count'),condition);
  }
 });
-test('potions cannot bypass cooldown through inventory or reloading, and preferences stay per profile',()=>{
- const {run,saved,elements}=createGame();arena(run);elements.get('auto-potion').onclick();run('p.hp=1;drinkPotion();save();');
+test('automatic timer persists across reloads but inventory potions remain manual and independent',()=>{
+ const {run,saved,elements}=createGame();arena(run);elements.get('auto-potion').onclick();run('p.hp=1;updateAutoPotion();save();');
  const profile=readSavedProfile(saved),restored=createGame(profile);assert.equal(restored.run('p.combatAssist.autoPotion'),true);assert.equal(restored.run('p.potionReadyAt'),profile.potionReadyAt);assert(restored.run('potionCooldownRemaining()>0'));
- run('paused=true;');assert.equal(run('drinkPotion(true)'),false);
+ run('var ready=p.potionReadyAt;p.hp=1;inventory();');assert(run('useInventorySupply("potions")'));assert(run('useInventorySupply("potions")'));assert.equal(run('p.potionReadyAt'),run('ready'));
 });
 test('sustained damage exceeds bounded potion healing and supply exhaustion stops automation',()=>{
  const {run}=createGame();arena(run);run('var now=100000;Date.now=()=>now;p.combatAssist.autoPotion=true;p.potions=2;p.hp=1;for(var i=0;i<4;i++){p.hp=1;updateAutoPotion();now+=4000;}');assert.equal(run('p.potions'),0);assert.equal(run('p.hp'),1);

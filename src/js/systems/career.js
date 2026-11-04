@@ -115,19 +115,6 @@ function pay(cost) {
   return true;
 }
 
-function trainingCost(stat) {
-  const rank = p.career.training[stat];
-  return { training: 3 + rank, gold: 100 * (rank + 1) };
-}
-
-function trainAttribute(stat) {
-  if (!Object.hasOwn(p.career.training, stat) || p.career.training[stat] >= PROGRESSION.maxTraining) return false;
-  if (!pay(trainingCost(stat))) return false;
-  p.career.training[stat]++; p[stat]++;
-  if (stat === 'vitality') p.hp = Math.min(maxHP(), p.hp + 10);
-  save(); return true;
-}
-
 function skillKey(index) { return p.schools[p.classId] + ':' + index; }
 
 function skillProgress(key) {
@@ -179,7 +166,7 @@ function careerKill(m) {
   dropBiologySample(m);
   if (eligible) {
     c.eligibleKills++; giveMaterial('essence', m.type === 'boss' ? 12 : m.type === 'stone' ? 4 : 1);
-    if (c.eligibleKills % 5 === 0) { giveMaterial('ore'); giveMaterial('training'); }
+    if (c.eligibleKills % 5 === 0) { giveMaterial('ore',2); }
     if (m.type === 'stone' || m.type === 'boss') { giveMaterial('books'); giveMaterial('dust', m.type === 'boss' ? 5 : 1); }
     if(enemyLevel(m)>=35&&m.type==='boss'&&rand()<.2)giveMaterial('soulStones');
     const used = new Set(m.skillContributors || []);

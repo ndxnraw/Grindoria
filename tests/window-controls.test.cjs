@@ -27,7 +27,7 @@ test('map can open during combat while travel and distant NPC transactions retai
  g.run('p.x=1100;p.y=1100;');assert.equal(g.run('marketCanTrade("merchant")'),false);assert.equal(g.run('buyMarketOffer("merchant","potions",1,p.economy.cycle)'),false);
 });
 test('refresh preserves held input and focus context; switching character clears all session windows',()=>{
- const g=setup();g.run('careerPanel("biology");inventory();keys.d=true;var key=panelState.key;refreshBiologyPanel();refreshOpenGameWindows(2);');
+ const g=setup();g.run('biologyInfoPanel();inventory();keys.d=true;var key=panelState.key;refreshBiologyPanel();refreshOpenGameWindows(2);');
  assert.equal(g.run('keys.d'),true);assert.equal(g.run('panelState.key'),g.run('key'));
  g.run('clickDestination={x:800,y:800};');press(g,'w');assert.equal(g.run('clickDestination'),null);
  g.run('returnToCharacters();');assert.equal(g.run('gameWindows.size'),0);assert.equal(g.run('activeGameWindow'),null);assert.equal(g.run('clickDestination'),null);assert.equal(g.run('paused'),false);

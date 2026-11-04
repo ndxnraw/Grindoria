@@ -36,17 +36,7 @@ test('one death grants loot only once, and hostile levels actually affect enemy 
   assert.equal(run('p.career.materials.essence'), essence);
 });
 
-test('attribute training is paid independently of level points and failed payments are atomic', () => {
-  const { run } = createGame();
-  assert.equal(run('trainAttribute("strength")'), false); assert.equal(run('p.strength'), 0);
-  run('p.gold=200;p.career.materials.training=10;');
-  assert.equal(run('trainAttribute("strength")'), true);
-  assert.equal(run('p.strength'), 1); assert.equal(run('p.points'), 0);
-  assert.equal(run('p.gold'), 100); assert.equal(run('p.career.materials.training'), 7);
-  assert.equal(run('trainAttribute("strength")'), false);
-  assert.equal(run('p.career.materials.training'), 7);
-  assert.equal(run('trainAttribute("toString")'), false);
-});
+test('removed paid training cannot spend currency or alter old trained attributes',()=>{const {run}=createGame();run('p.strength=7;p.career.training.strength=7;p.gold=200;p.career.materials.training=10;save();');assert.equal(run('typeof trainAttribute'),'undefined');assert.equal(run('p.strength'),7);assert.equal(run('p.gold'),200);});
 
 test('skill practice requires a real eligible kill; repeated hits do not multiply practice', () => {
   const { run } = createGame();
@@ -121,9 +111,9 @@ test('higher skill ranks change real spell damage, healing and cooldown, rather 
 
 test('repeatable quest cannot bypass EXP penalties and capped systems do not consume resources', () => {
   const { run } = createGame();
-  run('p.career.eligibleKills=10;claimHunt();'); assert.equal(run('p.xp'), 0);
+  run('running=true;p.career.eligibleKills=10;claimHunt();'); assert.equal(run('p.xp'), 0);
   run('p.career.materials.training=1000;p.gold=100000;p.career.training.strength=20;');
-  assert.equal(run('trainAttribute("strength")'), false); assert.equal(run('p.gold'), 100000);
+  assert.equal(run('typeof trainAttribute'), 'undefined'); assert.equal(run('p.gold'), 100000);
   run('p.equipped.weapon={slot:"weapon",bonus:10,enhance:9};p.career.materials.ore=10000;');
   assert.equal(run('enhanceEquipment("weapon")'), false); assert.equal(run('p.career.materials.ore'), 10000);
   run('for(let i=0;i<20000;i++)experience(enemyXP({type:"wolf",level:1}));');
@@ -145,7 +135,7 @@ test('an active expedition survives reload and abandoning restores the ordinary 
 test('every progression panel opens and the entire career persists in the save', () => {
   const { run, elements, saved } = createGame();
   run('running=true;');
-  for (const tab of ['overview','items','discovery','biology']) {
+  for (const tab of ['overview','discovery','metins']) {
     run(`careerPanel('${tab}');`); assert.equal(elements.get('modal').hidden, false); assert.equal(run('gameWindows.has("career:'+tab+'")'),true);assert.equal(run('paused'),false);
   }
   run('p.career.materials.books=8;p.career.biology.stage=1;save();');

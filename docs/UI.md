@@ -2,19 +2,19 @@
 
 ## Rozloženie a vrstvy
 
-Rozhranie používa tmavé hnedé povrchy, mosadzné rámy a kompaktnú spodnú lištu podľa vzoru Metin2. HP, mana, úroveň a EXP sú vľavo hore, kruhová minimapa vpravo hore. Osem rýchlych pozícií uprostred spodnej lišty používa 1–8 a F1–F8. Útok SPACE a inventár I sú na jej okrajoch. Existujúce sólo systémy zostávajú zachované.
+Rozhranie používa tmavé hnedé povrchy, mosadzné rámy a kompaktnú spodnú lištu podľa vzoru Metin2. HP, mana, úroveň a EXP sú vľavo hore, kruhová minimapa vpravo hore. Osem rýchlych pozícií uprostred spodnej lišty používa fyzické klávesy 1–8, numerický blok a F1–F8. Fungujú aj slovenské +, ľ, š, č, ť, ž, ý, á; označenie zostáva 1–8. Útok SPACE a inventár I sú na jej okrajoch. Existujúce sólo systémy zostávajú zachované.
 
 Postava C, inventár I, schopnosti V, úlohy N, mapa M, automatický boj K, progresia P a pomoc H sú samostatné vrstvy v hernej ploche. Rovnaký správca obsluhuje každého obchodníka, biológa, kováča, Dungeon Majstra, výrobné recepty aj ostatné systémy progresie. Otvorenie ďalšej vrstvy nezatvorí predchádzajúce a nepozastaví svet. Klik do sveta medzi oknami ovláda postavu.
 
 Záhlavie presúva okno cez lokálne pribalený **Interact.js 1.10.27**. − minimalizuje na záhlavie, × zatvorí. Rovnaká skratka obnoví minimalizované okno alebo zatvorí otvorené. Kliknuté okno sa dostane navrch; Esc zavrie vrchnú vrstvu. Pozície sa ukladajú oddelene od postáv do `grindoria-ui-windows-v1`. Resize aj fullscreen udržia záhlavia v dosahu. Menu Esc obsahuje obnovenie polôh.
 
-Tab sa pohybuje medzi ovládacími prvkami a vrstvami bez uzamknutia v jednom dialógu. Záhlavie vybrané klávesom Tab možno presúvať šípkami po 20 px; Enter minimalizuje. Polia na písanie a výber zachovajú natívne klávesy. Ctrl/Meta/Alt kombinácie neaktivujú boj. Medzerník pri práci vo vrstve neútočí. Rozpracované vyhodenie alebo odstránenie v aktívnom inventári zruší Esc pred zatvorením okna.
+Tab otvára a zatvára Cestovanie; Shift+Tab zachováva spätný pohyb fokusu. Zamerané záhlavie možno presúvať šípkami po 20 px; Enter minimalizuje. Polia na písanie a výber zachovajú natívne klávesy. Ctrl/Meta/Alt kombinácie neaktivujú boj. Medzerník pri práci vo vrstve neútočí. Rozpracované vyhodenie zruší Esc pred zatvorením inventára.
 
-## Rozdelenie systémov od 0.32.0
+## Rozdelenie systémov od 0.33.0
 
-- C: atribúty, ich tréning, špecializácia, prestíž a trvalé posilnenie.
+- C: atribúty, špecializácia, prestíž a trvalé posilnenie; bez plateného tréningu a odkazov na iné okná.
 - V: jediná kniha schopností vrátane štúdia Normál 1–20, M1–M10, G1–G10 a P.
-- P: prehľad, informácie o predmetoch, bestiár a informačný biologický výskum bez odovzdania.
+- P: prehľad, bestiár a Atlas Metinov. Biologický výskum je v N → Podrobnosti výskumu.
 - Biológ: po interakcii samostatné okno odovzdávania iba aktuálnej etapy.
 - Kováč: malé menu Vylepšovanie / Výroba; služby nie sú v P.
 - Dungeon Majster: dungeony, prestížne výpravy a trhliny. Aktívna výprava má stavový panel; samostatné okno Endgame neexistuje.

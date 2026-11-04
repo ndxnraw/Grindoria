@@ -32,7 +32,7 @@ Všetky kamene sú mimo bezpečnej zóny. Obnovujú sa po 18 sekundách aktívne
 
 Pri úrovni L a koeficiente typu H:
 
-- Zdravie = zaokrúhlenie((180 + 28 × L + 0,6 × L²) × H).
+- Zdravie = zaokrúhlenie((180 + 28 × L + 0,6 × L²) × H × (1,8 + 0,035 × L)).
 - Pancier = podlaha(0,3 × L + 20 × A).
 - Odolnosť = minimum(50 %, 4 % + 0,25 % × L + A), kde A je typový príspevok v rozsahu 0 až 11 %.
 - Skutočné poškodenie = maximum(1, zaokrúhlenie(maximum(1, vstupné poškodenie − pancier) × (1 − odolnosť))).
@@ -96,3 +96,5 @@ Po pancieri a základnej odolnosti sa uplatní typová odolnosť alebo slabina. 
 Od 0.16.0 stĺpec prémiovej tabuľky určuje miešanie šiestich rarít, nie výslednú šancu Epic. Reálne šance zobrazuje Atlas; podrobnosti sú v [RARITIES.md](RARITIES.md).
 
 Primeraný Metin od Lv.35 má navyše 8 % šancu na kameň duše pre štúdium Veľmajstra. Relikvie už nepadajú.
+
+Od 0.33.0 rastie zdravie približne 1,8× až 5,3× oproti pôvodnej krivke. `METIN_RULES.schema = 2` pri načítaní zachová percento zostávajúceho života, smrť, čas obnovy aj generáciu obrancov. Aktualizácia sa vzťahuje aj na uložené vzácne udalostné Metiny, ktoré si ponechajú svoj násobok 2,4×. Atlas je v P, cestovanie sa otvára aj Tab.
