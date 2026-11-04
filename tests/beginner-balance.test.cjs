@@ -19,9 +19,9 @@ const {run}=createGame();assert.equal(run('farmAreaAt(map().entry).id'),'southwe
 test('an actual level-one starter defeats a full ordinary group with three basic cleaves',()=>{
 const {run}=createGame(null,undefined,{}, {keepStarter:true});run('running=true;p.x=600;p.y=2400;cam.x=p.x;cam.y=p.y;var group=mobs.filter(m=>m.type==="wolf"&&m.area==="southwest"&&!m.rareSlot).slice(0,5);mobs.length=0;mobs.push(...group);group.forEach((m,i)=>{const angle=i*Math.PI*2/5;m.x=p.x+Math.cos(angle)*45;m.y=p.y+Math.sin(angle)*45;});rand=()=>.99;for(var hitIndex=0;hitIndex<3;hitIndex++){attackCD=0;attack();}');assert(run('group.every(m=>m.hp===0)'));assert.equal(run('p.level'),1);assert(run('p.hp>0'));
 });
-test('a level-one starter can finish a low Metin and its guards through normal following and attack updates',()=>{
-const {run}=createGame(null,undefined,{}, {keepStarter:true});run('running=true;var stone=mobs.find(m=>m.type==="stone"&&m.level===1);mobs.length=0;mobs.push(stone);p.x=stone.x-76;p.y=stone.y;cam.x=p.x;cam.y=p.y;rand=()=>.99;selectCombatTarget(stone,true);for(var i=0;i<200&&stone.hp>0;i++)update(.05);');
-assert.equal(run('stone.hp'),0);assert(run('p.hp>0'));assert(run('mobs.filter(m=>m.metinParentId).every(m=>m.hp===0)'));
+test('a level-one starter can finish the stronger low Metin with finite potions and normal following',()=>{
+const {run}=createGame(null,undefined,{}, {keepStarter:true});run('running=true;var stone=mobs.find(m=>m.type==="stone"&&m.level===1);mobs.length=0;mobs.push(stone);p.x=stone.x-76;p.y=stone.y;cam.x=p.x;cam.y=p.y;rand=()=>.99;p.combatAssist.autoPotion=true;var now=100000;Date.now=()=>now;var dead=false;death=()=>dead=true;selectCombatTarget(stone,true);for(var i=0;i<600&&stone.hp>0&&!dead;i++){now+=50;update(.05);}');
+assert.equal(run('stone.hp'),0);assert.equal(run('dead'),false);assert(run('p.hp>0'));assert(run('p.potions>=0&&p.potions<5'));assert(run('mobs.filter(m=>m.metinParentId).every(m=>m.hp===0)'));
 });
 test('ordinary loot requirements match enemy levels independently of player level',()=>{
 const {run}=createGame();run('p.level=99;');

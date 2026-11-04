@@ -10,6 +10,19 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.34.0] - 2026-11-05
+
+### Added
+- Integračné porovnanie všetkých ôsmich škôl so slabou a vylepšenou výbavou, vyššími cieľmi a prevodom Metinov zo schémy 2.
+
+### Changed
+- Metiny majú približne 2,5× až 3,1× viac HP než v 0.33.1; na Lv.99 260 420 HP. Prevod zachová percento života, zničenie, obrancov aj násobky výprav a udalostí.
+- Útočné schopnosti menej čerpajú z vrodeného útoku a INT, dvojnásobne z útoku a mágie výbavy vrátane vylepšení. Základný koeficient 0,65 a útočný stupeň maximálne 1,875× na P platia aj pre jed, oheň a Ducha plameňa.
+- Kniha schopností a Postava zobrazujú upravenú útočnú silu a bonus stupňa. Liečenie, podporné trvania, mana a cooldowny zostávajú zachované.
+
+### Fixed
+- Kvalita a vylepšenie výbavy majú podstatný vplyv na poškodenie kúziel. Žiadne oslabenie podľa rozdielu levelov; vybavený hráč naďalej môže porážať vyššie ciele a získavať EXP.
+
 ## [0.33.1] - 2026-11-05
 
 ### Added
@@ -619,7 +632,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.33.1...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.34.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -657,3 +670,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.32.0]: https://github.com/ndxnraw/Grindoria/compare/v0.31.0...v0.32.0
 [0.33.0]: https://github.com/ndxnraw/Grindoria/compare/v0.32.0...v0.33.0
 [0.33.1]: https://github.com/ndxnraw/Grindoria/compare/v0.33.0...v0.33.1
+[0.34.0]: https://github.com/ndxnraw/Grindoria/compare/v0.33.1...v0.34.0

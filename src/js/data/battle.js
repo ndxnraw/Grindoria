@@ -1,4 +1,4 @@
-const BATTLE = { meleeRange: 95, basicCleaveRadius:62, basicSplashRadius:65, basicSplashMultiplier:.65, meleeStop: 76, rangedRange: 500, rangedStop: 420, halfArc: Math.PI * .31, comboWindow: 4 };
+const BATTLE = { meleeRange: 95, basicCleaveRadius:62, basicSplashRadius:65, basicSplashMultiplier:.65, meleeStop: 76, rangedRange: 500, rangedStop: 420, halfArc: Math.PI * .31, comboWindow: 4, skillDamageScale: .65, magicPerIntelligence: 1, skillAttributeScale: .4, skillGearScale: 2 };
 const DAMAGE_TYPES = {
   physical: { name: 'Fyzické', color: '#dfce9e' }, piercing: { name: 'Prierazné', color: '#c3dca3' },
   fire: { name: 'Oheň', color: '#f3a56b' }, poison: { name: 'Jed', color: '#acd571' },

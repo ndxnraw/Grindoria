@@ -127,6 +127,7 @@ function skillRankShort(rank){return rank<=20?String(rank):rank<=30?'M'+(rank-20
 function skillRankLabel(rank){return (rank<=20?'Normál ':rank<=30?'Majster ':rank<=40?'Veľmajster ':'Perfektný majster ')+skillRankShort(rank);}
 function skillPowerSteps(rank){return rank<=20?(rank-1)*.5:rank<=30?10+rank-21:rank<=40?20+(rank-31)*1.5:35;}
 function skillPracticeNeeded(rank){return rank<=20?10+rank*2:rank<=30?50+(rank-20)*4:90+(rank-30)*8;}
+function skillAttackFactor(key){return 1+skillPowerSteps(skillProgress(key)?.rank||1)*.025;}
 function skillFactor(key){return 1+skillPowerSteps(skillProgress(key)?.rank||1)*.04;}
 function skillCooldownReduction(key){return Math.min(.35,skillPowerSteps(skillProgress(key)?.rank||1)*.01);}
 function skillCost(key){const rank=skillProgress(key).rank;if(rank>=41)return {};if(rank<20)return {gold:20*rank};if(rank<30)return {books:1+Math.floor((rank-20)/2),gold:500+250*(rank-20)};return {soulStones:1+Math.floor((rank-30)/2),gold:2500*(rank-29)};}

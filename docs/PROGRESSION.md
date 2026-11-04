@@ -23,7 +23,7 @@ Prax sa pripíše pri primeranom zabití, najviac raz za danú schopnosť a nepr
 
 Pred M1 stojí tréning `20r` Yang. Prechod 20 → M1 a štúdium Majstra používajú knihy: `1 + floor((r − 20)/2)` a `500 + 250(r − 20)` Yang. Od prechodu M10 → G1 sa používajú kamene duše: `1 + floor((r − 30)/2)` a `2500(r − 29)` Yang. Prax sa spotrebuje iba pri úspešnom štúdiu. Knihy pochádzajú z primeraných bossov a Metinov. Kamene duše: boss Lv.35+ 20 %, Metin Lv.35+ 8 %; platí primeranosť cieľa.
 
-Sila a trvanie rastú od 1× po 2,4× na P. Obnova sa skracuje najviac o 35 %; mana sa nemení. Stupne, prax a cooldowny zostávajú samostatné pre každú postavu a školu. Každé tretie úspešné štúdium naďalej dáva bod špecializácie.
+Od 0.34.0 rastie násobok útočnej sily stupňa od 1× po 1,875× na P; liečenie a podporné trvania zostávajú 1× až 2,4×. Základ útočných schopností viac závisí od výbavy, pozri [COMBAT.md](COMBAT.md). Obnova sa skracuje najviac o 35 %; mana sa nemení. Stupne, prax a cooldowny zostávajú samostatné pre každú postavu a školu. Každé tretie úspešné štúdium naďalej dáva bod špecializácie.
 
 ## Biológ a výpravy
 

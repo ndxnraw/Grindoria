@@ -62,3 +62,11 @@ Lokálne úložisko balí profily a opakujúce sa polia populácií bez straty h
 `tests/balance-integration.test.cjs` preveruje všetky levely 1–98, všetky bežné mapy, šesť opravených bossov a obnovu poškodených registrov aj záloh, rozdielne miesta vyzdvihnutia úlohy, skutočné popisy receptov, bojové cooldowny a predmety, krivky kováča a uloženie ôsmich preskúmaných postáv. Súboje pokrývajú každú z ôsmich škôl na leveloch 1, 10, 35, 60 a 98 s deterministickou reprezentatívnou výbavou, teda 40 scenárov. Nie sú zárukou rovnakého výsledku pre ľubovoľný build či ľubovoľnú skupinu bossov.
 
 Kontrola v Chromium používa skutočné klávesové ovládanie, offline zostavu, migráciu poškodeného registra, desktopový a mobilný panel a osem postáv s navštívenými mapami, exportom a novým načítaním. Dlhodobý hráčsky test môže ďalej spresniť požadované tempo a náročnosť.
+
+## Kúzla a Metiny od 0.34.0
+
+Metiny majú novú krivku HP podľa [METINS.md](METINS.md). Útočné schopnosti používajú menší vrodený príspevok levelu a STR, 1 bod magickej sily za INT a dvojnásobný príspevok útoku a mágie výbavy vrátane vylepšení. Ich celkový základný koeficient je 0,65; rast stupňa dosiahne 1,875× na P. Podrobné poradie výpočtu je v [COMBAT.md](COMBAT.md). Liečenie, podporné trvania, mana a cooldowny sa nemenia.
+
+Rozdiel levelov hráča a cieľa nemení spôsobené poškodenie. Silnejší gear a jeho vylepšenie preto zachovávajú možnosť rýchlejšie expiť na vyšších cieľoch. Bežné príšery, EXP a loot pooly zostávajú na pôvodných krivkách.
+
+`tests/gear-combat-balance.test.cjs` porovnáva všetkých osem škôl: rovnaké obrany cieľa na rôznych leveloch, rovnaký legálny gear +0/+3/+6/+9, slabú výbavu aj P, skutočné zabitie cieľa o 20 levelov vyššie s odmenou EXP, jed/oheň, odraz, liečenie a podporné trvania. Overuje všetkých 99 levelov Metinov a jednorazový prevod poškodených aj zničených kameňov zo schémy 2. Začiatočnícky Metin zostáva zvládnuteľný s konečnou zásobou elixírov.

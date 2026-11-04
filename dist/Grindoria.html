@@ -229,7 +229,7 @@ body.started{background:#10140f;overflow:hidden}body.started>header,body.started
 .game-window .item-tooltip .stat-same,.game-window .item-tooltip .stat-same b{color:#aaa796!important}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Schopnosti <kbd>4</kbd></button><button id="journal">Úlohy <kbd>N</kbd></button><button id="help">Pomoc <kbd>H</kbd></button><button id="desktop-updates" hidden>Aktualizácie</button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.33.1</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Schopnosti <kbd>4</kbd></button><button id="journal">Úlohy <kbd>N</kbd></button><button id="help">Pomoc <kbd>H</kbd></button><button id="desktop-updates" hidden>Aktualizácie</button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.34.0</b></span></header>
 <main><div class="world-title"><div><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Divoký vlk · Strážca pralesa</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
 <section id="game-shell" class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb kliknutím na zem, WASD alebo šípkami, výber cieľa kliknutím, nasledovanie a útok druhým klikom na rovnaký cieľ, smerový útok medzerníkom, schopnosti 1 až 6, liečenie 7, korisť ľavým kliknutím alebo Y v okolí, zlato a zásoby automaticky."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
 <div class="hud player"><div id="portrait" class="portrait">侍</div><div><div class="player-name"><b id="playername">Pútnik</b><small id="playerclass" hidden>Bojovník</small> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 154 skúseností</small></div></div>
@@ -625,7 +625,7 @@ for (let variant=0;variant<3;variant++) {
 
 
 // src/js/data/metins.js
-const METIN_RULES = { schema: 2, combatWindow: 6, firstWave: .1, maxGuards: 8, globalGuards: 60, guardLifetime: 45 };
+const METIN_RULES = { schema: 3, combatWindow: 6, firstWave: .1, maxGuards: 8, globalGuards: 60, guardLifetime: 45 };
 // Loot material entries are [chance, minimum amount, maximum amount].
 const METIN_TYPES = {
   fracture: { name: 'Metin praskliny', levels: [1, 9], model: 'obelisk', difficulty: 'Ľahký', color: '#80728e', glow: '#d6a3e2', hp: 1, armor: 0, interval: 4.8, wave: 2, loot: { yang: [18, 32], ore: [1, 1, 2], books: [.35, 1, 1], essence: [.55, 1, 3], dust: [.2, 1, 2], upgradeStones: [.05, 1, 1], gear: .45, epic: .025, slots: ['weapon', 'bracelet'], extra: ['wolf', .22, 1, 2] } },
@@ -650,7 +650,7 @@ for(const type of Object.values(METIN_TYPES))type.interval=Math.round(type.inter
 
 
 // src/js/data/battle.js
-const BATTLE = { meleeRange: 95, basicCleaveRadius:62, basicSplashRadius:65, basicSplashMultiplier:.65, meleeStop: 76, rangedRange: 500, rangedStop: 420, halfArc: Math.PI * .31, comboWindow: 4 };
+const BATTLE = { meleeRange: 95, basicCleaveRadius:62, basicSplashRadius:65, basicSplashMultiplier:.65, meleeStop: 76, rangedRange: 500, rangedStop: 420, halfArc: Math.PI * .31, comboWindow: 4, skillDamageScale: .65, magicPerIntelligence: 1, skillAttributeScale: .4, skillGearScale: 2 };
 const DAMAGE_TYPES = {
   physical: { name: 'Fyzické', color: '#dfce9e' }, piercing: { name: 'Prierazné', color: '#c3dca3' },
   fire: { name: 'Oheň', color: '#f3a56b' }, poison: { name: 'Jed', color: '#acd571' },
@@ -1519,9 +1519,9 @@ function nearest(range=500,from=p){if(!(range>0))return undefined;let best,minim
 function hurtMob(m,mult=1,magic=false,key=castingSkillKey,opts={}) {
   if(!m||m.hp<=0)return 0;if(key)rememberSkill(m,key);
   const type=opts.type||(key?skillDamageType(key):magic?'arcane':basicDamageType()),critical=rand()<criticalChance(),multiplier=opts.multiplier??castingMultiplier;
-  const magicBonus=!['physical','piercing'].includes(type)?p.intelligence*4+careerBonuses().magic+equipmentBonuses().magic:0;
+  const magicBonus=!key&&!['physical','piercing'].includes(type)?magicPower():0;
   const pierced=penetrationChance()>0 && rand()<penetrationChance();
-  const raw=(damage()+magicBonus)*mult*(key?skillFactor(key):1)*multiplier*(1+(passiveBonuses().outgoing[type]||0))*(critical?1.8:1)*(1+enemyGearBonus(m));
+  const raw=(key?skillAttackPower(type):damage()+magicBonus)*mult*(key?skillAttackFactor(key)*BATTLE.skillDamageScale:1)*multiplier*(1+(passiveBonuses().outgoing[type]||0))*(critical?1.8:1)*(1+enemyGearBonus(m));
   const actual=hit(m,Math.max(1,Math.round(raw*(.94+rand()*.12))),type,pierced);
   if(actual>0&&opts.basic)registerBasicHit(m);
   if(actual>0&&opts.basic&&opts.markTarget)markManualCombatHit(m);
@@ -1956,6 +1956,7 @@ function skillRankShort(rank){return rank<=20?String(rank):rank<=30?'M'+(rank-20
 function skillRankLabel(rank){return (rank<=20?'Normál ':rank<=30?'Majster ':rank<=40?'Veľmajster ':'Perfektný majster ')+skillRankShort(rank);}
 function skillPowerSteps(rank){return rank<=20?(rank-1)*.5:rank<=30?10+rank-21:rank<=40?20+(rank-31)*1.5:35;}
 function skillPracticeNeeded(rank){return rank<=20?10+rank*2:rank<=30?50+(rank-20)*4:90+(rank-30)*8;}
+function skillAttackFactor(key){return 1+skillPowerSteps(skillProgress(key)?.rank||1)*.025;}
 function skillFactor(key){return 1+skillPowerSteps(skillProgress(key)?.rank||1)*.04;}
 function skillCooldownReduction(key){return Math.min(.35,skillPowerSteps(skillProgress(key)?.rank||1)*.01);}
 function skillCost(key){const rank=skillProgress(key).rank;if(rank>=41)return {};if(rank<20)return {gold:20*rank};if(rank<30)return {books:1+Math.floor((rank-20)/2),gold:500+250*(rank-20)};return {soulStones:1+Math.floor((rank-30)/2),gold:2500*(rank-29)};}
@@ -3514,7 +3515,7 @@ function buildSuterlandPoints() {
 
 function metinStats(level, type) {
   const spec = METIN_TYPES[type] || METIN_TYPES.fracture;
-  return { hp: Math.round((180 + level * 28 + level * level * .6) * spec.hp * (1.8 + level * .035)), armor: Math.floor(level * .3 + spec.armor * 20), resistance: Math.min(.5, .04 + level * .0025 + spec.armor) };
+  return { hp: Math.round((180 + level * 28 + level * level * .6) * spec.hp * (4.5 + level * .12)), armor: Math.floor(level * .3 + spec.armor * 20), resistance: Math.min(.5, .04 + level * .0025 + spec.armor) };
 }
 
 function metinModelScale(stone) { return .84 + Math.min(105, stone.level) / 105 * .3; }
@@ -3796,6 +3797,14 @@ function playerResistances() {
   return Object.fromEntries(Object.keys(DAMAGE_TYPES).map(type=>[type,Math.max(-.5,Math.min(.75,(gear[type+'Resist']||0)+(passive.resist[type]||0)+(prestigeRank()===5?.05:0)))]));
 }
 
+// Skill power favors equipment over innate level/attribute damage; enemy level is not a damage gate.
+function magicPower(gear=equipmentBonuses(),career=careerBonuses()){return p.intelligence*BATTLE.magicPerIntelligence+career.magic+gear.magic*BATTLE.skillGearScale;}
+function skillAttackPower(type){
+ const gear=equipmentBonuses(),career=careerBonuses();
+ const base=18+((p.level-1)*2+p.strength*3)*BATTLE.skillAttributeScale+gear.attack*BATTLE.skillGearScale+career.attack;
+ return base*attackPower()*(1+career.attackPercent)+(!['physical','piercing'].includes(type)?magicPower(gear,career):0);
+}
+
 function resolveEnemyDamage(m,amount,type='physical',penetrated=false) {
   if(!Number.isFinite(amount)||amount<=0)return 0;
   return Math.max(1,Math.round(amount*(1-(penetrated?Math.min(0,enemyResistances(m)[type]||0):(enemyResistances(m)[type]||0)))));
@@ -3861,7 +3870,7 @@ function cloneEnemyState(m) { return {...m,dot:m.dot?{...m.dot}:null,dots:(m.dot
 function applyCombatControl(m,opts,x=p.x,y=p.y) {
   if(m.hp<=0)return;
   if(opts.stun)m.stun=Math.max(m.stun||0,opts.stun*(m.type==='boss'?.4:1));
-  if(opts.dot)applyDamageOverTime(m,opts.dot,Math.max(3,Math.round(damage()*.18*skillFactor(opts.skillKey||castingSkillKey||'invalid')*(opts.multiplier||castingMultiplier)*(1+(passiveBonuses().outgoing[opts.dot]||0)))),opts.skillKey||castingSkillKey);
+  if(opts.dot)applyDamageOverTime(m,opts.dot,Math.max(3,Math.round(skillAttackPower(opts.dot)*.18*BATTLE.skillDamageScale*skillAttackFactor(opts.skillKey||castingSkillKey||'invalid')*(opts.multiplier||castingMultiplier)*(1+(passiveBonuses().outgoing[opts.dot]||0)))),opts.skillKey||castingSkillKey);
   if(opts.knock&&m.type!=='stone'){const d=Math.hypot(m.x-x,m.y-y)||1;m.x=Math.max(45,Math.min(SIZE-45,m.x+(m.x-x)/d*45));m.y=Math.max(45,Math.min(SIZE-45,m.y+(m.y-y)/d*45));}
 }
 
@@ -4242,7 +4251,7 @@ let characterTab='stats';
 function characterPanel(tab=characterTab){
  if(!running)return;
  const stats=[['strength','Sila','STR'],['vitality','Vitalita','VIT'],['dexterity','Obratnosť','DEX'],['intelligence','Inteligencia','INT']];
- const values=[['Útok',damage()],['Obrana',defense()],['Zdravie',Math.ceil(p.hp)+' / '+maxHP()],['Mana',Math.ceil(p.mp)+' / '+maxMP()],['Kritický zásah',(criticalChance()*100).toFixed(1)+' %'],['Prenikavý zásah',(penetrationChance()*100).toFixed(1)+' %'],['Rýchlosť útoku','+'+(itemAttackSpeed()*100).toFixed(1)+' %'],['Rýchlosť pohybu',Math.round(speedValue())],['Sila kúziel',p.intelligence*4+careerBonuses().magic+equipmentBonuses().magic]];
+ const values=[['Útok',damage()],['Obrana',defense()],['Zdravie',Math.ceil(p.hp)+' / '+maxHP()],['Mana',Math.ceil(p.mp)+' / '+maxMP()],['Kritický zásah',(criticalChance()*100).toFixed(1)+' %'],['Prenikavý zásah',(penetrationChance()*100).toFixed(1)+' %'],['Rýchlosť útoku','+'+(itemAttackSpeed()*100).toFixed(1)+' %'],['Rýchlosť pohybu',Math.round(speedValue())],['Sila kúziel',magicPower()]];
  characterTab=['stats','specialization','prestige'].includes(tab)?tab:'stats';tab=characterTab;
  const navigation='<nav class="character-tabs">'+[['stats','Postava'],['specialization','Špecializácia'],['prestige','Prestíž']].map(([id,name])=>'<button data-character-tab="'+id+'" aria-pressed="'+(tab===id)+'">'+name+'</button>').join('')+'</nav>';
  const statsContent='<div class="stat-profile"><span class="stat-portrait">'+({warrior:'侍',ninja:'影',sura:'魔',shaman:'龍'})[p.classId]+'</span><div><b>'+escapeHTML(characterDisplayName(p))+'</b><small>'+role().name+' · '+school().name+'</small><small>Úroveň '+p.level+prestigeSuffix(p)+'</small></div></div><div class="stat-exp"><span>Skúsenosti</span><b>'+uiNumber(p.xp)+' / '+uiNumber(needXP())+'</b><progress max="'+needXP()+'" value="'+(p.level===99?needXP():p.xp)+'"></progress></div><h3>Vlastnosti <small>Voľné body: '+p.points+'</small></h3><div class="attribute-list">'+stats.map(([id,name,abbr])=>'<div><abbr title="'+name+'">'+abbr+'</abbr><span>'+name+'</span><b>'+p[id]+'</b><button data-character-stat="'+id+'" aria-label="Zvýšiť '+name.toLowerCase()+' o bod" '+(!p.points?'disabled':'')+'>+</button></div>').join('')+'</div><h3>Bojové hodnoty</h3><dl class="stat-values">'+values.map(([name,n])=>'<div><dt>'+name+'</dt><dd>'+n+'</dd></div>').join('')+'</dl>';
@@ -4649,7 +4658,7 @@ function spellbook() {
   const combo=SCHOOL_COMBOS[schoolId()];
   modal(`<span class="eyebrow">${role().name} · ${school().name}</span><h2>Kniha schopností</h2><div class="spell-list">${school().skills.map((s,i)=>{
     const meta=ACTIVE_SKILLS[skillKey(i)];
-    return `<div><kbd>${spellKeys[i].toUpperCase()}</kbd><span><b>${s[0]} · ${skillRankLabel(skillProgress(skillKey(i)).rank)}</b><small>${meta.type?DAMAGE_TYPES[meta.type].name+' poškodenie':'Podporná schopnosť'} · ${s[3]} many · cooldown ${Number((s[2]*(1-skillCooldownReduction(skillKey(i)))).toFixed(2))} s<br>Základný účinok: ${s[6]}<br>Bonus stupňa: +${Math.round((skillFactor(skillKey(i))-1)*100)} % sily / trvania${combo.sequence.includes(i)?'<br>Kombo: '+combo.name:''}</small>${skillUpgradeContent(i)}</span></div>`;
+    return `<div><kbd>${spellKeys[i].toUpperCase()}</kbd><span><b>${s[0]} · ${skillRankLabel(skillProgress(skillKey(i)).rank)}</b><small>${meta.type?DAMAGE_TYPES[meta.type].name+' poškodenie':'Podporná schopnosť'} · ${s[3]} many · cooldown ${Number((s[2]*(1-skillCooldownReduction(skillKey(i)))).toFixed(2))} s<br>Základný účinok: ${s[6]}<br>Bonus stupňa: +${Math.round(((meta.support?skillFactor(skillKey(i)):skillAttackFactor(skillKey(i)))-1)*100)} % ${meta.support?'trvania / liečenia':'poškodenia'}${s[1]==='spirit'?' · poškodenie +'+Math.round((skillAttackFactor(skillKey(i))-1)*100)+' %':''}${combo.sequence.includes(i)?'<br>Kombo: '+combo.name:''}</small>${skillUpgradeContent(i)}</span></div>`;
   }).join('')}</div>${passiveCard()}<section class="career-card"><h3>Kombo · ${combo.name}</h3><p>${combo.sequence.map(i=>'<kbd>'+spellKeys[i].toUpperCase()+'</kbd> '+school().skills[i][0]).join(' → ')}<br>Do ${BATTLE.comboWindow} s · druhá schopnosť +${Math.round(combo.bonus*100)} % poškodenia/liečenia. Neúspešné zoslanie kombo nespotrebuje.</p></section><details><summary>Bojové pravidlá a odolnosti</summary>${combatRulesContent()}</details><p>Knihy: primeraní bossovia a Metiny. Kamene duše: od Lv.35, boss 20 %, Metin 8 %.</p><p>Normál 1–20 → Majster M1–M10 → Veľmajster G1–G10 → Perfektný majster P.</p><p id="skill-message" role="status"></p>`,{key:'spellbook',refresh:spellbook});
   panelQueryAll('[data-upgrade-skill]').forEach(button=>button.onclick=()=>{const ok=upgradeSkill(button.dataset.upgradeSkill);spellbook();$('skill-message').textContent=ok?'Schopnosť vylepšená.':'Chýba prax, Yang alebo potrebné predmety.';updateClassHUD();});
 }

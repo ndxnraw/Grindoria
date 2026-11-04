@@ -1,4 +1,4 @@
-const METIN_RULES = { schema: 2, combatWindow: 6, firstWave: .1, maxGuards: 8, globalGuards: 60, guardLifetime: 45 };
+const METIN_RULES = { schema: 3, combatWindow: 6, firstWave: .1, maxGuards: 8, globalGuards: 60, guardLifetime: 45 };
 // Loot material entries are [chance, minimum amount, maximum amount].
 const METIN_TYPES = {
   fracture: { name: 'Metin praskliny', levels: [1, 9], model: 'obelisk', difficulty: 'Ľahký', color: '#80728e', glow: '#d6a3e2', hp: 1, armor: 0, interval: 4.8, wave: 2, loot: { yang: [18, 32], ore: [1, 1, 2], books: [.35, 1, 1], essence: [.55, 1, 3], dust: [.2, 1, 2], upgradeStones: [.05, 1, 1], gear: .45, epic: .025, slots: ['weapon', 'bracelet'], extra: ['wolf', .22, 1, 2] } },

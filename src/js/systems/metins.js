@@ -23,7 +23,7 @@ function buildSuterlandPoints() {
 
 function metinStats(level, type) {
   const spec = METIN_TYPES[type] || METIN_TYPES.fracture;
-  return { hp: Math.round((180 + level * 28 + level * level * .6) * spec.hp * (1.8 + level * .035)), armor: Math.floor(level * .3 + spec.armor * 20), resistance: Math.min(.5, .04 + level * .0025 + spec.armor) };
+  return { hp: Math.round((180 + level * 28 + level * level * .6) * spec.hp * (4.5 + level * .12)), armor: Math.floor(level * .3 + spec.armor * 20), resistance: Math.min(.5, .04 + level * .0025 + spec.armor) };
 }
 
 function metinModelScale(stone) { return .84 + Math.min(105, stone.level) / 105 * .3; }

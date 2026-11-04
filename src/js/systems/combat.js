@@ -64,9 +64,9 @@ function nearest(range=500,from=p){if(!(range>0))return undefined;let best,minim
 function hurtMob(m,mult=1,magic=false,key=castingSkillKey,opts={}) {
   if(!m||m.hp<=0)return 0;if(key)rememberSkill(m,key);
   const type=opts.type||(key?skillDamageType(key):magic?'arcane':basicDamageType()),critical=rand()<criticalChance(),multiplier=opts.multiplier??castingMultiplier;
-  const magicBonus=!['physical','piercing'].includes(type)?p.intelligence*4+careerBonuses().magic+equipmentBonuses().magic:0;
+  const magicBonus=!key&&!['physical','piercing'].includes(type)?magicPower():0;
   const pierced=penetrationChance()>0 && rand()<penetrationChance();
-  const raw=(damage()+magicBonus)*mult*(key?skillFactor(key):1)*multiplier*(1+(passiveBonuses().outgoing[type]||0))*(critical?1.8:1)*(1+enemyGearBonus(m));
+  const raw=(key?skillAttackPower(type):damage()+magicBonus)*mult*(key?skillAttackFactor(key)*BATTLE.skillDamageScale:1)*multiplier*(1+(passiveBonuses().outgoing[type]||0))*(critical?1.8:1)*(1+enemyGearBonus(m));
   const actual=hit(m,Math.max(1,Math.round(raw*(.94+rand()*.12))),type,pierced);
   if(actual>0&&opts.basic)registerBasicHit(m);
   if(actual>0&&opts.basic&&opts.markTarget)markManualCombatHit(m);

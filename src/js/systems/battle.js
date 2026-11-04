@@ -34,6 +34,14 @@ function playerResistances() {
   return Object.fromEntries(Object.keys(DAMAGE_TYPES).map(type=>[type,Math.max(-.5,Math.min(.75,(gear[type+'Resist']||0)+(passive.resist[type]||0)+(prestigeRank()===5?.05:0)))]));
 }
 
+// Skill power favors equipment over innate level/attribute damage; enemy level is not a damage gate.
+function magicPower(gear=equipmentBonuses(),career=careerBonuses()){return p.intelligence*BATTLE.magicPerIntelligence+career.magic+gear.magic*BATTLE.skillGearScale;}
+function skillAttackPower(type){
+ const gear=equipmentBonuses(),career=careerBonuses();
+ const base=18+((p.level-1)*2+p.strength*3)*BATTLE.skillAttributeScale+gear.attack*BATTLE.skillGearScale+career.attack;
+ return base*attackPower()*(1+career.attackPercent)+(!['physical','piercing'].includes(type)?magicPower(gear,career):0);
+}
+
 function resolveEnemyDamage(m,amount,type='physical',penetrated=false) {
   if(!Number.isFinite(amount)||amount<=0)return 0;
   return Math.max(1,Math.round(amount*(1-(penetrated?Math.min(0,enemyResistances(m)[type]||0):(enemyResistances(m)[type]||0)))));
@@ -99,7 +107,7 @@ function cloneEnemyState(m) { return {...m,dot:m.dot?{...m.dot}:null,dots:(m.dot
 function applyCombatControl(m,opts,x=p.x,y=p.y) {
   if(m.hp<=0)return;
   if(opts.stun)m.stun=Math.max(m.stun||0,opts.stun*(m.type==='boss'?.4:1));
-  if(opts.dot)applyDamageOverTime(m,opts.dot,Math.max(3,Math.round(damage()*.18*skillFactor(opts.skillKey||castingSkillKey||'invalid')*(opts.multiplier||castingMultiplier)*(1+(passiveBonuses().outgoing[opts.dot]||0)))),opts.skillKey||castingSkillKey);
+  if(opts.dot)applyDamageOverTime(m,opts.dot,Math.max(3,Math.round(skillAttackPower(opts.dot)*.18*BATTLE.skillDamageScale*skillAttackFactor(opts.skillKey||castingSkillKey||'invalid')*(opts.multiplier||castingMultiplier)*(1+(passiveBonuses().outgoing[opts.dot]||0)))),opts.skillKey||castingSkillKey);
   if(opts.knock&&m.type!=='stone'){const d=Math.hypot(m.x-x,m.y-y)||1;m.x=Math.max(45,Math.min(SIZE-45,m.x+(m.x-x)/d*45));m.y=Math.max(45,Math.min(SIZE-45,m.y+(m.y-y)/d*45));}
 }
 
