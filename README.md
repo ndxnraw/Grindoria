@@ -46,6 +46,8 @@ Zlato a zásoby sa pripíšu priamo, bez predmetu na zemi. Výbava a relikvie zo
 
 - Prestíž I–V od úrovne 99: nové výzvy, pasívne bonusy, emblémy a zdokonaľovanie Mythic bonusov bez resetu postavy. [Prestíž a endgame](docs/PRESTIGE.md).
 
+- Náhodné udalosti, vzácni bossovia a Metiny, elitné skupiny, dočasné ruiny a drop eventy. [Živý svet](docs/WORLD_EVENTS.md).
+
 ## Vývoj
 
 Node.js 22+; bez externých balíčkov.

@@ -1,6 +1,6 @@
 let combatHudSignature='';
 
-function enemyName(enemy) { return enemy.type==='stone'?(METIN_TYPES[enemy.metinType]?.name||'Metin'):enemy.type==='boss'?map().boss:enemy.name||map().mob; }
+function enemyName(enemy) { if(enemy.name)return enemy.name;return enemy.type==='stone'?(METIN_TYPES[enemy.metinType]?.name||'Metin'):enemy.type==='boss'?map().boss:enemy.name||map().mob; }
 function resistanceText(value) { return (value>0?'+':'')+Number((value*100).toFixed(1)).toLocaleString('sk-SK')+' %'; }
 
 function updateCombatHUD() {

@@ -28,6 +28,7 @@ Funkcie môžu medzi súbormi volať zdieľané pomenované funkcie. Načítanie
 | `systems/progression.js` | Skúsenosti, výbava, vlastnosti a odmeny |
 | `systems/forge.js` | Rizikové vylepšovanie, ochrana, talizmany, recepty a zdroje pomôcok |
 | `systems/locations.js` | NPC služby, bezpečné zóny, cestovanie mimo boja a migrácia rozmerov máp |
+| `systems/world-events.js` | Plánovanie a obnova dynamických udalostí, eventoví nepriatelia, odmeny a validácia |
 | `systems/world.js` | Generovanie, cestovanie, snímky máp a uloženie |
 | `systems/biology.js` | Osem biologických etáp, vzorky, pity, čas odovzdávania a trvalé bonusy v existujúcej kariére |
 | `systems/prestige.js` | Prestíž I–V, míľniky, znaky, pasívy, zdokonaľovanie výbavy a validácia |

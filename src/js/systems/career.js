@@ -34,6 +34,7 @@ function initializeCareer() {
   initializeEconomy();
   initializeDungeons();
   initializePrestige();
+  initializeWorldEvents();
   p.level = Math.max(1, Math.min(PROGRESSION.maxLevel, p.level));
   if (p.level === PROGRESSION.maxLevel) p.xp = 0;
   // World difficulty changed; preserve death timers/positions while scaling HP proportionally.
@@ -227,6 +228,7 @@ function enterRift() {
   end.run = { id: (p.career.riftSerial = (p.career.riftSerial || 0) + 1), tier, kills: 0, bosses: 0, active: true };
   // Separate expedition enemies from the ordinary map snapshot.
   p.career.normalTemple = p.worldStates.temple;
+  suspendWorldEvents();
   drops.length = 0;
   mobs.forEach(m => {
     applyRiftScaling(m, tier, end.run.id);

@@ -187,3 +187,5 @@ body{font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ui-text)}button,inp
 .character-select .dungeon-status{display:none}
 /* PC bestiary cards reuse the game's actual canvas models. */
 .discovery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.bestiary-model{display:block;width:220px;height:200px;max-width:100%;margin:auto;background:#101b20;border:1px solid var(--ui-line)}
+
+.world-event-status{position:absolute;left:18px;top:122px;max-width:260px;padding:9px 12px;background:#172c25ed;color:#e5d6a0;border:1px solid #a69765;border-radius:4px;font-size:12px;text-align:left;cursor:pointer;z-index:4}.world-event-status:hover{border-color:#ead499}

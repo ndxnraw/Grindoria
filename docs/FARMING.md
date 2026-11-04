@@ -85,3 +85,7 @@ Automatické testy overujú hustotu, hranice dosahu, reálny pohyb pritiahnutýc
 ## Trhové ceny od 0.20.0
 
 Cena 100 Yang za 10 plášťov je základná cena prvého cyklu. Aktuálny dopyt upravuje cenu a zásoba obchodníka je obmedzená. Pozri [ECONOMY.md](ECONOMY.md).
+
+## Dynamické udalosti
+
+Bežné spawny dopĺňajú časovo obmedzené elitné skupiny, vzácni bossovia a Metiny. Základná hustota a respawn sa nemenia. Pravdepodobnosti, odmeny a ukladanie: [WORLD_EVENTS.md](WORLD_EVENTS.md).

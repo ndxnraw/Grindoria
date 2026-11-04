@@ -3,7 +3,7 @@ function map(){return MAPS[p.mapId]||MAPS.valley;}
 function snapshotMap() {
   if (!mobs.length&&!map().town) return;
   p.worldStates[p.mapId] = {
-    worldSize:SIZE,layoutSchema: SPAWN_LAYOUT_VERSION, progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
+    events:worldEventSnapshot(),worldSize:SIZE,layoutSchema: SPAWN_LAYOUT_VERSION, progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
     mobs: mobs.map(cloneEnemyState),
     drops: drops.map(cloneGroundDrop)
   };
@@ -34,6 +34,7 @@ function loadMap(id, initial=false) {
   spawnPoints.push(...buildSpawnPoints(id));
   const oldRun=p.career.endgame.run&&id==='temple'&&old?.mobs?.length&&old.spawnSchema!==SPAWN_RULES.schema;
   const population=cfg.instance?hydrateDungeonPopulation(old):oldRun?loadLegacyRift(old):hydrateSpawnPopulation(old);
+  restoreWorldEvents(old?.events,population,old?.mobs||[]);
   mobs.length=0; mobs.push(...population); drops.length=0;
   drops.push(...hydrateGroundDrops(old?.drops||[]));
   clearLootPointer();

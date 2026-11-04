@@ -189,15 +189,17 @@ body{font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ui-text)}button,inp
 .character-select .dungeon-status{display:none}
 /* PC bestiary cards reuse the game's actual canvas models. */
 .discovery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.bestiary-model{display:block;width:220px;height:200px;max-width:100%;margin:auto;background:#101b20;border:1px solid var(--ui-line)}
+
+.world-event-status{position:absolute;left:18px;top:122px;max-width:260px;padding:9px 12px;background:#172c25ed;color:#e5d6a0;border:1px solid #a69765;border-radius:4px;font-size:12px;text-align:left;cursor:pointer;z-index:4}.world-event-status:hover{border-color:#ead499}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.24.0</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.25.0</b></span></header>
 <main><div class="world-title"><div><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Divoký vlk · Strážca pralesa</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
 <section id="game-shell" class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb iba WASD alebo šípkami, výber cieľa kliknutím, nasledovanie a útok druhým klikom na rovnaký cieľ, smerový útok medzerníkom, schopnosť Q, liečenie E, korisť ľavým kliknutím alebo Y v okolí, zlato a zásoby automaticky."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
 <div class="hud player"><div id="portrait" class="portrait">侍</div><div><div class="player-name"><b id="playername">Pútnik</b><small id="playerclass" hidden>Bojovník</small> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 60 skúseností</small></div></div>
 <div class="hud map"><button id="character-menu" class="fullscreen-control character-return-control" type="button" aria-label="Výber postáv" title="Uložiť a vrátiť sa na výber postáv">♙</button><button id="fullscreen" class="fullscreen-control" type="button" aria-label="Celá obrazovka" aria-pressed="false" title="Celá obrazovka · F10">⛶</button><canvas id="minimap" width="138" height="118"></canvas><span id="minimaplabel">ÚDOLIE TICHÉHO VETRA</span></div>
 <div class="hud quest"><span class="eyebrow">AKTÍVNA ÚLOHA</span><h3>Praskliny v pokoji</h3><div id="q-wolves">◇ Poraz príšery <b>0 / 5</b></div><div id="q-stones">◇ Znič kamene osudu <b>0 / 3</b></div><button id="claim" hidden>Vyzdvihnúť odmenu</button><small id="questnote">Odmena: 150 zlata + 60 skúseností</small></div>
-<div id="toast" role="status"></div><button id="dungeon-status" class="dungeon-status" hidden></button><div id="target-panel" class="hud target-panel" aria-live="off" hidden></div><div id="combat-flow" class="hud combat-flow" aria-live="polite" hidden></div><div id="buffs" class="buffs" aria-live="off"></div><div class="hud location">⌖ &nbsp; <span id="coords">Mesto</span></div>
+<div id="toast" role="status"></div><button id="world-event-status" class="world-event-status" hidden></button><button id="dungeon-status" class="dungeon-status" hidden></button><div id="target-panel" class="hud target-panel" aria-live="off" hidden></div><div id="combat-flow" class="hud combat-flow" aria-live="polite" hidden></div><div id="buffs" class="buffs" aria-live="off"></div><div class="hud location">⌖ &nbsp; <span id="coords">Mesto</span></div>
 <div class="combat-assist" role="group" aria-label="Automatická pomoc v boji"><button id="auto-aim" type="button" aria-pressed="false" title="Pri útoku mieri na najbližšieho nepriateľa do 500 jednotiek. Označený cieľ má prednosť; bez automatickej chôdze.">Automierenie: VYP</button><button id="auto-spell" type="button" aria-pressed="false" title="Iba v boji s označeným nepriateľom alebo Metinom používa schopnosti; rešpektuje manu a cooldowny. Esc vypne pomocníkov.">Autospell: VYP</button><button id="auto-potion" type="button" aria-pressed="false" title="Pod 45 % HP použije zásobu elixíra: +65 HP, spoločný cooldown 4 s.">Autoelixíry: VYP</button></div>
 <div class="hotbar"><button id="attack"><kbd>SPACE</kbd><span>⚔</span><small>Sek mečom</small></button><button id="skill"><kbd>Q</kbd><span>✺</span><small>Veterný kruh</small><em id="cooldown"></em></button><button id="skill2"><kbd>R</kbd><span>✧</span><small>Schopnosť</small><em id="cooldown2"></em></button><button id="skill3"><kbd>T</kbd><span>☄</span><small>Schopnosť</small><em id="cooldown3"></em></button><button id="skill4"><kbd>V</kbd><span>◈</span><small>Schopnosť</small><em id="cooldown4"></em></button><button id="skill5"><kbd>U</kbd><span>❖</span><small>Schopnosť</small><em id="cooldown5"></em></button><button id="skill6"><kbd>O</kbd><span>✥</span><small>Schopnosť</small><em id="cooldown6"></em></button><button id="potion"><kbd>E</kbd><span>⚱</span><small>Elixír <b id="pots">5</b></small><em id="potion-cooldown"></em></button><button id="bravery" title="Plášť statočnosti · B · dosah 650 · priťahovanie 18 s"><kbd>B</kbd><span>⚑</span><small>Plášť <b id="capes">10</b></small><em id="cape-cooldown"></em></button><div class="divider"></div><button id="inventory"><kbd>I</kbd><span>▣</span><small>Výbava</small></button></div>
 <div class="hud wallet"><span>◉</span> <b id="gold">0</b> <small>YANG</small></div>
@@ -728,6 +730,19 @@ const PRESTIGE_GOALS={
 };
 
 
+// src/js/data/world-events.js
+const WORLD_EVENT_RULES={schema:1,firstCheck:90,minCheck:120,maxCheck:180,maxMembers:5};
+const WORLD_EVENTS={
+ patrol:{name:'Elitná hliadka',kind:'group',chance:.20,duration:300,count:5,color:'#c3a1ed',objective:'Poraz päť elitných hliadkarov.',reward:'Yang a materiály; bonusové materiály len z primeraného cieľa.'},
+ invasion:{name:'Prepad lovcov',kind:'group',chance:.12,duration:360,count:5,color:'#e6aa7d',objective:'Poraz veliteľa a štyroch elitných lovcov.',reward:'Yang a materiály; bonusové materiály len z primeraného cieľa.'},
+ bounty:{name:'Žatva materiálov',kind:'drop',chance:.10,duration:240,count:0,color:'#b9d781',objective:'Farm v tejto mape počas udalosti.',reward:'Primeraná voľná príšera: ruda +1 (50 %), kameň vylepšenia +1 (10 %).'},
+ boss:{name:'Prastarý strážca',kind:'boss',chance:.035,duration:420,count:1,color:'#f1c67d',objective:'Poraz vzácneho bossa pred koncom udalosti.',reward:'Yang, materiály a epická alebo lepšia výbava z primeraného cieľa.'},
+ metin:{name:'Vzácny Metin',kind:'stone',chance:.025,duration:360,count:1,color:'#f3a4dd',objective:'Znič vzácny Metin pred koncom udalosti.',reward:'Pôvodný drop Metinu a bonusové Yang, materiály a výbava z primeraného cieľa.'},
+ ruins:{name:'Skryté ruiny',kind:'secret',chance:.015,duration:480,count:0,color:'#8ed9d1',objective:'Nájdi ruiny. Značka sa objaví až pri priblížení.',reward:'Yang, materiály, výbava z primeranej mapy a trvalý záznam objavu.'},
+ convoy:{name:'Démonický sprievod',kind:'group',chance:.01,duration:420,count:5,color:'#e49ac2',objective:'Poraz päť rôznych členov sprievodu.',reward:'Yang, materiály a epická alebo lepšia výbava z primeraného cieľa.'}
+};
+
+
 // src/js/systems/discovery.js
 // Additive, per-character progress. Existing bestiary kill counters remain authoritative.
 const SECRET_PLACES={grove:{name:'Zabudnutý háj',map:'valley',x:1750,y:2440},oasis:{name:'Ukrytá studňa',map:'desert',x:620,y:2440},shrine:{name:'Tichá svätyňa',map:'snow',x:1580,y:1560}};
@@ -741,7 +756,7 @@ function updateDiscovery(){if(!p.discovery)initializeDiscovery();for(const m of 
 function discoveryProgress(id){switch(id){case'hunter':return p.career.eligibleKills;case'metins':return Object.keys(METIN_TYPES).filter(k=>p.bestiary['metin:'+k]>0).length;case'trophies':return ['valley','desert','snow','temple'].filter(k=>p.bestiary['boss:'+k]>0).length;case'dungeons':return Object.keys(DUNGEONS).filter(k=>p.bestiary['dungeon:'+k]>0).length;case'rarities':return [1,2,4,5].filter(k=>p.discovery.rarities[k]).length;case'explorer':return Object.keys(p.discovery.places).length;case'relics':return Object.values(p.career.collection).filter(Boolean).length;}return 0;}
 function claimDiscoveryReward(id){const reward=DISCOVERY_REWARDS[id];if(!running||!reward||p.discovery.claimed[id]||discoveryProgress(id)<reward.goal)return false;p.discovery.claimed[id]=true;p.gold+=reward.yang;save();updateHUD();return true;}
 function discoveryBonuses(){const b={};for(const [id,r]of Object.entries(DISCOVERY_REWARDS))if(p.discovery?.claimed[id])for(const [stat,n]of Object.entries(r.bonus))b[stat]=(b[stat]||0)+n;return b;}
-function validateDiscovery(data){if(data.discovery===undefined)return;const d=data.discovery;assertCharacterObject(d,'objavovanie');for(const key of ['seen','places','rarities','claimed'])assertCharacterObject(d[key],key);for(const [id,v]of Object.entries(d.places))if(!Object.hasOwn(SECRET_PLACES,id)||v!==true)characterDataError('skrytá lokalita.');for(const [id,v]of Object.entries(d.rarities))if(!['1','2','4','5'].includes(id)||v!==true)characterDataError('zbierka rarít.');for(const [id,v]of Object.entries(d.claimed))if(!Object.hasOwn(DISCOVERY_REWARDS,id)||v!==true)characterDataError('odmena zbierky.');for(const [id,s]of Object.entries(d.seen)){if(!validDiscoveryKey(id))characterDataError('objavený nepriateľ.');assertCharacterObject(s,'nepriateľ');if(typeof s.name!=='string'||s.name.length>150||!['wolf','boss','stone'].includes(s.type)||!['wolf','scorpion','yeti','demon'].includes(s.skin))characterDataError('model bestiára.');assertCharacterNumber(s.level,'úroveň',1,199,true);assertCharacterNumber(s.hp,'HP',1,1e12);assertCharacterNumber(s.attackScale,'sila útoku',0,1e9);assertCharacterNumber(s.armor,'pancier',0,1e9);if(!Object.hasOwn(DAMAGE_TYPES,s.damageType))characterDataError('poškodenie bestiára.');if(s.metinType!==null&&!Object.hasOwn(METIN_TYPES,s.metinType)||s.dungeonId!==null&&!Object.hasOwn(DUNGEONS,s.dungeonId)||typeof s.dungeonBoss!=='boolean')characterDataError('typ bestiára.');if(!Array.isArray(s.locations)||s.locations.length>12||new Set(s.locations).size!==s.locations.length||s.locations.some(k=>!Object.hasOwn(MAPS,k)&&!(k.startsWith('dungeon:')&&Object.hasOwn(DUNGEONS,k.slice(8)))))characterDataError('lokalita bestiára.');}}
+function validateDiscovery(data){if(data.discovery===undefined)return;const d=data.discovery;if(d.eventPlaces!==undefined){assertCharacterObject(d.eventPlaces,'objavené ruiny');for(const [id,n]of Object.entries(d.eventPlaces)){if(!worldEventMap(id))characterDataError('mapa ruín.');assertCharacterNumber(n,'počet objavov ruín',1,1e12,true);}}assertCharacterObject(d,'objavovanie');for(const key of ['seen','places','rarities','claimed'])assertCharacterObject(d[key],key);for(const [id,v]of Object.entries(d.places))if(!Object.hasOwn(SECRET_PLACES,id)||v!==true)characterDataError('skrytá lokalita.');for(const [id,v]of Object.entries(d.rarities))if(!['1','2','4','5'].includes(id)||v!==true)characterDataError('zbierka rarít.');for(const [id,v]of Object.entries(d.claimed))if(!Object.hasOwn(DISCOVERY_REWARDS,id)||v!==true)characterDataError('odmena zbierky.');for(const [id,s]of Object.entries(d.seen)){if(!validDiscoveryKey(id))characterDataError('objavený nepriateľ.');assertCharacterObject(s,'nepriateľ');if(typeof s.name!=='string'||s.name.length>150||!['wolf','boss','stone'].includes(s.type)||!['wolf','scorpion','yeti','demon'].includes(s.skin))characterDataError('model bestiára.');assertCharacterNumber(s.level,'úroveň',1,199,true);assertCharacterNumber(s.hp,'HP',1,1e12);assertCharacterNumber(s.attackScale,'sila útoku',0,1e9);assertCharacterNumber(s.armor,'pancier',0,1e9);if(!Object.hasOwn(DAMAGE_TYPES,s.damageType))characterDataError('poškodenie bestiára.');if(s.metinType!==null&&!Object.hasOwn(METIN_TYPES,s.metinType)||s.dungeonId!==null&&!Object.hasOwn(DUNGEONS,s.dungeonId)||typeof s.dungeonBoss!=='boolean')characterDataError('typ bestiára.');if(!Array.isArray(s.locations)||s.locations.length>12||new Set(s.locations).size!==s.locations.length||s.locations.some(k=>!Object.hasOwn(MAPS,k)&&!(k.startsWith('dungeon:')&&Object.hasOwn(DUNGEONS,k.slice(8)))))characterDataError('lokalita bestiára.');}}
 
 
 // src/js/core/persistence.js
@@ -899,7 +914,7 @@ function selectCharacter(id) {
   const next=copyCharacterData(characterStore.account);next.selectedId=id;commitCharacterAccount(next);renderCharacterScreen();return true;
 }
 function clearCharacterSession() {
-  keysClear();resetCombatFlow();travelCombat.time=0;clearLootPointer();combatAim.inside=false;face=0;shots.length=0;effects.length=0;particles.length=0;
+  keysClear();resetCombatFlow();worldEventState=null;travelCombat.time=0;clearLootPointer();combatAim.inside=false;face=0;shots.length=0;effects.length=0;particles.length=0;
   for(const id of Object.keys(buffs))delete buffs[id];spellCD.fill(0);attackCD=0;skillCD=0;castPose=0;castStyle='';spiritTick=0;capeCooldown=0;saveTimer=0;slash=0;ring=0;
   for(const slot of Object.keys(forgeOptions))delete forgeOptions[slot];forgeResult=null;
   craftingFilter='all';craftingMessage='';marketMessage='';
@@ -1032,6 +1047,7 @@ function validateCharacterWorld(state) {
     if(mob.skillContributors&&(!Array.isArray(mob.skillContributors)||mob.skillContributors.some(key=>!Object.hasOwn(ACTIVE_SKILLS,key))))characterDataError('referencia schopnosti.');
     if(mob.dots&&(!Array.isArray(mob.dots)||mob.dots.length>2||mob.dots.some(dot=>!['poison','fire'].includes(dot.kind)||!Number.isFinite(dot.power)||dot.power<0||!Number.isFinite(dot.time)||!Number.isFinite(dot.tick)||dot.key&&!Object.hasOwn(ACTIVE_SKILLS,dot.key))))characterDataError('stav poškodenia.');
   }
+  validateWorldEventSnapshot(state);
   const dropIds=new Set();
   for(const drop of state.drops){
     assertCharacterObject(drop,'korisť');for(const key of ['x','y'])assertCharacterNumber(drop[key],'poloha koristi',0,Math.max(...Object.values(MAPS).map(m=>m.size)));
@@ -1090,6 +1106,7 @@ function validateCharacterProfile(record) {
   assertCharacterObject(data.worldStates,'mapy');for(const [id,state]of Object.entries(data.worldStates)){if(!Object.hasOwn(MAPS,id))characterDataError('referencia mapy.');validateCharacterWorld(state);}if(c.normalTemple)validateCharacterWorld(c.normalTemple);
   validateCraftingProfile(data);
   validateEconomyProfile(data);
+  validateWorldEventsProfile(data);
   validatePrestige(data);
   validateDungeonProfile(data);
   validateDiscovery(data);assertCharacterObject(data.bestiary,'bestiár');for(const [key,value]of Object.entries(data.bestiary)){if(!['wolf','scorpion','yeti','demon'].includes(key)&&!(key.startsWith('dungeon:')&&Object.hasOwn(DUNGEONS,key.slice(8)))&&!(key.startsWith('metin:')&&Object.hasOwn(METIN_TYPES,key.slice(6)))&&!(key.startsWith('boss:')&&Object.hasOwn(MAPS,key.slice(5))))characterDataError('záznam bestiára.');assertCharacterNumber(value,'počet v bestiári',0,1e12,true);}
@@ -1161,7 +1178,7 @@ function keysClear(){Object.keys(keys).forEach(k=>keys[k]=false);}
 function update(dt) {
   clock+=dt;refreshBiologyPanel();if(!running||paused)return;travelCombat.time=Math.max(0,travelCombat.time-dt);
   attackCD=Math.max(0,attackCD-dt);slash=Math.max(0,slash-dt);ring=Math.max(0,ring-dt);updateCombatAssistTimers(dt);updateAlchemy(dt);updateEconomy(dt);updateCombat(dt);
-  updateDiscovery();updatePlayerControl(dt);if(keys[' '])attack();updateAutoSpell(dt);
+  updateWorldEvents(dt);updateDiscovery();updatePlayerControl(dt);if(keys[' '])attack();updateAutoSpell(dt);
   const safe=isSanctuary(p);if(safe){p.hp=Math.min(maxHP(),p.hp+12*dt);p.mp=Math.min(maxMP(),p.mp+dt*10);}
   updateDungeon(dt,safe);updateMetins(dt,safe);updateEnemySpawns(dt,safe);updateGroundLoot(dt);updateBoss(dt,safe);updateAutoPotion();
   if(p.hp<=0)death();if(target&&!selectedEnemy())clearCombatTarget();
@@ -1177,7 +1194,7 @@ function discoveryLocationName(id){return id.startsWith('dungeon:')?DUNGEONS[id.
 function knownEnemyDrops(key,s){if(key.startsWith('metin:')){const l=METIN_TYPES[key.slice(6)].loot;return 'Yang · '+Object.keys(l).filter(k=>Object.hasOwn(MATERIALS,k)).map(k=>MATERIALS[k]).join(' · ')+' · '+l.slots.map(k=>EQUIPMENT[k].name).join(', ')+' · '+RELICS[l.relic].name;}if(key.startsWith('dungeon:'))return 'Yang · materiály · '+DUNGEON_UNIQUES[key.slice(8)].name+(key==='dungeon:abyss'?' · Legendary / Mythic podľa obtiažnosti':'');return 'Yang · elixíry · výbava podľa rarity nepriateľa'+(s.type==='boss'?' · knihy, byliny, kože a vzácne materiály':' · primerané zabitia: byliny alebo kože')+' · relikvie podľa lokality a podmienok';}
 function discoveryPanel(){
  const entries={...Object.fromEntries(Object.keys(p.bestiary).filter(k=>p.bestiary[k]>0).map(k=>[k,null])),...p.discovery.seen};
- return '<h3>Bestiár · '+Object.keys(entries).length+' záznamov</h3><p>Nový záznam vzniká pri priblížení k živému nepriateľovi. Atribúty patria poslednému pozorovanému variantu; úroveň a obtiažnosť ich menia.</p><div class="discovery-grid">'+Object.entries(entries).map(([key,s],i)=>s?'<article class="career-card"><canvas class="bestiary-model" data-bestiary="'+escapeHTML(key)+'" width="220" height="200" aria-label="'+escapeHTML(s.name)+'"></canvas><h4>'+escapeHTML(s.name)+'</h4><p>Úroveň '+s.level+' · HP '+uiNumber(s.hp)+'<br>Útočný násobok ×'+s.attackScale.toFixed(2)+' · '+DAMAGE_TYPES[s.damageType].name+'<br>Pancier '+s.armor+'<br>'+s.locations.map(discoveryLocationName).map(escapeHTML).join('<br>')+'<br>Porazení: '+uiNumber(p.bestiary[key]||0)+'</p><h4>Známe dropy</h4><p>'+knownEnemyDrops(key,s)+'</p></article>':'<article class="career-card"><h4>'+escapeHTML(key)+'</h4><p>Porazení: '+uiNumber(p.bestiary[key])+'. Starší záznam; model a atribúty sa doplnia pri ďalšom stretnutí.</p></article>').join('')+'</div><h3>Trofeje a dlhodobé zbierky</h3><p>Trofeje získavaš prvým porazením každého bossa. Vzácna výbava sa započíta po získaní do inventára, relikvie cez pôvodnú zbierku. Odmena sa dá vyzdvihnúť raz za postavu.</p>'+Object.entries(DISCOVERY_REWARDS).map(([id,r])=>'<article class="career-card"><h4>'+r.name+'</h4>'+requirementRow('Postup',discoveryProgress(id),r.goal)+'<p>'+r.yang+' Yang · trvalo '+Object.entries(r.bonus).map(([k,n])=>'+'+n+' '+ITEM_STATS[k]).join(', ')+'</p><button data-discovery-claim="'+id+'" '+(p.discovery.claimed[id]||discoveryProgress(id)<r.goal?'disabled':'')+'>'+(p.discovery.claimed[id]?'Vyzdvihnuté':'Vyzdvihnúť odmenu')+'</button></article>').join('')+'<h3>Skryté lokality · '+Object.keys(p.discovery.places).length+' / 3</h3><p>'+Object.entries(SECRET_PLACES).map(([id,s])=>p.discovery.places[id]?s.name+' · '+MAPS[s.map].name:'Neobjavené · '+MAPS[s.map].name).join('<br>')+'</p>';
+ return '<h3>Bestiár · '+Object.keys(entries).length+' záznamov</h3><p>Nový záznam vzniká pri priblížení k živému nepriateľovi. Atribúty patria poslednému pozorovanému variantu; úroveň a obtiažnosť ich menia.</p><div class="discovery-grid">'+Object.entries(entries).map(([key,s],i)=>s?'<article class="career-card"><canvas class="bestiary-model" data-bestiary="'+escapeHTML(key)+'" width="220" height="200" aria-label="'+escapeHTML(s.name)+'"></canvas><h4>'+escapeHTML(s.name)+'</h4><p>Úroveň '+s.level+' · HP '+uiNumber(s.hp)+'<br>Útočný násobok ×'+s.attackScale.toFixed(2)+' · '+DAMAGE_TYPES[s.damageType].name+'<br>Pancier '+s.armor+'<br>'+s.locations.map(discoveryLocationName).map(escapeHTML).join('<br>')+'<br>Porazení: '+uiNumber(p.bestiary[key]||0)+'</p><h4>Známe dropy</h4><p>'+knownEnemyDrops(key,s)+'</p></article>':'<article class="career-card"><h4>'+escapeHTML(key)+'</h4><p>Porazení: '+uiNumber(p.bestiary[key])+'. Starší záznam; model a atribúty sa doplnia pri ďalšom stretnutí.</p></article>').join('')+'</div><h3>Trofeje a dlhodobé zbierky</h3><p>Trofeje získavaš prvým porazením každého bossa. Vzácna výbava sa započíta po získaní do inventára, relikvie cez pôvodnú zbierku. Odmena sa dá vyzdvihnúť raz za postavu.</p>'+Object.entries(DISCOVERY_REWARDS).map(([id,r])=>'<article class="career-card"><h4>'+r.name+'</h4>'+requirementRow('Postup',discoveryProgress(id),r.goal)+'<p>'+r.yang+' Yang · trvalo '+Object.entries(r.bonus).map(([k,n])=>'+'+n+' '+ITEM_STATS[k]).join(', ')+'</p><button data-discovery-claim="'+id+'" '+(p.discovery.claimed[id]||discoveryProgress(id)<r.goal?'disabled':'')+'>'+(p.discovery.claimed[id]?'Vyzdvihnuté':'Vyzdvihnúť odmenu')+'</button></article>').join('')+'<h3>Skryté lokality · '+Object.keys(p.discovery.places).length+' / 3</h3><p>'+Object.entries(SECRET_PLACES).map(([id,s])=>p.discovery.places[id]?s.name+' · '+MAPS[s.map].name:'Neobjavené · '+MAPS[s.map].name).join('<br>')+'</p><h3>Dočasné ruiny</h3><p>'+(Object.entries(p.discovery.eventPlaces||{}).map(([id,n])=>MAPS[id].name+' · '+n+' objavov').join('<br>')||'Bez objavov.')+'</p>';
 }
 function bindDiscoveryUI(){document.querySelectorAll('[data-discovery-claim]').forEach(b=>b.onclick=()=>{if(claimDiscoveryReward(b.dataset.discoveryClaim))careerPanel('discovery');});document.querySelectorAll('[data-bestiary]').forEach(node=>{const s=p.discovery.seen[node.dataset.bestiary],old={ctx,cam:{...cam},W,H,map:p.mapId};try{ctx=node.getContext('2d');W=220;H=200;cam.x=0;cam.y=0;p.mapId=s.locations.find(k=>Object.hasOwn(MAPS,k))||'valley';ctx.clearRect(0,0,W,H);const m={...s,x:0,y:95,hp:s.hp,max:s.hp,hit:0,metinCombat:0,name:s.name,metinType:s.metinType};drawMobBase(m);}finally{ctx=old.ctx;Object.assign(cam,old.cam);W=old.W;H=old.H;p.mapId=old.map;}});}
 function drawSecretPlace(id){const s=SECRET_PLACES[id],a=screen(s.x,s.y);if(a.x<-70||a.x>W+70||a.y<-70||a.y>H+70)return;polygon([[a.x-18,a.y],[a.x-15,a.y-22],[a.x+14,a.y-26],[a.x+20,a.y]],'#68796a','#c7b887');line(a.x-5,a.y-17,a.x+6,a.y-9,'#d7c58e',2);if(p.discovery.places[id])text(s.name,a.x,a.y-38,'#ddcea2',11);}
@@ -1207,10 +1224,10 @@ function hit(m, amount, type='physical',penetrated=false) {
       if (rand() < .25) spawnGroundDrop({ kind: 'supply', supplyId: 'potions', count: 1 }, m);
     }
     if(m.dungeonBoss)dungeonBossReward(m);
-    experience(gained);
+    experience(gained);worldEventKill(m);
     float(gained ? '+' + gained + ' EXP' : 'Slabý cieľ · bez EXP', m.x, m.y - 85, gained ? '#d6c28c' : '#8e9f92');
-    if (m.type === 'boss'&&!m.dungeonBoss) toast('Strážca padol! Korisť leží na zemi · klikni alebo Y.');
-    else if (!p.claimed && p.kills >= 5 && p.stones >= 3) toast('Úloha splnená! Vyzdvihni si odmenu.');
+    if (m.type === 'boss'&&!m.dungeonBoss&&!m.worldEventId) toast('Strážca padol! Korisť leží na zemi · klikni alebo Y.');
+    else if (!m.worldEventId&&!p.claimed && p.kills >= 5 && p.stones >= 3) toast('Úloha splnená! Vyzdvihni si odmenu.');
   }
   return actual;
 }
@@ -1296,8 +1313,10 @@ function updateCombat(dt) {
   if(active('spirit')&&!isSanctuary(p)){spiritTick-=dt;if(spiritTick<=0){spiritTick=1.5;const m=nearest(430);if(m)shoot(m,.85,'fireArrow',{skillKey:'black:3',type:'fire',multiplier:1});}}
 }
 
-function updateBoss(dt,safe){const b=mobs.find(m=>m.type==='boss');if(!b||b.hp<=0||b.stun>0)return;if(b.dungeonBoss){updateDungeonBoss(b,dt,safe);return;}const d=Math.hypot(b.x-p.x,b.y-p.y);if(safe||(!(b.taunt>0||b.engaged>0)&&d>500)||active('stealth')){b.windup=0;b.taunt=0;b.engaged=0;const home=Math.hypot(b.x-b.homeX,b.y-b.homeY);if(home>4)walkEnemy(b,b.homeX,b.homeY,90,dt);b.hp=Math.min(b.max,b.hp+10*dt);return;}const enraged=b.hp<b.max*.3&&!(b.suppressed>0);if(b.windup>0){b.windup-=dt;if(b.windup<=0){b.cd=enraged?2:3;if(d<120){takeDamage(Math.round(26*(b.attackScale||map().scale)*(enraged?1.3:1)),b);beep(90,.25);}else float('ÚHYB!',p.x,p.y-75,'#acd9b0');}return;}if(d<100&&b.cd<=0){b.windup=1;beep(100,.2);return;}if(d>65){const speed=(enraged?115:90)*(b.slow>0?.55:1)*(active('fear')?.65:1);walkEnemy(b,p.x,p.y,speed,dt);}}
+function updateSingleBoss(b,dt,safe){if(!b||b.hp<=0||b.stun>0)return;if(b.dungeonBoss){updateDungeonBoss(b,dt,safe);return;}const d=Math.hypot(b.x-p.x,b.y-p.y);if(safe||(!(b.taunt>0||b.engaged>0)&&d>500)||active('stealth')){b.windup=0;b.taunt=0;b.engaged=0;const home=Math.hypot(b.x-b.homeX,b.y-b.homeY);if(home>4)walkEnemy(b,b.homeX,b.homeY,90,dt);b.hp=Math.min(b.max,b.hp+10*dt);return;}const enraged=b.hp<b.max*.3&&!(b.suppressed>0);if(b.windup>0){b.windup-=dt;if(b.windup<=0){b.cd=enraged?2:3;if(d<120){takeDamage(Math.round(26*(b.attackScale||map().scale)*(enraged?1.3:1)),b);beep(90,.25);}else float('ÚHYB!',p.x,p.y-75,'#acd9b0');}return;}if(d<100&&b.cd<=0){b.windup=1;beep(100,.2);return;}if(d>65){const speed=(enraged?115:90)*(b.slow>0?.55:1)*(active('fear')?.65:1);walkEnemy(b,p.x,p.y,speed,dt);}}
 
+
+function updateBoss(dt,safe){for(const boss of mobs.filter(m=>m.type==='boss'&&m.hp>0))updateSingleBoss(boss,dt,safe);}
 
 
 // src/js/systems/progression.js
@@ -1365,13 +1384,113 @@ function migrateMapSize(state,id){
 }
 
 
+// src/js/systems/world-events.js
+let worldEventState=null;
+function initializeWorldEvents(){p.career.worldEvents??={schema:1,serial:0,completed:{}};p.discovery.eventPlaces??={};}
+function worldEventMap(id=p.mapId){return Object.hasOwn(MAPS,id)&&!MAPS[id].town&&!MAPS[id].instance;}
+function worldEventsAllowed(){return worldEventMap()&&!dungeonRun()&&!p.career.endgame.run;}
+function worldEventRandom(){worldEventState.seed=(Math.imul(worldEventState.seed,1664525)+1013904223)>>>0;return worldEventState.seed/4294967296;}
+function worldEventSnapshot(){return worldEventState?copyCharacterData(worldEventState):null;}
+function restoreWorldEvents(state,population,prior=[]){
+ worldEventState=null;if(!worldEventsAllowed())return;
+ worldEventState=state?copyCharacterData(state):{schema:1,mapId:p.mapId,seed:appearanceHash((p.characterId||'player')+p.mapId),nextCheck:WORLD_EVENT_RULES.firstCheck,active:null};
+ const event=worldEventState.active;if(!event)return;
+ const members=prior.filter(m=>m.worldEventId===event.id),parents=new Set(members.filter(m=>m.type==='stone').map(m=>m.spawnId));
+ for(const m of prior)if(m.worldEventId===event.id||parents.has(m.metinParentId))population.push({...cloneEnemyState(m),taunt:0,engaged:0,windup:0,stun:0,roamTarget:null,returning:false});
+}
+function worldEventPosition(){
+ let point={x:SIZE/2,y:SIZE/2};
+ for(let attempt=0;attempt<48;attempt++){
+  point={x:220+worldEventRandom()*(SIZE-440),y:220+worldEventRandom()*(SIZE-440)};
+  if(Math.hypot(point.x-safeZone().x,point.y-safeZone().y)>safeZone().radius+320&&Math.hypot(point.x-p.x,point.y-p.y)>520&&!mobs.some(m=>m.hp>0&&Math.hypot(m.x-point.x,m.y-point.y)<110))break;
+ }
+ return safePosition(point,180);
+}
+function worldEventEnemy(event,index){
+ const spec=WORLD_EVENTS[event.type],type=spec.kind==='boss'?'boss':spec.kind==='stone'?'stone':'wolf',point={id:event.id,kind:type==='wolf'?'pack':type,area:farmAreaAt(event).id,offset:0};
+ const enemy=createSpawnEnemy(point,index),angle=worldEventRandom()*Math.PI*2,radius=spec.count>1?35+worldEventRandom()*65:0,at=safePosition({x:event.x+Math.cos(angle)*radius,y:event.y+Math.sin(angle)*radius},60);
+ Object.assign(enemy,{...at,homeX:at.x,homeY:at.y,level:event.level,baseLevel:event.level,noRespawn:true,worldEventId:event.id,spawnId:event.id+':'+index,spawnPointId:event.id,spawnSlot:index,variant:type==='wolf'?(event.type==='patrol'||index?'elite':'rare'):'rare',engaged:0,taunt:0});
+ if(type==='stone'){
+  configureMetin(enemy,{id:event.id,metinType:metinTypeForLevel(event.level),metinLevel:event.level});enemy.max=Math.round(enemy.max*2.4);enemy.hp=enemy.max;enemy.baseMax=enemy.max;enemy.metinArmor=Math.round(enemy.metinArmor*1.15);enemy.name='Vzácny '+METIN_TYPES[enemy.metinType].name;enemy.rareMetin=true;
+ }else{
+  enemy.max=Math.round((type==='boss'?620:55)*map().scale*(1+Math.max(0,event.level-map().enemyLevel)*.08)*(type==='boss'?2.8:enemy.variant==='rare'?2.8:1.8));enemy.hp=enemy.max;enemy.baseMax=enemy.max;enemy.attackScale=map().scale*(type==='boss'?2.2:enemy.variant==='rare'?1.7:1.35);enemy.baseAttack=enemy.attackScale;
+  enemy.name=type==='boss'?'Prastarý '+map().boss:event.type==='patrol'?'Elitný hliadkar':event.type==='convoy'?['Veliteľ sprievodu','Jedový lovec','Ľadový strážca','Temný bojovník','Stopár sprievodu'][index]:index?'Elitný lovec':'Veliteľ lovcov';
+  if(event.type==='convoy'){enemy.skin=['demon','scorpion','yeti','demon','wolf'][index];enemy.damageType=['dark','poison','physical','fire','physical'][index];if(index===2)enemy.resistances={physical:.35};}
+ }
+ return enemy;
+}
+function startWorldEvent(type){
+ if(!running||paused||p.hp<=0||!worldEventsAllowed()||!worldEventState||worldEventState.active||!Object.hasOwn(WORLD_EVENTS,type))return false;
+ const spec=WORLD_EVENTS[type];if(map().metinsOnly&&['group','boss'].includes(spec.kind))return false;
+ const at=worldEventPosition(),range=farmAreaLevelRange(farmAreaAt(at));
+ const level=Math.min(99,map().metinsOnly?range[0]+Math.floor(worldEventRandom()*(range[1]-range[0]+1)):range[0]+(spec.kind==='boss'?18:spec.kind==='stone'?10:4));
+ const serial=++p.career.worldEvents.serial,event={id:p.mapId+':event:'+serial,serial,type,...at,level,remaining:spec.duration,kills:0,total:spec.count,revealed:spec.kind!=='secret'};
+ worldEventState.active=event;for(let i=0;i<spec.count;i++)mobs.push(worldEventEnemy(event,i));
+ toast(spec.name+' · '+(spec.kind==='secret'?'Objavili sa neznáme stopy.':farmAreaAt(event).name));return true;
+}
+function purgeWorldEventMembers(event){
+ const parents=new Set(mobs.filter(m=>m.worldEventId===event.id&&m.type==='stone').map(m=>m.spawnId));
+ for(let i=mobs.length-1;i>=0;i--){const m=mobs[i];if(m.worldEventId!==event.id&&!parents.has(m.metinParentId))continue;if(target===m)clearCombatTarget();m.hp=0;m.dot=null;m.dots=[];m.windup=0;m.taunt=0;m.engaged=0;mobs.splice(i,1);}
+}
+function finishWorldEvent(success,source=null){
+ const event=worldEventState?.active;if(!event)return false;const spec=WORLD_EVENTS[event.type];worldEventState.active=null;
+ worldEventState.nextCheck=WORLD_EVENT_RULES.minCheck+worldEventRandom()*(WORLD_EVENT_RULES.maxCheck-WORLD_EVENT_RULES.minCheck);
+ purgeWorldEventMembers(event);
+ if(success){const completed=p.career.worldEvents.completed;completed[event.type]=(completed[event.type]||0)+1;
+  if(spec.kind==='secret')p.discovery.eventPlaces[p.mapId]=(p.discovery.eventPlaces[p.mapId]||0)+1;
+  if(spec.kind!=='drop'){
+   const at=source||event;spawnGroundDrop({kind:'gold',count:Math.round((['boss','stone'].includes(spec.kind)?1000:300)*map().scale)},at);
+   if(rewardEligible({level:event.level})){
+    dropMaterial('ore',spec.kind==='group'?5:12,at);dropMaterial('upgradeStones',spec.kind==='group'?1:3,at);
+    if(['boss','stone','secret'].includes(spec.kind)||event.type==='convoy'){const rarity=event.level>=75&&worldEventRandom()<.04?5:event.level>=50?4:2,slot=Object.keys(EQUIPMENT)[Math.floor(worldEventRandom()*Object.keys(EQUIPMENT).length)];spawnGroundDrop({kind:'gear',item:generateEquipmentItem(slot,rarity,event.level)},at);}
+   }
+  }
+  toast('Udalosť dokončená: '+spec.name);
+ }else toast('Udalosť sa skončila: '+spec.name);
+ save();return true;
+}
+function worldEventKill(enemy){
+ const event=worldEventState?.active;if(!event)return;
+ if(WORLD_EVENTS[event.type].kind==='drop'&&enemy.type==='wolf'&&!enemy.metinParentId&&rewardEligible(enemy)){
+  event.kills++;if(worldEventRandom()<.5)dropMaterial('ore',1,enemy);if(worldEventRandom()<.1)dropMaterial('upgradeStones',1,enemy);return;
+ }
+ if(enemy.worldEventId!==event.id)return;event.kills++;
+ if(!mobs.some(m=>m.worldEventId===event.id&&m.hp>0))finishWorldEvent(true,enemy);
+}
+function suspendWorldEvents(){if(worldEventState?.active)purgeWorldEventMembers(worldEventState.active);worldEventState=null;}
+function updateWorldEvents(dt){
+ if(!running||paused||p.hp<=0||!worldEventsAllowed()||!worldEventState)return;
+ const event=worldEventState.active;
+ if(event){
+  event.remaining=Math.max(0,event.remaining-dt);const distance=Math.hypot(p.x-event.x,p.y-event.y);
+  if(WORLD_EVENTS[event.type].kind==='secret'){if(distance<420)event.revealed=true;if(distance<90){finishWorldEvent(true,event);return;}}
+  if(event.remaining<=0)finishWorldEvent(WORLD_EVENTS[event.type].kind==='drop'&&event.kills>0);
+  return;
+ }
+ worldEventState.nextCheck=Math.max(0,worldEventState.nextCheck-dt);if(worldEventState.nextCheck>0)return;
+ worldEventState.nextCheck=WORLD_EVENT_RULES.minCheck+worldEventRandom()*(WORLD_EVENT_RULES.maxCheck-WORLD_EVENT_RULES.minCheck);
+ let roll=worldEventRandom();for(const [id,spec]of Object.entries(WORLD_EVENTS)){if(map().metinsOnly&&['group','boss'].includes(spec.kind))continue;roll-=spec.chance;if(roll<0){startWorldEvent(id);break;}}
+}
+function validateWorldEventSnapshot(state){
+ const events=state.events;if(events==null){if(state.mobs.some(m=>m.worldEventId))characterDataError('nepriateľ bez udalosti.');return;}
+ assertCharacterObject(events,'udalosti mapy');if(events.schema!==1||!worldEventMap(events.mapId))characterDataError('mapa udalosti.');assertCharacterNumber(events.seed,'náhoda udalostí',0,4294967295,true);assertCharacterNumber(events.nextCheck,'čas ďalšej udalosti',0,180);
+ const event=events.active;if(event!==null){assertCharacterObject(event,'udalosť');if(!Object.hasOwn(WORLD_EVENTS,event.type))characterDataError('typ udalosti.');const spec=WORLD_EVENTS[event.type];assertCharacterNumber(event.serial,'ID udalosti',1,Number.MAX_SAFE_INTEGER,true);if(event.id!==events.mapId+':event:'+event.serial||MAPS[events.mapId].metinsOnly&&['group','boss'].includes(spec.kind))characterDataError('identita udalosti.');for(const key of ['x','y'])assertCharacterNumber(event[key],'poloha udalosti',45,MAPS[events.mapId].size-45);assertCharacterNumber(event.level,'úroveň udalosti',1,99,true);assertCharacterNumber(event.remaining,'čas udalosti',0,spec.duration);assertCharacterNumber(event.kills,'postup udalosti',0,spec.kind==='drop'?1e12:spec.count,true);if(event.total!==spec.count||typeof event.revealed!=='boolean')characterDataError('cieľ udalosti.');}
+ const members=state.mobs.filter(m=>m.worldEventId);if(!event&&members.length||members.length>WORLD_EVENT_RULES.maxMembers)characterDataError('populácia udalosti.');
+ if(event){const spec=WORLD_EVENTS[event.type];if(members.length!==spec.count)characterDataError('neúplná populácia udalosti.');for(const m of members)if(m.worldEventId!==event.id||m.spawnId!==event.id+':'+m.spawnSlot||m.spawnPointId!==event.id||!Number.isInteger(m.spawnSlot)||m.spawnSlot<0||m.spawnSlot>=spec.count||m.noRespawn!==true||m.level!==event.level||m.type!==(spec.kind==='group'?'wolf':spec.kind))characterDataError('neplatný nepriateľ udalosti.');if(spec.count&&members.filter(m=>m.hp<=0).length!==event.kills)characterDataError('nesúlad postupu udalosti.');}
+}
+function validateWorldEventsProfile(data){
+ const c=data.career.worldEvents;if(c!==undefined){assertCharacterObject(c,'postup udalostí');if(c.schema!==1)characterDataError('verzia udalostí.');assertCharacterNumber(c.serial,'séria udalostí',0,Number.MAX_SAFE_INTEGER,true);assertCharacterObject(c.completed,'dokončené udalosti');for(const [id,n]of Object.entries(c.completed)){if(!Object.hasOwn(WORLD_EVENTS,id))characterDataError('záznam udalosti.');assertCharacterNumber(n,'počet udalostí',1,1e12,true);}}
+ for(const [id,state]of Object.entries(data.worldStates||{})){if(state?.events&&state.events.mapId!==id)characterDataError('nesúlad mapy udalosti.');if(state?.events?.active&&(!c||state.events.active.serial>c.serial))characterDataError('referencia udalosti.');}if(data.career.normalTemple?.events&&data.career.normalTemple.events.mapId!=='temple')characterDataError('mapa udalosti chrámu.');if(data.career.normalTemple?.events?.active&&(!c||data.career.normalTemple.events.active.serial>c.serial))characterDataError('referencia udalosti chrámu.');
+}
+
+
 // src/js/systems/world.js
 function map(){return MAPS[p.mapId]||MAPS.valley;}
 
 function snapshotMap() {
   if (!mobs.length&&!map().town) return;
   p.worldStates[p.mapId] = {
-    worldSize:SIZE,layoutSchema: SPAWN_LAYOUT_VERSION, progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
+    events:worldEventSnapshot(),worldSize:SIZE,layoutSchema: SPAWN_LAYOUT_VERSION, progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
     mobs: mobs.map(cloneEnemyState),
     drops: drops.map(cloneGroundDrop)
   };
@@ -1402,6 +1521,7 @@ function loadMap(id, initial=false) {
   spawnPoints.push(...buildSpawnPoints(id));
   const oldRun=p.career.endgame.run&&id==='temple'&&old?.mobs?.length&&old.spawnSchema!==SPAWN_RULES.schema;
   const population=cfg.instance?hydrateDungeonPopulation(old):oldRun?loadLegacyRift(old):hydrateSpawnPopulation(old);
+  restoreWorldEvents(old?.events,population,old?.mobs||[]);
   mobs.length=0; mobs.push(...population); drops.length=0;
   drops.push(...hydrateGroundDrops(old?.drops||[]));
   clearLootPointer();
@@ -1453,6 +1573,7 @@ function initializeCareer() {
   initializeEconomy();
   initializeDungeons();
   initializePrestige();
+  initializeWorldEvents();
   p.level = Math.max(1, Math.min(PROGRESSION.maxLevel, p.level));
   if (p.level === PROGRESSION.maxLevel) p.xp = 0;
   // World difficulty changed; preserve death timers/positions while scaling HP proportionally.
@@ -1646,6 +1767,7 @@ function enterRift() {
   end.run = { id: (p.career.riftSerial = (p.career.riftSerial || 0) + 1), tier, kills: 0, bosses: 0, active: true };
   // Separate expedition enemies from the ordinary map snapshot.
   p.career.normalTemple = p.worldStates.temple;
+  suspendWorldEvents();
   drops.length = 0;
   mobs.forEach(m => {
     applyRiftScaling(m, tier, end.run.id);
@@ -3661,7 +3783,8 @@ function journal(){
  if(!running)return;
  const huntTarget=(p.huntClaimed+1)*10;
  const card=(title,objectives,reward,button)=>'<article class="journal-entry"><h3>'+title+'</h3><div class="requirements"><div class="requirement-heading"><span>Cieľ</span><span>Postup / Cieľ</span></div>'+objectives+'</div><p class="quest-reward"><b>Odmena</b> · '+reward+'</p>'+button+'</article>';
- modal('<span class="eyebrow">ÚLOHY · J</span><h2>Denník úloh</h2>'+card('Praskliny v pokoji',requirementRow('Príšery',Math.min(p.kills,5),5)+requirementRow('Kamene',Math.min(p.stones,3),3),'150 Yang + 60 skúseností','<button class="primary" id="journalMain" '+(p.claimed||p.kills<5||p.stones<3?'disabled':'')+'>'+(p.claimed?'✓ Dokončené':'Vyzdvihnúť odmenu')+'</button>')+card('Prvý strážca',requirementRow('Boss · Údolie: odporúčaná úroveň 10+',Math.min(p.bossKills,1),1),'epická výbava + 200 Yang + 80 skúseností','<button class="primary" id="claimBoss" '+(p.bossClaimed||!p.bossKills?'disabled':'')+'>'+(p.bossClaimed?'✓ Dokončené':'Vyzdvihnúť odmenu')+'</button>')+card('Lovec údolia · opakovateľná',requirementRow('Primerané príšery',Math.min(p.career.eligibleKills,huntTarget),huntTarget),'60 Yang + 1 tréningová pečať (bez EXP)','<button class="primary" id="claimHunt" '+(p.career.eligibleKills<huntTarget?'disabled':'')+'>Vyzdvihnúť odmenu</button>')+biologyJournalCard(),{key:'journal'});
+ modal('<span class="eyebrow">ÚLOHY · J</span><h2>Denník úloh</h2>'+card('Praskliny v pokoji',requirementRow('Príšery',Math.min(p.kills,5),5)+requirementRow('Kamene',Math.min(p.stones,3),3),'150 Yang + 60 skúseností','<button class="primary" id="journalMain" '+(p.claimed||p.kills<5||p.stones<3?'disabled':'')+'>'+(p.claimed?'✓ Dokončené':'Vyzdvihnúť odmenu')+'</button>')+card('Prvý strážca',requirementRow('Boss · Údolie: odporúčaná úroveň 10+',Math.min(p.bossKills,1),1),'epická výbava + 200 Yang + 80 skúseností','<button class="primary" id="claimBoss" '+(p.bossClaimed||!p.bossKills?'disabled':'')+'>'+(p.bossClaimed?'✓ Dokončené':'Vyzdvihnúť odmenu')+'</button>')+card('Lovec údolia · opakovateľná',requirementRow('Primerané príšery',Math.min(p.career.eligibleKills,huntTarget),huntTarget),'60 Yang + 1 tréningová pečať (bez EXP)','<button class="primary" id="claimHunt" '+(p.career.eligibleKills<huntTarget?'disabled':'')+'>Vyzdvihnúť odmenu</button>')+biologyJournalCard()+worldEventsJournalCard(),{key:'journal'});
+ $('journalEvents').onclick=()=>careerPanel('events');
  $('journalBiology').onclick=()=>careerPanel('biology');
  $('journalMain').onclick=()=>{if(p.claimed||p.kills<5||p.stones<3)return;$('claim').onclick();journal();};$('claimBoss').onclick=claimBoss;$('claimHunt').onclick=claimHunt;
 }
@@ -3994,7 +4117,7 @@ function metinCodex() {
 // src/js/ui/battle.js
 let combatHudSignature='';
 
-function enemyName(enemy) { return enemy.type==='stone'?(METIN_TYPES[enemy.metinType]?.name||'Metin'):enemy.type==='boss'?map().boss:enemy.name||map().mob; }
+function enemyName(enemy) { if(enemy.name)return enemy.name;return enemy.type==='stone'?(METIN_TYPES[enemy.metinType]?.name||'Metin'):enemy.type==='boss'?map().boss:enemy.name||map().mob; }
 function resistanceText(value) { return (value>0?'+':'')+Number((value*100).toFixed(1)).toLocaleString('sk-SK')+' %'; }
 
 function updateCombatHUD() {
@@ -4049,7 +4172,7 @@ function renderClasses() {}
 
 function updateClassHUD(){$('portrait').textContent=({warrior:'侍',ninja:'影',sura:'魔',shaman:'龍'})[p.classId];$('playername').textContent=characterDisplayName(p)+prestigeSuffix(p);$('playerclass').textContent=role().name;school().skills.forEach((s,i)=>{$(i?'skill'+(i+1):'skill').querySelector('small').textContent=s[0];$(i?'skill'+(i+1):'skill').title=`${s[0]} · stupeň ${skillProgress(skillKey(i)).rank} · ${s[3]} many · ${s[2]} s\n${s[6]}`;});$('attack').querySelector('small').textContent=p.classId==='ninja'&&p.schools.ninja==='archery'?'Streľba':p.classId==='shaman'?'Úder vejárom':'Základný útok';}
 
-function updateHUD(){baseHUD();$('potion-cooldown').textContent=potionCooldownRemaining()>0?Math.ceil(potionCooldownRemaining()):'';$('potion').title='Elixír · +65 HP · spoločný cooldown 4 s';$('capes').textContent=p.braveryCapes;$('cape-cooldown').textContent=capeCooldown>0?Math.ceil(capeCooldown):'';p.mp=Math.max(0,Math.min(maxMP(),p.mp));$('mpbar').style.width=p.mp/maxMP()*100+'%';$('mptext').textContent=Math.ceil(p.mp)+' / '+maxMP();for(let i=0;i<6;i++)$(i?'cooldown'+(i+1):'cooldown').textContent=spellCD[i]>0?Math.ceil(spellCD[i]):'';$('coords').textContent=map().town?'Mesto · NPC F':isSanctuary(p)?'Bezpečná zóna':farmAreaAt().name+(map().metinsOnly?' · Metiny Lv.':' · Lv.')+farmAreaLevelRange(farmAreaAt()).join('–');$('buffs').textContent=(p.career.alchemy.active?ALCHEMY_PRODUCTS[p.career.alchemy.active.id].name+' '+Math.ceil(p.career.alchemy.active.remaining)+'s · ':'')+Object.entries(buffs).map(([id,t])=>{const s=Object.values(SCHOOLS).flatMap(c=>c.skills).find(s=>s[1]===id);return(s?s[0]:id)+' '+Math.ceil(t)+'s';}).join(' · ');if(p.claimed)$('questnote').textContent='✓ Dokončené · ďalšie úlohy v denníku J';updateCombatHUD();updateCombatAssistHUD();updateHotbarState();updateDungeonHUD();}
+function updateHUD(){baseHUD();$('potion-cooldown').textContent=potionCooldownRemaining()>0?Math.ceil(potionCooldownRemaining()):'';$('potion').title='Elixír · +65 HP · spoločný cooldown 4 s';$('capes').textContent=p.braveryCapes;$('cape-cooldown').textContent=capeCooldown>0?Math.ceil(capeCooldown):'';p.mp=Math.max(0,Math.min(maxMP(),p.mp));$('mpbar').style.width=p.mp/maxMP()*100+'%';$('mptext').textContent=Math.ceil(p.mp)+' / '+maxMP();for(let i=0;i<6;i++)$(i?'cooldown'+(i+1):'cooldown').textContent=spellCD[i]>0?Math.ceil(spellCD[i]):'';$('coords').textContent=map().town?'Mesto · NPC F':isSanctuary(p)?'Bezpečná zóna':farmAreaAt().name+(map().metinsOnly?' · Metiny Lv.':' · Lv.')+farmAreaLevelRange(farmAreaAt()).join('–');$('buffs').textContent=(p.career.alchemy.active?ALCHEMY_PRODUCTS[p.career.alchemy.active.id].name+' '+Math.ceil(p.career.alchemy.active.remaining)+'s · ':'')+Object.entries(buffs).map(([id,t])=>{const s=Object.values(SCHOOLS).flatMap(c=>c.skills).find(s=>s[1]===id);return(s?s[0]:id)+' '+Math.ceil(t)+'s';}).join(' · ');if(p.claimed)$('questnote').textContent='✓ Dokončené · ďalšie úlohy v denníku J';updateCombatHUD();updateCombatAssistHUD();updateHotbarState();updateDungeonHUD();updateWorldEventsHUD();}
 
 
 
@@ -4172,6 +4295,18 @@ function prestigeRefinementPanel(){
 }
 
 
+// src/js/ui/world-events.js
+function worldEventTime(seconds){seconds=Math.ceil(seconds);return Math.floor(seconds/60)+':'+String(seconds%60).padStart(2,'0');}
+function worldEventsPanel(){
+ const active=worldEventState?.active,spec=active?WORLD_EVENTS[active.type]:null;
+ return '<h3>Udalosti sveta</h3>'+(active?'<article class="career-card"><h4>'+spec.name+' · '+worldEventTime(active.remaining)+'</h4><p>'+spec.objective+'<br>'+(!active.revealed?'Miesto neznáme.':farmAreaAt(active).name+' · '+Math.round(active.x)+', '+Math.round(active.y))+' · úroveň '+active.level+'</p>'+(spec.count?requirementRow('Porazení nepriatelia',active.kills,spec.count):'')+'<p>'+spec.reward+'</p></article>':'<p>Na tejto mape práve neprebieha udalosť.</p>')+
+ '<p>Čas udalostí plynie pri hraní príslušnej mapy. Ostatné mapy, otvorené okná a offline hra čas pozastavia. V Meste, dungeonoch a trhlinách udalosti nevznikajú.</p><h3>Možné udalosti</h3>'+Object.entries(WORLD_EVENTS).map(([id,event])=>'<article class="career-card"><h4>'+event.name+'</h4><p>Šanca pri kontrole: '+(event.chance*100).toLocaleString('sk-SK')+' % · trvanie '+worldEventTime(event.duration)+'<br>'+event.objective+'<br>'+event.reward+'</p><small>Dokončené: '+(p.career.worldEvents.completed[id]||0)+'</small></article>').join('')+
+ '<p>Bonusová výbava: Epic do Lv.49, Legendary od Lv.50; od Lv.75 namiesto nej Mythic 4 %. Zaručená pri primeranom bossovi, vzácnom Metine, ruinách a démonickom sprievode. Zásoby a Yang sa pripíšu priamo, výbavu zbieraš klikom alebo Y.</p><h3>Objavené ruiny</h3><p>'+ (Object.entries(p.discovery.eventPlaces||{}).map(([id,n])=>MAPS[id].name+' · '+n+' objavov').join('<br>')||'Bez objavov.')+'</p>';
+}
+function worldEventsJournalCard(){const event=worldEventState?.active;return '<article class="journal-entry"><h3>Udalosti sveta</h3><p>'+(event?WORLD_EVENTS[event.type].name+' · zostáva '+worldEventTime(event.remaining):'Na tejto mape nie je aktívna udalosť.')+'</p><button id="journalEvents">Zobraziť udalosti</button></article>';}
+function updateWorldEventsHUD(){const button=$('world-event-status'),event=worldEventState?.active;button.hidden=!event||!running;if(!event)return;button.textContent=WORLD_EVENTS[event.type].name+' · '+worldEventTime(event.remaining);button.title='Udalosť sveta · cieľ, miesto a odmena';button.onclick=()=>careerPanel('events');}
+
+
 // src/js/ui/career.js
 const forgeOptions={};
 function costLabel(cost) {
@@ -4244,7 +4379,7 @@ function careerPanel(tab = careerTab) {
     skills: ['Schopnosti', careerSkills], biology: ['Biológ', careerBiology],
     forge: ['Vylepšovanie', careerForge], crafting: ['Výroba', () => craftingRecipesPanel('crafting')], alchemy: ['Alchýmia', () => craftingRecipesPanel('alchemy') + careerAlchemy()],
     collection: ['Relikvie', careerCollection], specialization: ['Špecializácia', careerSpecialization],
-    prestige: ['Prestíž', prestigePanel], dungeons: ['Dungeony', dungeonContent], endgame: ['Endgame', careerEndgame]
+    events: ['Udalosti', worldEventsPanel], prestige: ['Prestíž', prestigePanel], dungeons: ['Dungeony', dungeonContent], endgame: ['Endgame', careerEndgame]
   };
   if(tab!==careerTab)craftingFilter='all';
   careerTab = tabs[tab] ? tab : 'overview';
@@ -4434,7 +4569,7 @@ function drawMobBase(m){if(m.hp<=0)return;if(m.dungeonBoss||m.dungeonSeal){drawD
 
 function baseGround(){ctx.fillStyle='#536b45';ctx.fillRect(0,0,W,H);const gx=Math.floor((cam.x-W/2)/90)*90,gy=Math.floor((cam.y-H/.62/2)/90)*90;for(let x=gx;x<cam.x+W/2+90;x+=90)for(let y=gy;y<cam.y+H/.62/2+90;y+=90){const v=Math.sin(x*34.3+y*41.2)*43758.54,n=v-Math.floor(v),pos=screen(x,y);ellipse(pos.x,pos.y,70+n*35,27+n*14,`rgba(${n>.5?'115,135,76':'45,86,55'},.16)`);for(let k=0;k<4;k++){const a=pos.x+Math.sin(x+y+k*70)*40,b=pos.y+Math.cos(x-y+k*30)*25;line(a,b,a+2,b-4,'#a4b27a28');}}ctx.lineCap='round';for(const points of [[[100,1200],[520,1070],[1000,1090],[1450,900],[1900,670]],[[1000,1090],[900,750],[610,630]],[[1000,1090],[1270,1330],[1440,1430]]]){ctx.beginPath();points.forEach(([x,y],i)=>{const a=screen(x,y);i?ctx.lineTo(a.x,a.y):ctx.moveTo(a.x,a.y);});ctx.lineWidth=57;ctx.strokeStyle='#a29c7250';ctx.stroke();ctx.lineWidth=35;ctx.strokeStyle='#bab08426';ctx.stroke();}const water=screen(270,480);ctx.save();ctx.translate(water.x,water.y);ctx.rotate(-.3);ellipse(0,0,165,85,'#3b665e');ellipse(0,0,150,74,'#517c6c');for(let i=0;i<8;i++)line(-100+i*18,Math.sin(i+clock*.3)*30,-70+i*18,Math.sin(i+clock*.3)*30,'#95b8a43a');ctx.restore();}
 
-function drawBoss(b){const{x,y}=screen(b.x,b.y);if(x<-150||x>W+150||y<-80||y>H+150)return;shadow(x,y,2.1);if(b.windup>0){ellipse(x,y,120,74,'#db554633');ctx.strokeStyle='#f2a179';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(x,y,120,74,0,0,Math.PI*2);ctx.stroke();text('ÚDER · USTÚP!',x,y+92,'#f6ad8c',11);}line(x-15,y-14,x-22,y+4,'#4c3f38',9);line(x+15,y-14,x+22,y+4,'#4c3f38',9);polygon([[x-24,y-64],[x-33,y-37],[x-25,y-8],[x+25,y-8],[x+33,y-37],[x+24,y-64]],b.hit>0?'#e8c8a6':p.mapId==='snow'?'#c3d5cf':p.mapId==='temple'?'#ac6750':p.mapId==='desert'?'#ac8b53':'#76684c','#b09b6b');polygon([[x-18,y-56],[x,y-77],[x+18,y-56],[x+12,y-33],[x-12,y-33]],'#9a9a73');ellipse(x,y-70,15,16,'#9c9672');polygon([[x-14,y-76],[x-32,y-102],[x-24,y-74],[x-12,y-65]],'#c0b187');polygon([[x+14,y-76],[x+32,y-102],[x+24,y-74],[x+12,y-65]],'#c0b187');line(x-9,y-72,x-3,y-70,'#f1b17f',3);line(x+3,y-70,x+9,y-72,'#f1b17f',3);line(x+36,y-20,x+49,y-77,'#786344',6);polygon([[x+47,y-80],[x+65,y-78],[x+62,y-54],[x+44,y-57]],'#b4b18b');text(map().boss,x,y-126,'#f0c490',12);ctx.fillStyle='#1b2921';ctx.fillRect(x-55,y-114,110,6);ctx.fillStyle='#c88165';ctx.fillRect(x-55,y-114,110*b.hp/b.max,6);}
+function drawBoss(b){const{x,y}=screen(b.x,b.y);if(x<-150||x>W+150||y<-80||y>H+150)return;shadow(x,y,2.1);if(b.windup>0){ellipse(x,y,120,74,'#db554633');ctx.strokeStyle='#f2a179';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(x,y,120,74,0,0,Math.PI*2);ctx.stroke();text('ÚDER · USTÚP!',x,y+92,'#f6ad8c',11);}line(x-15,y-14,x-22,y+4,'#4c3f38',9);line(x+15,y-14,x+22,y+4,'#4c3f38',9);polygon([[x-24,y-64],[x-33,y-37],[x-25,y-8],[x+25,y-8],[x+33,y-37],[x+24,y-64]],b.hit>0?'#e8c8a6':p.mapId==='snow'?'#c3d5cf':p.mapId==='temple'?'#ac6750':p.mapId==='desert'?'#ac8b53':'#76684c','#b09b6b');polygon([[x-18,y-56],[x,y-77],[x+18,y-56],[x+12,y-33],[x-12,y-33]],'#9a9a73');ellipse(x,y-70,15,16,'#9c9672');polygon([[x-14,y-76],[x-32,y-102],[x-24,y-74],[x-12,y-65]],'#c0b187');polygon([[x+14,y-76],[x+32,y-102],[x+24,y-74],[x+12,y-65]],'#c0b187');line(x-9,y-72,x-3,y-70,'#f1b17f',3);line(x+3,y-70,x+9,y-72,'#f1b17f',3);line(x+36,y-20,x+49,y-77,'#786344',6);polygon([[x+47,y-80],[x+65,y-78],[x+62,y-54],[x+44,y-57]],'#b4b18b');text(b.name||map().boss,x,y-126,'#f0c490',12);ctx.fillStyle='#1b2921';ctx.fillRect(x-55,y-114,110,6);ctx.fillStyle='#c88165';ctx.fillRect(x-55,y-114,110*b.hp/b.max,6);}
 
 function drawCreature(m){const{x,y}=screen(m.x,m.y);if(x<-100||x>W+100||y<-90||y>H+90)return;shadow(x,y,1.2);const c=m.hit>0?'#ead1a4':m.skin==='scorpion'?'#9a6037':m.skin==='yeti'?'#e3e9dc':'#a16455';if(m.skin==='scorpion'){for(let i=0;i<3;i++){line(x-9,y-4-i*6,x-25-i*2,y+6-i*7,c,3);line(x+9,y-4-i*6,x+25+i*2,y+6-i*7,c,3);}ellipse(x,y-11,14,17,c);line(x,y-26,x+13,y-43,c,6);line(x+13,y-43,x+7,y-57,c,5);polygon([[x+7,y-58],[x-2,y-46],[x+10,y-48]],'#c5ab76');ellipse(x-23,y-9,7,9,c);ellipse(x+23,y-9,7,9,c);ellipse(x-4,y-8,2,2,'#f1d17e');ellipse(x+4,y-8,2,2,'#f1d17e');}else if(m.skin==='yeti'){line(x-10,y-12,x-13,y+2,c,9);line(x+10,y-12,x+13,y+2,c,9);ellipse(x,y-29,21,26,c);line(x-19,y-37,x-27,y-14,c,9);line(x+19,y-37,x+27,y-14,c,9);ellipse(x,y-53,13,13,c);ellipse(x,y-51,9,6,'#5e7b80');ellipse(x-4,y-53,2,2,'#b4e6ee');ellipse(x+4,y-53,2,2,'#b4e6ee');}else{polygon([[x-15,y-39],[x-39,y-61],[x-33,y-20],[x-12,y-16]],'#6e4a4c');polygon([[x+15,y-39],[x+39,y-61],[x+33,y-20],[x+12,y-16]],'#6e4a4c');line(x-8,y-10,x-13,y+1,c,6);line(x+8,y-10,x+13,y+1,c,6);polygon([[x-15,y-42],[x-11,y-9],[x+11,y-9],[x+15,y-42]],c);ellipse(x,y-47,11,12,c);polygon([[x-9,y-51],[x-18,y-67],[x-4,y-56]],'#c3a78c');polygon([[x+9,y-51],[x+18,y-67],[x+4,y-56]],'#c3a78c');line(x-6,y-48,x-1,y-46,'#f8ca72',2);line(x+1,y-46,x+6,y-48,'#f8ca72',2);}if(m.hp<m.max||(!m.metinParentId&&Math.hypot(m.x-p.x,m.y-p.y)<150)){ctx.fillStyle='#20342c';ctx.fillRect(x-24,y-77,48,4);ctx.fillStyle='#c78d79';ctx.fillRect(x-24,y-77,48*m.hp/m.max,4);text((m.name||map().mob),x,y-87,'#e1d4b7',9);}if(m.dots?.length||m.dot){const dot=m.dots?.[0]||m.dot;text(dot.kind==='poison'?'☠':'♨',x+28,y-35,dot.kind==='poison'?'#c6e58e':'#f8bc76',14);}}
 
@@ -4444,7 +4579,7 @@ function tree(d){if(p.mapId==='desert'){const{x,y}=screen(d.x,d.y),s=d.s;shadow(
 
 function rock(d){baseRock(d);const{x,y}=screen(d.x,d.y),s=d.s;if(p.mapId==='snow')polygon([[x-18*s,y-12*s],[x-6*s,y-24*s],[x+11*s,y-21*s],[x+3*s,y-12*s]],'#dae5d8');else if(p.mapId==='desert')polygon([[x-18*s,y-12*s],[x-6*s,y-24*s],[x+11*s,y-21*s],[x+3*s,y-12*s]],'#c4a06a');else if(p.mapId==='temple')line(x-4*s,y-20*s,x+4*s,y-3*s,'#cf804d',2*s);}
 
-function drawMini(){if(clock-lastMiniMapPaint<.1)return;lastMiniMapPaint=clock;mini.fillStyle=map().ground;mini.fillRect(0,0,138,118);mini.globalAlpha=.4;mini.fillStyle=map().water;mini.beginPath();mini.ellipse(18,28,13,9,0,0,7);mini.fill();for(const d of decor){mini.fillStyle=map().accent;mini.fillRect(d.x/SIZE*138,d.y/SIZE*118,2,2);}mini.globalAlpha=1;drawFarmMinimap();for(const m of mobs)if(m.hp>0){mini.fillStyle=m.type==='boss'?'#ff695c':m.type==='stone'?(METIN_TYPES[m.metinType]?.glow||'#dfb3f0'):m.variant==='rare'?ENEMY_VARIANTS.rare.color:m.variant==='elite'?ENEMY_VARIANTS.elite.color:'#f4cb84';const size=m.type==='wolf'?2:4;mini.fillRect(m.x/SIZE*138-1,m.y/SIZE*118-1,size,size);}mini.fillStyle='#f7edbc';const zone=safeZone();if(!map().town)mini.fillRect(zone.x/SIZE*138,zone.y/SIZE*118,3,3);else for(const npc of Object.values(NPCS)){mini.fillStyle='#cfb97c';mini.fillRect(npc.x/SIZE*138,npc.y/SIZE*118,4,4);}mini.beginPath();mini.arc(p.x/SIZE*138,p.y/SIZE*118,3,0,7);mini.fill();}
+function drawMini(){if(clock-lastMiniMapPaint<.1)return;lastMiniMapPaint=clock;mini.fillStyle=map().ground;mini.fillRect(0,0,138,118);mini.globalAlpha=.4;mini.fillStyle=map().water;mini.beginPath();mini.ellipse(18,28,13,9,0,0,7);mini.fill();for(const d of decor){mini.fillStyle=map().accent;mini.fillRect(d.x/SIZE*138,d.y/SIZE*118,2,2);}mini.globalAlpha=1;drawFarmMinimap();for(const m of mobs)if(m.hp>0){mini.fillStyle=m.type==='boss'?'#ff695c':m.type==='stone'?(METIN_TYPES[m.metinType]?.glow||'#dfb3f0'):m.variant==='rare'?ENEMY_VARIANTS.rare.color:m.variant==='elite'?ENEMY_VARIANTS.elite.color:'#f4cb84';const size=m.type==='wolf'?2:4;mini.fillRect(m.x/SIZE*138-1,m.y/SIZE*118-1,size,size);}mini.fillStyle='#f7edbc';const zone=safeZone();if(!map().town)mini.fillRect(zone.x/SIZE*138,zone.y/SIZE*118,3,3);else for(const npc of Object.values(NPCS)){mini.fillStyle='#cfb97c';mini.fillRect(npc.x/SIZE*138,npc.y/SIZE*118,4,4);}drawWorldEventMini();mini.beginPath();mini.arc(p.x/SIZE*138,p.y/SIZE*118,3,0,7);mini.fill();}
 
 
 
@@ -4534,6 +4669,17 @@ function drawTownNPC(id){
 }
 
 
+// src/js/render/world-events.js
+function drawWorldEventGround(){
+ const event=worldEventState?.active;if(!event)return;const spec=WORLD_EVENTS[event.type],at=screen(event.x,event.y);
+ if(spec.kind==='secret'){
+  if(Math.abs(at.x-W/2)>W/2+120||Math.abs(at.y-H/2)>H/2+120)return;
+  ellipse(at.x,at.y,65,26,'#729d9133');for(let i=0;i<3;i++){const x=at.x+(i-1)*35,y=at.y+(i%2)*16;polygon([[x-10,y],[x-9,y-42-i*7],[x+10,y-37-i*7],[x+12,y]],'#697a72','#c9b793');line(x-4,y-30,x+4,y-21,spec.color,2);}if(event.revealed)text('Skryté ruiny',at.x,at.y-72,spec.color,11);
+ }else for(const mob of mobs)if(mob.worldEventId===event.id&&mob.hp>0){const pos=screen(mob.x,mob.y);ellipse(pos.x,pos.y,32,13,spec.color+'35');if(mob.type!=='wolf'){ctx.save();ctx.strokeStyle=spec.color;ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(pos.x,pos.y,45,20,0,0,Math.PI*2);ctx.stroke();for(let i=0;i<5;i++){const a=i*Math.PI*2/5+clock*.25;ellipse(pos.x+Math.cos(a)*43,pos.y+Math.sin(a)*19,3,3,spec.color);}ctx.restore();}}
+}
+function drawWorldEventMini(){const event=worldEventState?.active;if(!event?.revealed)return;mini.strokeStyle=WORLD_EVENTS[event.type].color;mini.lineWidth=2;mini.beginPath();mini.arc(event.x/SIZE*138,event.y/SIZE*118,5,0,Math.PI*2);mini.stroke();}
+
+
 // src/js/render/dungeons.js
 function drawDungeonGround(){
  ctx.fillStyle=map().ground;ctx.fillRect(0,0,W,H);
@@ -4573,7 +4719,7 @@ function drawDungeonEnemy(m){
 
 
 // src/js/render/scene.js
-function draw(){ctx.setTransform(dpr,0,0,dpr,0,0);ground();drawDungeonHazards();drawFarmRegions();const objects=[...decor.map(d=>({y:d.y,draw:()=>d.type==='tree'?tree(d):rock(d)})),...worldObjects(),...mobs.filter(m=>m.hp>0).map(m=>({y:m.y,draw:()=>mobDraw(m)})),{y:p.y,draw:hero}];objects.sort((a,b)=>a.y-b.y).forEach(o=>o.draw());drawCombatTarget();for(const f of particles){const a=screen(f.x,f.y);text(f.t,a.x,a.y-f.age*36,f.color, f.big?22:f.small?11:14);}const glow=ctx.createRadialGradient(W*.3,H*.1,0,W*.3,H*.1,W*.7);glow.addColorStop(0,'#e4e5ad0e');glow.addColorStop(1,'#091b1a25');ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);drawEffects();drawFarmingEffects();drawBattleEffects();drawGroundLoot();drawMini();}
+function draw(){ctx.setTransform(dpr,0,0,dpr,0,0);ground();drawWorldEventGround();drawDungeonHazards();drawFarmRegions();const objects=[...decor.map(d=>({y:d.y,draw:()=>d.type==='tree'?tree(d):rock(d)})),...worldObjects(),...mobs.filter(m=>m.hp>0).map(m=>({y:m.y,draw:()=>mobDraw(m)})),{y:p.y,draw:hero}];objects.sort((a,b)=>a.y-b.y).forEach(o=>o.draw());drawCombatTarget();for(const f of particles){const a=screen(f.x,f.y);text(f.t,a.x,a.y-f.age*36,f.color, f.big?22:f.small?11:14);}const glow=ctx.createRadialGradient(W*.3,H*.1,0,W*.3,H*.1,W*.7);glow.addColorStop(0,'#e4e5ad0e');glow.addColorStop(1,'#091b1a25');ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);drawEffects();drawFarmingEffects();drawBattleEffects();drawGroundLoot();drawMini();}
 
 
 // src/js/render/farming.js
@@ -4746,8 +4892,8 @@ function drawMetin(stone) {
   if(x<-130||x>W+130||y<-50||y>H+170)return;
   const scale=metinModelScale(stone);
   shadow(x,y,1.5*scale);ellipse(x,y,44*scale,17*scale,spec.glow+(stone.metinCombat>0?'44':'20'));
-  ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);drawMetinModel(spec.model,spec.color,spec.glow,stone.hit>0);ctx.restore();
-  text(spec.name,x,y-135*scale,spec.glow,10);
+  ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);drawMetinModel(spec.model,stone.rareMetin?'#93688e':spec.color,stone.rareMetin?'#f3a4dd':spec.glow,stone.hit>0);ctx.restore();
+  text(stone.name||spec.name,x,y-135*scale,spec.glow,10);
 
   if(stone.hp<stone.max||Math.hypot(stone.x-p.x,stone.y-p.y)<230){
     ctx.fillStyle='#161c1d';ctx.fillRect(x-33,y-112*scale,66,5);ctx.fillStyle=spec.glow;ctx.fillRect(x-33,y-112*scale,66*stone.hp/stone.max,5);

@@ -10,6 +10,20 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.25.0] - 2026-11-04
+
+### Added
+- Sedem náhodných udalostí: elitná hliadka, prepad lovcov, žatva materiálov, prastarý boss, vzácny Metin, skryté ruiny a démonický sprievod.
+- Časové limity, rozdielne pravdepodobnosti vrátane 1 % sprievodu, priebežný HUD, detail cieľa a odmien v Progresii a denníku.
+- Viacerí aktívni bossovia, vzácne modelové označenia, nové dočasné lokality a záznamy objavov.
+- Obnova udalostí, časovačov, nepriateľov a náhody v existujúcich snímkach máp; izolácia postáv a validácia záloh.
+- Dvadsať integračných testov plánovania, odmien, expirácie, migrácie a ukladania.
+
+### Changed
+
+### Fixed
+- Cieľový panel a modely rešpektujú vlastné mená vzácnych bossov a Metinov.
+
 ## [0.24.0] - 2026-11-04
 
 ### Added
@@ -464,7 +478,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.24.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.25.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -492,3 +506,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.22.0]: https://github.com/ndxnraw/Grindoria/compare/v0.21.0...v0.22.0
 [0.23.0]: https://github.com/ndxnraw/Grindoria/compare/v0.22.0...v0.23.0
 [0.24.0]: https://github.com/ndxnraw/Grindoria/compare/v0.23.0...v0.24.0
+[0.25.0]: https://github.com/ndxnraw/Grindoria/compare/v0.24.0...v0.25.0

@@ -69,7 +69,7 @@ function careerPanel(tab = careerTab) {
     skills: ['Schopnosti', careerSkills], biology: ['Biológ', careerBiology],
     forge: ['Vylepšovanie', careerForge], crafting: ['Výroba', () => craftingRecipesPanel('crafting')], alchemy: ['Alchýmia', () => craftingRecipesPanel('alchemy') + careerAlchemy()],
     collection: ['Relikvie', careerCollection], specialization: ['Špecializácia', careerSpecialization],
-    prestige: ['Prestíž', prestigePanel], dungeons: ['Dungeony', dungeonContent], endgame: ['Endgame', careerEndgame]
+    events: ['Udalosti', worldEventsPanel], prestige: ['Prestíž', prestigePanel], dungeons: ['Dungeony', dungeonContent], endgame: ['Endgame', careerEndgame]
   };
   if(tab!==careerTab)craftingFilter='all';
   careerTab = tabs[tab] ? tab : 'overview';

@@ -47,6 +47,7 @@ function validateCharacterWorld(state) {
     if(mob.skillContributors&&(!Array.isArray(mob.skillContributors)||mob.skillContributors.some(key=>!Object.hasOwn(ACTIVE_SKILLS,key))))characterDataError('referencia schopnosti.');
     if(mob.dots&&(!Array.isArray(mob.dots)||mob.dots.length>2||mob.dots.some(dot=>!['poison','fire'].includes(dot.kind)||!Number.isFinite(dot.power)||dot.power<0||!Number.isFinite(dot.time)||!Number.isFinite(dot.tick)||dot.key&&!Object.hasOwn(ACTIVE_SKILLS,dot.key))))characterDataError('stav poškodenia.');
   }
+  validateWorldEventSnapshot(state);
   const dropIds=new Set();
   for(const drop of state.drops){
     assertCharacterObject(drop,'korisť');for(const key of ['x','y'])assertCharacterNumber(drop[key],'poloha koristi',0,Math.max(...Object.values(MAPS).map(m=>m.size)));
@@ -105,6 +106,7 @@ function validateCharacterProfile(record) {
   assertCharacterObject(data.worldStates,'mapy');for(const [id,state]of Object.entries(data.worldStates)){if(!Object.hasOwn(MAPS,id))characterDataError('referencia mapy.');validateCharacterWorld(state);}if(c.normalTemple)validateCharacterWorld(c.normalTemple);
   validateCraftingProfile(data);
   validateEconomyProfile(data);
+  validateWorldEventsProfile(data);
   validatePrestige(data);
   validateDungeonProfile(data);
   validateDiscovery(data);assertCharacterObject(data.bestiary,'bestiár');for(const [key,value]of Object.entries(data.bestiary)){if(!['wolf','scorpion','yeti','demon'].includes(key)&&!(key.startsWith('dungeon:')&&Object.hasOwn(DUNGEONS,key.slice(8)))&&!(key.startsWith('metin:')&&Object.hasOwn(METIN_TYPES,key.slice(6)))&&!(key.startsWith('boss:')&&Object.hasOwn(MAPS,key.slice(5))))characterDataError('záznam bestiára.');assertCharacterNumber(value,'počet v bestiári',0,1e12,true);}

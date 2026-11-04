@@ -105,7 +105,7 @@ function selectCharacter(id) {
   const next=copyCharacterData(characterStore.account);next.selectedId=id;commitCharacterAccount(next);renderCharacterScreen();return true;
 }
 function clearCharacterSession() {
-  keysClear();resetCombatFlow();travelCombat.time=0;clearLootPointer();combatAim.inside=false;face=0;shots.length=0;effects.length=0;particles.length=0;
+  keysClear();resetCombatFlow();worldEventState=null;travelCombat.time=0;clearLootPointer();combatAim.inside=false;face=0;shots.length=0;effects.length=0;particles.length=0;
   for(const id of Object.keys(buffs))delete buffs[id];spellCD.fill(0);attackCD=0;skillCD=0;castPose=0;castStyle='';spiritTick=0;capeCooldown=0;saveTimer=0;slash=0;ring=0;
   for(const slot of Object.keys(forgeOptions))delete forgeOptions[slot];forgeResult=null;
   craftingFilter='all';craftingMessage='';marketMessage='';
