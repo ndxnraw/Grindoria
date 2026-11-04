@@ -13,9 +13,11 @@ function experience(n) {
 
 function rarityName(r){return raritySpec(r).name;}
 
+function equipmentDropLevel(source){const level=raritySourceLevel(source);return Math.max(1,Math.floor(level/5)*5);}
+
 function makeItem(epic=false, source=null, forcedSlot=null) {
   const rarity=rollItemRarity(source,epic),slots=Object.keys(EQUIPMENT),slot=forcedSlot||slots[Math.min(slots.length-1,Math.floor(itemRandom()*slots.length))];
-  return generateEquipmentItem(slot,rarity,raritySourceLevel(source));
+  return generateEquipmentItem(slot,rarity,equipmentDropLevel(source));
 }
 
 function awardItem(epic=false,source=null){const item=makeItem(epic,source);if(!addGearItem(item)){p.gold+=itemSaleValue(item);float('Batoh plný · +'+itemSaleValue(item)+' zlata',p.x,p.y-110,'#d6cb99');return item;}float(item.name+' → I',p.x,p.y-110,rarityColor(item.rarity));return item;}

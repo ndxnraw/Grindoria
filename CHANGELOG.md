@@ -10,6 +10,23 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.28.0] - 2026-11-04
+
+### Added
+- Štartovacie Common zbrane +9 podľa povolania a školy; jednorazové doplnenie neozbrojeným starým postavám Lv.1.
+- Šesť lovísk: Vlčia lúka, Jedovaté močiare, Zabudnutý lom, Búrkové vrchy, Démonické ruiny a Pustatina skazy, vrátane príšer Lv.99.
+- Blízke plošné základné útoky a zmenšené plošné poškodenie pri dopade základného šípu.
+- Šestnásť integračných testov začiatku, progresie, AoE, máp a migrácie.
+
+### Changed
+- Najnižšie levely oblastí sú vždy pri vstupe mapy. Údolie má prvé skupiny Lv.1–2, nízke Metiny a bossa Lv.8.
+- Obyčajné dropy výbavy používajú päťlevelové pásma; pomenované zbrane a pevné odmeny zachovávajú požiadavky.
+- Mapy zobrazujú odporúčané pásma a sú zoradené podľa úrovne; typy Metinov rešpektujú svoje levely.
+
+### Fixed
+- Tooltipy nevypisujú neexistujúce nulové bonusy ani nulové hodnotenie predmetu bez bonusov.
+- Bezpečný prepočet starých spawnov zachováva poškodenie, smrť a respawn bez straty koristi alebo progresu.
+
 ## [0.27.0] - 2026-11-04
 
 ### Added
@@ -508,7 +525,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.27.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.28.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -539,3 +556,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.25.0]: https://github.com/ndxnraw/Grindoria/compare/v0.24.0...v0.25.0
 [0.26.0]: https://github.com/ndxnraw/Grindoria/compare/v0.25.0...v0.26.0
 [0.27.0]: https://github.com/ndxnraw/Grindoria/compare/v0.26.0...v0.27.0
+[0.28.0]: https://github.com/ndxnraw/Grindoria/compare/v0.27.0...v0.28.0

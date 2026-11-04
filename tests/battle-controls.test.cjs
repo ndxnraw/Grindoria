@@ -34,9 +34,9 @@ test('keyboard movement, Escape and blur cancel automated following',()=>{
   run('selectCombatTarget(foe);keys.w=true;');listeners.get('blur')();assert.equal(run('target'),null);assert.equal(run('keys.w'),false);
 });
 
-test('cursor facing and melee arcs damage only enemies in front, including while strafing',()=>{
+test('cursor facing keeps the forward reach beyond the close cleave while strafing',()=>{
   const {run,listeners}=createGame();arena(run);
-  run('foe.x=450;foe.homeX=450;let back=mobs.filter(m=>m.type==="wolf")[1];Object.assign(back,{hp:1000,max:1000,x:350,y:1400,skin:"wolf"});rand=()=>.99;');
+  run('foe.x=480;foe.homeX=480;let back=mobs.filter(m=>m.type==="wolf")[1];Object.assign(back,{hp:1000,max:1000,x:320,y:1400,skin:"wolf"});rand=()=>.99;');
   listeners.get('game:pointermove')({clientX:800,clientY:350});run('attack();let health=foe.hp;');
   assert(run('foe.hp<10000'));assert.equal(run('back.hp'),1000);
   listeners.get('game:pointermove')({clientX:200,clientY:350});run('attackCD=0;attack();');

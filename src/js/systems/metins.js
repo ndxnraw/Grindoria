@@ -4,7 +4,7 @@ function metinTypeForLevel(level) {
 
 function farmAreaLevelRange(area) {
   if (map().metinsOnly) { const index = FARM_AREAS.findIndex(a => a.id === area.id); return [index * 25 + 1, Math.min(99, (index + 1) * 25)]; }
-  return [map().enemyLevel + area.offset, map().enemyLevel + area.offset + 2];
+  const offset=map().areaLevelOffsets?.[FARM_AREAS.indexOf(area)]??area.offset;return [map().enemyLevel+offset,map().enemyLevel+offset+(map().mobLevelSpread??2)];
 }
 
 function buildSuterlandPoints() {
@@ -35,7 +35,7 @@ function metinHitTest(stone, x, y) {
 
 function configureMetin(m, point) {
   m.metinType = point.metinType || (METIN_MAP_TYPES[p.mapId] || ['fracture'])[Number(point.id.split(':').at(-1)) % (METIN_MAP_TYPES[p.mapId]?.length || 1)] || metinTypeForLevel(m.level);
-  m.level = point.metinLevel || m.level; m.baseLevel = m.level;
+  m.level = point.metinLevel || Math.min(METIN_TYPES[m.metinType].levels[1],Math.max(m.level,METIN_TYPES[m.metinType].levels[0])); m.baseLevel = m.level;
   const stats = metinStats(m.level, m.metinType);
   m.hp = stats.hp; m.max = stats.hp; m.baseMax = stats.hp;
   m.metinArmor = stats.armor; m.metinResistance = stats.resistance;

@@ -19,7 +19,7 @@ test('normal maps keep eight stones with local types, and all eight models rende
   for (const id of ['valley','desert','snow','temple']) {
     run(`loadMap('${id}',true);`);
     assert.equal(run('mobs.filter(m=>m.type==="stone").length'), 8);
-    assert.equal(run('new Set(mobs.filter(m=>m.type==="stone").map(m=>m.metinType)).size'), 2);
+    assert.equal(run('new Set(mobs.filter(m=>m.type==="stone").map(m=>m.metinType)).size'), id==='valley'?1:2);
     assert(run('mobs.filter(m=>m.type==="stone").every(m=>m.metinSchema===METIN_RULES.schema&&m.max>0&&m.metinResistance>0)'));
   }
   assert.equal(run('new Set(Object.values(METIN_TYPES).map(t=>t.model)).size'), 8);

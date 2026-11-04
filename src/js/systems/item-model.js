@@ -40,3 +40,12 @@ function validateItemModel(item){
 function validateProfileItemIdentities(data,seen=new Set()){
  const uids=new Set();for(const item of profileItemReferences(data,false)){if(item.itemSchema===undefined)continue;validateItemModel(item);if(seen.has(item.instanceId)||uids.has(item.uid))characterDataError('duplicitná identita predmetu.');seen.add(item.instanceId);uids.add(item.uid);if(item.uid>data.inventory.serial)characterDataError('séria predmetov.');}return seen;
 }
+
+function grantStarterWeapon(fresh=false){
+ if(p.starterWeaponGranted===true)return;
+ p.starterWeaponGranted=true;
+ if(!fresh&&(p.level!==1||p.equipped.weapon))return;
+ const kind=generatedWeaponKind(),names={sword:'Začiatočnícky meč',bow:'Začiatočnícky luk',daggers:'Začiatočnícke dýky',fan:'Začiatočnícky vejár'};
+ const item=createItem('equipment:weapon:'+kind,{rarity:0,tier:1,weaponKind:kind,rng:()=>0});
+ item.name=names[kind];item.enhance=9;item.classes=[p.classId];item.value=itemSaleValue(item);p.equipped.weapon=item;
+}

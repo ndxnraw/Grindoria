@@ -19,3 +19,9 @@ const FARM_AREAS = [
   { id: 'northeast', name: 'Územie strážcu', offset: 6, x1: 1640, x2: 3120, y1: 80, y2: 1560 }
 ];
 
+
+for(const cfg of Object.values(MAPS))if(!cfg.town&&!cfg.instance&&!cfg.metinsOnly){
+ const steps=[...(cfg.areaLevelOffsets||FARM_AREAS.map(area=>area.offset))].sort((a,b)=>a-b);
+ const areas=FARM_AREAS.map((area,index)=>({index,distance:Math.hypot((area.x1+area.x2)/2-cfg.entry.x,(area.y1+area.y2)/2-cfg.entry.y)})).sort((a,b)=>a.distance-b.distance);
+ cfg.areaLevelOffsets=[];areas.forEach((area,rank)=>cfg.areaLevelOffsets[area.index]=steps[rank]);cfg.balanceVersion=1;
+}

@@ -8,7 +8,7 @@ Sólo RPG v prehliadači. Vlastník: [@ndxnraw](https://github.com/ndxnraw).
 
 [Stiahnuť Grindoria.html](https://github.com/ndxnraw/Grindoria/raw/refs/heads/main/dist/Grindoria.html) a otvoriť uložený súbor. Hra nepotrebuje server ani pripojenie. dist/index.html obsahuje rovnakú zostavu pre statický hosting.
 
-Vytvor postavu, vyber povolanie a školu. Povolanie je nemenné. Každá postava má vlastný progres a inventár; predvolený limit je 8 postáv. Mená: 3–16 znakov, písmená, čísla, _ a -, prvý znak písmeno.
+Vytvor postavu, vyber povolanie a školu. Dostaneš obyčajnú zbraň +9 pre svoju školu. Povolanie je nemenné. Každá postava má vlastný progres a inventár; predvolený limit je 8 postáv. Mená: 3–16 znakov, písmená, čísla, _ a -, prvý znak písmeno.
 
 Postavy sa ukladajú automaticky. Tlačidlo Postavy uloží reláciu a otvorí výber. Export obsahuje všetky postavy. Import umožňuje pridať alebo nahradiť zoznam; pred nahradením vznikne bezpečnostná záloha. Vymazanie je nezvratné a vyžaduje celé meno. [Správa postáv](docs/CHARACTERS.md).
 
@@ -34,10 +34,14 @@ Cestovanie (M) je dostupné kdekoľvek mimo boja. F otvorí blízke NPC v Meste;
 
 Zlato a zásoby sa pripíšu priamo, bez predmetu na zemi. Výbava a relikvie zostávajú na zemi do zdvihnutia alebo expirácie. Okná možno zatvoriť kliknutím mimo nich.
 
+## Začiatok a loviská
+
+Údolie má pri vstupe bežné príšery Lv.1–2 a nízke Metiny. Ďalšie loviská postupne pokrývajú levely 5–99. Základné útoky zasahujú aj blízke skupiny; obyčajná výbava padá v päťlevelových pásmach. [Vyváženie začiatku](docs/BEGINNER_BALANCE.md).
+
 ## Herné systémy
 
 - Štyri povolania, osem škôl, 48 schopností, pasívne bonusy a kombá. [Boj](docs/COMBAT.md).
-- Mesto s NPC a päť rozšírených bojových máp vrátane Šuterlandu s Metinmi 1–99. [Lokality](docs/LOCATIONS.md). [Metiny](docs/METINS.md), [príšery a farmenie](docs/FARMING.md).
+- Mesto s NPC a jedenásť bojových máp vrátane Šuterlandu s Metinmi 1–99. [Lokality](docs/LOCATIONS.md). [Metiny](docs/METINS.md), [príšery a farmenie](docs/FARMING.md).
 - Desať slotov výbavy, mriežkový inventár a 44 vektorových modelov. [Inventár](docs/INVENTORY.md), [modely](docs/APPEARANCE.md).
 - Kováč v Meste: +0 až +9, materiály, šance, riziko a ochrana. Žiara zbraní od +5. [Vylepšovanie](docs/FORGE.md).
 - Spoločný katalóg a stabilné ID predmetov od dropu po výbavu. FMS, Jedovatý meč, RIB, Dýky Čierny list a Vejár jesenného vetra: výroba, dropy a vybrané ponuky zbrojára. [Predmetový model a loot pooly](docs/ITEM_MODEL.md).

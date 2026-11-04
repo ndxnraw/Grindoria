@@ -13,14 +13,14 @@ test('each map has dense packs, four level regions and unique protected spawn sl
     assert.equal(run('new Set(mobs.map(m=>m.spawnId)).size'), count + 9);
     assert(run('mobs.every(m=>Math.hypot(m.homeX-safeZone().x,m.homeY-safeZone().y)>=SPAWN_RULES.spawnClearance-1e-8)'));
     for (const area of ['southwest', 'southeast', 'northwest', 'northeast']) assert(run(`mobs.some(m=>m.type==='wolf'&&m.area==='${area}')`));
-    assert(run('Math.min(...mobs.filter(m=>m.area==="northeast").map(m=>m.level)) > Math.min(...mobs.filter(m=>m.area==="southwest").map(m=>m.level))'));
+    assert(run('Math.max(...FARM_AREAS.map(a=>farmAreaLevelRange(a)[0]))>Math.min(...FARM_AREAS.map(a=>farmAreaLevelRange(a)[0]))'));
     run('draw();');
   }
 });
 
 test('elite and rare rolls produce stronger enemies and appropriate respawn intervals', () => {
   const { run } = createGame();
-  run('let point=spawnPoints.find(p=>p.kind==="pack"&&!p.starter);rand=()=>.5;let normal=createSpawnEnemy(point,2);rand=()=>.04;let elite=createSpawnEnemy(point,2);rand=()=>.001;let rare=createSpawnEnemy(point,2);');
+  run('let point=spawnPoints.find(p=>p.kind==="pack"&&!p.starter&&p.area!=="southwest");rand=()=>.5;let normal=createSpawnEnemy(point,2);rand=()=>.04;let elite=createSpawnEnemy(point,2);rand=()=>.001;let rare=createSpawnEnemy(point,2);');
   assert.equal(run('normal.variant'), 'normal'); assert.equal(run('elite.variant'), 'elite'); assert.equal(run('rare.variant'), 'rare');
   assert(run('normal.max<elite.max&&elite.max<rare.max'));
   assert(run('normal.attackScale<elite.attackScale&&elite.attackScale<rare.attackScale'));
@@ -92,7 +92,7 @@ test('B and the action button use the same cape logic and the shop restocks fini
 
 test('spawn slots repeatedly replenish in place, reroll variants and clear old combat effects', () => {
   const { run } = createGame();
-  run('running=true;rand=()=>.5;let farmTarget=mobs.find(m=>m.type==="wolf"&&!m.rareSlot&&m.spawnSlot===2);farmTarget.hp=1;farmTarget.variant="normal";farmTarget.respawnSeconds=5;let identity=farmTarget,spawn=farmTarget.spawnId;hit(farmTarget,2);farmTarget.dot={time:20,tick:1,power:100};farmTarget.taunt=10;');
+  run('running=true;rand=()=>.5;let farmTarget=mobs.find(m=>m.type==="wolf"&&!m.rareSlot&&m.spawnSlot===2&&m.area!=="southwest");farmTarget.hp=1;farmTarget.variant="normal";farmTarget.respawnSeconds=5;let identity=farmTarget,spawn=farmTarget.spawnId;hit(farmTarget,2);farmTarget.dot={time:20,tick:1,power:100};farmTarget.taunt=10;');
   run('updateEnemySpawns(4.9,true);'); assert.equal(run('farmTarget.hp'), 0);
   run('rand=()=>.04;updateEnemySpawns(.2,true);'); assert.equal(run('farmTarget.variant'), 'elite'); assert.equal(run('farmTarget.hp'), run('farmTarget.max'));
   assert.equal(run('farmTarget===identity'), true); assert.equal(run('farmTarget.spawnId'), run('spawn')); assert.equal(run('farmTarget.dot'), undefined); assert.equal(run('farmTarget.taunt'), 0);

@@ -74,7 +74,7 @@ function attack(skill=false) {
   else{
     fx(p.classId==='ninja'?'cross':p.classId==='shaman'?'fan':'slash',p.x,p.y,role().color,.25,face);
     let marked=null;
-    for(const m of mobs)if(enemyInArc(m,BATTLE.meleeRange)){
+    for(const m of mobs)if(m.hp>0&&(Math.hypot(m.x-p.x,m.y-p.y)<=BATTLE.basicCleaveRadius||enemyInArc(m,BATTLE.meleeRange))){
       const actual=hurtMob(m,1,false,null,{basic:true,type:'physical',multiplier:1});
       if(keys[' ']&&actual>0&&m.hp>0&&(!marked||Math.hypot(m.x-p.x,m.y-p.y)<Math.hypot(marked.x-p.x,marked.y-p.y)))marked=m;
     }

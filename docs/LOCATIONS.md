@@ -2,9 +2,11 @@
 
 Mesto má rozmery 1 200 × 1 200, bez nepriateľov. Nové postavy začínajú na námestí. Obchodník je na západe, kováč na východe a biológ na severe. Služba vyžaduje vzdialenosť najviac 170 jednotiek; F otvorí najbližšiu dostupnú službu, klik konkrétne NPC. Bojové mapy obchodníka ani portál nemajú.
 
-Päť bojových máp má 3 200 × 3 200 jednotiek. Malá bezpečná zóna s polomerom 85 je na každej inde: Údolie (360, 280), Púšť (2840, 400), Hory (480, 2750), Chrám (2750, 2760), Šuterland (280, 1560). Je vyznačená kruhom a vlajkami. Vnútri nemožno útočiť; podporné schopnosti zostávajú dostupné. Príšery ju obchádzajú. Príchod a oživenie vedú do bezpečnej zóny danej mapy.
+Jedenásť bojových máp má 3 200 × 3 200 jednotiek. Malá bezpečná zóna s polomerom 85 je na každej inde: Údolie (360, 2800), Púšť (2840, 400), Hory (480, 2750), Chrám (2750, 2760), Šuterland (280, 1560). Je vyznačená kruhom a vlajkami. Vnútri nemožno útočiť; podporné schopnosti zostávajú dostupné. Príšery ju obchádzajú. Príchod a oživenie vedú do bezpečnej zóny danej mapy.
 
 M otvorí cestovanie z ľubovoľného miesta mimo boja. Blokuje ho útok, zásah alebo utrpené poškodenie za posledné 3 sekundy, aktívne aggro, plášť a hroziaci útok bossa. Blízkosť neutrálnej príšery ho neblokuje. Aktívnu trhlinu treba dokončiť alebo opustiť cez progresiu; ukončenie vráti postavu do Mesta.
+
+Nové loviská: Vlčia lúka (5–18), Jedovaté močiare (14–26), Zabudnutý lom (28–42), Búrkové vrchy (45–62), Démonické ruiny (60–82) a Pustatina skazy (80–99). Každé má vlastnú bezpečnú zónu, bossa, lokálne Metiny a uložený stav. Najnižšie levely sú v oblasti pri príchode; odporúčané pásma sú v ponuke M.
 
 ## Rozširovanie
 

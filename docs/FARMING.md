@@ -15,14 +15,9 @@ Predtým bolo na mape len 18–24 pohyblivých príšer. Trvalé identifikátory
 
 ## Oblasti a úrovne
 
-| Oblasť | Poloha | Údolie | Púšť | Hory | Chrám |
-| --- | --- | --- | --- | --- | --- |
-| Južné loviská | juhozápad | 1–3 | 8–10 | 18–20 | 35–37 |
-| Východné tábory | juhovýchod | 3–5 | 10–12 | 20–22 | 37–39 |
-| Severné hliadky | severozápad | 5–7 | 12–14 | 22–24 | 39–41 |
-| Územie strážcu | severovýchod | 7–9 | 14–16 | 24–26 | 41–43 |
+Štyri geografické oblasti majú levelové posuny zoradené podľa vzdialenosti od vstupu mapy. Najbližšia začína na základnom leveli mapy; presné pásma ukazuje minimapa a údaj o polohe. Údolie: 1–2, 2–3, 3–4 a 4–5; jeho počiatočná oblasť má iba obyčajné skupinové sloty a Metiny 1–4. Boss údolia je Lv.8. Ostatné lokality používajú vlastné posuny; vyššie mapy pokrývajú postup až po príšery Lv.99.
 
-Ide o úrovne bežných variantov. Elita pridáva 1 úroveň a vzácny variant 2. Boss v severovýchodnej oblasti má úroveň 12, 19, 29 alebo 46 podľa mapy. Kamene a príšery majú silu upravenú podľa oblasti aj variantu. Názov oblasti a úrovne vidíš v teréne, na minimape a v informácii o polohe.
+Elity pridávajú 1 level a vzácne varianty 2; Pustatina má strop 99. Kamene rešpektujú levelové pásmo vlastného typu. Najslabší prvý slot skupiny zostáva bežný; v počiatočnej oblasti údolia sú bežné všetky skupinové sloty. [Presné zmeny a migrácia](BEGINNER_BALANCE.md).
 
 ## Varianty a odmeny
 

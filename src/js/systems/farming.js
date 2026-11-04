@@ -19,10 +19,10 @@ function buildSpawnPoints(id) {
     const local = [];
     const add = (kind, suffix, extra = {}) => {
       const location = naturalSpawnLocation(area, local, random);
-      const point = { id: id + ':' + area.id + ':' + suffix, kind, ...location, area: area.id, offset: area.offset, ...extra };
+      const point = { id: id + ':' + area.id + ':' + suffix, kind, ...location, area: area.id, offset: MAPS[id].areaLevelOffsets?.[FARM_AREAS.indexOf(area)]??area.offset, ...extra };
       points.push(point); local.push(point);
     };
-    for (let i = 0; i < perArea; i++) add('pack', 'pack:' + i, { starter: area.offset === 0 && i === 0 });
+    for (let i = 0; i < perArea; i++) add('pack', 'pack:' + i, { starter: (MAPS[id].areaLevelOffsets?.[FARM_AREAS.indexOf(area)]??area.offset) === 0 && i === 0 });
     add('rare', 'rare');
     for (let i = 0; i < 2; i++) add('stone', 'stone:' + i);
   }
@@ -32,6 +32,7 @@ function buildSpawnPoints(id) {
 
 function rollEnemyVariant(point, slot) {
   if (point.kind === 'rare'){const roll=rand();return roll<.15?'rare':roll<.5?'elite':'normal';}
+  if (map().beginner&&point.kind==='pack'&&point.area==='southwest')return 'normal';
   if (point.kind !== 'pack' || (point.starter && slot === 0)) return 'normal';
   const roll = rand();
   return roll < SPAWN_RULES.rareChance ? 'rare' : roll < SPAWN_RULES.rareChance + SPAWN_RULES.eliteChance ? 'elite' : 'normal';
@@ -43,8 +44,8 @@ function createSpawnEnemy(point, slot = 0) {
   let x = point.x + Math.cos(angle) * radius, y = point.y + Math.sin(angle) * radius;
   ({x,y}=safePosition({x,y},SPAWN_RULES.spawnClearance-safeZone().radius));
   const variant = rollEnemyVariant(point, slot), v = ENEMY_VARIANTS[variant];
-  const normalLevel = cfg.enemyLevel + point.offset + (type === 'boss' ? 5 : type === 'stone' ? 2 : slot % 3);
-  const level = normalLevel + (type === 'wolf' ? v.level : 0);
+  const normalLevel = type==='boss'&&cfg.bossLevel?cfg.bossLevel:cfg.enemyLevel + point.offset + (type === 'boss' ? 5 : type === 'stone' ? (cfg.metinLevelOffset??2) : slot % ((cfg.mobLevelSpread??2)+1));
+  const level = Math.min(cfg.maxEnemyLevel||105,normalLevel + (type === 'wolf' ? v.level : 0));
   const hp = Math.round((type === 'boss' ? 620 : type === 'stone' ? 160 : 55) * cfg.scale * (1 + (level - cfg.enemyLevel) * .08) * (type === 'wolf' ? v.hp : 1));
   const attack = cfg.scale * (1 + (level - cfg.enemyLevel) * .06) * (type === 'wolf' ? v.damage : 1);
   const enemy = {

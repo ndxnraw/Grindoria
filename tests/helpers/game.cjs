@@ -17,7 +17,8 @@ exports.createGame = function (oldSave, storageKey = 'grindoria-save-v1', additi
     requestAnimationFrame() {}, TextEncoder, console
   });
   if(options.separateScripts)for(const source of runtimeSources())vm.runInContext(source,context);else vm.runInContext(runtimeSource(), context);
-  if (!options.emptyRoster && !vm.runInContext("characterStore.error",context)) vm.runInContext('if(!characterStore.account.order.length)createCharacter("Testovnik","warrior");playCharacter();if(p.mapId==="town"){loadMap("valley",true);p.x=map().entry.x;p.y=map().entry.y;cam.x=p.x;cam.y=p.y;}running=false;document.body.classList.remove("started");',context);
+  // Combat/inventory unit fixtures stay unarmed; creation and keepStarter tests use the real loadout.
+  if (!options.emptyRoster && !vm.runInContext("characterStore.error",context)) vm.runInContext('var fixtureCreated=!characterStore.account.order.length;if(fixtureCreated)createCharacter("Testovnik","warrior");playCharacter();'+(!options.keepStarter?'if(fixtureCreated){p.equipped.weapon=null;saveActiveCharacter();}':'')+'if(p.mapId==="town"){loadMap("valley",true);p.x=map().entry.x;p.y=map().entry.y;cam.x=p.x;cam.y=p.y;}running=false;document.body.classList.remove("started");',context);
   return { run: code => vm.runInContext(code, context), elements, saved, listeners };
 };
 

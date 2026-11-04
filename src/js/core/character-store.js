@@ -82,7 +82,7 @@ function createCharacter(input,classId,schoolId=DEFAULT_SCHOOLS[classId]) {
   const identity=validateCharacterName(input,listCharacters(next)),id=newCharacterId(next.profiles),now=Date.now();
   const record={id,...identity,classId,createdAt:now,lastPlayedAt:null,data:{classId,schools:{[classId]:schoolId}}};
   record.data=normalizeCharacterProfile(record);
-  const previous=p;try{p=record.data;p.hp=maxHP();p.mp=maxMP();}finally{p=previous;}
+  const previous=p;try{p=record.data;grantStarterWeapon(true);p.hp=maxHP();p.mp=maxMP();}finally{p=previous;}
   next.profiles[id]=record;next.order.push(id);next.selectedId=id;commitCharacterAccount(next);return id;
 }
 function accountWithActiveSnapshot() {
@@ -118,7 +118,7 @@ function playCharacter(id = characterStore.account.selectedId) {
   const record=characterStore.account.profiles[id];
   running=false;paused=false;characterStore.activeId=null;clearCharacterSession();
   p=createPlayerState(copyCharacterData(profileIdentity(record,record.data)));
-  initializeCareer();initializeInventory();initializeFarming();initializeLoot();initializeCombatAssist();
+  initializeCareer();initializeInventory();initializeFarming();initializeLoot();initializeCombatAssist();grantStarterWeapon();
   if(p.hp<=0){Object.assign(p,MAPS[p.mapId].entry);p.hp=maxHP();}
   p.hp=Math.max(1,Math.min(p.hp,maxHP()));p.mp=Math.max(0,Math.min(p.mp,maxMP()));loadMap(p.mapId,true);
   characterStore.activeId=id;

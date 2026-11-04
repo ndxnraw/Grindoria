@@ -10,7 +10,8 @@ const METIN_TYPES = {
   void: { name: 'Metin prázdnoty', levels: [80, 94], model: 'floating', difficulty: 'Veľmi ťažký', color: '#64567e', glow: '#c9a0ef', hp: 1.65, armor: .09, interval: 2.6, wave: 5, loot: { yang: [200, 290], ore: [.98, 5, 8], books: [.72, 2, 4], essence: [.9, 5, 10], dust: [.75, 4, 8], upgradeStones: [.3, 2, 3], gear: .78, epic: .2, rare: .07, relic: 'snow', slots: ['talisman', 'necklace', 'armor'], extra: ['shards', .1, 1, 2] } },
   doom: { name: 'Metin skazy', levels: [95, 99], model: 'crown', difficulty: 'Legendárny', color: '#5e414c', glow: '#f398ac', hp: 1.8, armor: .11, interval: 2.3, wave: 5, loot: { yang: [280, 420], ore: [1, 6, 10], books: [.8, 3, 5], essence: [.95, 6, 12], dust: [.85, 5, 10], upgradeStones: [.4, 2, 4], gear: .9, epic: .3, rare: .1, relic: 'temple', slots: ['weapon', 'armor', 'helmet', 'talisman'], extra: ['keys', .12, 1, 2] } }
 };
-const METIN_MAP_TYPES = { valley: ['fracture', 'fang'], desert: ['sand', 'fang'], snow: ['frost', 'storm'], temple: ['ember', 'void'] };
+const METIN_MAP_TYPES = { valley: ['fracture'], desert: ['fracture', 'fang'], snow: ['fang', 'sand'], temple: ['frost', 'ember'] };
+for(const [id,d]of Object.entries(EXP_MAPS))METIN_MAP_TYPES[id]=d.metinTypes;
 const METIN_GUARDS = [
   { max: 14, skin: 'wolf', name: 'Metinový vlk' },
   { max: 34, skin: 'scorpion', name: 'Pieskový obranca' },

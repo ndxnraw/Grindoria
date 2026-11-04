@@ -13,6 +13,8 @@ Od 0.16.0 používa hra šesť rarít. Staré ID ostávajú platné: Common=0, U
 
 ## Drop
 
+Požadovaná úroveň obyčajne generovanej výbavy sa zarovnáva nadol na násobok 5, minimálne 1: nepriateľ Lv.1–4 dáva Lv.1, Lv.5–9 dáva Lv.5. Výber rarity naďalej používa skutočnú úroveň zdroja. Pomenované zbrane a pevné odmeny si zachovávajú svoje požiadavky.
+
 Šanca, že vôbec vypadne výbava, sa nemení: obyčajná príšera 3 %, elita 20 %, vzácna príšera a boss zaručene; Metiny majú vlastné šance. Potom samostatný vážený výber určí raritu podľa zdroja. Legendary padá od úrovne nepriateľa 50, Mythic od 75. Pod týmito hranicami sa šance ostatných rarít pomerne prepočítajú.
 
 | Zdroj Lv.99 | Common | Uncommon | Rare | Epic | Legendary | Mythic |

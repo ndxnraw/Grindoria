@@ -62,7 +62,7 @@ function drawFarmMinimap() {
   mini.font = '7px Segoe UI'; mini.textAlign = 'left'; mini.fillStyle = '#fff1c6';
   for (const area of FARM_AREAS) {
     const x = area.x1 / SIZE * 138, y = area.y1 / SIZE * 118;
-    mini.fillText('L' + (map().metinsOnly ? farmAreaLevelRange(area).join('–') : map().enemyLevel + area.offset), x, y + 8);
+    mini.fillText('L' + (farmAreaLevelRange(area).join('–')), x, y + 8);
   }
   for (const point of spawnPoints) if (point.kind === 'pack' || point.kind === 'rare') {
     mini.strokeStyle = point.kind === 'rare' ? '#edd183aa' : '#f2deb54a'; mini.beginPath();

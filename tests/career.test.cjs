@@ -28,7 +28,7 @@ test('legacy saves keep level, EXP percentage, equipment power and their schema 
 
 test('one death grants loot only once, and hostile levels actually affect enemy strength', () => {
   const { run } = createGame();
-  assert(run('mobs[4].level > mobs[0].level && mobs[4].max > mobs[0].max && mobs[4].attackScale > mobs[0].attackScale'));
+  assert(run('mobs[1].level > mobs[0].level && mobs[1].max > mobs[0].max && mobs[1].attackScale > mobs[0].attackScale'));
   run('let foe=mobs[0];foe.hp=1;hit(foe,10);');
   const xp = run('p.xp'), essence = run('p.career.materials.essence');
   run('hit(foe,999);'); assert.equal(run('p.xp'), xp); assert.equal(run('p.career.materials.essence'), essence);

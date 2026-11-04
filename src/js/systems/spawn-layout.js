@@ -21,6 +21,7 @@ function naturalSpawnLocation(area, existing, random, gap = 115) {
 }
 
 function restoreSpawnLocation(enemy, fresh, state) {
+  if(map().balanceVersion&&state.balanceSchema!==map().balanceVersion){const ratio=Math.max(0,Math.min(1,enemy.hp/enemy.max));return {...enemy,level:fresh.level,baseLevel:fresh.baseLevel,variant:fresh.variant,max:fresh.max,baseMax:fresh.baseMax,attackScale:fresh.attackScale,baseAttack:fresh.baseAttack,speedScale:fresh.speedScale,hp:enemy.hp<=0?0:Math.max(1,Math.round(fresh.max*ratio)),metinType:fresh.metinType,metinArmor:fresh.metinArmor,metinResistance:fresh.metinResistance,x:fresh.x,y:fresh.y,homeX:fresh.homeX,homeY:fresh.homeY,roamTarget:null,returning:false};}
   if (state.layoutSchema === SPAWN_LAYOUT_VERSION) return enemy;
   return { ...enemy, x: fresh.x, y: fresh.y, homeX: fresh.homeX, homeY: fresh.homeY, roamTarget: null, returning: false };
 }

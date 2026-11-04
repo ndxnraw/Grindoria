@@ -111,7 +111,8 @@ function segmentHit(m,x1,y1,x2,y2) {
 
 function impactShot(b,m) {
   if(b.opts.sharedHits)b.opts.sharedHits.add(m);
-  if(b.opts.radius)areaHit(m.x,m.y,b.opts.radius,b.mult,{...b.opts,type:b.opts.type});
+  if(b.opts.basic){hurtMob(m,b.mult,false,null,b.opts);for(const other of mobs)if(other!==m&&other.hp>0&&Math.hypot(other.x-m.x,other.y-m.y)<=BATTLE.basicSplashRadius)hurtMob(other,b.mult*BATTLE.basicSplashMultiplier,false,null,{...b.opts,markTarget:false});}
+  else if(b.opts.radius)areaHit(m.x,m.y,b.opts.radius,b.mult,{...b.opts,type:b.opts.type});
   else{hurtMob(m,b.mult,!['physical','piercing'].includes(b.opts.type),b.opts.skillKey,b.opts);applyCombatControl(m,b.opts);}
   if(b.opts.dispel)m.suppressed=8;
   if(b.opts.slow)m.slow=b.opts.slow;

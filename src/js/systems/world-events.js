@@ -36,7 +36,7 @@ function startWorldEvent(type){
  if(!running||paused||p.hp<=0||!worldEventsAllowed()||!worldEventState||worldEventState.active||!Object.hasOwn(WORLD_EVENTS,type))return false;
  const spec=WORLD_EVENTS[type];if(map().metinsOnly&&['group','boss'].includes(spec.kind))return false;
  const at=worldEventPosition(),range=farmAreaLevelRange(farmAreaAt(at));
- const level=Math.min(99,map().metinsOnly?range[0]+Math.floor(worldEventRandom()*(range[1]-range[0]+1)):range[0]+(spec.kind==='boss'?18:spec.kind==='stone'?10:4));
+ const level=Math.min(map().beginner?map().levelMax+(spec.kind==='boss'?2:0):99,map().metinsOnly?range[0]+Math.floor(worldEventRandom()*(range[1]-range[0]+1)):range[0]+(spec.kind==='boss'?18:spec.kind==='stone'?10:4));
  const serial=++p.career.worldEvents.serial,event={id:p.mapId+':event:'+serial,serial,type,...at,level,remaining:spec.duration,kills:0,total:spec.count,revealed:spec.kind!=='secret'};
  worldEventState.active=event;for(let i=0;i<spec.count;i++)mobs.push(worldEventEnemy(event,i));
  toast(spec.name+' · '+(spec.kind==='secret'?'Objavili sa neznáme stopy.':farmAreaAt(event).name));return true;

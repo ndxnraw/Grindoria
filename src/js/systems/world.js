@@ -3,7 +3,7 @@ function map(){return MAPS[p.mapId]||MAPS.valley;}
 function snapshotMap() {
   if (!mobs.length&&!map().town) return;
   p.worldStates[p.mapId] = {
-    events:worldEventSnapshot(),worldSize:SIZE,layoutSchema: SPAWN_LAYOUT_VERSION, progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
+    balanceSchema:map().balanceVersion||0,events:worldEventSnapshot(),worldSize:SIZE,layoutSchema: SPAWN_LAYOUT_VERSION, progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
     mobs: mobs.map(cloneEnemyState),
     drops: drops.map(cloneGroundDrop)
   };
@@ -25,6 +25,7 @@ function loadMap(id, initial=false) {
   p.mapId=id;
   const cfg=map(), prior=p.worldStates[id],old=migrateMapSize(prior,id);SIZE=cfg.size;
   if(initial&&prior&&(prior.worldSize||2000)!==cfg.size){const factor=cfg.size/(prior.worldSize||2000);resumePosition.x*=factor;resumePosition.y*=factor;if(Math.hypot(resumePosition.x-1000*factor,resumePosition.y-1050*factor)<190*factor)Object.assign(resumePosition,cfg.entry);}
+  if(initial&&id==='valley'&&p.level===1&&old?.balanceSchema!==cfg.balanceVersion&&Math.hypot(resumePosition.x-360,resumePosition.y-310)<220)Object.assign(resumePosition,cfg.entry);
   cfg.mobSpeed=75+(cfg.scale-1)*14; seed=cfg.seed; decor.length=0;
   for(let i=0;i<(cfg.instance?0:250);i++) {
     const x=rand()*SIZE,y=rand()*SIZE;

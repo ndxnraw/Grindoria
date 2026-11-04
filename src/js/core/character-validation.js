@@ -34,7 +34,7 @@ function validateCharacterItem(item,slot=null) {
   if(item.special!==undefined&&(!Array.isArray(item.special)||item.special.length>20||item.special.some(value=>typeof value!=='string'||value.length>500)))characterDataError('vlastnosti predmetu.');
 }
 function validateCharacterWorld(state) {
-  assertCharacterObject(state,'snímka mapy');
+  assertCharacterObject(state,'snímka mapy');if(state.balanceSchema!==undefined)assertCharacterNumber(state.balanceSchema,'verzia vyváženia mapy',0,1,true);
   if(!Array.isArray(state.mobs)||state.mobs.length>1000||!Array.isArray(state.drops)||state.drops.length>5000)characterDataError('populácia alebo korisť mapy.');
   const ids=new Set();
   for(const mob of state.mobs){
@@ -72,6 +72,7 @@ function validateCharacterProfile(record) {
   assertCharacterNumber(record.createdAt,'dátum vytvorenia',0,Number.MAX_SAFE_INTEGER);
   if(record.lastPlayedAt!==null)assertCharacterNumber(record.lastPlayedAt,'posledné hranie',0,Number.MAX_SAFE_INTEGER);
   const data=record.data;assertCharacterObject(data,'herné údaje');
+  if(data.starterWeaponGranted!==undefined&&typeof data.starterWeaponGranted!=='boolean')characterDataError('štartovacia výbava.');
   if(data.characterId!==record.id||data.classId!==record.classId||data.name!==record.name||data.isGM!==record.isGM)characterDataError('nesúlad identity a povolania.');
   for(const key of ['level','xp','gold','potions','strength','vitality','dexterity','intelligence','points','kills','stones','bossKills','huntClaimed','braveryCapes'])assertCharacterNumber(data[key],key,key==='level'?1:0,key==='level'?99:1e12,true);
   for(const key of ['hp','mp'])assertCharacterNumber(data[key],key);for(const key of ['x','y'])assertCharacterNumber(data[key],key,45,(MAPS[data.mapId]?.size||2000)-45);
