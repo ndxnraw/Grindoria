@@ -46,3 +46,7 @@ Kľúče, jadrá trhlín, úlomky relikvií, tréningové pečate, biologické v
 Pred nákupom sa overí živá postava, NPC, cena, cyklus, úroveň, zásoba, Yang a kapacita. Zastaraná cenová ponuka sa odmietne. Neúspešná transakcia nemení peniaze ani predmety. Výbava sa predáva podľa stabilného UID; rovnaký kus nemožno predať dvakrát. Trh využíva pôvodné zásobníky, generátor predmetov, inventár aj ukladanie.
 
 Pravidlá sú v `data/economy.js`, logika v `systems/economy.js`, panely v `ui/economy.js`. Regresie sú v `tests/economy.test.cjs`. Balans cien a desaťminútovej obnovy treba ďalej vyhodnocovať pri hraní.
+
+## Ceny ikonických zbraní od 0.30.0
+
+FMS: základná cena 3 500 Yang, požadovaný level 30. Jedovatý meč: 35 000 Yang, level 75. Ich výroba stojí 1 500 / 15 000 Yang plus pôvodné suroviny. Ceny bežnej náhodnej výbavy a trhový dopyt zostávajú odvodené od generátora. Bežné zlato z nepriateľa používa jeho skutočný level: `round((8 + 1,2 × level) × násobok bossa/variantu/obrancu)`, nie skrytý násobok mapy.

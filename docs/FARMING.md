@@ -15,7 +15,7 @@ Predtým bolo na mape len 18–24 pohyblivých príšer. Trvalé identifikátory
 
 ## Oblasti a úrovne
 
-Štyri geografické oblasti majú levelové posuny zoradené podľa vzdialenosti od vstupu mapy. Najbližšia začína na základnom leveli mapy; presné pásma ukazuje minimapa a údaj o polohe. Údolie: 1–2, 2–3, 3–4 a 4–5; jeho počiatočná oblasť má iba obyčajné skupinové sloty a Metiny 1–4. Boss údolia je Lv.8. Ostatné lokality používajú vlastné posuny; vyššie mapy pokrývajú postup až po príšery Lv.99.
+Štyri geografické oblasti majú levelové posuny zoradené podľa vzdialenosti od vstupu mapy. Najbližšia začína na základnom leveli mapy; presné pásma ukazuje minimapa a údaj o polohe. Údolie: 1–2, 3–4, 5–6 a 7–8; jeho počiatočná oblasť má iba obyčajné skupinové sloty a Metiny 1–8. Boss údolia je Lv.8. Ostatné lokality používajú vlastné posuny; vyššie mapy pokrývajú postup až po príšery Lv.99.
 
 Elity pridávajú 1 level a vzácne varianty 2; Pustatina má strop 99. Kamene rešpektujú levelové pásmo vlastného typu. Najslabší prvý slot skupiny zostáva bežný; v počiatočnej oblasti údolia sú bežné všetky skupinové sloty. [Presné zmeny a migrácia](BEGINNER_BALANCE.md).
 
@@ -26,12 +26,12 @@ Bežný skupinový slot pri prvom vytvorení a po každom skutočnom respawne m�
 | Variant | Šanca v skupinovom slote | Životy pri danej úrovni | Poškodenie | EXP násobok | Zlato | Respawn |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | Bežný | 92,7 % | 1× | 1× | 1× | 1× | 8 s |
-| Elitný | 7 % | 1,8× | 1,35× | 1,35× | 2× | 12 s |
-| Vzácny | 0,3 % | 2,8× | 1,7× | 1,8× | 4× | 60 s |
+| Elitný | 7 % | 1,6× | 1,25× | 1,8× | 2× | 12 s |
+| Vzácny | 0,3 % | 2,3× | 1,5× | 3,2× | 4× | 60 s |
 
 Každá oblasť má aj jeden samostatný bod vzácnej hliadky. Hliadka sa obnovuje po 180 sekundách a vyberá vzácny variant s 15 %, elitný s 35 %, inak bežný. Kamene sa obnovujú po 18 sekundách, boss po 40 sekundách. Časovače bežia v aktívnom čase mapy, rovnako ako v predchádzajúcej verzii.
 
-Bežná príšera má **3 %** šancu na výbavu (predtým 32 %), elita **20 %** (predtým 75 %). Vzácny variant a boss výbavu zaručia; od 0.16.0 sa rarita samostatne vyberá podľa zdroja. Tabuľky a úrovňové hranice sú v [RARITIES.md](RARITIES.md). Primeraná elita pridá rudu a esenciu, primeraný vzácny nepriateľ aj prach, knihu a tréningovú pečať. Bossovia a vzácne príšery dopĺňajú aj plášte.
+Primeraná bežná príšera má **12 %** šancu na výbavu, elita **45 %**. Vzácny variant a boss výbavu zaručia; od 0.16.0 sa rarita samostatne vyberá podľa zdroja. Tabuľky a úrovňové hranice sú v [RARITIES.md](RARITIES.md). Primeraná elita pridá rudu a esenciu, primeraný vzácny nepriateľ aj prach, knihu a tréningovú pečať. Bossovia a vzácne príšery dopĺňajú aj plášte.
 
 Všetky EXP odmeny stále používajú rozdiel úrovní a percentuálne limity z [PROGRESSION.md](PROGRESSION.md). Ani vzácny slabý cieľ nemôže obísť nulovú EXP odmenu alebo neobmedzene vytvárať rozvojové materiály.
 

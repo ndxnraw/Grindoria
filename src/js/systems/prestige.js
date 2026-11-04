@@ -10,7 +10,7 @@ function prestigeProgress(goal){const c=p.career.prestige,gear=Object.values(p.e
  case'metins':return c.metins;case'bosses':return Object.values(c.bosses).reduce((a,b)=>a+b,0);case'bossTypes':return Object.keys(c.bosses).filter(id=>c.bosses[id]>0).length;
  case'skills10':case'skills20':return school().skills.filter((s,i)=>(p.career.skills[skillKey(i)]?.rank||1)>=(goal.metric==='skills10'?10:20)).length;
  case'biology':return p.career.biology.stage;case'uniques':return Object.keys(c.uniques).length;
- case'bestiary':return ['wolf','scorpion','yeti','demon',...Object.keys(METIN_TYPES).map(id=>'metin:'+id),...['valley','desert','snow','temple'].map(id=>'boss:'+id),...Object.keys(DUNGEONS).map(id=>'dungeon:'+id)].filter(id=>p.bestiary[id]>0).length;
+ case'bestiary':return PRESTIGE_BESTIARY_KEYS.filter(id=>p.bestiary[id]>0).length;
  case'weapon9':return p.equipped.weapon?.enhance===9&&rarityRank(p.equipped.weapon.rarity)>=4?1:0;
  case'arsenal':return gear.filter(item=>item.rarity===5&&item.enhance===9).length;
  case'perfect':return [...p.bag,...gear].some(item=>item.rarity===5&&item.affixes?.length===5&&item.affixes.every(affix=>affix.roll===100))?1:0;

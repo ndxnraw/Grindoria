@@ -2,15 +2,15 @@
 
 ## Štartovacia výbava
 
-Každá nová postava začína s nasadenou Common zbraňou +9, požadovaný level 1, bez náhodných bonusov. Bojovník a Sura dostanú meč, Ninja podľa školy dýky alebo luk, Šaman vejár. Používa rovnaký model predmetu, ID, bonusy a efekty +9 ako ostatná výbava.
+Každá nová postava začína s nasadenou Common zbraňou +2, požadovaný level 1, bez náhodných bonusov. Bojovník a Sura dostanú meč, Ninja podľa školy dýky alebo luk, Šaman vejár. Používa rovnaký model predmetu, ID a bonusy vylepšenia ako ostatná výbava.
 
-Existujúca neozbrojená postava Lv.1 dostane zbraň pri prvom načítaní. Predmety v batohu sa zachovajú. Nasadená výbava ani postavy vyšších levelov sa nemenia. Jednorazový príznak starterWeaponGranted zabraňuje opakovanému získavaniu po predaji, vyhodení alebo zložení zbrane; prenáša sa v existujúcej zálohe v2.
+Existujúca neozbrojená postava Lv.1 dostane zbraň pri prvom načítaní. Predmety v batohu sa zachovajú. Pôvodná štartovacia zbraň +9 sa pri jednorazovej migrácii zmení na +2; ostatná výbava zostáva zachovaná. Jednorazový príznak starterWeaponGranted zabraňuje opakovanému získavaniu po predaji, vyhodení alebo zložení zbrane; prenáša sa v existujúcej zálohe v2.
 
 ## Údolie
 
-Vstup aj bezpečná zóna sú na juhozápade. Prvé obyčajné skupiny majú level 1–2 bez elitných variantov. Zvyšné oblasti postupne pridávajú levely až po bežné 4–5 a vzácne varianty; Metiny majú level 1–4, boss 8. Základné HP, damage, EXP krivka a drop šance sa neznižovali plošne: problém rieši vhodná vstupná oblasť, primerané levely a štartovacia zbraň.
+Vstup aj bezpečná zóna sú na juhozápade. Prvé obyčajné skupiny majú level 1–2 bez elitných variantov. Zvyšné oblasti postupujú až po level 8; Metiny majú level 1–8 a boss 8. Zdravie a útok závisia od skutočného levelu, EXP a dropy používajú pravidlá [BALANCE.md](BALANCE.md).
 
-Obyčajné dropy používajú päťlevelové pásma zaokrúhlené nadol s minimom 1. Príklady: zdroj 1–4 → výbava 1, 5–9 → 5, 30–34 → 30, 75–79 → 75. Rarita sa vyberá podľa skutočného levelu zdroja. FMS, Jedovatý meč, recepty a pevné dungeonové unikáty majú naďalej vlastné požiadavky.
+Obyčajné dropy majú rovnakú požadovanú úroveň ako zdroj, najviac 99. Príklady: zdroj 4 → výbava 4, 14 → 14, 99 → 99. Rarita sa vyberá podľa skutočného levelu zdroja. FMS, Jedovatý meč, recepty a pevné dungeonové unikáty majú naďalej vlastné požiadavky.
 
 ## Loviská
 

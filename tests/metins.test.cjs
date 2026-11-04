@@ -112,7 +112,7 @@ test('new upgrade stones have a real forge cost from +4 and old material balance
   run('running=true;loadMap("town",true);p.x=NPCS.smith.x;p.y=NPCS.smith.y;rand=()=>0;p.gold=1000000;p.career.materials.ore=1000;p.equipped.weapon={name:"Meč",slot:"weapon",bonus:10,enhance:3};');
   assert.equal(run('enhanceEquipment("weapon")'),false); assert.equal(run('p.gold'),1000000); assert.equal(run('p.career.materials.ore'),1000);
   run('addMaterial("upgradeStones",3);'); assert.equal(run('enhanceEquipment("weapon")'),true);
-  assert.equal(run('p.equipped.weapon.enhance'),4); assert.equal(run('p.career.materials.upgradeStones'),0);
+  assert.equal(run('p.equipped.weapon.enhance'),4); assert.equal(run('p.career.materials.upgradeStones'),1);
   run('save();'); const profile=readSavedProfile(saved); delete profile.career.materials.upgradeStones;
   const reload=createGame(profile); assert.equal(reload.run('p.career.materials.upgradeStones'),0); assert.equal(reload.run('p.career.materials.ore'),run('p.career.materials.ore'));
 });

@@ -34,14 +34,14 @@ test('a full grid rejects equipment before consuming inputs, IDs, practice or ra
   assert(run('craftRecipe("ingot")'));
 });
 test('alchemy processes herbs, makes healing and mana potions and upgrades existing products', () => {
-  const {run} = workshop('alchemy');run('var pots=p.potions;');assert(run('craftRecipe("potion")'));assert.equal(run('p.potions'),run('pots+3'));
+  const {run} = workshop('alchemy');run('var pots=p.potions;');assert(run('craftRecipe("potion")'));assert.equal(run('p.potions'),run('pots+6'));
   assert(run('craftRecipe("extract")'));assert(run('craftRecipe("mana")'));run('p.career.alchemy.xp=4500;p.career.alchemy.products.might=3;var before=p.career.materials.extract;');
   assert(run('craftRecipe("greaterMight")'));assert.equal(run('p.career.alchemy.products.might'),0);assert.equal(run('p.career.alchemy.products.greaterMight'),1);assert.equal(run('p.career.materials.extract'),run('before-4'));
   run('var state=JSON.stringify(p);');assert(!run('craftRecipe("greaterMight")'));assert.equal(run('JSON.stringify(p)'),run('state'));
 });
 test('mana products use the shared potion cooldown and cannot be wasted at full mana', () => {
   const {run} = workshop('alchemy');run('p.career.alchemy.products.mana=3;p.mp=maxMP();');assert(!run('useAlchemyProduct("mana")'));
-  run('p.mp=1;');assert(run('useAlchemyProduct("mana")'));assert.equal(run('p.mp'),81);assert(!run('useAlchemyProduct("mana")'));assert.equal(run('p.career.alchemy.products.mana'),2);assert(!run('drinkPotion()'));
+  run('p.mp=1;');assert(run('useAlchemyProduct("mana")'));assert.equal(run('p.mp'),175);assert(!run('useAlchemyProduct("mana")'));assert.equal(run('p.career.alchemy.products.mana'),2);assert(!run('drinkPotion()'));
 });
 test('tonics affect real statistics, never heal by swapping, respect pause and expire safely', () => {
   const {run} = workshop('alchemy');run('p.career.alchemy.products.might=2;p.career.alchemy.products.vitality=2;var dmg=damage(),hp=p.hp,max=maxHP();');

@@ -22,6 +22,9 @@ exports.createGame = function (oldSave, storageKey = 'grindoria-save-v1', additi
   return { run: code => vm.runInContext(code, context), elements, saved, listeners };
 };
 
-exports.readSavedAccount = saved => JSON.parse(saved.get('grindoria-characters-v1'));
+const storageContext=vm.createContext({});
+vm.runInContext(require('node:fs').readFileSync(require('node:path').join(__dirname,'../../src/js/core/storage.js'),'utf8'),storageContext);
+exports.readStorage = raw => JSON.parse(JSON.stringify(vm.runInContext('decodeCharacterStorage('+JSON.stringify(raw)+')',storageContext)));
+exports.readSavedAccount = saved => exports.readStorage(saved.get('grindoria-characters-v1'));
 exports.readSavedProfile = (saved,id) => { const account=exports.readSavedAccount(saved);return account.profiles[id||account.selectedId].data; };
 exports.createEmptyGame = (additionalStorage={}) => exports.createGame(null,'grindoria-save-v1',additionalStorage,{emptyRoster:true});

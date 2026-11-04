@@ -78,13 +78,14 @@ function grantAutomaticDrop(drop) {
   return true;
 }
 function flushAutomaticLoot() {
+  // The regular four-second autosave and pagehide publish batches, not a full world per kill.
   if(!automaticLoot.items.size)return;
   const items=[...automaticLoot.items.values()];automaticLoot.items.clear();
   for(let i=0;i<items.length;i+=2){
     float(items.slice(i,i+2).map(item=>'+'+item.count+' '+item.name).join(' · '),p.x,p.y-75-i*8,'#dec799');
     if(particles.length)particles[particles.length-1].small=true;
   }
-  updateHUD();save();
+  updateHUD();
 }
 function dropMaterial(id, count, source) {
   if (MATERIALS[id] && Number.isSafeInteger(count) && count > 0) return spawnGroundDrop({ kind: 'supply', supplyId: 'material:' + id, count }, source);

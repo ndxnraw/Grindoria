@@ -35,7 +35,8 @@ function metinHitTest(stone, x, y) {
 
 function configureMetin(m, point) {
   m.metinType = point.metinType || (METIN_MAP_TYPES[p.mapId] || ['fracture'])[Number(point.id.split(':').at(-1)) % (METIN_MAP_TYPES[p.mapId]?.length || 1)] || metinTypeForLevel(m.level);
-  m.level = point.metinLevel || Math.min(METIN_TYPES[m.metinType].levels[1],Math.max(m.level,METIN_TYPES[m.metinType].levels[0])); m.baseLevel = m.level;
+  const bounds=METIN_TYPES[m.metinType].levels;
+  m.level = point.metinLevel || Math.min(bounds[1],map().levelMax||99,Math.max(m.level,bounds[0],map().level)); m.baseLevel = m.level;
   const stats = metinStats(m.level, m.metinType);
   m.hp = stats.hp; m.max = stats.hp; m.baseMax = stats.hp;
   m.metinArmor = stats.armor; m.metinResistance = stats.resistance;

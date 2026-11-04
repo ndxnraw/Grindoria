@@ -10,7 +10,7 @@ Prestíž sa aktivuje po úrovni 99 cez P → Prestíž, mimo boja a výprav. Le
 | II | Prestížna hrobka I+, 5 Metinov Lv.95+ po aktivácii, tri schopnosti stupňa 10+ | +4 obrana | 10 |
 | III | Prestížna pevnosť II+, traja prestížni bossovia, jedna maximálna schopnosť | +6 útok, +8 sila kúziel | 15 |
 | IV | Prestížna priepasť III+, všetkých 8 biologických etáp, tri získané dungeonové unikáty | +6 rýchlosť pohybu | 20 |
-| V | Všetky tri prestížne dungeony IV+, 19 porazených druhov bestiára, všetkých 6 schopností školy na maxime, Legendary alebo Mythic zbraň +9 | +3 % útok, +5 % odolnosť voči všetkým typom poškodenia | 25 |
+| V | Všetky tri prestížne dungeony IV+, 25 porazených druhov bestiára vrátane šiestich nových bossov, všetkých 6 schopností školy na maxime, Legendary alebo Mythic zbraň +9 | +3 % útok, +5 % odolnosť voči všetkým typom poškodenia | 25 |
 
 Bonusy stupňov sa sčítavajú. Typové odolnosti stále rešpektujú spoločný strop 75 %. Zvýšenie maximálneho HP nepredstavuje liečenie. Stupeň sa už neznižuje. Každý má vlastnú farbu, rímsku číslicu, znak nad postavou, kruh pri nohách a emblém v portréte. Meno a pravidlá jeho validácie sa nemenia.
 

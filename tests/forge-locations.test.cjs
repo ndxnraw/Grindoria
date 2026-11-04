@@ -23,7 +23,7 @@ test('all nine steps increase real equipment power and costs, with declining suc
   assert(run('enhanceEquipment("weapon")'));assert.equal(run('p.equipped.weapon.enhance'),rank);assert(run('damage()>previousDamage'));assert.equal(run('p.equipped.weapon.stats.hp'),20);
   run('previousGold=cost.gold;previousOre=cost.ore;previousDamage=damage();previousChance=chance;');
  }
- assert.equal(run('enhancementCost(p.equipped.weapon)'),null);run('var before=p.gold;');assert(!run('enhanceEquipment("weapon")'));assert.equal(run('p.gold'),run('before'));assert.equal(run('enhancementBonus(p.equipped.weapon)'),85);
+ assert.equal(run('enhancementCost(p.equipped.weapon)'),null);run('var before=p.gold;');assert(!run('enhanceEquipment("weapon")'));assert.equal(run('p.gold'),run('before'));assert.equal(run('enhancementBonus(p.equipped.weapon)'),40);
  assert(run('enhancementCost({slot:"weapon",tier:70,rarity:5}).gold>enhancementCost({slot:"weapon",tier:1,rarity:0}).gold'));
 });
 
@@ -46,7 +46,7 @@ test('missing protection or booster never silently attempts an unprotected upgra
 });
 
 test('blacksmith crafts support for finite resources; only eligible high-level rare sources grant extra supplies',()=>{
- const {run}=smith();run('p.career.crafting.xp=CRAFT_RULES.maxXP;var before=p.gold,cores=p.career.materials.forgeCore;');assert(run('craftForgeSupport("protectionScroll")'));assert.equal(run('p.gold'),run('before-FORGE_RULES.recipes.protectionScroll.gold'));assert.equal(run('p.career.materials.forgeCore'),run('cores-6'));assert(!run('craftForgeSupport("toString")'));
+ const {run}=smith();run('p.career.crafting.xp=CRAFT_RULES.maxXP;var before=p.gold,cores=p.career.materials.forgeCore;');assert(run('craftForgeSupport("protectionScroll")'));assert.equal(run('p.gold'),run('before-FORGE_RULES.recipes.protectionScroll.gold'));assert.equal(run('p.career.materials.forgeCore'),run('cores-2'));assert(!run('craftForgeSupport("toString")'));
  run('for(const id of Object.keys(MATERIALS))p.career.materials[id]=0;p.level=35;rand=()=>0;var enemy={type:"boss",level:35,x:500,y:500};dropForgeSupplies(enemy);');for(const id of ['forgeCore','smithCharm','protectionScroll'])assert.equal(run('p.career.materials.'+id),1);
  run('dropForgeSupplies({...enemy,level:34});dropForgeSupplies({...enemy,metinParentId:"parent"});dropForgeSupplies({...enemy,type:"wolf",variant:"normal"});p.level=99;dropForgeSupplies(enemy);');assert.equal(run('p.career.materials.forgeCore'),1);assert.equal(run('drops.length'),0);
 });

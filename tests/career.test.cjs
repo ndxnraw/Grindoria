@@ -1,16 +1,16 @@
 const test = require('node:test'), assert = require('node:assert/strict');
 const { createGame, readSavedProfile } = require('./helpers/game.cjs');
 
-test('EXP curve demands long farming, scales with enemy level, and suppresses weak targets', () => {
+test('EXP curve supports bounded leveling, scales with enemy level, and suppresses weak targets', () => {
   const { run } = createGame();
-  assert.equal(run('needXP()'), 600);
+  assert.equal(run('needXP()'), 154);
   assert.equal(run('enemyXP({type:"wolf",level:1})'), 6);
   assert.equal(run('enemyXP({type:"wolf",level:2})') > run('enemyXP({type:"wolf",level:1})'), true);
   assert.equal(run('enemyXP({type:"boss",level:90})') <= 210, true);
   for (const level of [2, 5, 10, 20, 35, 60, 98]) assert(run(`xpForLevel(${level + 1}) > xpForLevel(${level})`));
-  assert(run('xpForLevel(10) > 100000'));
-  run('experience(6 * 99);'); assert.equal(run('p.level'), 1);
-  run('experience(6);'); assert.equal(run('p.level'), 2); assert.equal(run('p.points'), 3);
+  assert(run('xpForLevel(10) >= 3000 && xpForLevel(10) < 4000'));
+  run('experience(153);'); assert.equal(run('p.level'), 1);
+  run('experience(1);'); assert.equal(run('p.level'), 2); assert.equal(run('p.points'), 3);
   run('p.level=20;'); assert.equal(run('enemyXP({type:"wolf",level:1})'), 0);
   assert(run('enemyXP({type:"wolf",level:18}) < enemyXP({type:"wolf",level:20})'));
   run('p.level=99;p.xp=0;experience(1000000);'); assert.equal(run('p.level'), 99); assert.equal(run('p.xp'), 0);
@@ -80,9 +80,9 @@ test('enhancement follows the item across swaps and cannot be bought without ore
   run('running=true;loadMap("town",true);p.x=NPCS.smith.x;p.y=NPCS.smith.y;rand=()=>0;p.equipped.weapon={name:"A",slot:"weapon",bonus:10,rarity:0,value:10};p.bag=[{name:"B",slot:"weapon",bonus:12,rarity:0,value:10}];p.gold=1000;');
   assert.equal(run('enhanceEquipment("weapon")'), false); assert.equal(run('p.gold'), 1000);
   run('p.career.materials.ore=10;'); assert.equal(run('enhanceEquipment("weapon")'), true);
-  assert.equal(run('equippedBonus("weapon")'), 13);
+  assert.equal(run('equippedBonus("weapon")'), 12);
   run('equipItem(0);'); assert.equal(run('equippedBonus("weapon")'), 12);
-  run('equipItem(0);'); assert.equal(run('equippedBonus("weapon")'), 13);
+  run('equipItem(0);'); assert.equal(run('equippedBonus("weapon")'), 12);
 });
 
 test('alchemy consumes ingredients and fusion stones; all three bonuses can coexist', () => {

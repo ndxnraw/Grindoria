@@ -43,3 +43,7 @@ Každá snímka v existujúcom worldStates ukladá voliteľné events: schému, 
 career.worldEvents drží len sériu ID a dokončené typy; objavy ruín rozširujú existujúce discovery. Všetko patrí konkrétnej postave a prenáša sa existujúcim exportom a importom. Staré profily bez udalostí sa načítajú bez straty dát a bez spätne pridanej odmeny. Import odmietne neplatné typy, časy, mapy, ID, populácie, čítače a objavy transakčne.
 
 Definície: data/world-events.js. Plánovanie, odmeny a validácia: systems/world-events.js. UI a denník: ui/world-events.js. Modelové doplnky, ruiny a značky: render/world-events.js.
+
+## Lokálne hranice od 0.30.0
+
+Úroveň udalosti neprekročí hornú hranicu mapy. Vzácnosť mení zdravie, poškodenie a odmeny pri rovnakej úrovni. Šuterland povoľuje iba vzácny Metin a skryté ruiny; Žatva materiálov sa tam neplánuje, pretože neobsahuje vhodné voľné príšery. Starý nesplniteľný stav sa pri načítaní zruší bez falošnej odmeny. Bossovia nových máp používajú existujúce registrované relikvie podľa regiónu.

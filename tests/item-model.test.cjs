@@ -58,7 +58,7 @@ const {run}=createGame();assert.match(run('itemCatalogPanel()'),/MeÄ splnu.*VyÅ
 });
 
 test('each enemy pool can tune its gear odds without changing another species',()=>{
-const {run}=createGame();run('LOOT_POOLS["enemy:wolf"].gear.normal=0;');assert.equal(run('LOOT_POOLS["enemy:scorpion"].gear.normal'),.03);
+const {run}=createGame();run('LOOT_POOLS["enemy:wolf"].gear.normal=0;');assert.equal(run('LOOT_POOLS["enemy:scorpion"].gear.normal'),.12);
 run('rand=()=>.001;var before=drops.length;dropFarmEquipment({type:"wolf",skin:"wolf",level:1,x:p.x,y:p.y});');assert.equal(run('drops.length'),run('before'));
 });
 test('canonical corrupted imports fail atomically while name-resolved copies get disjoint item identities',()=>{

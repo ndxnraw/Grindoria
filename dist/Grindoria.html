@@ -196,14 +196,14 @@ body{font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ui-text)}button,inp
 .item-catalog .career-card{display:flow-root;min-height:142px}.item-catalog .item-icon{float:left;width:64px;height:96px;max-width:25%;margin:4px 18px 8px 0}.item-catalog .career-card h3{margin:0 0 8px}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button><button id="desktop-updates" hidden>Aktualizácie</button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.29.0</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button><button id="desktop-updates" hidden>Aktualizácie</button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.30.0</b></span></header>
 <main><div class="world-title"><div><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Divoký vlk · Strážca pralesa</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
 <section id="game-shell" class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb iba WASD alebo šípkami, výber cieľa kliknutím, nasledovanie a útok druhým klikom na rovnaký cieľ, smerový útok medzerníkom, schopnosť Q, liečenie E, korisť ľavým kliknutím alebo Y v okolí, zlato a zásoby automaticky."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
-<div class="hud player"><div id="portrait" class="portrait">侍</div><div><div class="player-name"><b id="playername">Pútnik</b><small id="playerclass" hidden>Bojovník</small> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 60 skúseností</small></div></div>
+<div class="hud player"><div id="portrait" class="portrait">侍</div><div><div class="player-name"><b id="playername">Pútnik</b><small id="playerclass" hidden>Bojovník</small> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 154 skúseností</small></div></div>
 <div class="hud map"><button id="character-menu" class="fullscreen-control character-return-control" type="button" aria-label="Výber postáv" title="Uložiť a vrátiť sa na výber postáv">♙</button><button id="fullscreen" class="fullscreen-control" type="button" aria-label="Celá obrazovka" aria-pressed="false" title="Celá obrazovka · F10">⛶</button><canvas id="minimap" width="138" height="118"></canvas><span id="minimaplabel">ÚDOLIE TICHÉHO VETRA</span></div>
 <div class="hud quest"><span class="eyebrow">AKTÍVNA ÚLOHA</span><h3>Praskliny v pokoji</h3><div id="q-wolves">◇ Poraz príšery <b>0 / 5</b></div><div id="q-stones">◇ Znič kamene osudu <b>0 / 3</b></div><button id="claim" hidden>Vyzdvihnúť odmenu</button><small id="questnote">Odmena: 150 zlata + 60 skúseností</small></div>
 <div id="toast" role="status"></div><button id="world-event-status" class="world-event-status" hidden></button><button id="dungeon-status" class="dungeon-status" hidden></button><div id="target-panel" class="hud target-panel" aria-live="off" hidden></div><div id="combat-flow" class="hud combat-flow" aria-live="polite" hidden></div><div id="buffs" class="buffs" aria-live="off"></div><div class="hud location">⌖ &nbsp; <span id="coords">Mesto</span></div>
-<div class="combat-assist" role="group" aria-label="Automatická pomoc v boji"><button id="auto-aim" type="button" aria-pressed="false" title="Pri útoku mieri na najbližšieho nepriateľa do 500 jednotiek. Označený cieľ má prednosť; bez automatickej chôdze.">Automierenie: VYP</button><button id="auto-spell" type="button" aria-pressed="false" title="Iba v boji s označeným nepriateľom alebo Metinom používa schopnosti; rešpektuje manu a cooldowny. Esc vypne pomocníkov.">Autospell: VYP</button><button id="auto-potion" type="button" aria-pressed="false" title="Pod 45 % HP použije zásobu elixíra: +65 HP, spoločný cooldown 4 s.">Autoelixíry: VYP</button></div>
+<div class="combat-assist" role="group" aria-label="Automatická pomoc v boji"><button id="auto-aim" type="button" aria-pressed="false" title="Pri útoku mieri na najbližšieho nepriateľa do 500 jednotiek. Označený cieľ má prednosť; bez automatickej chôdze.">Automierenie: VYP</button><button id="auto-spell" type="button" aria-pressed="false" title="Iba v boji s označeným nepriateľom alebo Metinom používa schopnosti; rešpektuje manu a cooldowny. Esc vypne pomocníkov.">Autospell: VYP</button><button id="auto-potion" type="button" aria-pressed="false" title="Pod 45 % HP použije zásobu elixíra: +65 HP alebo 25 % maxima podľa vyššej hodnoty, spoločný cooldown 4 s.">Autoelixíry: VYP</button></div>
 <div class="hotbar"><button id="attack"><kbd>SPACE</kbd><span>⚔</span><small>Sek mečom</small></button><button id="skill"><kbd>Q</kbd><span>✺</span><small>Veterný kruh</small><em id="cooldown"></em></button><button id="skill2"><kbd>R</kbd><span>✧</span><small>Schopnosť</small><em id="cooldown2"></em></button><button id="skill3"><kbd>T</kbd><span>☄</span><small>Schopnosť</small><em id="cooldown3"></em></button><button id="skill4"><kbd>V</kbd><span>◈</span><small>Schopnosť</small><em id="cooldown4"></em></button><button id="skill5"><kbd>U</kbd><span>❖</span><small>Schopnosť</small><em id="cooldown5"></em></button><button id="skill6"><kbd>O</kbd><span>✥</span><small>Schopnosť</small><em id="cooldown6"></em></button><button id="potion"><kbd>E</kbd><span>⚱</span><small>Elixír <b id="pots">5</b></small><em id="potion-cooldown"></em></button><button id="bravery" title="Plášť statočnosti · B · dosah 650 · priťahovanie 18 s"><kbd>B</kbd><span>⚑</span><small>Plášť <b id="capes">10</b></small><em id="cape-cooldown"></em></button><div class="divider"></div><button id="inventory"><kbd>I</kbd><span>▣</span><small>Výbava</small></button></div>
 <div class="hud wallet"><span>◉</span> <b id="gold">0</b> <small>YANG</small></div>
 <div id="intro" class="character-screen"></div>
@@ -387,10 +387,11 @@ BIOLOGY.push(
 
 // src/js/data/forge.js
 const FORGE_RULES={
- success:[0,.95,.9,.8,.65,.5,.35,.23,.14,.08],
- bonus:[0,3,7,12,18,25,34,46,62,85],
- destructionChance:.35,charmBoost:.1,
- recipes:{smithCharm:{forgeCore:2,essence:100,gold:15000},protectionScroll:{forgeCore:6,dust:100,books:10,gold:50000}}
+ success:[0,.95,.93,.9,.85,.75,.65,.55,.45,.35],
+ bonus:[0,2,4,7,10,14,19,25,32,40],
+ bonuses:{defense:[0,1,2,3,5,7,10,13,17,22],hp:[0,10,22,36,55,80,110,145,180,220],mp:[0,10,20,32,48,68,92,120,155,195],magic:[0,2,4,7,10,14,19,25,32,40],speed:[0,1,2,3,4,6,8,10,12,15],crit:[0,.4,.8,1.3,1.9,2.6,3.4,4.3,5.3,6.5]},
+ destructionChance:.15,charmBoost:.1,
+ recipes:{smithCharm:{forgeCore:1,essence:30,gold:1000},protectionScroll:{forgeCore:2,dust:25,books:3,gold:3000}}
 };
 Object.assign(MATERIALS,{forgeCore:'Kováčske jadro',smithCharm:'Talizman kováča',protectionScroll:'Ochranný zvitok'});
 
@@ -413,8 +414,8 @@ const SPAWN_RULES = {
 
 const ENEMY_VARIANTS = {
   normal: { name: '', hp: 1, damage: 1, speed: 1, xp: 1, gold: 1, level: 0, respawn: 8, color: '#b8c59c' },
-  elite: { name: 'Elitný', hp: 1.8, damage: 1.35, speed: 1.1, xp: 1.35, gold: 2, level: 1, respawn: 12, color: '#b59ceb' },
-  rare: { name: 'Vzácny', hp: 2.8, damage: 1.7, speed: 1.15, xp: 1.8, gold: 4, level: 2, respawn: 60, color: '#edd183' }
+  elite: { name: 'Elitný', hp: 1.6, damage: 1.25, speed: 1.1, xp: 1.8, gold: 2, level: 1, respawn: 12, color: '#b59ceb' },
+  rare: { name: 'Vzácny', hp: 2.3, damage: 1.5, speed: 1.15, xp: 3.2, gold: 4, level: 2, respawn: 60, color: '#edd183' }
 };
 
 const FARM_AREAS = [
@@ -426,10 +427,13 @@ const FARM_AREAS = [
 
 
 for(const cfg of Object.values(MAPS))if(!cfg.town&&!cfg.instance&&!cfg.metinsOnly){
- const steps=[...(cfg.areaLevelOffsets||FARM_AREAS.map(area=>area.offset))].sort((a,b)=>a-b);
+ const span=cfg.levelMax-cfg.level;
+ cfg.mobLevelSpread=Math.max(1,Math.min(3,Math.floor(span/4)));
+ const last=Math.max(0,span-cfg.mobLevelSpread),steps=[0,Math.floor(last/3),Math.floor(last*2/3),last];
  const areas=FARM_AREAS.map((area,index)=>({index,distance:Math.hypot((area.x1+area.x2)/2-cfg.entry.x,(area.y1+area.y2)/2-cfg.entry.y)})).sort((a,b)=>a.distance-b.distance);
- cfg.areaLevelOffsets=[];areas.forEach((area,rank)=>cfg.areaLevelOffsets[area.index]=steps[rank]);cfg.balanceVersion=1;
+ cfg.areaLevelOffsets=[];areas.forEach((area,rank)=>cfg.areaLevelOffsets[area.index]=steps[rank]);cfg.balanceVersion=2;cfg.bossLevel=cfg.levelMax;cfg.maxEnemyLevel=cfg.levelMax;
 }
+MAPS.suterland.balanceVersion=2;
 
 
 // src/js/data/items.js
@@ -462,12 +466,12 @@ const RARITIES = [
 ];
 const ITEM_GENERATION = {version:1,legendaryLevel:50,mythicLevel:75,maxAttackSpeed:.6,maxPenetration:.5,maxEnemyBonus:1};
 const RARITY_WEIGHTS = {
- normal:[750000,190000,55000,4500,490,10],
- elite:[550000,300000,130000,18000,1950,50],
- rare:[300000,390000,260000,47000,2900,100],
- boss:[150000,300000,420000,120000,9800,200],
- metin:[500000,330000,140000,28000,1900,100],
- reward:[0,0,0,980000,19800,200]
+ normal:[450000,350000,175000,22000,2900,100],
+ elite:[200000,350000,350000,90000,9500,500],
+ rare:[50000,200000,500000,220000,28000,2000],
+ boss:[0,50000,500000,365000,80000,5000],
+ metin:[250000,350000,300000,85000,14500,500],
+ reward:[0,0,0,950000,48000,2000]
 };
 const ITEM_AFFIXES = {
  attack:{base:3,scale:.3},hp:{base:25,scale:2},mp:{base:20,scale:1.6},
@@ -642,7 +646,7 @@ const POTION_RULES = { heal: 65, cooldown: 4, autoThreshold: .45 };
 
 
 // src/js/data/characters.js
-const CHARACTER_RULES = { maxCharacters: 8, nameMin: 3, nameMax: 16, backupVersion: 2, maxBackupCharacters: 128, maxBackupBytes: 16 * 1024 * 1024, storageKey: 'grindoria-characters-v1' };
+const CHARACTER_RULES = { maxCharacters: 8, nameMin: 3, nameMax: 16, backupVersion: 2, maxBackupCharacters: 128, maxBackupBytes: 64 * 1024 * 1024, storageKey: 'grindoria-characters-v1' };
 const DEFAULT_SCHOOLS = { warrior: 'body', ninja: 'blade', sura: 'weapon', shaman: 'dragon' };
 const CHARACTER_ACHIEVEMENTS = { firstKill: 'Prvý protivník', firstMetin: 'Lámač kameňov', firstBoss: 'Víťaz nad strážcom', hunter100: 'Lovec stovky' };
 
@@ -652,7 +656,7 @@ const CRAFT_RULES = { maxLevel: 10, maxXP: 4500, maxStock: 1e12 };
 const CRAFT_MATERIALS = { herb: 'Liečivá bylina', hide: 'Vyčinená koža', crystal: 'Surový kryštál', ingot: 'Oceľový ingot', extract: 'Bylinný extrakt', primal: 'Jadro trhliny' };
 Object.assign(MATERIALS, CRAFT_MATERIALS);
 const ALCHEMY_PRODUCTS = {
-  mana: { name: 'Elixír many', text: 'Obnoví 80 many. Spoločný cooldown elixírov 4 s.', mana: 80, icon: 'essence' },
+  mana: { name: 'Elixír many', text: 'Obnoví 80 many alebo 30 % maxima, podľa vyššej hodnoty. Spoločný cooldown elixírov 4 s.', mana: 80, icon: 'essence' },
   might: { name: 'Odvar sily', text: '+4 útok na 120 s.', bonus: { attack: 4 }, duration: 120, icon: 'ember' },
   guard: { name: 'Odvar odolnosti', text: '+4 obrana na 120 s.', bonus: { defense: 4 }, duration: 120, icon: 'jade' },
   vitality: { name: 'Odvar vitality', text: '+60 max. zdravie na 120 s. Nedopĺňa zdravie.', bonus: { hp: 60 }, duration: 120, icon: 'potion' },
@@ -660,10 +664,10 @@ const ALCHEMY_PRODUCTS = {
 };
 const CRAFT_RECIPES = {
   ingot: { name: 'Oceľový ingot', profession: 'crafting', level: 1, xp: 12, cost: { ore: 5, gold: 30 }, output: { material: 'ingot', count: 1 } },
-  potion: { name: 'Liečivé elixíry ×3', profession: 'alchemy', level: 1, xp: 15, cost: { herb: 3, gold: 15 }, output: { counter: 'potions', count: 3 } },
+  potion: { name: 'Liečivé elixíry ×6', profession: 'alchemy', level: 1, xp: 15, cost: { herb: 1, gold: 10 }, output: { counter: 'potions', count: 6 } },
   extract: { name: 'Bylinný extrakt', profession: 'alchemy', level: 1, xp: 12, cost: { herb: 4, essence: 2, gold: 20 }, output: { material: 'extract', count: 1 } },
   mana: { name: 'Elixír many', profession: 'alchemy', level: 1, xp: 15, cost: { herb: 2, essence: 4, gold: 25 }, output: { product: 'mana', count: 1 } },
-  cape: { name: 'Plášť statočnosti', profession: 'crafting', level: 2, xp: 20, cost: { hide: 4, essence: 5, gold: 80 }, output: { counter: 'braveryCapes', count: 1 } },
+  cape: { name: 'Plášte statočnosti ×10', profession: 'crafting', level: 2, xp: 20, cost: { hide: 1, essence: 1, gold: 20 }, output: { counter: 'braveryCapes', count: 10 } },
   might: { name: 'Odvar sily', profession: 'alchemy', level: 2, xp: 22, cost: { extract: 2, wolf: 2, gold: 80 }, output: { product: 'might', count: 1 } },
   guard: { name: 'Odvar odolnosti', profession: 'alchemy', level: 3, xp: 30, cost: { extract: 2, crystal: 2, gold: 100 }, output: { product: 'guard', count: 1 } },
   vitality: { name: 'Odvar vitality', profession: 'alchemy', level: 4, xp: 40, cost: { extract: 3, frost: 2, dust: 3, gold: 150 }, output: { product: 'vitality', count: 1 } },
@@ -678,7 +682,7 @@ const CRAFT_RECIPES = {
 for (const [suffix, level, tier, rarity, ingots] of [['basic', 1, 1, 0, 2], ['adept', 4, 20, 1, 6], ['master', 8, 50, 2, 12]]) {
   for (const slot of Object.keys(EQUIPMENT)) CRAFT_RECIPES[slot + '-' + suffix] = {
     name: EQUIPMENT[slot].name + ' · Lv.' + tier + ' · ' + rarityNameForRecipe(rarity), profession: 'crafting', level, playerLevel: tier, xp: 20 + level * 10,
-    cost: { ingot: ingots, hide: ingots, gold: tier * 100, ...(level >= 4 ? { crystal: ingots } : {}), ...(level >= 8 ? { primal: 1 } : {}) },
+    cost: { ingot: ingots, hide: ingots, gold: tier * 25, ...(level >= 4 ? { crystal: ingots } : {}), ...(level >= 8 ? { primal: 1 } : {}) },
     output: { slot, tier, rarity, count: 1 }
   };
 }
@@ -689,8 +693,8 @@ for (const id of Object.keys(GEMS)) CRAFT_RECIPES['gem-' + id] = { name: GEMS[id
 // src/js/data/economy.js
 const ECONOMY_RULES = { schema: 1, refreshSeconds: 600, maxDemand: 10, maxCycles: 1000000 };
 const MARKET_GOODS = {
-  'catalog-fms': {name:'Meč splnu (FMS)',definitionId:'weapon:fms',count:1,price:100000,stock:1,group:'gear',level:30},
-  'catalog-poison': {name:'Jedovatý meč',definitionId:'weapon:poison-sword',count:1,price:1500000,stock:1,group:'gear',level:75},
+  'catalog-fms': {name:'Meč splnu (FMS)',definitionId:'weapon:fms',count:1,price:3500,stock:1,group:'gear',level:30},
+  'catalog-poison': {name:'Jedovatý meč',definitionId:'weapon:poison-sword',count:1,price:35000,stock:1,group:'gear',level:75},
   potions: { name: 'Liečivé elixíry ×3', supply: 'potions', count: 3, price: 25, stock: 20, group: 'supplies' },
   capes: { name: 'Plášte statočnosti ×10', supply: 'braveryCapes', count: 10, price: 100, stock: 5, group: 'supplies' },
   ore: { name: 'Ruda ×5', supply: 'material:ore', count: 5, price: 100, stock: 12, group: 'materials' },
@@ -724,6 +728,7 @@ MAPS.dungeon={name:'Dungeon',region:'ODDELENÁ VÝPRAVA',desc:'Opakovateľný du
 
 
 // src/js/data/prestige.js
+const PRESTIGE_BESTIARY_KEYS=['wolf','scorpion','yeti','demon',...Object.keys(METIN_TYPES).map(id=>'metin:'+id),...Object.keys(MAPS).filter(id=>!MAPS[id].town&&!MAPS[id].instance&&!MAPS[id].metinsOnly).map(id=>'boss:'+id),...Object.keys(DUNGEONS).map(id=>'dungeon:'+id)];
 const PRESTIGE_RULES={schema:1,maxRank:5,maxTraining:10,goalReward:20};
 const PRESTIGE_RANKS=[null,
  {label:'I',color:'#a1d6c0',bonus:{hp:40},text:'+40 HP'},
@@ -737,7 +742,7 @@ const PRESTIGE_REQUIREMENTS={
  2:[{metric:'trial',dungeon:'crypt',tier:1,need:1,label:'Prestížna hrobka · stupeň I+'},{metric:'metins',need:5,label:'Metiny Lv.95+ po aktivácii'},{metric:'skills10',need:3,label:'Schopnosti stupňa 10+'}],
  3:[{metric:'trial',dungeon:'frost',tier:2,need:1,label:'Prestížna pevnosť · stupeň II+'},{metric:'bosses',need:3,label:'Vzácni prestížni bossovia'},{metric:'skills20',need:1,label:'Schopnosť maximálneho stupňa'}],
  4:[{metric:'trial',dungeon:'abyss',tier:3,need:1,label:'Prestížna priepasť · stupeň III+'},{metric:'biology',need:8,label:'Dokončené biologické etapy'},{metric:'uniques',need:3,label:'Získané dungeonové unikáty'}],
- 5:[{metric:'trials4',need:3,label:'Rôzne prestížne dungeony · stupeň IV+'},{metric:'bestiary',need:19,label:'Druhy porazené v bestiári'},{metric:'skills20',need:6,label:'Maximálne schopnosti aktuálnej školy'},{metric:'weapon9',need:1,label:'Legendary alebo Mythic zbraň +9'}]
+ 5:[{metric:'trials4',need:3,label:'Rôzne prestížne dungeony · stupeň IV+'},{metric:'bestiary',need:PRESTIGE_BESTIARY_KEYS.length,label:'Druhy porazené v bestiári'},{metric:'skills20',need:6,label:'Maximálne schopnosti aktuálnej školy'},{metric:'weapon9',need:1,label:'Legendary alebo Mythic zbraň +9'}]
 };
 const PRESTIGE_GOALS={
  arsenal:{metric:'arsenal',need:10,label:'Mythic výbava +9 vo všetkých slotoch'},
@@ -747,7 +752,7 @@ const PRESTIGE_GOALS={
  challenges:{metric:'trials5',need:3,label:'Všetky prestížne dungeony · stupeň V'},
  bosses:{metric:'bossTypes',need:3,label:'Všetci traja vzácni prestížni bossovia'},
  uniques:{metric:'uniques',need:3,label:'Získané tri dungeonové unikáty'},
- bestiary:{metric:'bestiary',need:19,label:'Dokončený bestiár'},
+ bestiary:{metric:'bestiary',need:PRESTIGE_BESTIARY_KEYS.length,label:'Dokončený bestiár'},
  mastery:{metric:'training',need:30,label:'Všetky prestížne pasívne tréningy'}
 };
 
@@ -788,14 +793,14 @@ registerEquipmentModel('weapon','red-iron-blade',look=>[modelPath('M25 1h15l8 12
 registerEquipmentModel('weapon','black-leaf',look=>[modelPath('M18 6 28 22 20 60l-8-10 8-22ZM46 2 56 19 46 57l-8-10 9-22Z','#587a69','#bad2b5'),modelPath('m7 57 22 5-2 6-22-5Zm27-4 24 6-2 6-24-6ZM15 67l7 1-4 21-7-1Zm28-5 7 2-6 23-7-2Z','#474c40','#d2b57d')]);
 registerEquipmentModel('weapon','autumn-fan',look=>[modelPath('M32 60 4 26Q30-8 60 26Z','#bd784b','#edc58f'),modelPath('M32 60 9 27m23 33L20 16m12 44V9m0 51 12-44M32 60l23-33','none','#784b39',2),modelPath('m29 55 6 0 3 27-6 8-6-8Z','#c9ac78','#f4dca4'),modelGem(32,34,7,'#e8d390')]);
 
-for(const [key,d]of Object.entries(ICONIC_ITEMS))CRAFT_RECIPES['iconic-'+key]={name:d.name,profession:'crafting',level:d.level===75?10:6,playerLevel:d.level,xp:d.level===75?120:65,cost:d.level===75?{primal:8,ingot:30,crystal:30,forgeCore:5,gold:500000}:{ingot:15,crystal:10,ore:50,gold:50000},output:{definitionId:d.id,slot:'weapon',count:1}};
+for(const [key,d]of Object.entries(ICONIC_ITEMS))CRAFT_RECIPES['iconic-'+key]={name:d.name,profession:'crafting',level:d.level===75?10:6,playerLevel:d.level,xp:d.level===75?120:65,cost:d.level===75?{primal:8,ingot:30,crystal:30,forgeCore:5,gold:15000}:{ingot:15,crystal:10,ore:50,gold:1500},output:{definitionId:d.id,slot:'weapon',count:1}};
 
 
 // src/js/data/loot-pools.js
 // Content registries contain definitions, never mutable item instances.
 const LOOT_POOLS=Object.create(null);
 function registerLootPool(id,pool){if(Object.hasOwn(LOOT_POOLS,id)||!pool||!Array.isArray(pool.catalog))throw Error('Neplatný loot pool.');for(const e of pool.catalog)if(!ITEM_DEFINITIONS[e.definitionId]||!Number.isFinite(e.chance)||e.chance<0||e.chance>1)throw Error('Neplatný drop.');LOOT_POOLS[id]=pool;}
-const ENEMY_LOOT_DEFAULTS={gear:{normal:.03,elite:.2,rare:1,boss:1},potionChance:.25,gold:{boss:120,min:7,range:7},capes:{boss:3,rare:2,eliteChance:.25,normalChance:.02}};
+const ENEMY_LOOT_DEFAULTS={gear:{normal:.12,elite:.45,rare:1,boss:1},potionChance:.25,gold:{boss:120,min:7,range:7},capes:{boss:3,rare:2,eliteChance:.25,normalChance:.02}};
 function enemyLootDefaults(){return JSON.parse(JSON.stringify(ENEMY_LOOT_DEFAULTS));}
 for(const skin of ['wolf','scorpion','yeti','demon'])registerLootPool('enemy:'+skin,{...enemyLootDefaults(),catalog:[]});
 for(const id of Object.keys(MAPS))registerLootPool('boss:'+id,{...enemyLootDefaults(),catalog:[]});
@@ -812,7 +817,7 @@ const DISCOVERY_REWARDS={hunter:{name:'Lovec tisícky',goal:1000,bonus:{hp:30},y
 function initializeDiscovery(){p.discovery??={seen:{},places:{},rarities:{},claimed:{}};trackCollectionGear();}
 function discoveryEnemyKey(m){return m.dungeonSeal?null:m.dungeonBoss?'dungeon:'+m.dungeonId:m.type==='stone'?'metin:'+m.metinType:m.type==='boss'?'boss:'+p.mapId:m.skin||'wolf';}
 function validDiscoveryKey(key){return ['wolf','scorpion','yeti','demon'].includes(key)||key.startsWith('metin:')&&Object.hasOwn(METIN_TYPES,key.slice(6))||key.startsWith('boss:')&&Object.hasOwn(MAPS,key.slice(5))||key.startsWith('dungeon:')&&Object.hasOwn(DUNGEONS,key.slice(8));}
-function discoverEnemy(m){const key=discoveryEnemyKey(m);if(!key)return;const d=p.discovery.seen;const old=d[key];const loc=m.dungeonId?'dungeon:'+m.dungeonId:p.mapId;const name=m.name||(m.type==='stone'?METIN_TYPES[m.metinType].name:m.type==='boss'?map().boss:map().mob);d[key]={name,level:enemyLevel(m),hp:m.max,attackScale:m.attackScale||1,armor:Number(m.armor)||0,damageType:enemyDamageType(m),skin:m.skin||'wolf',type:m.type,metinType:m.metinType||null,dungeonId:m.dungeonId||null,dungeonBoss:!!m.dungeonBoss,locations:[...new Set([...(old?.locations||[]),loc])]};}
+function discoverEnemy(m){const key=discoveryEnemyKey(m);if(!key)return;const d=p.discovery.seen;const old=d[key];const loc=m.dungeonId?'dungeon:'+m.dungeonId:p.mapId;const name=m.name||(m.type==='stone'?METIN_TYPES[m.metinType].name:m.type==='boss'?map().boss:map().mob);d[key]={name,level:enemyLevel(m),hp:m.max,attackScale:m.attackScale||1,armor:Number(m.type==='stone'?m.metinArmor:m.armor)||0,damageType:enemyDamageType(m),skin:m.skin||'wolf',type:m.type,metinType:m.metinType||null,dungeonId:m.dungeonId||null,dungeonBoss:!!m.dungeonBoss,locations:[...new Set([...(old?.locations||[]),loc])]};}
 function trackCollectionGear(){if(!p.discovery)return;for(const item of [...(p.bag||[]),...Object.values(p.equipped||{})])if(item&&rarityRank(item.rarity)>=2)p.discovery.rarities[item.rarity]=true;}
 function updateDiscovery(){if(!p.discovery)initializeDiscovery();for(const m of mobs)if(m.hp>0&&!m.dungeonSeal&&Math.hypot(m.x-p.x,m.y-p.y)<420)discoverEnemy(m);trackCollectionGear();for(const [id,place]of Object.entries(SECRET_PLACES))if(place.map===p.mapId&&!p.discovery.places[id]&&Math.hypot(p.x-place.x,p.y-place.y)<85){p.discovery.places[id]=true;toast('Objavené: '+place.name);save();}}
 function discoveryProgress(id){switch(id){case'hunter':return p.career.eligibleKills;case'metins':return Object.keys(METIN_TYPES).filter(k=>p.bestiary['metin:'+k]>0).length;case'trophies':return ['valley','desert','snow','temple'].filter(k=>p.bestiary['boss:'+k]>0).length;case'dungeons':return Object.keys(DUNGEONS).filter(k=>p.bestiary['dungeon:'+k]>0).length;case'rarities':return [1,2,4,5].filter(k=>p.discovery.rarities[k]).length;case'explorer':return Object.keys(p.discovery.places).length;case'relics':return Object.values(p.career.collection).filter(Boolean).length;}return 0;}
@@ -868,6 +873,111 @@ function loadLegacyPlayerSave() {
 }
 
 
+// src/js/core/storage.js
+// Storage transport only. Runtime profiles and portable JSON backups keep their existing shape.
+function packMobTable(mobs){
+  const groups=[],byShape=new Map(),rows=[];
+  for(const mob of mobs){
+    const fields=Object.keys(mob).filter(key=>mob[key]!==undefined).sort(),shape=fields.join('\0');
+    let index=byShape.get(shape);
+    if(index===undefined){index=groups.length;byShape.set(shape,index);groups.push({fields,mobs:[]});}
+    groups[index].mobs.push(mob);rows.push({index,mob});
+  }
+  const tables=groups.map(group=>{
+    const defaults={},aliases={},fields=[];
+    for(const key of group.fields){
+      const first=JSON.stringify(group.mobs[0][key]);
+      if(group.mobs.every(m=>JSON.stringify(m[key])===first))Object.defineProperty(defaults,key,{value:group.mobs[0][key],enumerable:true});
+      else{
+        const alias=fields.find(other=>group.mobs.every(m=>JSON.stringify(m[key])===JSON.stringify(m[other])));
+        if(alias)Object.defineProperty(aliases,key,{value:alias,enumerable:true});else fields.push(key);
+      }
+    }
+    return {defaults,aliases,fields};
+  });
+  return {$mobTable:1,tables,rows:rows.map(({index,mob})=>[index,...tables[index].fields.map(key=>mob[key])])};
+}
+function unpackMobTable(table){
+  if(!Array.isArray(table.tables)||table.tables.length>1000||!Array.isArray(table.rows)||table.rows.length>1000)throw Error('Poškodená populácia v úložisku.');
+  return table.rows.map(row=>{
+    const spec=table.tables[row[0]];
+    if(!spec||!Array.isArray(spec.fields)||row.length!==spec.fields.length+1||!spec.defaults||!spec.aliases)throw Error('Poškodený záznam nepriateľa.');
+    const entries=[...Object.entries(spec.defaults),...spec.fields.map((key,i)=>[key,row[i+1]])],mob=Object.fromEntries(entries);
+    for(const [key,source]of Object.entries(spec.aliases))Object.defineProperty(mob,key,{value:mob[source],enumerable:true,writable:true,configurable:true});
+    return mob;
+  });
+}
+function compressCharacterText(input){
+  const last=new Map(),out=[];let at=0,literal=0;
+  const flush=end=>{while(literal<end){const size=Math.min(255,end-literal);out.push(String.fromCharCode(256+size),input.slice(literal,literal+size));literal+=size;}};
+  while(at<input.length){
+    const key=input.slice(at,at+4),previous=last.get(key);last.set(key,at);
+    let size=0;
+    if(key.length===4&&previous!==undefined&&at-previous<=32767){while(size<1023&&at+size<input.length&&input[previous+size]===input[at+size])size++;}
+    if(size>=4){
+      flush(at);out.push(String.fromCharCode(4096+size),String.fromCharCode(256+at-previous));
+      for(let i=1;i<size;i++)last.set(input.slice(at+i,at+i+4),at+i);
+      at+=size;literal=at;
+    }else at++;
+  }
+  flush(at);return out.join('');
+}
+function decompressCharacterText(input){
+  const out=[],history=new Uint16Array(32768),block=new Uint16Array(8192);let length=0;
+  const emit=code=>{if(length>=64*1024*1024)throw Error('Uložené dáta sú príliš veľké.');history[length&32767]=code;block[length%8192]=code;length++;if(length%8192===0)out.push(String.fromCharCode(...block));};
+  for(let at=0;at<input.length;){
+    const token=input.charCodeAt(at++);
+    if(token>256&&token<=511){const size=token-256;if(at+size>input.length)throw Error('Neúplné uložené dáta.');for(let i=0;i<size;i++)emit(input.charCodeAt(at++));}
+    else if(token>=4100&&token<=5119){
+      const size=token-4096,distance=input.charCodeAt(at++)-256;
+      if(!Number.isInteger(distance)||distance<1||distance>32767||distance>length)throw Error('Poškodený odkaz v úložisku.');
+      for(let i=0;i<size;i++)emit(history[(length-distance)&32767]);
+    }else throw Error('Neznámy údaj v úložisku.');
+  }
+  if(length%8192)out.push(String.fromCharCode(...block.subarray(0,length%8192)));
+  return out.join('');
+}
+const characterStorageCache=new Map();
+function encodeCharacterStorage(account){
+  if(account.format==='grindoria-account'){
+    let size=JSON.stringify({...account,profiles:{}}).length;const records=[];
+    for(const [id,record]of Object.entries(account.profiles)){
+      const cached=characterStorageCache.get(id),text=cached?.record===record?cached.plain:JSON.stringify(record);
+      const entry=cached?.plain===text?cached:{record,plain:text,packed:null};entry.record=record;characterStorageCache.set(id,entry);records.push({id,record,entry});size+=text.length+id.length+4;
+    }
+    for(const id of characterStorageCache.keys())if(!Object.hasOwn(account.profiles,id))characterStorageCache.delete(id);
+    if(size<128000)return JSON.stringify(account);
+    const profiles={};
+    for(const {id,record,entry}of records){
+      if(!entry.packed){const compact=JSON.stringify(record,(key,value)=>key==='mobs'&&Array.isArray(value)?packMobTable(value):value);entry.packed={format:'grindoria-profile',version:1,data:compressCharacterText(compact)};}
+      Object.defineProperty(profiles,id,{value:entry.packed,enumerable:true,writable:true,configurable:true});
+    }
+    return JSON.stringify({format:'grindoria-storage',version:2,account:{...account,profiles}});
+  }
+  const plain=JSON.stringify(account);
+  if(plain.length<128000)return plain;
+  const compact=JSON.stringify(account,(key,value)=>key==='mobs'&&Array.isArray(value)?packMobTable(value):value);
+  const packed=JSON.stringify({format:'grindoria-storage',version:1,data:compressCharacterText(compact)});
+  return packed.length<plain.length?packed:plain;
+}
+function decodeCharacterStorage(raw){
+  if(typeof raw!=='string'||raw.length>64*1024*1024)throw Error('Uložené dáta sú príliš veľké.');
+  const value=JSON.parse(raw);
+  if(value?.format!=='grindoria-storage')return value;
+  if(value.version===2&&value.account?.profiles){
+    const profiles={};
+    for(const [id,record]of Object.entries(value.account.profiles)){
+      if(record?.format!=='grindoria-profile'||record.version!==1||typeof record.data!=='string')throw Error('Poškodený uložený profil.');
+      Object.defineProperty(profiles,id,{value:JSON.parse(decompressCharacterText(record.data),(key,item)=>key==='mobs'&&item?.$mobTable===1?unpackMobTable(item):item),enumerable:true,writable:true,configurable:true});
+    }
+    return {...value.account,profiles};
+  }
+  if(value.version!==1||typeof value.data!=='string')throw Error('Neznáma verzia úložiska.');
+  return JSON.parse(decompressCharacterText(value.data),(key,item)=>key==='mobs'&&item?.$mobTable===1?unpackMobTable(item):item);
+}
+function characterSafetyBackupText(raw){try{return JSON.stringify(decodeCharacterStorage(raw),null,2);}catch{return raw;}}
+
+
 // src/js/core/character-store.js
 const characterStore = { account: null, raw: null, activeId: null, needsMigration: false, error: '', writeError: '', serial: 0 };
 const copyCharacterData = value => JSON.parse(JSON.stringify(value));
@@ -896,7 +1006,7 @@ function loadPlayerSave() {
   try {
     const raw=(localStorage.getItem(CHARACTER_RULES.storageKey)??null);characterStore.raw=raw;
     if(raw!==null){
-      const stored=JSON.parse(raw);migrateForgeMaterials(stored);migrateItemAccount(stored);validateCharacterAccount(stored);characterStore.account=stored;
+      const stored=decodeCharacterStorage(raw);migrateForgeMaterials(stored);migrateItemAccount(stored);for(const record of Object.values(stored.profiles||{}))repairLegacyRelics(record.data);validateCharacterAccount(stored);characterStore.account=stored;
       return stored.selectedId?copyCharacterData(profileIdentity(stored.profiles[stored.selectedId],stored.profiles[stored.selectedId].data)):null;
     }
     const legacy=loadLegacyPlayerSave(),candidates=legacy?[legacy]:[...pendingSaveImports];pendingSaveImports.length=0;
@@ -916,10 +1026,11 @@ function commitCharacterAccount(next, {safetyBackup=false, allowRecovery=false} 
   const previous=localStorage.getItem(CHARACTER_RULES.storageKey)??null;
   if(previous!==characterStore.raw)throw new Error('Postavy zmenilo iné okno. Obnov túto stránku pred ďalším ukladaním.');
   next.revision=(characterStore.account.revision||0)+1;
-  const serialized=JSON.stringify(next);
+  assertSafeCharacterJSON(next);
+  const serialized=encodeCharacterStorage(next);
   try {
   if(safetyBackup){
-    const backup=characterStore.error?previous:JSON.stringify(characterBackupDocument(characterStore.account));
+    const backup=characterStore.error?previous:encodeCharacterStorage(characterBackupDocument(characterStore.account));
     localStorage.setItem(CHARACTER_RULES.storageKey+'.safety',backup);
   }
   // A single atomic localStorage write publishes the entire new profile set.
@@ -962,7 +1073,9 @@ function accountWithActiveSnapshot() {
   const record=characterStore.account.profiles[id];
   if(!record||p.characterId!==id||p.classId!==record.classId)throw new Error('Identita postavy nesúhlasí. Uloženie bolo zastavené.');
   expireGroundDrops();pruneStoredGroundDrops();snapshotMap();migrateItemProfile(p,p.characterId);
-  const next=copyCharacterData(characterStore.account),saved=next.profiles[id];saved.lastPlayedAt=Date.now();p.lastPlayedAt=saved.lastPlayedAt;
+  p.combatRecovery={skills:[...spellCD],attack:attackCD,cape:capeCooldown,travel:travelCombat.time};
+  // Inactive records are immutable here; clone only the active snapshot for an atomic commit.
+  const next={...characterStore.account,settings:{...characterStore.account.settings},order:[...characterStore.account.order],profiles:{...characterStore.account.profiles}},saved={...record};next.profiles[id]=saved;saved.lastPlayedAt=Date.now();p.lastPlayedAt=saved.lastPlayedAt;
   saved.data=copyCharacterData(profileIdentity(saved,p));next.selectedId=id;next.settings.sound=sound;return next;
 }
 function saveActiveCharacter() {
@@ -992,6 +1105,7 @@ function playCharacter(id = characterStore.account.selectedId) {
   initializeCareer();initializeInventory();initializeFarming();initializeLoot();initializeCombatAssist();grantStarterWeapon();
   if(p.hp<=0){Object.assign(p,MAPS[p.mapId].entry);p.hp=maxHP();}
   p.hp=Math.max(1,Math.min(p.hp,maxHP()));p.mp=Math.max(0,Math.min(p.mp,maxMP()));loadMap(p.mapId,true);
+  if(p.combatRecovery){spellCD=[...p.combatRecovery.skills];attackCD=p.combatRecovery.attack;capeCooldown=p.combatRecovery.cape;travelCombat.time=p.combatRecovery.travel;skillCD=spellCD[0];}
   characterStore.activeId=id;
   if(!saveActiveCharacter()){characterStore.activeId=null;renderCharacterScreen();return false;}
   running=true;setCharacterScreenMode(false);document.body.classList.add('started');document.body.classList.remove('character-select');$('modal').hidden=true;
@@ -1024,7 +1138,7 @@ function prepareCharacterImport(text) {
     for(const source of data.characters){assertCharacterObject(source,'profil starej zálohy');assertCharacterObject(source.data,'údaje starej zálohy');const record=copyCharacterData(source);record.isGM??=false;record.lastPlayedAt??=null;record.data.characterId=record.id;record.data.name=record.name;record.data.isGM=record.isGM;record.data.bestiary??={};record.data.achievements??={};if(Object.hasOwn(account.profiles,record.id))throw new Error('Duplicitné ID v zálohe.');account.order.push(record.id);account.profiles[record.id]=record;}
     account.selectedId=account.order[0]||null;data={...data,version:CHARACTER_RULES.backupVersion,account};
   }
-  migrateForgeMaterials(data.account);migrateItemAccount(data.account);validateCharacterAccount(data.account);return {account:copyCharacterData(data.account),baseRaw:characterStore.raw};
+  migrateForgeMaterials(data.account);migrateItemAccount(data.account);for(const record of Object.values(data.account?.profiles||{}))repairLegacyRelics(record.data);validateCharacterAccount(data.account);return {account:copyCharacterData(data.account),baseRaw:characterStore.raw};
 }
 function remapImportedCharacterReferences(value,idMap) {
   if(!value||typeof value!=='object')return;
@@ -1066,7 +1180,7 @@ function assertCharacterNumber(value,label,min=0,max=1e12,integer=false) { if(!N
 function assertSafeCharacterJSON(value) {
   let nodes=0;
   const visit=(node,depth)=>{
-    if(++nodes>600000||depth>40)characterDataError('dáta sú príliš zložité.');
+    if(++nodes>3000000||depth>40)characterDataError('dáta sú príliš zložité.');
     if(typeof node==='number'&&!Number.isFinite(node))characterDataError('neplatné číslo.');
     if(typeof node==='string'&&node.length>20000)characterDataError('príliš dlhý text.');
     if(node&&typeof node==='object')for(const [key,item] of Object.entries(node)){
@@ -1096,7 +1210,7 @@ function validateCharacterItem(item,slot=null) {
   if(item.special!==undefined&&(!Array.isArray(item.special)||item.special.length>20||item.special.some(value=>typeof value!=='string'||value.length>500)))characterDataError('vlastnosti predmetu.');
 }
 function validateCharacterWorld(state) {
-  assertCharacterObject(state,'snímka mapy');if(state.balanceSchema!==undefined)assertCharacterNumber(state.balanceSchema,'verzia vyváženia mapy',0,1,true);
+  assertCharacterObject(state,'snímka mapy');if(state.balanceSchema!==undefined)assertCharacterNumber(state.balanceSchema,'verzia vyváženia mapy',0,2,true);
   if(!Array.isArray(state.mobs)||state.mobs.length>1000||!Array.isArray(state.drops)||state.drops.length>5000)characterDataError('populácia alebo korisť mapy.');
   const ids=new Set();
   for(const mob of state.mobs){
@@ -1134,6 +1248,7 @@ function validateCharacterProfile(record) {
   assertCharacterNumber(record.createdAt,'dátum vytvorenia',0,Number.MAX_SAFE_INTEGER);
   if(record.lastPlayedAt!==null)assertCharacterNumber(record.lastPlayedAt,'posledné hranie',0,Number.MAX_SAFE_INTEGER);
   const data=record.data;assertCharacterObject(data,'herné údaje');
+  if(data.combatRecovery!==undefined){const r=data.combatRecovery;assertCharacterObject(r,'obnova boja');if(!Array.isArray(r.skills)||r.skills.length!==6)characterDataError('obnova schopností.');for(const n of r.skills)assertCharacterNumber(n,'cooldown schopnosti',0,120);for(const key of ['attack','cape','travel'])assertCharacterNumber(r[key],'obnova boja',0,120);}
   if(data.starterWeaponGranted!==undefined&&typeof data.starterWeaponGranted!=='boolean')characterDataError('štartovacia výbava.');
   if(data.characterId!==record.id||data.classId!==record.classId||data.name!==record.name||data.isGM!==record.isGM)characterDataError('nesúlad identity a povolania.');
   for(const key of ['level','xp','gold','potions','strength','vitality','dexterity','intelligence','points','kills','stones','bossKills','huntClaimed','braveryCapes'])assertCharacterNumber(data[key],key,key==='level'?1:0,key==='level'?99:1e12,true);
@@ -1302,13 +1417,15 @@ function potionCooldownRemaining(now = Date.now()) { return Math.max(0, ((p.poti
 
 function drinkPotion(allowPaused=false) {
   if(!running||(paused&&!allowPaused)||p.hp<=0)return false;
+  if(paused&&!canTravel()){toast('Elixír počas boja použi po zavretí okna (E).');return false;}
   if(potionCooldownRemaining()>0){toast('Elixír bude pripravený o '+Math.ceil(potionCooldownRemaining())+' s.');return false;}
   if(p.potions<=0){toast('Nemáš elixíry. Navštív obchodníka (F).');return false;}
   if(p.hp>=maxHP()){toast('Zdravie máš plné.');return false;}
-  const healed=Math.min(POTION_RULES.heal,maxHP()-p.hp);
+  const healed=Math.min(potionHealAmount(),maxHP()-p.hp);
   p.potions--;p.hp+=healed;p.potionReadyAt=Date.now()+POTION_RULES.cooldown*1000;
   float('+'+Math.round(healed)+' zdravia',p.x,p.y-65,'#a9e0ac');beep(520,.2);updateHUD();save();return true;
 }
+function potionHealAmount(){return Math.max(POTION_RULES.heal,Math.round(maxHP()*.25));}
 
 function death(){resetDungeonBoss();resetCombatFlow();p.mp=maxMP();shots.length=0;Object.keys(buffs).forEach(k=>delete buffs[k]);p.gold=Math.floor(p.gold*.9);Object.assign(p,map().entry);p.hp=maxHP();target=null;mobs.forEach(m=>m.cd=2);toast('Návrat do bezpečnej zóny\nStratil si 10 % zlata.');save();}
 
@@ -1399,7 +1516,7 @@ function experience(n) {
 
 function rarityName(r){return raritySpec(r).name;}
 
-function equipmentDropLevel(source){const level=raritySourceLevel(source);return Math.max(1,Math.floor(level/5)*5);}
+function equipmentDropLevel(source){return raritySourceLevel(source);}
 
 function makeItem(epic=false, source=null, forcedSlot=null) {
   const rarity=rollItemRarity(source,epic),slots=Object.keys(EQUIPMENT),slot=forcedSlot||slots[Math.min(slots.length-1,Math.floor(itemRandom()*slots.length))];
@@ -1412,7 +1529,7 @@ function awardItem(epic=false,source=null){const item=makeItem(epic,source);if(!
 
 function allocate(stat){if(p.points<=0||!['strength','vitality','dexterity','intelligence'].includes(stat))return;p.points--;p[stat]++;if(stat==='vitality')p.hp=Math.min(maxHP(),p.hp+10);updateHUD();save();inventory();}
 
-function claimBoss(){if(p.bossClaimed||p.bossKills<1)return;p.bossClaimed=true;p.gold+=200;experience(80);awardItem(true);save();updateHUD();journal();}
+function claimBoss(){if(p.bossClaimed||p.bossKills<1)return;p.bossClaimed=true;p.gold+=200;experience(80);awardItem(true,{type:'boss',level:8});save();updateHUD();journal();}
 
 function claimHunt(){if(p.career.eligibleKills<(p.huntClaimed+1)*10)return;p.huntClaimed++;p.gold+=60;addMaterial('training');save();updateHUD();journal();}
 
@@ -1479,7 +1596,7 @@ function worldEventEnemy(event,index){
  if(type==='stone'){
   configureMetin(enemy,{id:event.id,metinType:metinTypeForLevel(event.level),metinLevel:event.level});enemy.max=Math.round(enemy.max*2.4);enemy.hp=enemy.max;enemy.baseMax=enemy.max;enemy.metinArmor=Math.round(enemy.metinArmor*1.15);enemy.name='Vzácny '+METIN_TYPES[enemy.metinType].name;enemy.rareMetin=true;
  }else{
-  enemy.max=Math.round((type==='boss'?620:55)*map().scale*(1+Math.max(0,event.level-map().enemyLevel)*.08)*(type==='boss'?2.8:enemy.variant==='rare'?2.8:1.8));enemy.hp=enemy.max;enemy.baseMax=enemy.max;enemy.attackScale=map().scale*(type==='boss'?2.2:enemy.variant==='rare'?1.7:1.35);enemy.baseAttack=enemy.attackScale;
+  const stats=enemyCombatStats(event.level,type,enemy.variant);enemy.max=stats.hp;enemy.hp=stats.hp;enemy.baseMax=stats.hp;enemy.attackScale=stats.attack;enemy.baseAttack=stats.attack;
   enemy.name=type==='boss'?'Prastarý '+map().boss:event.type==='patrol'?'Elitný hliadkar':event.type==='convoy'?['Veliteľ sprievodu','Jedový lovec','Ľadový strážca','Temný bojovník','Stopár sprievodu'][index]:index?'Elitný lovec':'Veliteľ lovcov';
   if(event.type==='convoy'){enemy.skin=['demon','scorpion','yeti','demon','wolf'][index];enemy.damageType=['dark','poison','physical','fire','physical'][index];if(index===2)enemy.resistances={physical:.35};}
  }
@@ -1487,9 +1604,9 @@ function worldEventEnemy(event,index){
 }
 function startWorldEvent(type){
  if(!running||paused||p.hp<=0||!worldEventsAllowed()||!worldEventState||worldEventState.active||!Object.hasOwn(WORLD_EVENTS,type))return false;
- const spec=WORLD_EVENTS[type];if(map().metinsOnly&&['group','boss'].includes(spec.kind))return false;
+ const spec=WORLD_EVENTS[type];if(!worldEventTypeAllowed(type))return false;
  const at=worldEventPosition(),range=farmAreaLevelRange(farmAreaAt(at));
- const level=Math.min(map().beginner?map().levelMax+(spec.kind==='boss'?2:0):99,map().metinsOnly?range[0]+Math.floor(worldEventRandom()*(range[1]-range[0]+1)):range[0]+(spec.kind==='boss'?18:spec.kind==='stone'?10:4));
+ const level=Math.min(map().levelMax||99,map().metinsOnly?range[0]+Math.floor(worldEventRandom()*(range[1]-range[0]+1)):range[0]+(spec.kind==='boss'?18:spec.kind==='stone'?10:4));
  const serial=++p.career.worldEvents.serial,event={id:p.mapId+':event:'+serial,serial,type,...at,level,remaining:spec.duration,kills:0,total:spec.count,revealed:spec.kind!=='secret'};
  worldEventState.active=event;for(let i=0;i<spec.count;i++)mobs.push(worldEventEnemy(event,i));
  toast(spec.name+' · '+(spec.kind==='secret'?'Objavili sa neznáme stopy.':farmAreaAt(event).name));return true;
@@ -1505,7 +1622,7 @@ function finishWorldEvent(success,source=null){
  if(success){const completed=p.career.worldEvents.completed;completed[event.type]=(completed[event.type]||0)+1;
   if(spec.kind==='secret')p.discovery.eventPlaces[p.mapId]=(p.discovery.eventPlaces[p.mapId]||0)+1;
   if(spec.kind!=='drop'){
-   const at=source||event;spawnGroundDrop({kind:'gold',count:Math.round((['boss','stone'].includes(spec.kind)?1000:300)*map().scale)},at);
+   const at=source||event;spawnGroundDrop({kind:'gold',count:Math.round((['boss','stone'].includes(spec.kind)?300:100)*(1+event.level*.08))},at);
    if(rewardEligible({level:event.level})){
     dropMaterial('ore',spec.kind==='group'?5:12,at);dropMaterial('upgradeStones',spec.kind==='group'?1:3,at);
     if(['boss','stone','secret'].includes(spec.kind)||event.type==='convoy'){const rarity=event.level>=75&&worldEventRandom()<.04?5:event.level>=50?4:2,slot=Object.keys(EQUIPMENT)[Math.floor(worldEventRandom()*Object.keys(EQUIPMENT).length)];spawnGroundDrop({kind:'gear',item:generateEquipmentItem(slot,rarity,event.level)},at);}
@@ -1535,12 +1652,13 @@ function updateWorldEvents(dt){
  }
  worldEventState.nextCheck=Math.max(0,worldEventState.nextCheck-dt);if(worldEventState.nextCheck>0)return;
  worldEventState.nextCheck=WORLD_EVENT_RULES.minCheck+worldEventRandom()*(WORLD_EVENT_RULES.maxCheck-WORLD_EVENT_RULES.minCheck);
- let roll=worldEventRandom();for(const [id,spec]of Object.entries(WORLD_EVENTS)){if(map().metinsOnly&&['group','boss'].includes(spec.kind))continue;roll-=spec.chance;if(roll<0){startWorldEvent(id);break;}}
+ let roll=worldEventRandom();for(const [id,spec]of Object.entries(WORLD_EVENTS)){if(!worldEventTypeAllowed(id))continue;roll-=spec.chance;if(roll<0){startWorldEvent(id);break;}}
 }
+function worldEventTypeAllowed(type,id=p.mapId){return Object.hasOwn(WORLD_EVENTS,type)&&!(MAPS[id]?.metinsOnly&&['group','boss','drop'].includes(WORLD_EVENTS[type].kind));}
 function validateWorldEventSnapshot(state){
  const events=state.events;if(events==null){if(state.mobs.some(m=>m.worldEventId))characterDataError('nepriateľ bez udalosti.');return;}
  assertCharacterObject(events,'udalosti mapy');if(events.schema!==1||!worldEventMap(events.mapId))characterDataError('mapa udalosti.');assertCharacterNumber(events.seed,'náhoda udalostí',0,4294967295,true);assertCharacterNumber(events.nextCheck,'čas ďalšej udalosti',0,180);
- const event=events.active;if(event!==null){assertCharacterObject(event,'udalosť');if(!Object.hasOwn(WORLD_EVENTS,event.type))characterDataError('typ udalosti.');const spec=WORLD_EVENTS[event.type];assertCharacterNumber(event.serial,'ID udalosti',1,Number.MAX_SAFE_INTEGER,true);if(event.id!==events.mapId+':event:'+event.serial||MAPS[events.mapId].metinsOnly&&['group','boss'].includes(spec.kind))characterDataError('identita udalosti.');for(const key of ['x','y'])assertCharacterNumber(event[key],'poloha udalosti',45,MAPS[events.mapId].size-45);assertCharacterNumber(event.level,'úroveň udalosti',1,99,true);assertCharacterNumber(event.remaining,'čas udalosti',0,spec.duration);assertCharacterNumber(event.kills,'postup udalosti',0,spec.kind==='drop'?1e12:spec.count,true);if(event.total!==spec.count||typeof event.revealed!=='boolean')characterDataError('cieľ udalosti.');}
+ const event=events.active;if(event!==null){assertCharacterObject(event,'udalosť');if(!Object.hasOwn(WORLD_EVENTS,event.type))characterDataError('typ udalosti.');const spec=WORLD_EVENTS[event.type];assertCharacterNumber(event.serial,'ID udalosti',1,Number.MAX_SAFE_INTEGER,true);if(event.id!==events.mapId+':event:'+event.serial||!worldEventTypeAllowed(event.type,events.mapId))characterDataError('identita udalosti.');for(const key of ['x','y'])assertCharacterNumber(event[key],'poloha udalosti',45,MAPS[events.mapId].size-45);assertCharacterNumber(event.level,'úroveň udalosti',1,99,true);assertCharacterNumber(event.remaining,'čas udalosti',0,spec.duration);assertCharacterNumber(event.kills,'postup udalosti',0,spec.kind==='drop'?1e12:spec.count,true);if(event.total!==spec.count||typeof event.revealed!=='boolean')characterDataError('cieľ udalosti.');}
  const members=state.mobs.filter(m=>m.worldEventId);if(!event&&members.length||members.length>WORLD_EVENT_RULES.maxMembers)characterDataError('populácia udalosti.');
  if(event){const spec=WORLD_EVENTS[event.type];if(members.length!==spec.count)characterDataError('neúplná populácia udalosti.');for(const m of members)if(m.worldEventId!==event.id||m.spawnId!==event.id+':'+m.spawnSlot||m.spawnPointId!==event.id||!Number.isInteger(m.spawnSlot)||m.spawnSlot<0||m.spawnSlot>=spec.count||m.noRespawn!==true||m.level!==event.level||m.type!==(spec.kind==='group'?'wolf':spec.kind))characterDataError('neplatný nepriateľ udalosti.');if(spec.count&&members.filter(m=>m.hp<=0).length!==event.kills)characterDataError('nesúlad postupu udalosti.');}
 }
@@ -1553,11 +1671,17 @@ function validateWorldEventsProfile(data){
 // src/js/systems/world.js
 function map(){return MAPS[p.mapId]||MAPS.valley;}
 
+function trimEnemySnapshot(enemy){
+  // These ordinary-world fields already reset on hydration; never discard dungeon attack plans.
+  if(!enemy.dungeonId)for(const key of ['roamTarget','roamWait','returning','taunt','engaged','windup','stun','hit'])delete enemy[key];
+  enemy.cd=Math.max(0,enemy.cd||0);return enemy;
+}
+
 function snapshotMap() {
   if (!mobs.length&&!map().town) return;
   p.worldStates[p.mapId] = {
     balanceSchema:map().balanceVersion||0,events:worldEventSnapshot(),worldSize:SIZE,layoutSchema: SPAWN_LAYOUT_VERSION, progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
-    mobs: mobs.map(cloneEnemyState),
+    mobs: mobs.map(m=>trimEnemySnapshot(cloneEnemyState(m))),
     drops: drops.map(cloneGroundDrop)
   };
 }
@@ -1579,7 +1703,7 @@ function loadMap(id, initial=false) {
   const cfg=map(), prior=p.worldStates[id],old=migrateMapSize(prior,id);SIZE=cfg.size;
   if(initial&&prior&&(prior.worldSize||2000)!==cfg.size){const factor=cfg.size/(prior.worldSize||2000);resumePosition.x*=factor;resumePosition.y*=factor;if(Math.hypot(resumePosition.x-1000*factor,resumePosition.y-1050*factor)<190*factor)Object.assign(resumePosition,cfg.entry);}
   if(initial&&id==='valley'&&p.level===1&&old?.balanceSchema!==cfg.balanceVersion&&Math.hypot(resumePosition.x-360,resumePosition.y-310)<220)Object.assign(resumePosition,cfg.entry);
-  cfg.mobSpeed=75+(cfg.scale-1)*14; seed=cfg.seed; decor.length=0;
+  cfg.mobSpeed=95+Math.min(60,cfg.enemyLevel*.7); seed=cfg.seed; decor.length=0;
   for(let i=0;i<(cfg.instance?0:250);i++) {
     const x=rand()*SIZE,y=rand()*SIZE;
     if(!isSanctuary({x,y})) decor.push({x,y,type:rand()<(cfg.metinsOnly?0:id==='valley'?.67:id==='snow'?.45:id==='desert'?.2:.12)?'tree':'rock',s:.6+rand()*.8,t:rand()});
@@ -1605,11 +1729,36 @@ function loadMap(id, initial=false) {
 
 // src/js/systems/career.js
 function xpForLevel(level) {
-  return Math.ceil(600 * Math.pow(level, 2.15) * (1 + .025 * (level - 1)));
+  return Math.ceil(baseEnemyXP(level) * (24 + 1.6 * level));
+}
+function baseEnemyXP(level){return Math.max(6,Math.floor(6*Math.max(1,level)**1.15));}
+function paragonCost(rank){return {shards:25*rank};}
+
+// Enemy strength depends on actual level; location changes population, never hidden multipliers.
+function enemyCombatStats(level,type='wolf',variant='normal'){
+  const hp=50+12*level+.22*level*level,attack=8+2*level+.012*level*level;
+  const v=ENEMY_VARIANTS[variant]||ENEMY_VARIANTS.normal,boss=type==='boss';
+  return {hp:Math.round(hp*(boss?9*(variant==='rare'?1.6:1):v.hp)),attack:attack*(boss?2.5*(variant==='rare'?1.25:1):v.damage)/(boss?26:9)};
+}
+function bossRelicId(mapId=p.mapId){const regions={meadow:'valley',marsh:'desert',quarry:'snow',highlands:'snow',ruins:'temple',wastes:'temple'};return Object.hasOwn(regions,mapId)?regions[mapId]:Object.hasOwn(RELICS,mapId)?mapId:null;}
+function migrateBalanceProfile(data){
+  if(!data?.career||data.career.balanceVersion===2)return;
+  const oldNeed=Math.ceil(600*data.level**2.15*(1+.025*(data.level-1)));
+  data.xp=data.level===99?0:Math.floor(Math.min(.999999,Math.max(0,data.xp/oldNeed))*xpForLevel(data.level));
+  for(const item of [...(data.bag||[]),...Object.values(data.equipped||{})])if(item&&item.rarity===0&&item.tier===1&&item.enhance===9&&['Začiatočnícky meč','Začiatočnícky luk','Začiatočnícke dýky','Začiatočnícky vejár'].includes(item.name))item.enhance=2;
+  data.career.balanceVersion=2;
+}
+function repairLegacyRelics(data){
+  for(const state of [...Object.values(data?.worldStates||{}),data?.career?.normalTemple])for(const m of state?.mobs||[])trimEnemySnapshot(m);
+  for(const seen of Object.values(data?.discovery?.seen||{}))if(seen?.type==='stone'&&seen.armor===0&&METIN_TYPES[seen.metinType])seen.armor=metinStats(seen.level,seen.metinType).armor;
+  for(const state of [...Object.values(data?.worldStates||{}),data?.career?.normalTemple])for(const drop of state?.drops||[]){
+    if(drop.kind==='relic'&&!Object.hasOwn(RELICS,drop.relicId)){const id=bossRelicId(drop.relicId);if(id)drop.relicId=id;}
+  }
+  for(const state of Object.values(data?.worldStates||{}))if(state?.events?.mapId==='suterland'&&state.events.active?.type==='bounty'){state.events.active=null;state.events.nextCheck=120;}
 }
 
 function initializeCareer() {
-  migrateItemProfile(p,p.characterId||'legacy');
+  migrateItemProfile(p,p.characterId||'legacy');repairLegacyRelics(p);
   const old = p.career;
   if (!old || old.schema !== PROGRESSION.schema) {
     const progress = Math.max(0, Math.min(.999999, p.xp / (60 + (p.level - 1) * 35)));
@@ -1623,7 +1772,7 @@ function initializeCareer() {
     }
     p.weapon = 0;
     p.career = {
-      schema: PROGRESSION.schema,
+      schema: PROGRESSION.schema, balanceVersion: 2,
       materials: Object.fromEntries(Object.keys(MATERIALS).map(id => [id, 0])),
       eligibleKills: (p.huntClaimed || 0) * 10, training: { strength: 0, vitality: 0, dexterity: 0, intelligence: 0 },
       skills: {}, skillUpgrades: 0,
@@ -1634,6 +1783,7 @@ function initializeCareer() {
       endgame: { highest: 0, paragon: 0, run: null }
     };
   }
+  migrateBalanceProfile(p);
   for (const id of Object.keys(MATERIALS)) p.career.materials[id] ??= 0;
   initializeBiology();
   initializeDiscovery();
@@ -1686,8 +1836,8 @@ function enemyXP(m) {
   const delta = enemyLevel(m) - p.level;
   const factor = delta >= 0 ? Math.min(1.5, 1 + delta * .05) : delta <= -8 ? 0 : [1, .85, .7, .55, .4, .25, .1, .05][-delta];
   const type = m.type === 'boss' ? 12 : m.type === 'stone' ? 3 : 1;
-  const cap = m.type === 'boss' ? .35 : m.type === 'stone' ? .12 : .03;
-  return Math.max(0, Math.floor(Math.min(6 * enemyLevel(m) ** 1.15 * type * factor * (ENEMY_VARIANTS[m.variant]?.xp||1) * (m.metinParentId ? .35 : 1), needXP() * cap)));
+  const cap = m.type === 'boss' ? .35 : m.type === 'stone'||m.variant==='rare' ? .12 : m.variant==='elite' ? .08 : .06;
+  return Math.max(0, Math.floor(Math.min(baseEnemyXP(enemyLevel(m)) * type * factor * (ENEMY_VARIANTS[m.variant]?.xp||1) * (m.metinParentId ? .35 : 1), needXP() * cap)));
 }
 
 function addMaterial(id, count = 1) {
@@ -1728,7 +1878,7 @@ function skillProgress(key) {
   return p.career.skills[key] ??= { rank: 1, practice: 0 };
 }
 
-function skillPracticeNeeded(rank) { return Math.ceil(20 * rank ** 1.4); }
+function skillPracticeNeeded(rank) { return Math.ceil(10 * rank ** 1.15); }
 function skillFactor(key) { return 1 + ((skillProgress(key)?.rank || 1) - 1) * .04; }
 function skillCost(key) { const rank = skillProgress(key).rank; return { books: Math.ceil(rank / 3), gold: 25 * rank * rank }; }
 
@@ -1806,7 +1956,8 @@ function careerKill(m) {
     c.keyPity++;
     if (c.keyPity >= 3) { giveMaterial('keys'); c.keyPity = 0; }
     c.relicPity[p.mapId] = (c.relicPity[p.mapId] || 0) + 1;
-    if (rand() < .08 || c.relicPity[p.mapId] >= 10) { spawnGroundDrop({ kind: 'relic', relicId: p.mapId, count: 1 }, m); c.relicPity[p.mapId] = 0; }
+    const relicId=bossRelicId();
+    if (relicId&&(rand() < .08 || c.relicPity[p.mapId] >= 10)) { spawnGroundDrop({ kind: 'relic', relicId, count: 1 }, m); c.relicPity[p.mapId] = 0; }
   }
   const run = c.endgame.run;
   if (run?.active && p.mapId === 'temple' && m.riftId === run.id) {
@@ -1862,7 +2013,7 @@ function finishRift(claim = true) {
 
 function upgradeParagon() {
   const end = p.career.endgame, rank = end.paragon + 1;
-  if (p.level < 35 || end.paragon >= PROGRESSION.maxParagon || !pay({ shards: 25 * rank * rank })) return false;
+  if (p.level < 35 || end.paragon >= PROGRESSION.maxParagon || !pay(paragonCost(rank))) return false;
   end.paragon++; save(); return true;
 }
 
@@ -1881,7 +2032,7 @@ function prestigeProgress(goal){const c=p.career.prestige,gear=Object.values(p.e
  case'metins':return c.metins;case'bosses':return Object.values(c.bosses).reduce((a,b)=>a+b,0);case'bossTypes':return Object.keys(c.bosses).filter(id=>c.bosses[id]>0).length;
  case'skills10':case'skills20':return school().skills.filter((s,i)=>(p.career.skills[skillKey(i)]?.rank||1)>=(goal.metric==='skills10'?10:20)).length;
  case'biology':return p.career.biology.stage;case'uniques':return Object.keys(c.uniques).length;
- case'bestiary':return ['wolf','scorpion','yeti','demon',...Object.keys(METIN_TYPES).map(id=>'metin:'+id),...['valley','desert','snow','temple'].map(id=>'boss:'+id),...Object.keys(DUNGEONS).map(id=>'dungeon:'+id)].filter(id=>p.bestiary[id]>0).length;
+ case'bestiary':return PRESTIGE_BESTIARY_KEYS.filter(id=>p.bestiary[id]>0).length;
  case'weapon9':return p.equipped.weapon?.enhance===9&&rarityRank(p.equipped.weapon.rarity)>=4?1:0;
  case'arsenal':return gear.filter(item=>item.rarity===5&&item.enhance===9).length;
  case'perfect':return [...p.bag,...gear].some(item=>item.rarity===5&&item.affixes?.length===5&&item.affixes.every(affix=>affix.roll===100))?1:0;
@@ -1955,17 +2106,17 @@ function dropBiologySample(enemy){
 
 // src/js/systems/forge.js
 let forgeResult=null;
-function enhancementBonus(item){return FORGE_RULES.bonus[Math.max(0,Math.min(9,Math.floor(item?.enhance||0)))];}
+function enhancementBonus(item){const curve=FORGE_RULES.bonuses[EQUIPMENT[item?.slot]?.stat]||FORGE_RULES.bonus;return curve[Math.max(0,Math.min(9,Math.floor(item?.enhance||0)))];}
 function forgeChance(item,options={}){const rank=(item?.enhance||0)+1;return Math.min(.95,(FORGE_RULES.success[rank]||0)+(options.charm?FORGE_RULES.charmBoost:0));}
 function forgeFailureText(item,options={}){
  const next=(item.enhance||0)+1;
  if(options.protect||next<=3)return 'Neúspech: stupeň zostane.';
- return next>=7?'Neúspech: 35 % zničenie, inak −1 stupeň.':'Neúspech: −1 stupeň.';
+ return next>=7?'Neúspech: 15 % zničenie, inak −1 stupeň.':'Neúspech: −1 stupeň.';
 }
 function enhancementCost(item,options={}){
  if(!item||!EQUIPMENT[item.slot]||(item.enhance||0)>=9)return null;
- const rank=(item.enhance||0)+1,multiplier=1+(item.tier||1)/25+rarityRank(item.rarity)*.35;
- return {ore:3*rank*rank,gold:Math.ceil(300*rank**3*multiplier),...(rank>=3?{upgradeStones:Math.ceil(rank*rank/6)}:{}),...(rank>=5?{dust:4*(rank-4)**2}:{}),...(rank>=7?{forgeCore:rank-6}:{}),...(options.charm&&FORGE_RULES.success[rank]<.95?{smithCharm:1}:{}),...(options.protect&&rank>=4?{protectionScroll:1}:{})};
+ const rank=(item.enhance||0)+1,multiplier=1+(item.tier||1)/30+rarityRank(item.rarity)*.25;
+ return {ore:2*rank+Math.floor(rank*rank/4),gold:Math.ceil(40*rank**2*multiplier),...(rank>=3?{upgradeStones:Math.ceil(rank/3)}:{}),...(rank>=5?{dust:2*(rank-4)}:{}),...(rank>=7?{forgeCore:Math.ceil((rank-6)/2)}:{}),...(options.charm&&FORGE_RULES.success[rank]<.95?{smithCharm:1}:{}),...(options.protect&&rank>=4?{protectionScroll:1}:{})};
 }
 function enhanceEquipment(slot,options={}){
  forgeResult=null;
@@ -2058,10 +2209,11 @@ function alchemyBonuses() {
 }
 function useAlchemyProduct(id, allowPaused = false) {
   if (!Object.hasOwn(ALCHEMY_PRODUCTS, id) || !running || p.hp <= 0 || paused && !allowPaused || p.career.alchemy.products[id] < 1) return false;
+  if(paused&&!canTravel()){toast('Spotrebné predmety počas boja použi po zavretí okna.');return false;}
   const product = ALCHEMY_PRODUCTS[id], a = p.career.alchemy;
   if (product.mana) {
     if (p.mp >= maxMP() || potionCooldownRemaining() > 0) return false;
-    p.mp = Math.min(maxMP(), p.mp + product.mana); p.potionReadyAt = Date.now() + POTION_RULES.cooldown * 1000;
+    p.mp = Math.min(maxMP(), p.mp + Math.max(product.mana,Math.round(maxMP()*.3))); p.potionReadyAt = Date.now() + POTION_RULES.cooldown * 1000;
   } else {
     if (a.active) { toast('Už pôsobí odvar. Počkaj na skončenie účinku.'); return false; }
     a.active = { id, remaining: product.duration };
@@ -2312,7 +2464,18 @@ function naturalSpawnLocation(area, existing, random, gap = 115) {
 }
 
 function restoreSpawnLocation(enemy, fresh, state) {
-  if(map().balanceVersion&&state.balanceSchema!==map().balanceVersion){const ratio=Math.max(0,Math.min(1,enemy.hp/enemy.max));return {...enemy,level:fresh.level,baseLevel:fresh.baseLevel,variant:fresh.variant,max:fresh.max,baseMax:fresh.baseMax,attackScale:fresh.attackScale,baseAttack:fresh.baseAttack,speedScale:fresh.speedScale,hp:enemy.hp<=0?0:Math.max(1,Math.round(fresh.max*ratio)),metinType:fresh.metinType,metinArmor:fresh.metinArmor,metinResistance:fresh.metinResistance,x:fresh.x,y:fresh.y,homeX:fresh.homeX,homeY:fresh.homeY,roamTarget:null,returning:false};}
+  if(map().balanceVersion&&state.balanceSchema!==map().balanceVersion){
+    const ratio=Math.max(0,Math.min(1,enemy.hp/enemy.max));
+    if(enemy.type==='wolf'){
+      const variant=ENEMY_VARIANTS[enemy.variant]?enemy.variant:fresh.variant;
+      const level=Math.min(map().levelMax||105,fresh.baseLevel-(ENEMY_VARIANTS[fresh.variant]?.level||0)+(ENEMY_VARIANTS[variant]?.level||0));
+      const stats=enemyCombatStats(level,'wolf',variant),run=p.career.endgame.run;
+      Object.assign(fresh,{level,baseLevel:level,variant,max:stats.hp,baseMax:stats.hp,attackScale:stats.attack,baseAttack:stats.attack,speedScale:ENEMY_VARIANTS[variant].speed});
+      if(run&&p.mapId==='temple')applyRiftScaling(fresh,run.tier,run.id);
+    }
+    const location=state.layoutSchema===SPAWN_LAYOUT_VERSION?{}:{x:fresh.x,y:fresh.y,homeX:fresh.homeX,homeY:fresh.homeY};
+    return {...enemy,...location,level:fresh.level,baseLevel:fresh.baseLevel,variant:fresh.variant,max:fresh.max,baseMax:fresh.baseMax,attackScale:fresh.attackScale,baseAttack:fresh.baseAttack,speedScale:fresh.speedScale,hp:enemy.hp<=0?0:Math.max(1,Math.round(fresh.max*ratio)),metinType:fresh.metinType,metinArmor:fresh.metinArmor,metinResistance:fresh.metinResistance,roamTarget:null,returning:false};
+  }
   if (state.layoutSchema === SPAWN_LAYOUT_VERSION) return enemy;
   return { ...enemy, x: fresh.x, y: fresh.y, homeX: fresh.homeX, homeY: fresh.homeY, roamTarget: null, returning: false };
 }
@@ -2367,8 +2530,7 @@ function createSpawnEnemy(point, slot = 0) {
   const variant = rollEnemyVariant(point, slot), v = ENEMY_VARIANTS[variant];
   const normalLevel = type==='boss'&&cfg.bossLevel?cfg.bossLevel:cfg.enemyLevel + point.offset + (type === 'boss' ? 5 : type === 'stone' ? (cfg.metinLevelOffset??2) : slot % ((cfg.mobLevelSpread??2)+1));
   const level = Math.min(cfg.maxEnemyLevel||105,normalLevel + (type === 'wolf' ? v.level : 0));
-  const hp = Math.round((type === 'boss' ? 620 : type === 'stone' ? 160 : 55) * cfg.scale * (1 + (level - cfg.enemyLevel) * .08) * (type === 'wolf' ? v.hp : 1));
-  const attack = cfg.scale * (1 + (level - cfg.enemyLevel) * .06) * (type === 'wolf' ? v.damage : 1);
+  const stats=enemyCombatStats(level,type,variant),hp=stats.hp,attack=stats.attack;
   const enemy = {
     spawnId: point.id + ':' + slot, spawnPointId: point.id, spawnSlot: slot,
     type, skin: cfg.skin, area: point.area, variant, rareSlot: point.kind === 'rare',
@@ -2562,7 +2724,7 @@ function updateEnemySpawns(dt, safe) {
       const slow = (active('fear') && d < 300 ? .5 : 1) * (m.slow > 0 ? .55 : 1);
       const angle = (m.spawnSlot || 0) * 2.39996, spread = d < 110 ? 28 : 0;
       if (d > 33) walkEnemy(m, p.x + Math.cos(angle) * spread, p.y + Math.sin(angle) * spread, map().mobSpeed * (m.speedScale || 1) * slow, dt, grid);
-      if (d < 55 && m.cd <= 0) { m.engaged = Math.max(m.engaged || 0, 8); takeDamage(Math.max(4, Math.round(9 * (m.attackScale || map().scale) - p.level * .5)), m); m.cd = 1.3; }
+      if (d < 55 && m.cd <= 0) { m.engaged = Math.max(m.engaged || 0, 8); takeDamage(Math.max(4, Math.round(9 * (m.attackScale || map().scale))), m); m.cd = 1.3; }
     } else {
       m.taunt = 0; m.engaged = 0;
       if (m.returning || home > SPAWN_RULES.roamRadius + 1e-6) {
@@ -2605,6 +2767,7 @@ function farmBonusLoot(m) {
 }
 
 function dropFarmEquipment(m) {
+  if(!rewardEligible(m))return;
   const rare = m.variant === 'rare', elite = m.variant === 'elite';
   const chance=m.type==='stone'?1:enemyLootPool(m).gear[m.type==='boss'?'boss':rare?'rare':elite?'elite':'normal'];
   if (chance>=1 || rand() < chance) return spawnGroundDrop({ kind: 'gear', item: makeItem(false, m) }, m);
@@ -2735,7 +2898,7 @@ function moveGearItem(uid, cell) {
 
 function supplyDefinitions() {
   return [
-    { id: 'potions', name: 'Liečivý elixír', count: p.potions, icon: 'potion', description: 'Obnoví 65 zdravia. Kláves E. Spoločný cooldown 4 s aj pre Autoelixíry.', action: 'drink' },
+    { id: 'potions', name: 'Liečivý elixír', count: p.potions, icon: 'potion', description: 'Obnoví 65 zdravia alebo 25 % maxima, podľa vyššej hodnoty. Kláves E. Spoločný cooldown 4 s aj pre Autoelixíry.', action: 'drink' },
     { id: 'braveryCapes', name: 'Plášť statočnosti', count: p.braveryCapes, icon: 'cape', description: 'Privolá pohyblivých nepriateľov v dosahu 650 na 18 sekúnd. Kláves B.', action: 'cape' },
     ...Object.entries(MATERIALS).map(([id, name]) => ({ id: 'material:' + id, name, count: p.career.materials[id], icon: id, description: BIOLOGY.some(stage=>stage.item===id)?'Odovzdanie: Biológ v Meste.':['ore','upgradeStones','forgeCore','smithCharm','protectionScroll'].includes(id)?'Použitie: kováč.':'Materiál na progresiu.', action: 'material', material: id })),
     ...Object.entries(ALCHEMY_PRODUCTS).map(([id, product]) => ({ id: 'alchemy:' + id, name: product.name, count: p.career.alchemy.products[id], icon: product.icon, description: product.text, action: 'product' })),
@@ -3022,7 +3185,7 @@ function grantStarterWeapon(fresh=false){
  if(!fresh&&(p.level!==1||p.equipped.weapon))return;
  const kind=generatedWeaponKind(),names={sword:'Začiatočnícky meč',bow:'Začiatočnícky luk',daggers:'Začiatočnícke dýky',fan:'Začiatočnícky vejár'};
  const item=createItem('equipment:weapon:'+kind,{rarity:0,tier:1,weaponKind:kind,rng:()=>0});
- item.name=names[kind];item.enhance=9;item.classes=[p.classId];item.value=itemSaleValue(item);p.equipped.weapon=item;
+ item.name=names[kind];item.enhance=2;item.classes=[p.classId];item.value=itemSaleValue(item);p.equipped.weapon=item;
 }
 
 
@@ -3180,13 +3343,14 @@ function grantAutomaticDrop(drop) {
   return true;
 }
 function flushAutomaticLoot() {
+  // The regular four-second autosave and pagehide publish batches, not a full world per kill.
   if(!automaticLoot.items.size)return;
   const items=[...automaticLoot.items.values()];automaticLoot.items.clear();
   for(let i=0;i<items.length;i+=2){
     float(items.slice(i,i+2).map(item=>'+'+item.count+' '+item.name).join(' · '),p.x,p.y-75-i*8,'#dec799');
     if(particles.length)particles[particles.length-1].small=true;
   }
-  updateHUD();save();
+  updateHUD();
 }
 function dropMaterial(id, count, source) {
   if (MATERIALS[id] && Number.isSafeInteger(count) && count > 0) return spawnGroundDrop({ kind: 'supply', supplyId: 'material:' + id, count }, source);
@@ -3314,7 +3478,7 @@ function updateGroundLoot(dt) {
 function enemyLootPoolId(enemy){if(enemy.type==='stone')return 'metin:'+(enemy.metinType||metinTypeForLevel(enemyLevel(enemy)));if(enemy.dungeonBoss)return 'dungeon:'+(enemy.dungeonId||'crypt');return enemy.type==='boss'?'boss:'+(enemy.mapId||p.mapId):'enemy:'+(enemy.skin||map().skin);}
 function enemyLootPool(enemy){return LOOT_POOLS[enemyLootPoolId(enemy)]||LOOT_POOLS['enemy:wolf'];}
 function dropCatalogLoot(enemy){if(!rewardEligible(enemy)||enemy.metinParentId)return;for(const entry of enemyLootPool(enemy).catalog)if(enemyLevel(enemy)>=entry.minLevel&&rand()<entry.chance)spawnGroundDrop({kind:'gear',item:createItem(entry.definitionId)},enemy);}
-function dropEnemyLoot(enemy){const pool=enemyLootPool(enemy);farmBonusLoot(enemy);spawnGroundDrop({kind:'gold',count:Math.round((enemy.type==='boss'?pool.gold.boss:pool.gold.min+Math.floor(rand()*pool.gold.range))*(enemy.metinParentId?enemy.attackScale*.5:map().scale)*(ENEMY_VARIANTS[enemy.variant]?.gold||1))},enemy);if(!enemy.dungeonBoss)dropFarmEquipment(enemy);if(rand()<pool.potionChance)spawnGroundDrop({kind:'supply',supplyId:'potions',count:1},enemy);}
+function dropEnemyLoot(enemy){const pool=enemyLootPool(enemy);farmBonusLoot(enemy);spawnGroundDrop({kind:'gold',count:Math.max(1,Math.round((8+enemyLevel(enemy)*1.2)*(enemy.type==='boss'?12:1)*(enemy.metinParentId?.35:1)*(ENEMY_VARIANTS[enemy.variant]?.gold||1)))},enemy);if(!enemy.dungeonBoss)dropFarmEquipment(enemy);if(rewardEligible(enemy)&&rand()<pool.potionChance)spawnGroundDrop({kind:'supply',supplyId:'potions',count:1},enemy);}
 
 
 // src/js/systems/metins.js
@@ -3355,7 +3519,8 @@ function metinHitTest(stone, x, y) {
 
 function configureMetin(m, point) {
   m.metinType = point.metinType || (METIN_MAP_TYPES[p.mapId] || ['fracture'])[Number(point.id.split(':').at(-1)) % (METIN_MAP_TYPES[p.mapId]?.length || 1)] || metinTypeForLevel(m.level);
-  m.level = point.metinLevel || Math.min(METIN_TYPES[m.metinType].levels[1],Math.max(m.level,METIN_TYPES[m.metinType].levels[0])); m.baseLevel = m.level;
+  const bounds=METIN_TYPES[m.metinType].levels;
+  m.level = point.metinLevel || Math.min(bounds[1],map().levelMax||99,Math.max(m.level,bounds[0],map().level)); m.baseLevel = m.level;
   const stats = metinStats(m.level, m.metinType);
   m.hp = stats.hp; m.max = stats.hp; m.baseMax = stats.hp;
   m.metinArmor = stats.armor; m.metinResistance = stats.resistance;
@@ -3955,7 +4120,7 @@ function journal(){
  if(!running)return;
  const huntTarget=(p.huntClaimed+1)*10;
  const card=(title,objectives,reward,button)=>'<article class="journal-entry"><h3>'+title+'</h3><div class="requirements"><div class="requirement-heading"><span>Cieľ</span><span>Postup / Cieľ</span></div>'+objectives+'</div><p class="quest-reward"><b>Odmena</b> · '+reward+'</p>'+button+'</article>';
- modal('<span class="eyebrow">ÚLOHY · J</span><h2>Denník úloh</h2>'+card('Praskliny v pokoji',requirementRow('Príšery',Math.min(p.kills,5),5)+requirementRow('Kamene',Math.min(p.stones,3),3),'150 Yang + 60 skúseností','<button class="primary" id="journalMain" '+(p.claimed||p.kills<5||p.stones<3?'disabled':'')+'>'+(p.claimed?'✓ Dokončené':'Vyzdvihnúť odmenu')+'</button>')+card('Prvý strážca',requirementRow('Boss · Údolie: odporúčaná úroveň 10+',Math.min(p.bossKills,1),1),'epická výbava + 200 Yang + 80 skúseností','<button class="primary" id="claimBoss" '+(p.bossClaimed||!p.bossKills?'disabled':'')+'>'+(p.bossClaimed?'✓ Dokončené':'Vyzdvihnúť odmenu')+'</button>')+card('Lovec údolia · opakovateľná',requirementRow('Primerané príšery',Math.min(p.career.eligibleKills,huntTarget),huntTarget),'60 Yang + 1 tréningová pečať (bez EXP)','<button class="primary" id="claimHunt" '+(p.career.eligibleKills<huntTarget?'disabled':'')+'>Vyzdvihnúť odmenu</button>')+biologyJournalCard()+worldEventsJournalCard(),{key:'journal'});
+ modal('<span class="eyebrow">ÚLOHY · J</span><h2>Denník úloh</h2>'+card('Praskliny v pokoji',requirementRow('Príšery',Math.min(p.kills,5),5)+requirementRow('Kamene',Math.min(p.stones,3),3),'150 Yang + 60 skúseností','<button class="primary" id="journalMain" '+(p.claimed||p.kills<5||p.stones<3?'disabled':'')+'>'+(p.claimed?'✓ Dokončené':'Vyzdvihnúť odmenu')+'</button>')+card('Prvý strážca',requirementRow('Boss · prvý odporúčaný cieľ: Údolie Lv.8',Math.min(p.bossKills,1),1),'epická výbava + 200 Yang + 80 skúseností','<button class="primary" id="claimBoss" '+(p.bossClaimed||!p.bossKills?'disabled':'')+'>'+(p.bossClaimed?'✓ Dokončené':'Vyzdvihnúť odmenu')+'</button>')+card('Lovec údolia · opakovateľná',requirementRow('Primerané príšery',Math.min(p.career.eligibleKills,huntTarget),huntTarget),'60 Yang + 1 tréningová pečať (bez EXP)','<button class="primary" id="claimHunt" '+(p.career.eligibleKills<huntTarget?'disabled':'')+'>Vyzdvihnúť odmenu</button>')+biologyJournalCard()+worldEventsJournalCard(),{key:'journal'});
  $('journalEvents').onclick=()=>careerPanel('events');
  $('journalBiology').onclick=()=>careerPanel('biology');
  $('journalMain').onclick=()=>{if(p.claimed||p.kills<5||p.stones<3)return;$('claim').onclick();journal();};$('claimBoss').onclick=claimBoss;$('claimHunt').onclick=claimHunt;
@@ -4326,7 +4491,7 @@ function spellbook() {
 function combatManual() {
   if(!running)return;
   const resist=playerResistances();
-  modal(`<span class="eyebrow">ŠKOLA BOJA · C</span><h2>Bojový manuál</h2><h3>Automatická pomoc</h3><p><b>Automierenie</b> pri útoku mieri na najbližší cieľ do 500; označený má prednosť. <b>Autospell</b> čaruje iba v boji s označeným cieľom, so spotrebou many a cooldownmi. Výpady môžu premiestniť postavu. Automatika čaká pri pauze, neaktívnom okne a v bezpečnej zóne. <b>Autoelixíry:</b> pod 45 % HP, +65 HP, spotreba 1 kusu. Spoločný cooldown s ručným použitím: 4 s.</p><h3>Typy poškodenia a tvoje odolnosti</h3><div class="battle-type-grid">${Object.entries(DAMAGE_TYPES).map(([id,spec])=>`<div style="border-left-color:${spec.color}"><b>${spec.name}</b><span>${resistanceText(resist[id])}</span></div>`).join('')}</div><p>Obrana: fyzické zásahy 100 %, prierazné 60 %, ostatné 25 %. Kladná odolnosť znižuje poškodenie, záporná zvyšuje. Limity: +75 % / −50 %. Metiny navyše používajú vlastný pancier a základnú odolnosť. Oslabenie Zrušením kúzla znižuje kladné typové odolnosti o 15 percentuálnych bodov a potláča zúrivosť bossa.</p><p>Kritický zásah: 1,8× poškodenie. Prenikavý zásah ignoruje kladné odolnosti a ochranu Metinu, strop šance 50 %. Bonus rýchlosti útoku: najviac 60 %, odstup aspoň 0,16 s. Bonus proti skupine: najviac +100 %. Jed a oheň pôsobia súčasne; rovnaký efekt obnoví trvanie a zachová silnejšiu hodnotu. Základný útok zblízka zasahuje čelný výsek do 95 a celé okolie do 62. Základný šíp zasiahne aj ciele do 65 od dopadu za 65 % poškodenia. Šípy letia priamo; vybrané magické strely sledujú cieľ.</p><p>Zásah vyprovokuje najviac 5 členov skupiny. Plášť pritiahne pohyblivé ciele do 650 na 18 s, spotreba 1 kusu. Bossovia útočia bez vyprovokovania; pod 30 % HP zúria.</p><h3>Kombá</h3>${Object.entries(SCHOOL_COMBOS).map(([id,combo])=>`<div class="career-card"><h3>${combo.name}</h3><p>${SCHOOLS[id].name}: ${combo.sequence.map(i=>SCHOOLS[id].skills[i][0]).join(' → ')}<br>Do 4 s · druhá schopnosť +${Math.round(combo.bonus*100)} % poškodenia/liečenia.</p></div>`).join('')}`);
+  modal(`<span class="eyebrow">ŠKOLA BOJA · C</span><h2>Bojový manuál</h2><h3>Automatická pomoc</h3><p><b>Automierenie</b> pri útoku mieri na najbližší cieľ do 500; označený má prednosť. <b>Autospell</b> čaruje iba v boji s označeným cieľom, so spotrebou many a cooldownmi. Výpady môžu premiestniť postavu. Automatika čaká pri pauze, neaktívnom okne a v bezpečnej zóne. <b>Autoelixíry:</b> pod 45 % HP, +65 HP alebo 25 % maxima podľa vyššej hodnoty, spotreba 1 kusu. Spoločný cooldown s ručným použitím: 4 s.</p><h3>Typy poškodenia a tvoje odolnosti</h3><div class="battle-type-grid">${Object.entries(DAMAGE_TYPES).map(([id,spec])=>`<div style="border-left-color:${spec.color}"><b>${spec.name}</b><span>${resistanceText(resist[id])}</span></div>`).join('')}</div><p>Obrana: fyzické zásahy 100 %, prierazné 60 %, ostatné 25 %. Kladná odolnosť znižuje poškodenie, záporná zvyšuje. Limity: +75 % / −50 %. Metiny navyše používajú vlastný pancier a základnú odolnosť. Oslabenie Zrušením kúzla znižuje kladné typové odolnosti o 15 percentuálnych bodov a potláča zúrivosť bossa.</p><p>Kritický zásah: 1,8× poškodenie. Prenikavý zásah ignoruje kladné odolnosti a ochranu Metinu, strop šance 50 %. Bonus rýchlosti útoku: najviac 60 %, odstup aspoň 0,16 s. Bonus proti skupine: najviac +100 %. Jed a oheň pôsobia súčasne; rovnaký efekt obnoví trvanie a zachová silnejšiu hodnotu. Základný útok zblízka zasahuje čelný výsek do 95 a celé okolie do 62. Základný šíp zasiahne aj ciele do 65 od dopadu za 65 % poškodenia. Šípy letia priamo; vybrané magické strely sledujú cieľ.</p><p>Zásah vyprovokuje najviac 5 členov skupiny. Plášť pritiahne pohyblivé ciele do 650 na 18 s, spotreba 1 kusu. Bossovia útočia bez vyprovokovania; pod 30 % HP zúria.</p><h3>Kombá</h3>${Object.entries(SCHOOL_COMBOS).map(([id,combo])=>`<div class="career-card"><h3>${combo.name}</h3><p>${SCHOOLS[id].name}: ${combo.sequence.map(i=>SCHOOLS[id].skills[i][0]).join(' → ')}<br>Do 4 s · druhá schopnosť +${Math.round(combo.bonus*100)} % poškodenia/liečenia.</p></div>`).join('')}`);
 }
 
 
@@ -4345,7 +4510,7 @@ function renderClasses() {}
 
 function updateClassHUD(){$('portrait').textContent=({warrior:'侍',ninja:'影',sura:'魔',shaman:'龍'})[p.classId];$('playername').textContent=characterDisplayName(p)+prestigeSuffix(p);$('playerclass').textContent=role().name;school().skills.forEach((s,i)=>{$(i?'skill'+(i+1):'skill').querySelector('small').textContent=s[0];$(i?'skill'+(i+1):'skill').title=`${s[0]} · stupeň ${skillProgress(skillKey(i)).rank} · ${s[3]} many · ${s[2]} s\n${s[6]}`;});$('attack').querySelector('small').textContent=p.classId==='ninja'&&p.schools.ninja==='archery'?'Streľba':p.classId==='shaman'?'Úder vejárom':'Základný útok';}
 
-function updateHUD(){const health=maxHP(),mana=maxMP();baseHUD(health);$('potion-cooldown').textContent=potionCooldownRemaining()>0?Math.ceil(potionCooldownRemaining()):'';$('potion').title='Elixír · +65 HP · spoločný cooldown 4 s';$('capes').textContent=p.braveryCapes;$('cape-cooldown').textContent=capeCooldown>0?Math.ceil(capeCooldown):'';p.mp=Math.max(0,Math.min(mana,p.mp));$('mpbar').style.width=p.mp/mana*100+'%';$('mptext').textContent=Math.ceil(p.mp)+' / '+mana;for(let i=0;i<6;i++)$(i?'cooldown'+(i+1):'cooldown').textContent=spellCD[i]>0?Math.ceil(spellCD[i]):'';$('coords').textContent=map().town?'Mesto · NPC F':isSanctuary(p)?'Bezpečná zóna':farmAreaAt().name+(map().metinsOnly?' · Metiny Lv.':' · Lv.')+farmAreaLevelRange(farmAreaAt()).join('–');$('buffs').textContent=(p.career.alchemy.active?ALCHEMY_PRODUCTS[p.career.alchemy.active.id].name+' '+Math.ceil(p.career.alchemy.active.remaining)+'s · ':'')+Object.entries(buffs).map(([id,t])=>{const s=Object.values(SCHOOLS).flatMap(c=>c.skills).find(s=>s[1]===id);return(s?s[0]:id)+' '+Math.ceil(t)+'s';}).join(' · ');if(p.claimed)$('questnote').textContent='✓ Dokončené · ďalšie úlohy v denníku J';updateCombatHUD();updateCombatAssistHUD();updateHotbarState();updateDungeonHUD();updateWorldEventsHUD();}
+function updateHUD(){const health=maxHP(),mana=maxMP();baseHUD(health);$('potion-cooldown').textContent=potionCooldownRemaining()>0?Math.ceil(potionCooldownRemaining()):'';$('potion').title='Elixír · +'+potionHealAmount()+' HP · spoločný cooldown 4 s';$('capes').textContent=p.braveryCapes;$('cape-cooldown').textContent=capeCooldown>0?Math.ceil(capeCooldown):'';p.mp=Math.max(0,Math.min(mana,p.mp));$('mpbar').style.width=p.mp/mana*100+'%';$('mptext').textContent=Math.ceil(p.mp)+' / '+mana;for(let i=0;i<6;i++)$(i?'cooldown'+(i+1):'cooldown').textContent=spellCD[i]>0?Math.ceil(spellCD[i]):'';$('coords').textContent=map().town?'Mesto · NPC F':isSanctuary(p)?'Bezpečná zóna':farmAreaAt().name+(map().metinsOnly?' · Metiny Lv.':' · Lv.')+farmAreaLevelRange(farmAreaAt()).join('–');$('buffs').textContent=(p.career.alchemy.active?ALCHEMY_PRODUCTS[p.career.alchemy.active.id].name+' '+Math.ceil(p.career.alchemy.active.remaining)+'s · ':'')+Object.entries(buffs).map(([id,t])=>{const s=Object.values(SCHOOLS).flatMap(c=>c.skills).find(s=>s[1]===id);return(s?s[0]:id)+' '+Math.ceil(t)+'s';}).join(' · ');if(p.claimed)$('questnote').textContent='✓ Dokončené · ďalšie úlohy v denníku J';updateCombatHUD();updateCombatAssistHUD();updateHotbarState();updateDungeonHUD();updateWorldEventsHUD();}
 
 
 
@@ -4473,7 +4638,7 @@ function worldEventTime(seconds){seconds=Math.ceil(seconds);return Math.floor(se
 function worldEventsPanel(){
  const active=worldEventState?.active,spec=active?WORLD_EVENTS[active.type]:null;
  return '<h3>Udalosti sveta</h3>'+(active?'<article class="career-card"><h4>'+spec.name+' · '+worldEventTime(active.remaining)+'</h4><p>'+spec.objective+'<br>'+(!active.revealed?'Miesto neznáme.':farmAreaAt(active).name+' · '+Math.round(active.x)+', '+Math.round(active.y))+' · úroveň '+active.level+'</p>'+(spec.count?requirementRow('Porazení nepriatelia',active.kills,spec.count):'')+'<p>'+spec.reward+'</p></article>':'<p>Na tejto mape práve neprebieha udalosť.</p>')+
- '<p>Čas udalostí plynie pri hraní príslušnej mapy. Ostatné mapy, otvorené okná a offline hra čas pozastavia. V Meste, dungeonoch a trhlinách udalosti nevznikajú.</p><h3>Možné udalosti</h3>'+Object.entries(WORLD_EVENTS).map(([id,event])=>'<article class="career-card"><h4>'+event.name+'</h4><p>Šanca pri kontrole: '+(event.chance*100).toLocaleString('sk-SK')+' % · trvanie '+worldEventTime(event.duration)+'<br>'+event.objective+'<br>'+event.reward+'</p><small>Dokončené: '+(p.career.worldEvents.completed[id]||0)+'</small></article>').join('')+
+ '<p>Čas udalostí plynie pri hraní príslušnej mapy. Ostatné mapy, otvorené okná a offline hra čas pozastavia. V Meste, dungeonoch a trhlinách udalosti nevznikajú.</p><h3>Možné udalosti</h3>'+Object.entries(WORLD_EVENTS).filter(([id])=>worldEventTypeAllowed(id)).map(([id,event])=>'<article class="career-card"><h4>'+event.name+'</h4><p>Šanca pri kontrole: '+(event.chance*100).toLocaleString('sk-SK')+' % · trvanie '+worldEventTime(event.duration)+'<br>'+event.objective+'<br>'+event.reward+'</p><small>Dokončené: '+(p.career.worldEvents.completed[id]||0)+'</small></article>').join('')+
  '<p>Bonusová výbava: Epic do Lv.49, Legendary od Lv.50; od Lv.75 namiesto nej Mythic 4 %. Zaručená pri primeranom bossovi, vzácnom Metine, ruinách a démonickom sprievode. Zásoby a Yang sa pripíšu priamo, výbavu zbieraš klikom alebo Y.</p><h3>Objavené ruiny</h3><p>'+ (Object.entries(p.discovery.eventPlaces||{}).map(([id,n])=>MAPS[id].name+' · '+n+' objavov').join('<br>')||'Bez objavov.')+'</p>';
 }
 function worldEventsJournalCard(){const event=worldEventState?.active;return '<article class="journal-entry"><h3>Udalosti sveta</h3><p>'+(event?WORLD_EVENTS[event.type].name+' · zostáva '+worldEventTime(event.remaining):'Na tejto mape nie je aktívna udalosť.')+'</p><button id="journalEvents">Zobraziť udalosti</button></article>';}
@@ -4517,7 +4682,7 @@ function careerForge() {
  return '<p>Kováč · Mesto. Materiály a Yang sa spotrebujú pri každom pokuse.</p>'+Object.keys(EQUIPMENT).map(slot=>{
   const item=p.equipped[slot];if(!item)return '<div class="career-card"><h3>'+EQUIPMENT[slot].name+'</h3><p>Bez nasadeného predmetu.</p></div>';
   const rank=item.enhance||0,options=forgeOptions[slot]||{},cost=enhancementCost(item,options);
-  return '<div class="career-card"><h3>'+escapeHTML(item.name)+' +'+rank+'</h3><p>'+ITEM_STATS[EQUIPMENT[slot].stat]+' z vylepšenia: '+signedItemStat(EQUIPMENT[slot].stat,enhancementBonus(item)*(EQUIPMENT[slot].stat==='crit'?.01:1))+(rank<9?' → '+signedItemStat(EQUIPMENT[slot].stat,FORGE_RULES.bonus[rank+1]*(EQUIPMENT[slot].stat==='crit'?.01:1)):' · maximum')+'</p>'+(cost?'<p>Úspech '+Math.round(forgeChance(item,options)*100)+' % · '+'</p>'+costRequirements(cost)+'<p>'+forgeFailureText(item,options)+'</p><label><input type="checkbox" data-forge-option="charm" data-slot="'+slot+'" '+(options.charm?'checked ':'')+(!p.career.materials.smithCharm||FORGE_RULES.success[rank+1]>=.95?'disabled':'')+'> Talizman kováča: +10 percentuálnych bodov · '+p.career.materials.smithCharm+' ks</label><br><label><input type="checkbox" data-forge-option="protect" data-slot="'+slot+'" '+(options.protect?'checked ':'')+(!p.career.materials.protectionScroll||rank<3?'disabled':'')+'> Ochranný zvitok: zachová predmet aj stupeň · '+p.career.materials.protectionScroll+' ks</label><br><button class="primary" data-action="enhance" data-id="'+slot+'" '+(!available||!canPayRecipe(cost)?'disabled':'')+'>Vylepšiť na +'+(rank+1)+'</button>':'')+'</div>';
+  return '<div class="career-card"><h3>'+escapeHTML(item.name)+' +'+rank+'</h3><p>'+ITEM_STATS[EQUIPMENT[slot].stat]+' z vylepšenia: '+signedItemStat(EQUIPMENT[slot].stat,enhancementBonus(item)*(EQUIPMENT[slot].stat==='crit'?.01:1))+(rank<9?' → '+signedItemStat(EQUIPMENT[slot].stat,enhancementBonus({...item,enhance:rank+1})*(EQUIPMENT[slot].stat==='crit'?.01:1)):' · maximum')+'</p>'+(cost?'<p>Úspech '+Math.round(forgeChance(item,options)*100)+' % · '+'</p>'+costRequirements(cost)+'<p>'+forgeFailureText(item,options)+'</p><label><input type="checkbox" data-forge-option="charm" data-slot="'+slot+'" '+(options.charm?'checked ':'')+(!p.career.materials.smithCharm||FORGE_RULES.success[rank+1]>=.95?'disabled':'')+'> Talizman kováča: +10 percentuálnych bodov · '+p.career.materials.smithCharm+' ks</label><br><label><input type="checkbox" data-forge-option="protect" data-slot="'+slot+'" '+(options.protect?'checked ':'')+(!p.career.materials.protectionScroll||rank<3?'disabled':'')+'> Ochranný zvitok: zachová predmet aj stupeň · '+p.career.materials.protectionScroll+' ks</label><br><button class="primary" data-action="enhance" data-id="'+slot+'" '+(!available||!canPayRecipe(cost)?'disabled':'')+'>Vylepšiť na +'+(rank+1)+'</button>':'')+'</div>';
  }).join('')+'<button data-career-tab="crafting">Výroba predmetov a pomôcok</button>'+'<p>Kováčske jadro / talizman / zvitok: boss Lv.35+ 50 % / 15 % / 6 %, Metin Lv.35+ 8 % / 4 % / 1,5 %, vzácny nepriateľ Lv.35+ 15 % / 5 % / 1 %. Vyžaduje primeraný cieľ.</p>';
 }
 
@@ -4542,7 +4707,7 @@ function careerEndgame() {
   const end = p.career.endgame, run = end.run;
   return `<button id="open-prestige">Prestíž a endgame ciele · úroveň 99</button><p>Vyžaduje úroveň 35 a 3 kľúče. Cieľ: 20 príšer a 1 boss. Kľúč: každý 3. boss. Vyšší stupeň zvyšuje silu nepriateľov aj odmenu.</p>
     ${run ? `<div class="career-card"><h3>Aktívna trhlina · stupeň ${run.tier}</h3><p>Príšery ${Math.min(20, run.kills)} / 20 · boss ${Math.min(1, run.bosses)} / 1<br>Odmena: ${10 + run.tier * 3} úlomkov</p><button class="primary" data-action="claimRift" ${run.kills < 20 || run.bosses < 1 ? 'disabled' : ''}>Dokončiť a vyzdvihnúť odmenu</button><button class="secondary" data-action="abandon">Opustiť bez odmeny · kľúče sa nevrátia</button></div>` : `<div class="career-card"><h3>Ďalší stupeň ${Math.min(PROGRESSION.maxRiftTier, end.highest + 1)}</h3><p>Najvyšší dokončený: ${end.highest} · vstup mimo boja.</p>${costRequirements({keys:3})}<button class="primary" data-action="enter" ${p.level < 35 || p.career.materials.keys < 3 ? 'disabled' : ''}>Vstúpiť · 3 kľúče</button></div>`}
-    <div class="career-card"><h3>Relikviár · ${end.paragon} / ${PROGRESSION.maxParagon}</h3><p>Trvalý bonus: +${end.paragon * 2} útok a +${end.paragon * 5} zdravie.</p>${costRequirements({shards:25*(end.paragon+1)**2})}<button class="primary" data-action="paragon" ${p.level < 35 || end.paragon >= PROGRESSION.maxParagon || !canPayRecipe({shards:25*(end.paragon+1)**2}) ? 'disabled' : ''}>Posilniť relikviár</button></div>`;
+    <div class="career-card"><h3>Relikviár · ${end.paragon} / ${PROGRESSION.maxParagon}</h3><p>Trvalý bonus: +${end.paragon * 2} útok a +${end.paragon * 5} zdravie.</p>${costRequirements(paragonCost(end.paragon+1))}<button class="primary" data-action="paragon" ${p.level < 35 || end.paragon >= PROGRESSION.maxParagon || !canPayRecipe(paragonCost(end.paragon+1)) ? 'disabled' : ''}>Posilniť relikviár</button></div>`;
 }
 
 function careerPanel(tab = careerTab) {
@@ -4606,8 +4771,8 @@ function craftingRecipesPanel(profession) {
     ${profession === 'alchemy' ? `<p>Odvary sa nekombinujú. Čas plynie iba počas hry.${activeProduct ? ' Aktívny: ' + activeProduct.name + ' · ' + Math.ceil(a.active.remaining) + ' s.' : ''}</p><div class="craft-products">${Object.entries(ALCHEMY_PRODUCTS).map(([id, product]) => `<div><b>${product.name} · ${a.products[id]} ks</b><small>${product.text}</small><button data-action="product" data-id="${id}" ${!a.products[id] || product.bonus && a.active ? 'disabled' : ''}>Použiť</button></div>`).join('')}</div>` : ''}
     <label>Recepty <select id="craft-filter">${Object.entries(categories).filter(([id]) => id === 'all' || recipes.some(([, r]) => category(r) === id)).map(([id, label]) => `<option value="${id}" ${craftingFilter === id ? 'selected' : ''}>${label}</option>`).join('')}</select></label>
     <div class="craft-recipes">${visible.map(([id, r]) => {
-      const reason = recipeBlockReason(id), out = r.output;
-      const outcome = out.slot ? `${EQUIPMENT[out.slot].name} · ${rarityName(out.rarity)} · požadovaná úroveň ${out.tier} · náhodné bonusy podľa rarity` : out.product ? ALCHEMY_PRODUCTS[out.product].text : out.gem ? GEMS[out.gem].text : out.counter === 'potions' ? 'Obnoví 65 zdravia za kus.' : '';
+      const reason = recipeBlockReason(id), out = r.output, definition=out.definitionId?ITEM_DEFINITIONS[out.definitionId]:out;
+      const outcome = out.slot ? `${EQUIPMENT[out.slot].name} · ${rarityName(definition.rarity)} · požadovaná úroveň ${definition.level||definition.tier} · náhodné bonusy podľa rarity` : out.product ? ALCHEMY_PRODUCTS[out.product].text : out.gem ? GEMS[out.gem].text : out.counter === 'potions' ? 'Obnoví aspoň 65 zdravia alebo 25 % maxima za kus.' : '';
       return `<article class="career-card craft-recipe"><h4>${r.name}</h4><p>Remeslo ${r.level}${r.playerLevel ? ' · postava ' + r.playerLevel : ''} · +${Math.max(1, Math.floor(r.xp / (level >= r.level + 3 ? 4 : 1)))} praxe${level === CRAFT_RULES.maxLevel ? ' (maximum)' : ''}</p><p>${outcome}</p>${costRequirements(r.cost)}${Object.keys(r.ingredients||{}).length?'<div class="requirements">'+Object.entries(r.ingredients).map(([key,count])=>requirementRow(ALCHEMY_PRODUCTS[key].name,a.products[key],count)).join('')+'</div>':''}<button class="primary" data-action="recipe" data-id="${id}" ${reason ? 'disabled' : ''}>Vyrobiť</button>${reason ? '<small>' + reason + '</small>' : ''}</article>`;
     }).join('') || '<p>V tejto kategórii nie sú recepty.</p>'}</div></section>`;
 }
@@ -4684,11 +4849,11 @@ function renderCharacterScreen() {
   if(record)$('character-details').onclick=()=>showCharacterDetails(record);
   $('export-characters').onclick=()=>{try{downloadCharacterJSON(exportCharacters());rosterMessage('Záloha všetkých postáv pripravená.');}catch(error){rosterMessage(error.message);}};
   $('import-characters').onclick=()=>$('character-import-file').click();$('character-import-file').onchange=handleCharacterBackupFile;
-  try{const safety=localStorage.getItem(CHARACTER_RULES.storageKey+'.safety');$('download-safety').hidden=!safety;$('download-safety').onclick=()=>downloadCharacterJSON(safety,'grindoria-characters-safety-backup.json');}catch{}
+  try{const safety=localStorage.getItem(CHARACTER_RULES.storageKey+'.safety');$('download-safety').hidden=!safety;$('download-safety').onclick=()=>downloadCharacterJSON(characterSafetyBackupText(safety),'grindoria-characters-safety-backup.json');}catch{}
 }
 function renderCharacterCreation() {
   const draft=characterDraft,cls=CLASSES[draft.classId],preview={name:draft.name.replace(/^\*/,''),isGM:draft.name.startsWith('*'),classId:draft.classId,data:{equipped:{},schools:{[draft.classId]:draft.schoolId}}};
-  $('intro').innerHTML=characterBackdrop()+'<div class="roster-shell creation-shell"><div class="roster-heading"><div><span class="eyebrow">NOVÁ POSTAVA</span><h2>Vytvoriť postavu</h2></div><button id="cancel-creation" class="roster-secondary">← Výber postáv</button></div><div class="creation-layout"><section><span class="eyebrow">01 · POVOLANIE</span><div class="creation-classes">'+Object.entries(CLASSES).map(([id,c])=>'<button data-create-class="'+id+'" aria-pressed="'+(draft.classId===id)+'"><b>'+c.name+'</b><small>'+c.desc+'</small></button>').join('')+'</div><span class="eyebrow">02 · ŠKOLA SCHOPNOSTÍ</span><div class="creation-schools">'+Object.entries(SCHOOLS).filter(([,s])=>s.classId===draft.classId).map(([id,s])=>'<button data-create-school="'+id+'" aria-pressed="'+(draft.schoolId===id)+'">'+s.name+'</button>').join('')+'</div></section><div class="roster-stage">'+characterAvatar(preview)+'<div class="stage-caption"><span class="eyebrow">'+cls.name+'</span><h2 id="draft-caption">'+escapeHTML(characterDisplayName({...preview,name:preview.name||'Meno postavy'}))+'</h2></div></div><form id="character-create-form" class="creation-form" novalidate><span class="eyebrow">03 · TVOJE MENO</span><h3>'+cls.name+'</h3><label for="character-name">Meno postavy</label><input id="character-name" type="text" minlength="'+CHARACTER_RULES.nameMin+'" maxlength="'+(CHARACTER_RULES.nameMax+1)+'" autocomplete="off" spellcheck="false" value="'+escapeHTML(draft.name)+'" placeholder="Zadaj meno"><small>'+CHARACTER_RULES.nameMin+'–'+CHARACTER_RULES.nameMax+' znakov · písmená, čísla, _ a -</small><div class="roster-stats"><div><span>Životy</span><b>'+(100+cls.health)+'</b></div><div><span>Mana</span><b>108</b></div><div><span>Rýchlosť</span><b>'+cls.speed+'</b></div><div><span>Kritický zásah</span><b>'+Math.round(cls.crit*100)+' %</b></div></div><p>Začiatočná zbraň +9.</p><p>Začiatočné atribúty: sila 0 · vitalita 0 · obratnosť 0 · inteligencia 0.</p><p id="creation-error" class="form-error" role="alert"></p><button class="roster-primary" id="confirm-character" type="submit">Vytvoriť postavu →</button><p class="creation-note">Povolanie po vytvorení nezmeníš.</p></form></div></div>';
+  $('intro').innerHTML=characterBackdrop()+'<div class="roster-shell creation-shell"><div class="roster-heading"><div><span class="eyebrow">NOVÁ POSTAVA</span><h2>Vytvoriť postavu</h2></div><button id="cancel-creation" class="roster-secondary">← Výber postáv</button></div><div class="creation-layout"><section><span class="eyebrow">01 · POVOLANIE</span><div class="creation-classes">'+Object.entries(CLASSES).map(([id,c])=>'<button data-create-class="'+id+'" aria-pressed="'+(draft.classId===id)+'"><b>'+c.name+'</b><small>'+c.desc+'</small></button>').join('')+'</div><span class="eyebrow">02 · ŠKOLA SCHOPNOSTÍ</span><div class="creation-schools">'+Object.entries(SCHOOLS).filter(([,s])=>s.classId===draft.classId).map(([id,s])=>'<button data-create-school="'+id+'" aria-pressed="'+(draft.schoolId===id)+'">'+s.name+'</button>').join('')+'</div></section><div class="roster-stage">'+characterAvatar(preview)+'<div class="stage-caption"><span class="eyebrow">'+cls.name+'</span><h2 id="draft-caption">'+escapeHTML(characterDisplayName({...preview,name:preview.name||'Meno postavy'}))+'</h2></div></div><form id="character-create-form" class="creation-form" novalidate><span class="eyebrow">03 · TVOJE MENO</span><h3>'+cls.name+'</h3><label for="character-name">Meno postavy</label><input id="character-name" type="text" minlength="'+CHARACTER_RULES.nameMin+'" maxlength="'+(CHARACTER_RULES.nameMax+1)+'" autocomplete="off" spellcheck="false" value="'+escapeHTML(draft.name)+'" placeholder="Zadaj meno"><small>'+CHARACTER_RULES.nameMin+'–'+CHARACTER_RULES.nameMax+' znakov · písmená, čísla, _ a -</small><div class="roster-stats"><div><span>Životy</span><b>'+(100+cls.health)+'</b></div><div><span>Mana</span><b>108</b></div><div><span>Rýchlosť</span><b>'+cls.speed+'</b></div><div><span>Kritický zásah</span><b>'+Math.round(cls.crit*100)+' %</b></div></div><p>Začiatočná zbraň +2.</p><p>Začiatočné atribúty: sila 0 · vitalita 0 · obratnosť 0 · inteligencia 0.</p><p id="creation-error" class="form-error" role="alert"></p><button class="roster-primary" id="confirm-character" type="submit">Vytvoriť postavu →</button><p class="creation-note">Povolanie po vytvorení nezmeníš.</p></form></div></div>';
   $('intro').scrollTop=0;window.scrollTo?.(0,0);
   $('cancel-creation').onclick=renderCharacterScreen;
   document.querySelectorAll('[data-create-class]').forEach(button=>button.onclick=()=>{draft.classId=button.dataset.createClass;draft.schoolId=DEFAULT_SCHOOLS[draft.classId];renderCharacterCreation();});

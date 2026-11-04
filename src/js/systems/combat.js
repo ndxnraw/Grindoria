@@ -33,13 +33,15 @@ function potionCooldownRemaining(now = Date.now()) { return Math.max(0, ((p.poti
 
 function drinkPotion(allowPaused=false) {
   if(!running||(paused&&!allowPaused)||p.hp<=0)return false;
+  if(paused&&!canTravel()){toast('Elixír počas boja použi po zavretí okna (E).');return false;}
   if(potionCooldownRemaining()>0){toast('Elixír bude pripravený o '+Math.ceil(potionCooldownRemaining())+' s.');return false;}
   if(p.potions<=0){toast('Nemáš elixíry. Navštív obchodníka (F).');return false;}
   if(p.hp>=maxHP()){toast('Zdravie máš plné.');return false;}
-  const healed=Math.min(POTION_RULES.heal,maxHP()-p.hp);
+  const healed=Math.min(potionHealAmount(),maxHP()-p.hp);
   p.potions--;p.hp+=healed;p.potionReadyAt=Date.now()+POTION_RULES.cooldown*1000;
   float('+'+Math.round(healed)+' zdravia',p.x,p.y-65,'#a9e0ac');beep(520,.2);updateHUD();save();return true;
 }
+function potionHealAmount(){return Math.max(POTION_RULES.heal,Math.round(maxHP()*.25));}
 
 function death(){resetDungeonBoss();resetCombatFlow();p.mp=maxMP();shots.length=0;Object.keys(buffs).forEach(k=>delete buffs[k]);p.gold=Math.floor(p.gold*.9);Object.assign(p,map().entry);p.hp=maxHP();target=null;mobs.forEach(m=>m.cd=2);toast('Návrat do bezpečnej zóny\nStratil si 10 % zlata.');save();}
 

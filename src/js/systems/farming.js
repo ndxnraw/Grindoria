@@ -46,8 +46,7 @@ function createSpawnEnemy(point, slot = 0) {
   const variant = rollEnemyVariant(point, slot), v = ENEMY_VARIANTS[variant];
   const normalLevel = type==='boss'&&cfg.bossLevel?cfg.bossLevel:cfg.enemyLevel + point.offset + (type === 'boss' ? 5 : type === 'stone' ? (cfg.metinLevelOffset??2) : slot % ((cfg.mobLevelSpread??2)+1));
   const level = Math.min(cfg.maxEnemyLevel||105,normalLevel + (type === 'wolf' ? v.level : 0));
-  const hp = Math.round((type === 'boss' ? 620 : type === 'stone' ? 160 : 55) * cfg.scale * (1 + (level - cfg.enemyLevel) * .08) * (type === 'wolf' ? v.hp : 1));
-  const attack = cfg.scale * (1 + (level - cfg.enemyLevel) * .06) * (type === 'wolf' ? v.damage : 1);
+  const stats=enemyCombatStats(level,type,variant),hp=stats.hp,attack=stats.attack;
   const enemy = {
     spawnId: point.id + ':' + slot, spawnPointId: point.id, spawnSlot: slot,
     type, skin: cfg.skin, area: point.area, variant, rareSlot: point.kind === 'rare',
@@ -241,7 +240,7 @@ function updateEnemySpawns(dt, safe) {
       const slow = (active('fear') && d < 300 ? .5 : 1) * (m.slow > 0 ? .55 : 1);
       const angle = (m.spawnSlot || 0) * 2.39996, spread = d < 110 ? 28 : 0;
       if (d > 33) walkEnemy(m, p.x + Math.cos(angle) * spread, p.y + Math.sin(angle) * spread, map().mobSpeed * (m.speedScale || 1) * slow, dt, grid);
-      if (d < 55 && m.cd <= 0) { m.engaged = Math.max(m.engaged || 0, 8); takeDamage(Math.max(4, Math.round(9 * (m.attackScale || map().scale) - p.level * .5)), m); m.cd = 1.3; }
+      if (d < 55 && m.cd <= 0) { m.engaged = Math.max(m.engaged || 0, 8); takeDamage(Math.max(4, Math.round(9 * (m.attackScale || map().scale))), m); m.cd = 1.3; }
     } else {
       m.taunt = 0; m.engaged = 0;
       if (m.returning || home > SPAWN_RULES.roamRadius + 1e-6) {
@@ -284,6 +283,7 @@ function farmBonusLoot(m) {
 }
 
 function dropFarmEquipment(m) {
+  if(!rewardEligible(m))return;
   const rare = m.variant === 'rare', elite = m.variant === 'elite';
   const chance=m.type==='stone'?1:enemyLootPool(m).gear[m.type==='boss'?'boss':rare?'rare':elite?'elite':'normal'];
   if (chance>=1 || rand() < chance) return spawnGroundDrop({ kind: 'gear', item: makeItem(false, m) }, m);

@@ -34,9 +34,9 @@ test('expiry survives save, travel and reload; legacy loot gets one finite lifet
   assert(run('Number.isFinite(migrated[0].expiresAt)'));assert.equal(run('again[0].expiresAt'),run('migrated[0].expiresAt'));
 });
 
-test('ordinary gear drops are 3 percent, elites 20 percent, while rare enemies and bosses retain rewards', () => {
+test('ordinary gear drops are 12 percent, elites 45 percent, while rare enemies and bosses retain rewards', () => {
   const { run } = createGame();
-  for(const [variant,chance] of [['normal',.03],['elite',.2]]){
+  for(const [variant,chance] of [['normal',.12],['elite',.45]]){
     run('drops.length=0;var sample={type:"wolf",variant:"'+variant+'",level:1,x:400,y:400};');
     run('rand=()=>'+chance+';dropFarmEquipment(sample);');assert.equal(run('drops.length'),0);
     run('rand=()=>'+(chance-.00001)+';dropFarmEquipment(sample);');assert.equal(run('drops.length'),1);

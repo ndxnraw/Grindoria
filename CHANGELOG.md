@@ -10,6 +10,24 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.30.0] - 2026-11-04
+
+### Added
+- Integračné kontroly tempa levelov 1–99, všetkých máp a ôsmich škôl na piatich úrovniach; kontrola ôsmich plne preskúmaných postáv vrátane záloh a obnovy.
+
+### Changed
+- EXP krivka na približne 26–181 primeraných bežných protivníkov na level; jednorazová migrácia zachová level aj pomerný postup.
+- Sila, zlato a úroveň bežnej výbavy podľa skutočného levelu nepriateľa; oblasti a bossovia pokrývajú uvedené rozsahy máp, udalosti ich neprekračujú.
+- Výbava z primeraných bežných cieľov 12 %, elít 45 %; lepšie rarity bossov, elít a vzácnych cieľov. Slabé ciele nedávajú rozvojovú výbavu ani liečivé elixíry.
+- Štartovacia zbraň +2, samostatné krivky vylepšení pre jednotlivé atribúty, miernejšie ceny a riziko kováča; dostupnejšie ikonické zbrane a výhodnejšie dávky spotrebných receptov.
+- Rýchlejšia prax schopností, lineárne náklady relikviára a škálovanie liečivého/mana elixíra. Úplný prestížny bestiár zahŕňa všetkých 25 druhov.
+- Bezstratovo zbalené lokálne profily a populácie, cache nezmenených postáv a širší limit prenosných JSON záloh; ukladanie neuchováva resetované dočasné údaje obyčajnej AI.
+
+### Fixed
+- Neplatné relikvie šiestich nových bossov a obnova už poškodených registrov a záloh bez straty výbavy.
+- Nesplniteľná Žatva materiálov v Šuterlande, úlohová odmena závislá od miesta vyzdvihnutia, nesprávne úrovne a rarity ikonických receptov a nulový pancier Metinov v bestiári.
+- Resetovanie cooldownov prepínaním postavy a použitie spotrebných predmetov v pozastavenom boji.
+
 ## [0.29.0] - 2026-11-04
 
 ### Added
@@ -541,7 +559,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.29.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.30.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -574,3 +592,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.27.0]: https://github.com/ndxnraw/Grindoria/compare/v0.26.0...v0.27.0
 [0.28.0]: https://github.com/ndxnraw/Grindoria/compare/v0.27.0...v0.28.0
 [0.29.0]: https://github.com/ndxnraw/Grindoria/compare/v0.28.0...v0.29.0
+[0.30.0]: https://github.com/ndxnraw/Grindoria/compare/v0.29.0...v0.30.0

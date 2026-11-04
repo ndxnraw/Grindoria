@@ -13,16 +13,16 @@ Od 0.16.0 používa hra šesť rarít. Staré ID ostávajú platné: Common=0, U
 
 ## Drop
 
-Požadovaná úroveň obyčajne generovanej výbavy sa zarovnáva nadol na násobok 5, minimálne 1: nepriateľ Lv.1–4 dáva Lv.1, Lv.5–9 dáva Lv.5. Výber rarity naďalej používa skutočnú úroveň zdroja. Pomenované zbrane a pevné odmeny si zachovávajú svoje požiadavky.
+Požadovaná úroveň obyčajne generovanej výbavy zodpovedá úrovni nepriateľa, najviac 99. Výber rarity naďalej používa skutočnú úroveň zdroja. Pomenované zbrane a pevné odmeny si zachovávajú svoje požiadavky.
 
-Šanca, že vôbec vypadne výbava, sa nemení: obyčajná príšera 3 %, elita 20 %, vzácna príšera a boss zaručene; Metiny majú vlastné šance. Potom samostatný vážený výber určí raritu podľa zdroja. Legendary padá od úrovne nepriateľa 50, Mythic od 75. Pod týmito hranicami sa šance ostatných rarít pomerne prepočítajú.
+Šanca výbavy z primeraného cieľa: obyčajná príšera 12 %, elita 45 %, vzácna príšera a boss zaručene; Metiny majú vlastné šance. Potom samostatný vážený výber určí raritu podľa zdroja. Legendary padá od úrovne nepriateľa 50, Mythic od 75. Pod týmito hranicami sa šance ostatných rarít pomerne prepočítajú.
 
 | Zdroj Lv.99 | Common | Uncommon | Rare | Epic | Legendary | Mythic |
 |---|---:|---:|---:|---:|---:|---:|
-| Obyčajný | 75 % | 19 % | 5,5 % | 0,45 % | 0,049 % | 0,001 % |
-| Elita | 55 % | 30 % | 13 % | 1,8 % | 0,195 % | 0,005 % |
-| Vzácny | 30 % | 39 % | 26 % | 4,7 % | 0,29 % | 0,01 % |
-| Boss | 15 % | 30 % | 42 % | 12 % | 0,98 % | 0,02 % |
+| Obyčajný | 45 % | 35 % | 17,5 % | 2,2 % | 0,29 % | 0,01 % |
+| Elita | 20 % | 35 % | 35 % | 9 % | 0,95 % | 0,05 % |
+| Vzácny | 5 % | 20 % | 50 % | 22 % | 2,8 % | 0,2 % |
+| Boss | 0 % | 5 % | 50 % | 36,5 % | 8 % | 0,5 % |
 
 Metiny miešajú vlastnú základnú tabuľku s tabuľkou prémiových odmien podľa loot.epic svojho typu. Tento parameter je teraz podiel prémiovej tabuľky, nie výsledná šanca Epic. Aktuálne šance zobrazuje Atlas Metinov pre začiatok úrovňového pásma a sprievodca Rarity pre referenčný Metin skazy Lv.99. Explicitná prémiová odmena z úlohy cez makeItem(true) zostáva minimálne Epic.
 

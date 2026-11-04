@@ -21,7 +21,7 @@ test('event groups use independent non-grid positions, a shared group of at most
 });
 
 test('rare bosses are stronger, named correctly, and both ordinary and event bosses really attack',()=>{
- const g=ready();start(g,'boss');g.run('var bosses=mobs.filter(m=>m.type==="boss"),rare=bosses.find(m=>m.worldEventId),normal=bosses.find(m=>!m.worldEventId);p.x=900;p.y=1400;p.hp=10000;bosses.forEach((b,i)=>Object.assign(b,{x:p.x+(i?70:-70),y:p.y,cd:0,windup:0}));updateBoss(.01,false);');assert.equal(g.run('bosses.length'),2);assert(g.run('rare.max>normal.max&&rare.level>normal.level'));assert.equal(g.run('enemyName(rare)'),g.run('rare.name'));assert(g.run('bosses.every(b=>b.windup>0)'));g.run('updateBoss(1.1,false);');assert(g.run('bosses.every(b=>b.cd>0&&b.windup<=0)'));assert(g.run('p.hp<10000'));
+ const g=ready();start(g,'boss');g.run('var bosses=mobs.filter(m=>m.type==="boss"),rare=bosses.find(m=>m.worldEventId),normal=bosses.find(m=>!m.worldEventId);p.x=900;p.y=1400;p.hp=10000;bosses.forEach((b,i)=>Object.assign(b,{x:p.x+(i?70:-70),y:p.y,cd:0,windup:0}));updateBoss(.01,false);');assert.equal(g.run('bosses.length'),2);assert(g.run('rare.max>normal.max&&rare.level>=normal.level&&rare.level<=map().levelMax'));assert.equal(g.run('enemyName(rare)'),g.run('rare.name'));assert(g.run('bosses.every(b=>b.windup>0)'));g.run('updateBoss(1.1,false);');assert(g.run('bosses.every(b=>b.cd>0&&b.windup<=0)'));assert(g.run('p.hp<10000'));
 });
 
 test('Šuterland remains Metin-only, with rare Metin waves and higher HP rather than free-roaming groups',()=>{

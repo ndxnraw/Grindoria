@@ -1,15 +1,15 @@
 let forgeResult=null;
-function enhancementBonus(item){return FORGE_RULES.bonus[Math.max(0,Math.min(9,Math.floor(item?.enhance||0)))];}
+function enhancementBonus(item){const curve=FORGE_RULES.bonuses[EQUIPMENT[item?.slot]?.stat]||FORGE_RULES.bonus;return curve[Math.max(0,Math.min(9,Math.floor(item?.enhance||0)))];}
 function forgeChance(item,options={}){const rank=(item?.enhance||0)+1;return Math.min(.95,(FORGE_RULES.success[rank]||0)+(options.charm?FORGE_RULES.charmBoost:0));}
 function forgeFailureText(item,options={}){
  const next=(item.enhance||0)+1;
  if(options.protect||next<=3)return 'Neúspech: stupeň zostane.';
- return next>=7?'Neúspech: 35 % zničenie, inak −1 stupeň.':'Neúspech: −1 stupeň.';
+ return next>=7?'Neúspech: 15 % zničenie, inak −1 stupeň.':'Neúspech: −1 stupeň.';
 }
 function enhancementCost(item,options={}){
  if(!item||!EQUIPMENT[item.slot]||(item.enhance||0)>=9)return null;
- const rank=(item.enhance||0)+1,multiplier=1+(item.tier||1)/25+rarityRank(item.rarity)*.35;
- return {ore:3*rank*rank,gold:Math.ceil(300*rank**3*multiplier),...(rank>=3?{upgradeStones:Math.ceil(rank*rank/6)}:{}),...(rank>=5?{dust:4*(rank-4)**2}:{}),...(rank>=7?{forgeCore:rank-6}:{}),...(options.charm&&FORGE_RULES.success[rank]<.95?{smithCharm:1}:{}),...(options.protect&&rank>=4?{protectionScroll:1}:{})};
+ const rank=(item.enhance||0)+1,multiplier=1+(item.tier||1)/30+rarityRank(item.rarity)*.25;
+ return {ore:2*rank+Math.floor(rank*rank/4),gold:Math.ceil(40*rank**2*multiplier),...(rank>=3?{upgradeStones:Math.ceil(rank/3)}:{}),...(rank>=5?{dust:2*(rank-4)}:{}),...(rank>=7?{forgeCore:Math.ceil((rank-6)/2)}:{}),...(options.charm&&FORGE_RULES.success[rank]<.95?{smithCharm:1}:{}),...(options.protect&&rank>=4?{protectionScroll:1}:{})};
 }
 function enhanceEquipment(slot,options={}){
  forgeResult=null;

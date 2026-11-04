@@ -1,10 +1,16 @@
 function map(){return MAPS[p.mapId]||MAPS.valley;}
 
+function trimEnemySnapshot(enemy){
+  // These ordinary-world fields already reset on hydration; never discard dungeon attack plans.
+  if(!enemy.dungeonId)for(const key of ['roamTarget','roamWait','returning','taunt','engaged','windup','stun','hit'])delete enemy[key];
+  enemy.cd=Math.max(0,enemy.cd||0);return enemy;
+}
+
 function snapshotMap() {
   if (!mobs.length&&!map().town) return;
   p.worldStates[p.mapId] = {
     balanceSchema:map().balanceVersion||0,events:worldEventSnapshot(),worldSize:SIZE,layoutSchema: SPAWN_LAYOUT_VERSION, progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
-    mobs: mobs.map(cloneEnemyState),
+    mobs: mobs.map(m=>trimEnemySnapshot(cloneEnemyState(m))),
     drops: drops.map(cloneGroundDrop)
   };
 }
@@ -26,7 +32,7 @@ function loadMap(id, initial=false) {
   const cfg=map(), prior=p.worldStates[id],old=migrateMapSize(prior,id);SIZE=cfg.size;
   if(initial&&prior&&(prior.worldSize||2000)!==cfg.size){const factor=cfg.size/(prior.worldSize||2000);resumePosition.x*=factor;resumePosition.y*=factor;if(Math.hypot(resumePosition.x-1000*factor,resumePosition.y-1050*factor)<190*factor)Object.assign(resumePosition,cfg.entry);}
   if(initial&&id==='valley'&&p.level===1&&old?.balanceSchema!==cfg.balanceVersion&&Math.hypot(resumePosition.x-360,resumePosition.y-310)<220)Object.assign(resumePosition,cfg.entry);
-  cfg.mobSpeed=75+(cfg.scale-1)*14; seed=cfg.seed; decor.length=0;
+  cfg.mobSpeed=95+Math.min(60,cfg.enemyLevel*.7); seed=cfg.seed; decor.length=0;
   for(let i=0;i<(cfg.instance?0:250);i++) {
     const x=rand()*SIZE,y=rand()*SIZE;
     if(!isSanctuary({x,y})) decor.push({x,y,type:rand()<(cfg.metinsOnly?0:id==='valley'?.67:id==='snow'?.45:id==='desert'?.2:.12)?'tree':'rock',s:.6+rand()*.8,t:rand()});

@@ -8,7 +8,7 @@ Obe remeslá majú samostatnú prax a úrovne 1–10. Úroveň L vyžaduje celko
 
 ## Výrobky a recepty
 
-Register obsahuje 47 receptov:
+Register obsahuje 52 receptov vrátane piatich ikonických zbraní:
 
 - 30 kusov výbavy: všetkých desať slotov v troch stupňoch. Základná výbava: remeslo 1, postava 1, Common. Pokročilá: remeslo 4, postava 20, Rare. Majstrovská: remeslo 8, postava 50, Epic a jadro trhliny.
 - Ingot, plášť, kameň vylepšenia, kováčske jadro, talizman kováča, ochranný zvitok a kľúč trhliny.
@@ -18,6 +18,8 @@ Register obsahuje 47 receptov:
 Výbava používa existujúci generátor, rarity, náhodné bonusy, modely povolaní, inventár a požiadavky na nasadenie. Plný inventár zablokuje výrobu pred spotrebou materiálov, praxe či náhodných hodov. Materiály a produkty sa ukladajú do existujúcich zásobníkov; vyrobená výbava sa nepredáva automaticky.
 
 Presné ceny a prax sú v `src/js/data/crafting.js`. Talizman a zvitok zdieľajú existujúce ceny `FORGE_RULES.recipes`; starý vstup `craftForgeSupport()` deleguje na ten istý receptový systém. Aj tieto recepty teraz vyžadujú príslušnú remeselnú úroveň.
+
+Liečivé elixíry sa vyrábajú po 6 kusoch za 1 bylinu a 10 Yang; plášte po 10 kusoch za 1 kožu, 1 esenciu a 20 Yang. Výroba sa oplatí aj pri kúpe základných surovín. Počas pozastaveného boja nemožno použiť spotrebný predmet; mimo boja zostáva použitie cez inventár dostupné.
 
 ## Suroviny
 
@@ -36,8 +38,8 @@ Primeraný cieľ nie je viac než päť úrovní pod hráčom. Privolaní obranc
 
 | Produkt | Účinok |
 | --- | --- |
-| Liečivý elixír | Pôvodný zásobník: 65 HP, cooldown 4 s |
-| Elixír many | 80 MP, spoločný cooldown s liečivým elixírom 4 s |
+| Liečivý elixír | 65 HP alebo 25 % maxima podľa vyššej hodnoty, cooldown 4 s |
+| Elixír many | 80 MP alebo 30 % maxima podľa vyššej hodnoty, spoločný cooldown s liečivým elixírom 4 s |
 | Odvar sily | +4 útok na 120 s |
 | Odvar odolnosti | +4 obrana na 120 s |
 | Odvar vitality | +60 maximálneho zdravia na 120 s, bez doplnenia HP |

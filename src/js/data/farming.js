@@ -8,8 +8,8 @@ const SPAWN_RULES = {
 
 const ENEMY_VARIANTS = {
   normal: { name: '', hp: 1, damage: 1, speed: 1, xp: 1, gold: 1, level: 0, respawn: 8, color: '#b8c59c' },
-  elite: { name: 'Elitný', hp: 1.8, damage: 1.35, speed: 1.1, xp: 1.35, gold: 2, level: 1, respawn: 12, color: '#b59ceb' },
-  rare: { name: 'Vzácny', hp: 2.8, damage: 1.7, speed: 1.15, xp: 1.8, gold: 4, level: 2, respawn: 60, color: '#edd183' }
+  elite: { name: 'Elitný', hp: 1.6, damage: 1.25, speed: 1.1, xp: 1.8, gold: 2, level: 1, respawn: 12, color: '#b59ceb' },
+  rare: { name: 'Vzácny', hp: 2.3, damage: 1.5, speed: 1.15, xp: 3.2, gold: 4, level: 2, respawn: 60, color: '#edd183' }
 };
 
 const FARM_AREAS = [
@@ -21,7 +21,10 @@ const FARM_AREAS = [
 
 
 for(const cfg of Object.values(MAPS))if(!cfg.town&&!cfg.instance&&!cfg.metinsOnly){
- const steps=[...(cfg.areaLevelOffsets||FARM_AREAS.map(area=>area.offset))].sort((a,b)=>a-b);
+ const span=cfg.levelMax-cfg.level;
+ cfg.mobLevelSpread=Math.max(1,Math.min(3,Math.floor(span/4)));
+ const last=Math.max(0,span-cfg.mobLevelSpread),steps=[0,Math.floor(last/3),Math.floor(last*2/3),last];
  const areas=FARM_AREAS.map((area,index)=>({index,distance:Math.hypot((area.x1+area.x2)/2-cfg.entry.x,(area.y1+area.y2)/2-cfg.entry.y)})).sort((a,b)=>a.distance-b.distance);
- cfg.areaLevelOffsets=[];areas.forEach((area,rank)=>cfg.areaLevelOffsets[area.index]=steps[rank]);cfg.balanceVersion=1;
+ cfg.areaLevelOffsets=[];areas.forEach((area,rank)=>cfg.areaLevelOffsets[area.index]=steps[rank]);cfg.balanceVersion=2;cfg.bossLevel=cfg.levelMax;cfg.maxEnemyLevel=cfg.levelMax;
 }
+MAPS.suterland.balanceVersion=2;

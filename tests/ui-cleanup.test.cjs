@@ -22,11 +22,11 @@ test('double clicking loot never starts combat through the removed item; first e
  const {run,listeners}=createGame();arena(run);run('var drop=spawnGroundDrop({kind:"gear",item:{slot:"bracelet",name:"Náramok",bonus:1}},p);Object.assign(drop,{x:450,y:1400,launchX:450,launchY:1400,fallAge:1});');
  click(listeners);assert.equal(run('p.bag.length'),1);click(listeners);listeners.get('game:dblclick')({clientX:650,clientY:333,button:0});assert.equal(run('combatSelection.following'),false);assert.equal(run('foe.hp'),20000);
 });
-test('automatic loot is immediate, batched as small text, saved once and never duplicated after reload',()=>{
+test('automatic loot is immediate, batched as small text and never duplicated after a saved reload',()=>{
  const {run,saved}=createGame();arena(run);run('var gold=p.gold,ore=p.career.materials.ore;var a=spawnGroundDrop({kind:"gold",count:11},{x:1900,y:1900});spawnGroundDrop({kind:"gold",count:7},{x:1900,y:1900});spawnGroundDrop({kind:"supply",supplyId:"material:ore",count:3},{x:1900,y:1900});');
  assert.equal(run('p.gold-gold'),18);assert.equal(run('p.career.materials.ore-ore'),3);assert.equal(run('drops.length'),0);assert.equal(run('pickUpGroundDrop(a.id)'),false);
  run('updateGroundLoot(.01);var receipts=particles.filter(p=>p.small);');assert.equal(run('receipts.length'),1);assert(run('receipts[0].t.includes("+18")&&receipts[0].t.includes("+3")'));
- const restored=createGame(readSavedProfile(saved));assert.equal(restored.run('p.gold'),run('p.gold'));assert.equal(restored.run('p.career.materials.ore'),run('p.career.materials.ore'));restored.run('running=true;updateGroundLoot(.01);');assert.equal(restored.run('drops.length'),0);assert.equal(restored.run('particles.filter(p=>p.small).length'),0);
+ run('save();');const restored=createGame(readSavedProfile(saved));assert.equal(restored.run('p.gold'),run('p.gold'));assert.equal(restored.run('p.career.materials.ore'),run('p.career.materials.ore'));restored.run('running=true;updateGroundLoot(.01);');assert.equal(restored.run('drops.length'),0);assert.equal(restored.run('particles.filter(p=>p.small).length'),0);
 });
 test('pending automatic loot remains isolated when switching profiles and legacy ground supplies migrate once',()=>{
  const {run}=createEmptyGame();run('var a=createCharacter("Prva","warrior"),b=createCharacter("Druha","ninja");playCharacter(a);spawnGroundDrop({kind:"supply",supplyId:"potions",count:3},p);var count=p.potions;returnToCharacters();playCharacter(b);');assert.equal(run('automaticLoot.items.size'),0);assert.equal(run('p.potions'),5);run('returnToCharacters();playCharacter(a);');assert.equal(run('p.potions'),run('count'));

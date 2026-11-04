@@ -10,12 +10,12 @@ const RARITIES = [
 ];
 const ITEM_GENERATION = {version:1,legendaryLevel:50,mythicLevel:75,maxAttackSpeed:.6,maxPenetration:.5,maxEnemyBonus:1};
 const RARITY_WEIGHTS = {
- normal:[750000,190000,55000,4500,490,10],
- elite:[550000,300000,130000,18000,1950,50],
- rare:[300000,390000,260000,47000,2900,100],
- boss:[150000,300000,420000,120000,9800,200],
- metin:[500000,330000,140000,28000,1900,100],
- reward:[0,0,0,980000,19800,200]
+ normal:[450000,350000,175000,22000,2900,100],
+ elite:[200000,350000,350000,90000,9500,500],
+ rare:[50000,200000,500000,220000,28000,2000],
+ boss:[0,50000,500000,365000,80000,5000],
+ metin:[250000,350000,300000,85000,14500,500],
+ reward:[0,0,0,950000,48000,2000]
 };
 const ITEM_AFFIXES = {
  attack:{base:3,scale:.3},hp:{base:25,scale:2},mp:{base:20,scale:1.6},

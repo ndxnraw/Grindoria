@@ -4,29 +4,23 @@ Panel **Progres (P)** spája deväť ciest rozvoja. Všetky sú funkčné v sól
 
 ## EXP a levelovanie
 
-Prechod z úrovne `L` na `L+1` vyžaduje:
+Základné EXP bežného nepriateľa úrovne L sú `max(6, floor(6 × L^1.15))`. Ďalší level stojí `ceil(základné EXP × (24 + 1,6 × L))`.
 
-```text
-ceil(600 × L^2.15 × (1 + 0.025 × (L − 1)))
-```
+| Úroveň | Potrebné EXP | EXP za rovnaký bežný cieľ | Takéto zabitia na ďalší level |
+|---|---:|---:|---:|
+| 1 | 154 | 6 | 26 |
+| 5 | 1 216 | 38 | 32 |
+| 10 | 3 360 | 84 | 40 |
+| 20 | 10 528 | 188 | 56 |
+| 35 | 28 560 | 357 | 80 |
+| 60 | 79 800 | 665 | 120 |
+| 98 | 211 356 | 1 169 | 181 |
 
-Základná odmena bežného nepriateľa je `floor(6 × enemyLevel^1.15)`, upravená rozdielom úrovní. Kamene majú násobok 3, bossovia 12. Celková odmena za jeden cieľ je obmedzená na 3 % aktuálne potrebných EXP pri príšere, 12 % pri kameni a 35 % pri bossovi. Silný boss preto nemôže preskočiť niekoľko levelov naraz.
+Silnejší cieľ dáva najviac +50 % za rozdiel úrovní; slabší postupne menej a od rozdielu 8 nedáva EXP. Násobky: Metin 3×, boss 12×, elita 1,8×, vzácny variant 3,2×, obranca Metinu navyše 0,35×. Limit odmeny z jedného cieľa je 6 % potrebných EXP pri bežnej príšere, 8 % pri elite, 12 % pri vzácnej príšere alebo Metine a 35 % pri bossovi. Plošné útoky a varianty preto zrýchľujú reálne tempo oproti tabuľke.
 
-| Aktuálna úroveň | Potrebné EXP na ďalší level | EXP za rovnako silnú bežnú príšeru | Zabitia pri tejto odmene |
-| --- | ---: | ---: | ---: |
-| 1 | 600 | 6 | 100 |
-| 5 | 21 006 | 38 | 553 |
-| 10 | 103 822 | 84 | 1 236 |
-| 20 | 554 828 | 188 | 2 952 |
-| 35 | 2 317 765 | 357 | 6 493 |
-| 60 | 9 879 880 | 665 | 14 857 |
-| 98 | 39 259 783 | 1 169 | 33 585 |
+Maximum je 99. Nový level dáva tri body atribútov a obnoví zdravie aj manu. Opakovateľný lov dáva Yang a pečať bez dodatočných EXP. Jednorazové úlohy naďalej dávajú 60 a 80 EXP; odmena Prvého strážcu má pevnú úroveň 8 bez ohľadu na miesto vyzdvihnutia.
 
-Tabuľka je matematický porovnávací príklad, nie odhad hodín hrania. Skutočné tempo ovplyvňuje zloženie nepriateľov, bossovia, výbava a plošné schopnosti. Od verzie 0.5 má údolie štyri oblasti bežných príšer úrovní 1–9; elitné a vzácne varianty môžu byť ešte silnejšie. Ich EXP násobky nemenia uvedené percentuálne limity ani odmenu za príliš slabé ciele. Podrobnosti sú v [FARMING.md](FARMING.md).
-
-Slabší protivníci majú postupne nižšiu odmenu; pri rozdiele 8 levelov neposkytujú EXP. Silnejší cieľ môže dať najviac 50 % relatívny bonus pred uplatnením uvedeného limitu. Životy a poškodenie protivníkov rastú podľa mapy aj ich úrovne.
-
-Maximum je 99. Nový level dáva 3 body vlastností, vyššie maximálne zdravie a manu, obnoví obe hodnoty a zobrazí odmenu. Základný útok z levelu rastie pomalšie než v prototype. Opakovateľný lov poskytuje zlato a tréningovú pečať, nie EXP; nemôže obísť penalizáciu slabých cieľov. Prvé príbehové odmeny sú jednorazové a znížené na 60 a 80 EXP.
+Staré profily zachovajú level a pomer EXP k ďalšiemu levelu; migrácia sa vykoná raz. Nepripisuje spätne levely. Úrovne máp, sila protivníkov a testovanie sú v [BALANCE.md](BALANCE.md).
 
 ## Paralelné cesty
 
@@ -48,7 +42,7 @@ Primeraný cieľ je najviac o 5 úrovní slabší než hráč. Len taký poskytu
 
 Každé kúzlo má vlastnú uloženú prax a stupeň. Jedna príšera poskytne prax danej schopnosti najviac raz, až po porážke; kúzlenie do prázdna ani opakovanie zásahov nepridáva ďalšiu prax. Boss dáva 4 jednotky praxe. Liečivé a podporné schopnosti môžu označiť blízkeho protivníka; aktivovaná aura sa započíta pri primeranom zabití.
 
-Štúdium vyžaduje `ceil(20 × rank^1.4)` praxe, `ceil(rank/3)` kníh a `25 × rank²` zlata. Každý stupeň pridáva 4 % sily útočných/liečivých kúziel alebo trvania aury a skracuje obnovu o 1 %. Stupeň 10 je Majster, 20 Veľmajster. Odmeny sa nedajú opakovane získať zabitím už mŕtveho nepriateľa.
+Štúdium vyžaduje `ceil(10 × rank^1.15)` praxe, `ceil(rank/3)` kníh a `25 × rank²` zlata. Každý stupeň pridáva 4 % sily útočných/liečivých kúziel alebo trvania aury a skracuje obnovu o 1 %. Stupeň 10 je Majster, 20 Veľmajster. Odmeny sa nedajú opakovane získať zabitím už mŕtveho nepriateľa.
 
 ### Biologický výskum
 
@@ -75,7 +69,7 @@ Od úrovne 10 a za 3 špecializačné body si hráč vedome zvolí trvalú cestu
 
 Vstup od úrovne 35 mimo boja stojí 3 kľúče; každý tretí boss zanechá kľúč. Expedícia používa oddelený stav chrámu. Treba poraziť 20 príšer a jedného bossa; odmena je `10 + tier × 3` úlomkov a odomknutie ďalšieho stupňa. Počas expedície sa nedá normálne cestovať; opustenie ju ukončí bez odmeny a bez vrátenia kľúčov.
 
-Stupeň zvyšuje životy, poškodenie aj úroveň nepriateľov. Aktívna expedícia prežije uloženie a načítanie; po ukončení sa obnoví pôvodný stav bežného chrámu. Relikviár stojí `25 × nextRank²` úlomkov a pridáva trvalo +2 útok a +5 zdravie za stupeň.
+Stupeň zvyšuje životy, poškodenie aj úroveň nepriateľov. Aktívna expedícia prežije uloženie a načítanie; po ukončení sa obnoví pôvodný stav bežného chrámu. Relikviár stojí `25 × nextRank` úlomkov a pridáva trvalo +2 útok a +5 zdravie za stupeň.
 
 ## Migrácia a limity overenia
 

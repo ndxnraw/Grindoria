@@ -21,7 +21,18 @@ function naturalSpawnLocation(area, existing, random, gap = 115) {
 }
 
 function restoreSpawnLocation(enemy, fresh, state) {
-  if(map().balanceVersion&&state.balanceSchema!==map().balanceVersion){const ratio=Math.max(0,Math.min(1,enemy.hp/enemy.max));return {...enemy,level:fresh.level,baseLevel:fresh.baseLevel,variant:fresh.variant,max:fresh.max,baseMax:fresh.baseMax,attackScale:fresh.attackScale,baseAttack:fresh.baseAttack,speedScale:fresh.speedScale,hp:enemy.hp<=0?0:Math.max(1,Math.round(fresh.max*ratio)),metinType:fresh.metinType,metinArmor:fresh.metinArmor,metinResistance:fresh.metinResistance,x:fresh.x,y:fresh.y,homeX:fresh.homeX,homeY:fresh.homeY,roamTarget:null,returning:false};}
+  if(map().balanceVersion&&state.balanceSchema!==map().balanceVersion){
+    const ratio=Math.max(0,Math.min(1,enemy.hp/enemy.max));
+    if(enemy.type==='wolf'){
+      const variant=ENEMY_VARIANTS[enemy.variant]?enemy.variant:fresh.variant;
+      const level=Math.min(map().levelMax||105,fresh.baseLevel-(ENEMY_VARIANTS[fresh.variant]?.level||0)+(ENEMY_VARIANTS[variant]?.level||0));
+      const stats=enemyCombatStats(level,'wolf',variant),run=p.career.endgame.run;
+      Object.assign(fresh,{level,baseLevel:level,variant,max:stats.hp,baseMax:stats.hp,attackScale:stats.attack,baseAttack:stats.attack,speedScale:ENEMY_VARIANTS[variant].speed});
+      if(run&&p.mapId==='temple')applyRiftScaling(fresh,run.tier,run.id);
+    }
+    const location=state.layoutSchema===SPAWN_LAYOUT_VERSION?{}:{x:fresh.x,y:fresh.y,homeX:fresh.homeX,homeY:fresh.homeY};
+    return {...enemy,...location,level:fresh.level,baseLevel:fresh.baseLevel,variant:fresh.variant,max:fresh.max,baseMax:fresh.baseMax,attackScale:fresh.attackScale,baseAttack:fresh.baseAttack,speedScale:fresh.speedScale,hp:enemy.hp<=0?0:Math.max(1,Math.round(fresh.max*ratio)),metinType:fresh.metinType,metinArmor:fresh.metinArmor,metinResistance:fresh.metinResistance,roamTarget:null,returning:false};
+  }
   if (state.layoutSchema === SPAWN_LAYOUT_VERSION) return enemy;
   return { ...enemy, x: fresh.x, y: fresh.y, homeX: fresh.homeX, homeY: fresh.homeY, roamTarget: null, returning: false };
 }

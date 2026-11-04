@@ -60,10 +60,11 @@ function alchemyBonuses() {
 }
 function useAlchemyProduct(id, allowPaused = false) {
   if (!Object.hasOwn(ALCHEMY_PRODUCTS, id) || !running || p.hp <= 0 || paused && !allowPaused || p.career.alchemy.products[id] < 1) return false;
+  if(paused&&!canTravel()){toast('Spotrebné predmety počas boja použi po zavretí okna.');return false;}
   const product = ALCHEMY_PRODUCTS[id], a = p.career.alchemy;
   if (product.mana) {
     if (p.mp >= maxMP() || potionCooldownRemaining() > 0) return false;
-    p.mp = Math.min(maxMP(), p.mp + product.mana); p.potionReadyAt = Date.now() + POTION_RULES.cooldown * 1000;
+    p.mp = Math.min(maxMP(), p.mp + Math.max(product.mana,Math.round(maxMP()*.3))); p.potionReadyAt = Date.now() + POTION_RULES.cooldown * 1000;
   } else {
     if (a.active) { toast('Už pôsobí odvar. Počkaj na skončenie účinku.'); return false; }
     a.active = { id, remaining: product.duration };

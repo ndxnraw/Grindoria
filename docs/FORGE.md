@@ -1,36 +1,29 @@
 # Kováč a vylepšovanie
 
-Kováč je v Meste. Príď k nemu a stlač F alebo naň klikni. Vylepšuje nasadenú výbavu vo všetkých desiatich slotoch od +0 po +9. Panel zobrazuje aktuálny aj ďalší bonus, cenu, šancu a následok neúspechu. Každý pokus spotrebuje celú cenu.
+Kováč v Meste vylepšuje nasadenú výbavu +0 až +9. Každý pokus spotrebuje celú zobrazenú cenu. Ochranný zvitok od +4 zachová predmet aj stupeň; bez ochrany neúspech zníži stupeň a od +7 môže predmet zničiť.
 
-| Cieľový stupeň | Úspech | Celkový bonus k hlavnému atribútu | Neúspech bez ochrany |
-|---|---:|---:|---|
-| +1 | 95 % | +3 | Bez zmeny |
-| +2 | 90 % | +7 | Bez zmeny |
-| +3 | 80 % | +12 | Bez zmeny |
-| +4 | 65 % | +18 | −1 stupeň |
-| +5 | 50 % | +25 | −1 stupeň |
-| +6 | 35 % | +34 | −1 stupeň |
-| +7 | 23 % | +46 | 35 % zničenie, inak −1 |
-| +8 | 14 % | +62 | 35 % zničenie, inak −1 |
-| +9 | 8 % | +85 | 35 % zničenie, inak −1 |
+| Cieľ | Úspech | Útok / sila kúziel | Obrana | HP | MP | Pohyb | Kritický zásah |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| +1 | 95 % | 2 | 1 | 10 | 10 | 1 | 0,4 p. b. |
+| +2 | 93 % | 4 | 2 | 22 | 20 | 2 | 0,8 p. b. |
+| +3 | 90 % | 7 | 3 | 36 | 32 | 3 | 1,3 p. b. |
+| +4 | 85 % | 10 | 5 | 55 | 48 | 4 | 1,9 p. b. |
+| +5 | 75 % | 14 | 7 | 80 | 68 | 6 | 2,6 p. b. |
+| +6 | 65 % | 19 | 10 | 110 | 92 | 8 | 3,4 p. b. |
+| +7 | 55 % | 25 | 13 | 145 | 120 | 10 | 4,3 p. b. |
+| +8 | 45 % | 32 | 17 | 180 | 155 | 12 | 5,3 p. b. |
+| +9 | 35 % | 40 | 22 | 220 | 195 | 15 | 6,5 p. b. |
 
-Pri šperku s hlavným atribútom kritického zásahu sa bonus počíta v percentuálnych bodoch; existujúci celkový bojový limit platí naďalej. Ostatné atribúty predmetu, bonusy, UID a rarita zostávajú zachované. Zničenie odstráni iba daný predmet a ihneď prepočíta štatistiky. +9 je maximum.
+Tabuľka udáva celkový príspevok vylepšenia. Slot používa svoj hlavný atribút; ostatné štatistiky, identita a rarita predmetu sa nemenia. Celkový strop kritického zásahu je naďalej 80 %. Neúspech do +3 nemení stupeň. Pri neúspechu od +7 je šanca zničenia 15 %, inak sa stupeň zníži o jeden.
 
-## Cena
+## Cena a pomôcky
 
-Pre cieľový stupeň r: ruda = 3 × r²; Yang = zaokrúhlenie nahor(300 × r³ × (1 + tier / 25 + poradie rarity × 0,35)). Poradie rarity je 0–5 podľa Common až Mythic. Od +3 treba aj ceil(r² / 6) kameňov vylepšenia, od +5 navyše 4 × (r − 4)² prachu a od +7 navyše r − 6 kováčskych jadier.
+Pre cieľový stupeň r: ruda = `2r + floor(r² / 4)`; Yang = `ceil(40 × r² × (1 + tier / 30 + poradie rarity × 0,25))`. Od +3 treba `ceil(r / 3)` kameňov vylepšenia, od +5 aj `2 × (r − 4)` prachu, od +7 aj `ceil((r − 6) / 2)` jadier.
 
-## Pomôcky
+- Talizman kováča pridáva 10 percentuálnych bodov úspechu, najviac 95 %. Pri +1 sa nespotrebuje. Recept: 1 jadro, 30 esencie, 1 000 Yang.
+- Ochranný zvitok sa používa od +4. Recept: 2 jadrá, 25 prachu, 3 knihy, 3 000 Yang.
+- Pomôcky sa spotrebujú aj pri úspechu. Chýbajúca zvolená pomôcka odmietne celý pokus.
 
-- Talizman kováča: +10 percentuálnych bodov, najviac 95 %. Pri +1 sa nespotrebuje.
-- Ochranný zvitok: pri neúspechu zachová predmet aj stupeň. Používa sa od pokusu na +4.
-- Zvolené pomôcky sa spotrebujú aj pri úspechu. Chýbajúca pomôcka pokus úplne odmietne; nevykoná sa nechránene.
-- Talizman sa vyrába za 2 jadrá, 100 esencie a 15 000 Yang. Zvitok za 6 jadier, 100 prachu, 10 kníh a 50 000 Yang.
+Jadrá / talizmany / zvitky padajú z primeraných cieľov Lv.35+: boss 50 % / 15 % / 6 %, Metin 8 % / 4 % / 1,5 %, vzácna príšera 15 % / 5 % / 1 %. Obrancovia Metinov ich neposkytujú.
 
-Jadrá / talizmany / zvitky padajú z primeraných cieľov Lv.35+: boss 50 % / 15 % / 6 %, Metin 8 % / 4 % / 1,5 %, vzácna príšera 15 % / 5 % / 1 %. Obrancovia Metinov tieto dodatočné pomôcky neposkytujú. Zásoby sa pripisujú priamo do inventára.
-
-## Vzhľad a kompatibilita
-
-Zbrane +5 až +9 majú postupne silnejšiu žiaru, energetické vlákna a častice; každý stupeň mení farbu a intenzitu. Efekt zdieľajú herný model, ikony aj portréty. Animácia nepoužíva herný generátor náhody. Modul render/weapon-upgrades.js sa pridáva k existujúcim modelom.
-
-Staré stupne sa zachovajú a použijú novú tabuľku bonusov. Chýbajúce tri nové počítadlá materiálov sa doplnia nulami pri načítaní staršieho registra alebo importe zálohy. Formát záloh ostáva kompatibilný.
+Staré stupne výbavy používajú nové krivky. Výnimkou je pôvodná štartovacia Common zbraň Lv.1 +9: jednorazovo sa zmení na +2 a zachová svoju identitu. Ostatné predmety sa neodstraňujú ani neprehadzujú. Zbrane +5 až +9 si zachovávajú existujúce vizuálne efekty.

@@ -47,5 +47,5 @@ function grantStarterWeapon(fresh=false){
  if(!fresh&&(p.level!==1||p.equipped.weapon))return;
  const kind=generatedWeaponKind(),names={sword:'Začiatočnícky meč',bow:'Začiatočnícky luk',daggers:'Začiatočnícke dýky',fan:'Začiatočnícky vejár'};
  const item=createItem('equipment:weapon:'+kind,{rarity:0,tier:1,weaponKind:kind,rng:()=>0});
- item.name=names[kind];item.enhance=9;item.classes=[p.classId];item.value=itemSaleValue(item);p.equipped.weapon=item;
+ item.name=names[kind];item.enhance=2;item.classes=[p.classId];item.value=itemSaleValue(item);p.equipped.weapon=item;
 }

@@ -62,7 +62,7 @@ test('legacy large bags migrate without losses, duplicates or changes to enhance
   const { run, saved } = createGame({ level: 5, bag: items, equipped: { weapon: { name: 'Meč', slot: 'weapon', bonus: 25, enhance: 2 } }, potions: 123, braveryCapes: 321 });
   assert.equal(run('p.bag.length'), 24); assert(run('p.inventory.pages>=4'));
   assert.equal(run('new Set(p.bag.map(i=>i.uid)).size'), 24);
-  assert(run('p.bag.every(i=>i.enhance===3)')); assert.equal(run('equippedBonus("weapon")'), 32);
+  assert(run('p.bag.every(i=>i.enhance===3)')); assert.equal(run('equippedBonus("weapon")'), 29);
   run('let cell=p.bag[3].cell;save();'); const reload = createGame(readSavedProfile(saved));
   assert.equal(reload.run('p.bag[3].cell'), run('cell')); assert.equal(reload.run('p.bag.length'), 24);
   assert.equal(reload.run('p.potions'), 123); assert.equal(reload.run('p.braveryCapes'), 321);

@@ -52,7 +52,7 @@ Typový násobok zdravia rastie od 1 pri praskline po 1,8 pri skaze. Zvyšujúca
 
 Úroveň každého obrancu je najviac o jednu nižšia alebo vyššia než Metin. Jeho sila vychádza z tejto úrovne aj v Šuterlande. Obrancovia sa hneď zamerajú na hráča a pri aktívnom boji ho prenasledujú. Bežné pasívne skupiny príšer si zachovávajú pôvodné pravidlá aggra.
 
-Limity sú **8 živých obrancov na jednu generáciu kameňa a 60 na mape**. Zabité posily sa samostatne neobnovujú; ďalšie vytvorí iba nová vlna. Neporažené posily po 45 sekundách aktívneho času zmiznú bez odmeny. Rozbitie kameňa zabije jeho zostávajúcich obrancov a vyplatí ich obvyklé EXP, zlato a dropy raz. Obrancovia iného kameňa zostanú živí. Poskytujú 35 % bežných EXP pri rovnakej úrovni a upravené zlato, aby neobchádzali pomalú progresiu.
+Limity sú **8 živých obrancov na jednu generáciu kameňa a 60 na mape**. Zabité posily sa samostatne neobnovujú; ďalšie vytvorí iba nová vlna. Neporažené posily po 45 sekundách aktívneho času zmiznú bez odmeny. Rozbitie kameňa zabije jeho zostávajúcich obrancov a vyplatí ich obvyklé EXP, zlato a dropy raz. Obrancovia iného kameňa zostanú živí. Poskytujú 35 % bežných EXP pri rovnakej úrovni a upravené zlato, aby neprevažovali nad hlavnými cieľmi.
 
 ## Vlastné loot pooly
 
@@ -73,7 +73,7 @@ V bunkách materiálov je šanca / počet kusov. Množstvo Yang = základ z tabu
 
 Relikvie využívajú existujúcu trvalú zbierku; opakovaný exemplár sa po zdvihnutí spracuje podľa pravidiel zbierky. Typy navyše môžu poskytnúť vlčie tkanivo, tréningové pečate, vak jedu, ľadové jadro, démonický popol, úlomky relikvie alebo kľúče. Presný výber a šance ukazuje Atlas.
 
-**Kamene vylepšenia** sú nová stackovateľná zásoba s vlastnou ikonou. Kováč ich od stupňa +4 vyžaduje spolu s rudou a zlatom. Počet pri cieľovom stupni R je strop((R − 3) / 2): +4 a +5 stoja jeden kameň, +6 a +7 dva, +8 a +9 tri.
+**Kamene vylepšenia** sa vyžadujú od +3 v počte `ceil(cieľový stupeň / 3)`. Presné ceny a ochrana: [FORGE.md](FORGE.md).
 
 Yang a zásoby sa pripíšu priamo. Výbava a relikvie dopadnú na zem a zbierajú sa pomocou Y alebo kliknutia podľa [LOOT.md](LOOT.md). Zničenie jednej identity kameňa poskytne odmeny iba raz.
 

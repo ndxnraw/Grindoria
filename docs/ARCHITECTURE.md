@@ -136,3 +136,11 @@ Definície, identity kusov a loot registre: [ITEM_MODEL.md](ITEM_MODEL.md). Nov�
 ## Výkon
 
 Prechodné plánovanie a indexy sú v systems/performance.js; vykresľovacie cache ostávajú pri príslušnom rendereri. Nepridávajú ďalšie uložené kópie entít. [Pravidlá, limity a merania](PERFORMANCE.md).
+
+## Úložisko a vyváženie od 0.30.0
+
+`core/storage.js` je transport existujúceho registra. Väčšie účty sa ukladajú po bezstratovo zbalených profiloch s tabuľkovou populáciou; nezmenené profily používajú cache. Malé a staré JSON registre zostávajú čitateľné. Export je štandardný JSON zálohy v2, do 64 MiB. Limit validácie je 3 milióny uzlov, aby pokryl osem plne preskúmaných postáv. Bežné mapové snímky neukladajú dočasné roamingové ciele, aggro, hit animáciu a stun, ktoré sa už predtým resetovali pri hydratácii. Zdravie, pozície, stavy poškodenia, smrti, respawn, Metiny, udalosti a dungeonové attackPlan zostávajú zachované.
+
+Obnova boja ukladá zostávajúce cooldowny schopností, útoku, plášťa a cestovania. Po návrate postavy sa obnovia; offline čas ich neskracuje. Liečenie a odvary cez pozastavený panel vyžadujú ukončený boj. Runtime, štruktúra postáv a prenosné zálohy nepoužívajú druhý inventár ani druhý progres.
+
+Automatická korisť aktualizuje živé počítadlá okamžite, ale zlučuje zápisy do pravidelného štvorsekundového autosave. Odchod, pagehide a explicitné dôležité akcie ukladajú naďalej ihneď. Snímkovanie klonuje aktívny profil a zdieľa nemenné neaktívne záznamy; ich zabalený obsah možno znovu použiť bez opakovanej kompresie.
