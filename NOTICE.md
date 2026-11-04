@@ -12,3 +12,15 @@ Názvy povolaní, členenie škôl a súbor šiestich klasických schopností vy
 Metin2 a súvisiace ochranné známky patria ich príslušným vlastníkom. Grindoria nie je oficiálny produkt ani klient Metin2. Názvy slúžia na uvedenie inšpirácie; hodnoty a 2D efekty sú prispôsobené tomuto prototypu.
 
 Vlastník zatiaľ neurčil licenciu na ďalšie šírenie zdrojového kódu. Verejná dostupnosť repozitára sama nenahrádza licenciu.
+
+## Klasické zbrane
+
+Názvy a požadované úrovne zbraní vychádzajú z wiki Gameforge:
+
+- [Full Moon Sword](https://en-wiki.metin2.gameforge.com/index.php/Full_Moon_Sword)
+- [Poison Sword](https://en-wiki.metin2.gameforge.com/index.php/Poison_Sword)
+- [Red Iron Blade](https://en-wiki.metin2.gameforge.com/index.php/Red_Iron_Blade)
+- [Black Leaf Dirk](https://en-wiki.metin2.gameforge.com/index.php/Black_Leaf_Dirk)
+- [Autumn Wind Fan](https://en-wiki.metin2.gameforge.com/index.php/Autumn_Wind_Fan)
+
+Modely sú vlastné procedurálne vektory. Damage, bonusy, recepty, ceny a dropy sú vyvážené pre Grindoriu, nekopírujú číselné tabuľky originálu.

@@ -17,7 +17,7 @@ function groundDropTooltip(drop) {
   let details;
   if (gear) {
     const spec = EQUIPMENT[item.slot], base = (Number(item.bonus) || 0) * (spec.stat === 'crit' ? .01 : 1);
-    const extras = Object.entries(item.stats || {}).filter(([stat, value]) => ITEM_STATS[stat] && Number.isFinite(value));
+    const extras = Object.entries(Object.fromEntries(Object.keys(ITEM_STATS).map(stat=>[stat,(item.baseStats?.[stat]||0)+(item.stats?.[stat]||0)]))).filter(([stat, value]) => ITEM_STATS[stat] && Number.isFinite(value));
     const specials = Array.isArray(item.special) ? item.special : [];
     details = `<h4>Základné atribúty</h4><div class="loot-stat"><span>${ITEM_STATS[spec.stat]}</span><b>${signedItemStat(spec.stat, base)}</b></div><div class="loot-stat"><span>Vylepšenie +${item.enhance || 0}</span><b>${signedItemStat(spec.stat, enhancementBonus(item) * (spec.stat === 'crit' ? .01 : 1))}</b></div>${extras.length ? '<h4>Bonusy</h4>'+extras.map(([stat, value]) => `<div class="loot-stat"><span>${ITEM_STATS[stat]}</span><b>${signedItemStat(stat, value)}</b></div>`).join('') : ''}${specials.length?'<h4>Špeciálne vlastnosti</h4><p>'+specials.map(value=>escapeHTML(value)).join('<br>')+'</p>':''}<p class="${usable ? 'stat-gain' : 'stat-loss'}">${usable ? 'Možno vybaviť · ' + spec.name : escapeHTML(itemEquipReason(item))}</p>${usable ? groundItemComparison(item) : ''}`;
   } else details = `<p>${escapeHTML(item.description)}</p><div class="loot-stat"><span>Množstvo</span><b>${item.count.toLocaleString('sk-SK')}</b></div><h4>Vybavenie</h4><p>${drop.kind === 'relic' ? 'Relikvia zbierky · nezaberá slot výbavy.' : 'Nie je výbava postavy.'}</p>`;

@@ -10,6 +10,21 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.26.0] - 2026-11-04
+
+### Added
+- Spoločný katalóg predmetov, stabilné ID jednotlivých kusov a validácia identity naprieč inventárom, výbavou, trhom a mapami.
+- FMS, Jedovatý meč, RIB, Dýky Čierny list a Vejár jesenného vetra: päť vlastných modelov, základné bonusy, výroba a vzácne dropy; FMS a Jedovatý meč aj u zbrojára.
+- Konfigurovateľné loot pooly podľa druhu nepriateľa, mapového bossa, typu Metinu a dungeonu; katalóg s požiadavkami a získavaním v Progresii.
+- Štrnásť integračných testov identity, presunov, bonusov, migrácie, neplatných dát a samostatného načítania skriptov v prehliadači.
+
+### Changed
+- Zásoby používajú spoločné definície pri zachovaní existujúcich počítadiel a ukladania. Základné bonusy predmetov vstupujú do bojových štatistík aj porovnania.
+
+### Fixed
+- Zdrojový náhľad načítava uložené postavy až po registrácii všetkých modulov, rovnako ako offline zostava.
+- Zdvihnutie predmetu zachová jeho pôvodné ID. Snímky koristi hlboko kopírujú vnorené štatistiky a bonusy.
+
 ## [0.25.0] - 2026-11-04
 
 ### Added
@@ -478,7 +493,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.25.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.26.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -507,3 +522,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.23.0]: https://github.com/ndxnraw/Grindoria/compare/v0.22.0...v0.23.0
 [0.24.0]: https://github.com/ndxnraw/Grindoria/compare/v0.23.0...v0.24.0
 [0.25.0]: https://github.com/ndxnraw/Grindoria/compare/v0.24.0...v0.25.0
+[0.26.0]: https://github.com/ndxnraw/Grindoria/compare/v0.25.0...v0.26.0

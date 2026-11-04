@@ -1,5 +1,7 @@
 const ECONOMY_RULES = { schema: 1, refreshSeconds: 600, maxDemand: 10, maxCycles: 1000000 };
 const MARKET_GOODS = {
+  'catalog-fms': {name:'Meč splnu (FMS)',definitionId:'weapon:fms',count:1,price:100000,stock:1,group:'gear',level:30},
+  'catalog-poison': {name:'Jedovatý meč',definitionId:'weapon:poison-sword',count:1,price:1500000,stock:1,group:'gear',level:75},
   potions: { name: 'Liečivé elixíry ×3', supply: 'potions', count: 3, price: 25, stock: 20, group: 'supplies' },
   capes: { name: 'Plášte statočnosti ×10', supply: 'braveryCapes', count: 10, price: 100, stock: 5, group: 'supplies' },
   ore: { name: 'Ruda ×5', supply: 'material:ore', count: 5, price: 100, stock: 12, group: 'materials' },
@@ -14,7 +16,7 @@ const MARKET_GOODS = {
 };
 const MARKET_TRADERS = {
   merchant: { name: 'Obchodník', goods: ['potions','capes','ore','hide','essence'], rare: false },
-  armsdealer: { name: 'Zbrojár', goods: ['ore','crystal','forgeCore'], rare: true },
+  armsdealer: { name: 'Zbrojár', goods: ['ore','crystal','forgeCore','catalog-fms','catalog-poison'], rare: true },
   alchemist: { name: 'Alchymista', goods: ['herb','dust','extract','mana'], rare: false }
 };
 const MARKET_MATERIAL_PRICES = { ore:20, hide:30, herb:20, essence:30, dust:80, extract:180, crystal:250, forgeCore:6000 };

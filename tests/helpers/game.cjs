@@ -1,5 +1,5 @@
 const vm = require('node:vm');
-const { runtimeSource } = require('./source.cjs');
+const { runtimeSource, runtimeSources } = require('./source.cjs');
 
 exports.createGame = function (oldSave, storageKey = 'grindoria-save-v1', additionalStorage = {}, options = {}) {
   const elements = new Map(), saved = new Map(), listeners = new Map();
@@ -16,7 +16,7 @@ exports.createGame = function (oldSave, storageKey = 'grindoria-save-v1', additi
     localStorage: { getItem: key => saved.get(key), setItem: (key, value) => { if(options.failWrites)throw new Error("quota");saved.set(key, value); }, key: index => [...saved.keys()][index] ?? null, get length() { return saved.size; } },
     requestAnimationFrame() {}, TextEncoder, console
   });
-  vm.runInContext(runtimeSource(), context);
+  if(options.separateScripts)for(const source of runtimeSources())vm.runInContext(source,context);else vm.runInContext(runtimeSource(), context);
   if (!options.emptyRoster && !vm.runInContext("characterStore.error",context)) vm.runInContext('if(!characterStore.account.order.length)createCharacter("Testovnik","warrior");playCharacter();if(p.mapId==="town"){loadMap("valley",true);p.x=map().entry.x;p.y=map().entry.y;cam.x=p.x;cam.y=p.y;}running=false;document.body.classList.remove("started");',context);
   return { run: code => vm.runInContext(code, context), elements, saved, listeners };
 };

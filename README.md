@@ -38,8 +38,9 @@ Zlato a zásoby sa pripíšu priamo, bez predmetu na zemi. Výbava a relikvie zo
 
 - Štyri povolania, osem škôl, 48 schopností, pasívne bonusy a kombá. [Boj](docs/COMBAT.md).
 - Mesto s NPC a päť rozšírených bojových máp vrátane Šuterlandu s Metinmi 1–99. [Lokality](docs/LOCATIONS.md). [Metiny](docs/METINS.md), [príšery a farmenie](docs/FARMING.md).
-- Desať slotov výbavy, mriežkový inventár a 39 vektorových modelov. [Inventár](docs/INVENTORY.md), [modely](docs/APPEARANCE.md).
+- Desať slotov výbavy, mriežkový inventár a 44 vektorových modelov. [Inventár](docs/INVENTORY.md), [modely](docs/APPEARANCE.md).
 - Kováč v Meste: +0 až +9, materiály, šance, riziko a ochrana. Žiara zbraní od +5. [Vylepšovanie](docs/FORGE.md).
+- Spoločný katalóg a stabilné ID predmetov od dropu po výbavu. FMS, Jedovatý meč, RIB, Dýky Čierny list a Vejár jesenného vetra: výroba, dropy a vybrané ponuky zbrojára. [Predmetový model a loot pooly](docs/ITEM_MODEL.md).
 - Šesť rarít, 20 náhodných bonusov a hodnotenie predmetov. [Rarity](docs/RARITIES.md).
 - Tréning, schopnosti, osem biologických výskumov, alchýmia, relikvie, špecializácia a trhliny. [Biológ](docs/BIOLOGY.md). [Progresia](docs/PROGRESSION.md).
 - Automierenie pri útoku, Autospell v boji s označeným cieľom a Autoelixíry pod 45 % HP. Podrobnosti v bojovom manuáli.

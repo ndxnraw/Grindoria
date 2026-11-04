@@ -25,7 +25,7 @@ function loadPlayerSave() {
   try {
     const raw=(localStorage.getItem(CHARACTER_RULES.storageKey)??null);characterStore.raw=raw;
     if(raw!==null){
-      const stored=JSON.parse(raw);migrateForgeMaterials(stored);validateCharacterAccount(stored);characterStore.account=stored;
+      const stored=JSON.parse(raw);migrateForgeMaterials(stored);migrateItemAccount(stored);validateCharacterAccount(stored);characterStore.account=stored;
       return stored.selectedId?copyCharacterData(profileIdentity(stored.profiles[stored.selectedId],stored.profiles[stored.selectedId].data)):null;
     }
     const legacy=loadLegacyPlayerSave(),candidates=legacy?[legacy]:[...pendingSaveImports];pendingSaveImports.length=0;
@@ -90,7 +90,7 @@ function accountWithActiveSnapshot() {
   if(!id)return copyCharacterData(characterStore.account);
   const record=characterStore.account.profiles[id];
   if(!record||p.characterId!==id||p.classId!==record.classId)throw new Error('Identita postavy nesúhlasí. Uloženie bolo zastavené.');
-  expireGroundDrops();pruneStoredGroundDrops();snapshotMap();
+  expireGroundDrops();pruneStoredGroundDrops();snapshotMap();migrateItemProfile(p,p.characterId);
   const next=copyCharacterData(characterStore.account),saved=next.profiles[id];saved.lastPlayedAt=Date.now();p.lastPlayedAt=saved.lastPlayedAt;
   saved.data=copyCharacterData(profileIdentity(saved,p));next.selectedId=id;next.settings.sound=sound;return next;
 }
@@ -153,7 +153,7 @@ function prepareCharacterImport(text) {
     for(const source of data.characters){assertCharacterObject(source,'profil starej zálohy');assertCharacterObject(source.data,'údaje starej zálohy');const record=copyCharacterData(source);record.isGM??=false;record.lastPlayedAt??=null;record.data.characterId=record.id;record.data.name=record.name;record.data.isGM=record.isGM;record.data.bestiary??={};record.data.achievements??={};if(Object.hasOwn(account.profiles,record.id))throw new Error('Duplicitné ID v zálohe.');account.order.push(record.id);account.profiles[record.id]=record;}
     account.selectedId=account.order[0]||null;data={...data,version:CHARACTER_RULES.backupVersion,account};
   }
-  migrateForgeMaterials(data.account);validateCharacterAccount(data.account);return {account:copyCharacterData(data.account),baseRaw:characterStore.raw};
+  migrateForgeMaterials(data.account);migrateItemAccount(data.account);validateCharacterAccount(data.account);return {account:copyCharacterData(data.account),baseRaw:characterStore.raw};
 }
 function remapImportedCharacterReferences(value,idMap) {
   if(!value||typeof value!=='object')return;
@@ -175,7 +175,7 @@ function importCharacterBackup(prepared,mode,{renames={},confirmReplace=false}={
   for(const source of listCharacters(prepared.account)){
     const record=copyCharacterData(source),identity=validateCharacterName(renames[source.id]||characterInputName(record),listCharacters(next));
     record.id=idMap[source.id];record.name=identity.name;record.isGM=identity.isGM;remapImportedCharacterReferences(record.data,idMap);
-    record.data=profileIdentity(record,record.data);next.profiles[record.id]=record;next.order.push(record.id);
+    record.data=profileIdentity(record,record.data);rebaseImportedItems(record.data,source.id,record.id);next.profiles[record.id]=record;next.order.push(record.id);
   }
   if(mode==='replace'||!next.selectedId)next.selectedId=idMap[prepared.account.selectedId]||next.order[0]||null;
   validateCharacterAccount(next);commitCharacterAccount(next,{safetyBackup:mode==='replace',allowRecovery:mode==='replace'});return next.order.length;

@@ -13,7 +13,7 @@ function createPlayerState(profile = {}) {
   player.schools??={};for(const [id,school] of Object.entries(DEFAULT_SCHOOLS))if(SCHOOLS[player.schools[id]]?.classId!==id)player.schools[id]=school;
   player.bestiary??={};player.achievements??={};return player;
 }
-let p=createPlayerState(loadPlayerSave()||{});
+let p=createPlayerState();
 const spellKeys=['q','r','t','v','u','o'],buffs={},effects=[],shots=[];
 let spellCD=[0,0,0,0,0,0],castPose=0,castStyle='',spiritTick=0;
 const role=()=>CLASSES[p.classId],equippedBonus=slot=>(p.equipped[slot]?.bonus||0)+enhancementBonus(p.equipped[slot]);

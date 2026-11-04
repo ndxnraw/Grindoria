@@ -15,11 +15,9 @@ function hit(m, amount, type='physical',penetrated=false) {
     const gained = enemyXP(m); careerKill(m);prestigeKill(m);dropForgeSupplies(m);dropCraftMaterials(m);
     if (m.type === 'stone') { m.metinCombat = 0; m.metinWaveTimer = 0; dropMetinLoot(m);for(const guard of mobs.filter(guard=>guard.hp>0&&guard.metinParentId===m.spawnId&&guard.metinGeneration===m.metinGeneration))hit(guard,guard.hp,'arcane',true); }
     else {
-      farmBonusLoot(m);
-      spawnGroundDrop({ kind: 'gold', count: Math.round((m.type === 'boss' ? 120 : 7 + Math.floor(rand() * 7)) * (m.metinParentId ? m.attackScale * .5 : map().scale) * (ENEMY_VARIANTS[m.variant]?.gold || 1)) }, m);
-      if(!m.dungeonBoss)dropFarmEquipment(m);
-      if (rand() < .25) spawnGroundDrop({ kind: 'supply', supplyId: 'potions', count: 1 }, m);
+      dropEnemyLoot(m);
     }
+    dropCatalogLoot(m);
     if(m.dungeonBoss)dungeonBossReward(m);
     experience(gained);worldEventKill(m);
     float(gained ? '+' + gained + ' EXP' : 'Slabý cieľ · bez EXP', m.x, m.y - 85, gained ? '#d6c28c' : '#8e9f92');

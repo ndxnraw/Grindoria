@@ -19,7 +19,7 @@ test('random affixes are unique, reproducible, tier-scaled and more numerous and
   run('var gear=generateEquipmentItem("'+slot+'",'+rarity+',80,"sword",rng);validateCharacterItem(gear);');assert.equal(run('gear.affixes.length'),run('raritySpec('+rarity+').affixes'));assert.equal(run('new Set(gear.affixes.map(a=>a.stat)).size'),run('gear.affixes.length'));
   assert(run('Object.values(gear.stats).every(n=>Number.isFinite(n)&&n>0)'));
  }
- assert.equal(run('JSON.stringify(generateEquipmentItem("weapon",5,90,"bow",layoutRandom("same")))'),run('JSON.stringify(generateEquipmentItem("weapon",5,90,"bow",layoutRandom("same")))'));
+ assert.equal(run('JSON.stringify((({uid,instanceId,...attributes})=>attributes)(generateEquipmentItem("weapon",5,90,"bow",layoutRandom("same"))))'),run('JSON.stringify((({uid,instanceId,...attributes})=>attributes)(generateEquipmentItem("weapon",5,90,"bow",layoutRandom("same"))))'));
  assert(run('affixValue("hp",90,5,100)>affixValue("hp",20,5,100)'));assert(run('affixValue("crit",80,5,100)>affixValue("crit",80,3,100)'));
  run('var seen=new Set();for(var i=0;i<500;i++)seen.add(JSON.stringify(generateEquipmentItem("armor",1,75,"sword",rng).affixes));');assert(run('seen.size>400'));
 });

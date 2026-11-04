@@ -3,6 +3,7 @@ function xpForLevel(level) {
 }
 
 function initializeCareer() {
+  migrateItemProfile(p,p.characterId||'legacy');
   const old = p.career;
   if (!old || old.schema !== PROGRESSION.schema) {
     const progress = Math.max(0, Math.min(.999999, p.xp / (60 + (p.level - 1) * 35)));

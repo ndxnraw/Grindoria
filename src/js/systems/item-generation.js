@@ -48,7 +48,7 @@ function itemSaleValue(item) {return item.generationVersion===ITEM_GENERATION.ve
 function generateEquipmentItem(slot,rarity,tier,weaponKind=generatedWeaponKind(),rng=rand) {
  const spec=EQUIPMENT[slot],rank=raritySpec(rarity),item={generationVersion:ITEM_GENERATION.version,name:equipmentItemName(slot,rarity,weaponKind),slot,rarity,tier,requiredLevel:tier,enhance:0,bonus:spec.base+Math.floor(tier*spec.scale)+Math.round(rank.power*spec.rare)};
  if(slot==='weapon')item.weaponKind=weaponKind;
- Object.assign(item,rollItemAffixes(item,rng));item.value=itemSaleValue(item);return item;
+ Object.assign(item,rollItemAffixes(item,rng));item.value=itemSaleValue(item);return ensureItemIdentity(item);
 }
 function validateGeneratedItem(item) {
  if(item.generationVersion===undefined){if(item.affixes!==undefined)characterDataError('bonusy bez verzie generátora.');return;}

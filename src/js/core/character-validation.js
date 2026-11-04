@@ -13,7 +13,7 @@ function assertSafeCharacterJSON(value) {
   };visit(value,0);
 }
 function validateCharacterItem(item,slot=null) {
-  assertCharacterObject(item,'predmet');
+  assertCharacterObject(item,'predmet');validateItemModel(item);
   if(item.weaponKind!==undefined && (item.slot!=='weapon'||!['sword','bow','daggers','fan'].includes(item.weaponKind)))characterDataError('typ zbrane.');
   if(item.modelId!==undefined && (typeof item.modelId!=='string'||!Object.hasOwn(EQUIPMENT_MODELS[item.slot]||{},item.modelId)))characterDataError('model predmetu.');
   if(!Object.hasOwn(EQUIPMENT,item.slot)||slot&&item.slot!==slot)characterDataError('neplatný slot predmetu.');
@@ -27,6 +27,7 @@ function validateCharacterItem(item,slot=null) {
   if(item.cell!==undefined)assertCharacterNumber(item.cell,'políčko',0,4499,true);
   if(item.icon!==undefined&&!Object.hasOwn(EQUIPMENT,item.icon))characterDataError('ikona výbavy.');
   if(item.classes!==undefined&&(!Array.isArray(item.classes)||item.classes.some(id=>!Object.hasOwn(CLASSES,id))))characterDataError('povolanie predmetu.');
+  if(item.allowedSchools!==undefined&&(!Array.isArray(item.allowedSchools)||item.allowedSchools.some(id=>!Object.hasOwn(SCHOOLS,id))))characterDataError('škola predmetu.');
   if(item.stats!==undefined){assertCharacterObject(item.stats,'bonusy predmetu');for(const [key,value]of Object.entries(item.stats)){if(!Object.hasOwn(ITEM_STATS,key))characterDataError('neznámy bonus predmetu.');assertCharacterNumber(value,'hodnota bonusu',-.5,1e9);}}
   validateGeneratedItem(item);
   if(item.uniqueId!==undefined&&(!Object.hasOwn(DUNGEON_UNIQUES,item.uniqueId)||DUNGEON_UNIQUES[item.uniqueId].slot!==item.slot))characterDataError('unikát dungeonu.');
@@ -121,6 +122,7 @@ function validateCharacterAccount(account) {
   assertCharacterNumber(account.revision,'revízia',0,Number.MAX_SAFE_INTEGER,true);assertCharacterObject(account.settings,'globálne nastavenia');if(typeof account.settings.sound!=='boolean')characterDataError('nastavenie zvuku.');
   assertCharacterObject(account.profiles,'profily');if(new Set(account.order).size!==account.order.length||Object.keys(account.profiles).length!==account.order.length)characterDataError('duplicitné alebo chýbajúce profily.');
   const names=new Set();for(const id of account.order){if(typeof id!=='string'||!Object.hasOwn(account.profiles,id))characterDataError('referencia postavy.');const record=account.profiles[id];validateCharacterProfile(record);if(id!==record.id||names.has(characterNameKey(record.name)))characterDataError('duplicitné meno alebo ID.');names.add(characterNameKey(record.name));}
+  const itemInstances=new Set();for(const record of Object.values(account.profiles))validateProfileItemIdentities(record.data,itemInstances);
   const checkReferences=(value,ownerId)=>{if(!value||typeof value!=='object')return;for(const [key,item]of Object.entries(value)){if(['characterId','ownerCharacterId','selectedCharacterId'].includes(key)&&item!==null&&(typeof item!=='string'||!account.order.includes(item)))characterDataError('referencia na neexistujúcu postavu.');if(item&&typeof item==='object')checkReferences(item,ownerId);}};
   for(const record of Object.values(account.profiles))checkReferences(record.data,record.id);
   if(account.selectedId!==null&&!account.order.includes(account.selectedId))characterDataError('vybraná postava.');

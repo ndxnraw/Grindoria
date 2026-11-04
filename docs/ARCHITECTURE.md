@@ -128,3 +128,7 @@ UI/common.js obsahuje riadky požiadaviek, identitu panelu, obnovu fokusu a stav
 ## Dungeony od 0.22.0
 
 Data/dungeons.js registruje lokality, obtiažnosti, unikáty a vyhradený inštančný slot MAPS.dungeon. Systems/dungeons.js používa existujúce mapové snímky, nepriateľov, hit(), takeDamage(), dropy a generátor výbavy. Bežné AI pohybu ostáva v farming.js; bossova AI sa deleguje z updateBoss(). Render/dungeons.js zobrazuje vlastné modely a rovnaké geometrie útokov ako kolízie. UI/dungeons.js poskytuje vstup, ciele, odmeny a návrat. Pôvodné trhliny sa nemenia a aktívne výpravy sa navzájom vylučujú. Pozri [DUNGEONS.md](DUNGEONS.md).
+
+## Spoločné predmety
+
+Definície, identity kusov a loot registre: [ITEM_MODEL.md](ITEM_MODEL.md). Nové zdroje výbavy používajú createItem alebo existujúci generátor; inventár, výbava, trh a zem zachovávajú instanceId. Materiály ostávajú v pôvodných počítadlách, spoločné dátové pohľady nevytvárajú ďalší save.

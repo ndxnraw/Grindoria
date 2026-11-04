@@ -4,7 +4,7 @@ Od 0.15.0 zdieľajú ikony, korisť na zemi, portrét a postava rovnakú vektoro
 
 ## Katalóg
 
-Desať slotov má po tri odlišné siluety podľa rodiny existujúcich názvov. Deväť ďalších modelov tvorí tri varianty dvojdýk, lukov a vejárov; spolu 39 modelov. Nové zbrane dostávajú typ podľa povolania a školy bez zmeny bojových pravidiel. Staré zbrane ostávajú mečmi.
+Desať slotov má po tri odlišné siluety podľa rodiny existujúcich názvov. Deväť ďalších modelov tvorí tri varianty dvojdýk, lukov a vejárov; spolu 39 základných modelov. Päť samostatných modelov klasických zbraní rozširuje katalóg na 44; definície a získavanie sú v [ITEM_MODEL.md](ITEM_MODEL.md). Nové zbrane dostávajú typ podľa povolania a školy bez zmeny bojových pravidiel. Staré zbrane ostávajú mečmi.
 
 Úroveň 1–99 mení kovanie v piatich stupňoch. Základný bonus pridáva rytiny. Vylepšenia +1 až +9 pridávajú kamene; od +6 aj svetelný lem vo svete. Identické kópie majú rovnaký vzhľad, nezávislý od ID, inventárnej pozície alebo opätovného načítania. Alchymistické kamene a štyri relikvie majú samostatné tvary.
 

@@ -7,9 +7,10 @@ function makeRareOffers(cycle) {
   return [0,1].map(index=>({id:'rare-'+index,stock:1,item:generateEquipmentItem(slots[Math.floor(rng()*slots.length)],tier>=35&&index===1?2:1,tier,generatedWeaponKind(),rng)}));
 }
 function initializeEconomy() {
-  if(p.economy)return;
+  if(p.economy){initializeCatalogMarket();return;}
   p.economy={schema:ECONOMY_RULES.schema,elapsed:0,cycle:0,demand:{supplies:0,materials:0,gear:0},stock:{},rare:makeRareOffers(0)};
   for(const [trader,cfg] of Object.entries(MARKET_TRADERS))for(const id of cfg.goods)p.economy.stock[trader+':'+id]=MARKET_GOODS[id].stock;
+  initializeCatalogMarket();
 }
 function updateEconomy(dt) {
   const e=p.economy;e.elapsed+=dt;
@@ -18,7 +19,7 @@ function updateEconomy(dt) {
   e.cycle=Math.min(ECONOMY_RULES.maxCycles,e.cycle+periods);
   for(const group of Object.keys(e.demand))e.demand[group]=Math.trunc(e.demand[group]/2);
   for(const [trader,cfg] of Object.entries(MARKET_TRADERS))for(const id of cfg.goods)e.stock[trader+':'+id]=MARKET_GOODS[id].stock;
-  e.rare=makeRareOffers(e.cycle);
+  e.rare=makeRareOffers(e.cycle);e.catalogItems=undefined;initializeCatalogMarket();
 }
 function marketFactor(group) {
   const e=p.economy;if(!e)return 1;
@@ -30,7 +31,7 @@ function currentTrader(){return Object.keys(MARKET_TRADERS).filter(id=>nearNPC(i
 function marketCanTrade(trader){return running&&p.hp>0&&Object.hasOwn(MARKET_TRADERS,trader)&&nearNPC(trader);}
 function marketOffers(trader) {
   if(!Object.hasOwn(MARKET_TRADERS,trader))return [];
-  const list=MARKET_TRADERS[trader].goods.map(id=>{const g=MARKET_GOODS[id];return {id,name:g.name,price:Math.ceil(g.price*marketFactor(g.group)),stock:p.economy.stock[trader+':'+id],level:g.level||1,group:g.group,supply:g.supply,count:g.count};});
+  const list=MARKET_TRADERS[trader].goods.map(id=>{const g=MARKET_GOODS[id];return {id,name:g.name,price:Math.ceil(g.price*marketFactor(g.group)),stock:p.economy.stock[trader+':'+id],level:g.level||1,group:g.group,supply:g.supply,count:g.count,...(g.definitionId?{item:p.economy.catalogItems[id]}:{})};});
   if(MARKET_TRADERS[trader].rare)for(const r of p.economy.rare)list.push({id:r.id,name:r.item.name,price:Math.ceil(Math.max(1000,itemMarketValue(r.item)*4)*marketFactor('gear')),stock:r.stock,level:requiredItemLevel(r.item),group:'gear',item:r.item,count:1});
   return list;
 }
@@ -47,7 +48,7 @@ function buyMarketOffer(trader,id,expectedPrice=null,expectedCycle=null) {
     if(!entry||entry.count+offer.count>1e12||!grantGroundSupply(offer.supply,offer.count)){marketMessage='Zásoba dosiahla maximum.';return false;}
   }
   p.gold-=offer.price;
-  if(offer.item)p.economy.rare.find(r=>r.id===id).stock--;else p.economy.stock[trader+':'+id]--;
+  if(id.startsWith('rare-'))p.economy.rare.find(r=>r.id===id).stock--;else p.economy.stock[trader+':'+id]--;
   changeDemand(offer.group,1);marketMessage='Kúpené: '+offer.name+' · −'+offer.price+' Yang.';save();updateHUD();return true;
 }
 function marketGearSaleValue(item,trader=currentTrader()) {
@@ -80,5 +81,8 @@ function validateEconomyProfile(data) {
   for(const [trader,cfg]of Object.entries(MARKET_TRADERS))for(const id of cfg.goods){const key=trader+':'+id;keys.push(key);assertCharacterNumber(e.stock[key],'zásoba ponuky',0,MARKET_GOODS[id].stock,true);}
   if(Object.keys(e.stock).some(key=>!keys.includes(key)))characterDataError('neznáma ponuka.');
   if(!Array.isArray(e.rare)||e.rare.length!==2)characterDataError('vzácne ponuky.');
+  if(e.catalogItems!==undefined){assertCharacterObject(e.catalogItems,'katalóg obchodu');for(const [trader,cfg]of Object.entries(MARKET_TRADERS))for(const id of cfg.goods)if(MARKET_GOODS[id].definitionId&&e.stock[trader+':'+id]>0&&!e.catalogItems[id])characterDataError('neúplná ponuka.');for(const [id,item]of Object.entries(e.catalogItems)){if(!MARKET_GOODS[id]?.definitionId||item.definitionId!==MARKET_GOODS[id].definitionId)characterDataError('predmet ponuky.');validateCharacterItem(item);}}
   e.rare.forEach((r,i)=>{assertCharacterObject(r,'vzácna ponuka');if(r.id!=='rare-'+i)characterDataError('ID ponuky.');assertCharacterNumber(r.stock,'vzácna zásoba',0,1,true);validateCharacterItem(r.item);});
 }
+
+function initializeCatalogMarket(){p.economy.catalogItems??={};for(const [id,g]of Object.entries(MARKET_GOODS))if(g.definitionId&&!Object.hasOwn(p.economy.catalogItems,id)){let seed=marketSeed(p.characterId+':'+id+':'+p.economy.cycle);const rng=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};p.economy.catalogItems[id]=createItem(g.definitionId,{rng});for(const [trader,cfg]of Object.entries(MARKET_TRADERS))if(cfg.goods.includes(id))p.economy.stock[trader+':'+id]=g.stock;}}

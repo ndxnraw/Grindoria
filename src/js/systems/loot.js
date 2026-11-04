@@ -30,9 +30,8 @@ function initializeLoot() {
   }
 }
 
-function cloneGroundDrop(drop) {
-  return { ...drop, ...(drop.item ? { item: { ...drop.item, ...(drop.item.stats ? { stats: { ...drop.item.stats } } : {}), ...(drop.item.special ? { special: [...drop.item.special] } : {}) } } : {}) };
-}
+function cloneGroundDrop(drop) {return {...drop,...(drop.item?{item:cloneItem(drop.item)}:{})};}
+
 
 function hydrateGroundDrops(saved) {
   const ids = new Set();
@@ -52,6 +51,7 @@ function hydrateGroundDrops(saved) {
 }
 
 function spawnGroundDrop(payload, source) {
+  if(payload.kind==='gear')ensureItemIdentity(payload.item);
   const angle = rand() * Math.PI * 2, radius = 22 + rand() * 64;
   const drop = {
     ...payload, id: ++p.lootSerial,

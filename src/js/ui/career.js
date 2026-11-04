@@ -65,7 +65,7 @@ function careerEndgame() {
 function careerPanel(tab = careerTab) {
   if (!running) return;
   const tabs = {
-    discovery: ['Bestiár a zbierky', discoveryPanel], overview: ['Prehľad', careerOverview], training: ['Atribúty', careerTraining],
+    items: ['Predmety', itemCatalogPanel], discovery: ['Bestiár a zbierky', discoveryPanel], overview: ['Prehľad', careerOverview], training: ['Atribúty', careerTraining],
     skills: ['Schopnosti', careerSkills], biology: ['Biológ', careerBiology],
     forge: ['Vylepšovanie', careerForge], crafting: ['Výroba', () => craftingRecipesPanel('crafting')], alchemy: ['Alchýmia', () => craftingRecipesPanel('alchemy') + careerAlchemy()],
     collection: ['Relikvie', careerCollection], specialization: ['Špecializácia', careerSpecialization],
@@ -99,3 +99,9 @@ function careerPanel(tab = careerTab) {
   });
 }
 
+
+function itemCatalogPanel(){return '<div class="item-catalog">'+Object.entries(ICONIC_ITEMS).map(([key,d])=>{
+const preview={slot:'weapon',name:d.name,modelId:d.modelId,rarity:ITEM_DEFINITIONS[d.id].rarity,tier:d.level,bonus:d.bonus,weaponKind:d.weaponKind};
+const chance=ICONIC_DROP_ENTRIES.find(e=>e.definitionId===d.id).chance;
+return '<div class="career-card">'+itemIcon(preview)+'<h3>'+d.name+'</h3><p>Vyžaduje úroveň '+d.level+' · '+d.classes.map(id=>CLASSES[id].name).join(', ')+'</p><p>Útok +'+d.bonus+' · '+Object.entries(d.baseStats).map(([stat,n])=>ITEM_STATS[stat]+' '+signedItemStat(stat,n)).join(' · ')+'</p><p>Bossovia a Metiny od úrovne '+d.level+': '+(chance*100)+' % za zbraň. Výroba: kováč, remeslo '+CRAFT_RECIPES['iconic-'+key].level+'.'+(['fms','poison'].includes(key)?' Predaj: zbrojár.':'')+'</p></div>';
+}).join('')+'</div>';}

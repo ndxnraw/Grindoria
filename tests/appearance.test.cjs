@@ -1,12 +1,12 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const {createGame,readSavedProfile}=require('./helpers/game.cjs');
 function item(slot,rarity=0,tier=1,extra={}){return {slot,name:slot+' '+rarity,rarity,tier,requiredLevel:tier,bonus:10,enhance:0,...extra};}
-test('all 39 registered models have distinct silhouettes and every slot has three actual shapes',()=>{
+test('all 44 registered models have distinct silhouettes and every slot has three actual shapes',()=>{
  const {run}=createGame();const shapes=new Set();let total=0;
  for(const slot of Object.keys(run('EQUIPMENT'))) {
   const variants=run('Object.keys(EQUIPMENT_MODELS["'+slot+'"])');assert(variants.length>=3);
   for(const model of variants){const gear=item(slot,0,1,{modelId:model});const shape=run('equipmentAppearance('+JSON.stringify(gear)+').parts[0].d');assert(!shapes.has(shape),model);shapes.add(shape);total++;}
- }assert.equal(total,39);
+ }assert.equal(total,44);
 });
 test('identity survives moving, equipping, serial changes and reload while tier, strength and enhancements alter visible detail',()=>{
  const {run,saved}=createGame();const gear=item('weapon',2,65,{name:'Dračí meč'});

@@ -271,7 +271,8 @@ function buyBraveryCapes() {
 
 function farmBonusLoot(m) {
   const eligible = rewardEligible(m), rare = m.variant === 'rare', elite = m.variant === 'elite';
-  let capes = m.type === 'boss' ? 3 : rare ? 2 : rand() < (elite ? .25 : .02) ? 1 : 0;
+  const cfg=enemyLootPool(m).capes;
+  let capes = m.type === 'boss' ? cfg.boss : rare ? cfg.rare : rand() < (elite ? cfg.eliteChance : cfg.normalChance) ? 1 : 0;
   if (capes) spawnGroundDrop({ kind: 'supply', supplyId: 'braveryCapes', count: capes }, m);
   if (!eligible || m.type !== 'wolf') return;
   if (rare) { dropMaterial('ore', 3, m); dropMaterial('dust', 3, m); dropMaterial('books', 1, m); dropMaterial('training', 1, m); }
@@ -280,7 +281,7 @@ function farmBonusLoot(m) {
 
 function dropFarmEquipment(m) {
   const rare = m.variant === 'rare', elite = m.variant === 'elite';
-  if (m.type === 'boss') return spawnGroundDrop({ kind: 'gear', item: makeItem(false, m) }, m);
-  if (m.type === 'stone' || rare || rand() < (elite ? .2 : .03)) return spawnGroundDrop({ kind: 'gear', item: makeItem(false, m) }, m);
+  const chance=m.type==='stone'?1:enemyLootPool(m).gear[m.type==='boss'?'boss':rare?'rare':elite?'elite':'normal'];
+  if (chance>=1 || rand() < chance) return spawnGroundDrop({ kind: 'gear', item: makeItem(false, m) }, m);
 }
 

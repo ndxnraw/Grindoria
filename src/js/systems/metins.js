@@ -123,7 +123,7 @@ function updateMetins(dt, safe) {
 function metinLootAmount(min, max) { return min + Math.floor(rand() * (max - min + 1)); }
 
 function dropMetinLoot(stone) {
-  const type = METIN_TYPES[stone.metinType || metinTypeForLevel(stone.level)], pool = type.loot;
+  const type = METIN_TYPES[stone.metinType || metinTypeForLevel(stone.level)], pool = enemyLootPool(stone).metin;
   spawnGroundDrop({ kind: 'gold', currencyName: 'Yang', count: Math.round(metinLootAmount(...pool.yang) * (1 + stone.level * .12)) }, stone);
   if (!rewardEligible(stone)) return;
   for (const id of ['ore', 'books', 'essence', 'dust', 'upgradeStones']) {

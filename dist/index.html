@@ -191,9 +191,12 @@ body{font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--ui-text)}button,inp
 .discovery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}.bestiary-model{display:block;width:220px;height:200px;max-width:100%;margin:auto;background:#101b20;border:1px solid var(--ui-line)}
 
 .world-event-status{position:absolute;left:18px;top:122px;max-width:260px;padding:9px 12px;background:#172c25ed;color:#e5d6a0;border:1px solid #a69765;border-radius:4px;font-size:12px;text-align:left;cursor:pointer;z-index:4}.world-event-status:hover{border-color:#ead499}
+
+/* Named weapon catalogue uses the same bounded icons as the market. */
+.item-catalog .career-card{display:flow-root;min-height:142px}.item-catalog .item-icon{float:left;width:64px;height:96px;max-width:25%;margin:4px 18px 8px 0}.item-catalog .career-card h3{margin:0 0 8px}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.25.0</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Kúzla <kbd>K</kbd></button><button id="journal">Denník <kbd>J</kbd></button><button id="help">Ako hrať <kbd>?</kbd></button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.26.0</b></span></header>
 <main><div class="world-title"><div><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Divoký vlk · Strážca pralesa</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
 <section id="game-shell" class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb iba WASD alebo šípkami, výber cieľa kliknutím, nasledovanie a útok druhým klikom na rovnaký cieľ, smerový útok medzerníkom, schopnosť Q, liečenie E, korisť ľavým kliknutím alebo Y v okolí, zlato a zásoby automaticky."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
 <div class="hud player"><div id="portrait" class="portrait">侍</div><div><div class="player-name"><b id="playername">Pútnik</b><small id="playerclass" hidden>Bojovník</small> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 60 skúseností</small></div></div>
@@ -669,6 +672,8 @@ for (const id of Object.keys(GEMS)) CRAFT_RECIPES['gem-' + id] = { name: GEMS[id
 // src/js/data/economy.js
 const ECONOMY_RULES = { schema: 1, refreshSeconds: 600, maxDemand: 10, maxCycles: 1000000 };
 const MARKET_GOODS = {
+  'catalog-fms': {name:'Meč splnu (FMS)',definitionId:'weapon:fms',count:1,price:100000,stock:1,group:'gear',level:30},
+  'catalog-poison': {name:'Jedovatý meč',definitionId:'weapon:poison-sword',count:1,price:1500000,stock:1,group:'gear',level:75},
   potions: { name: 'Liečivé elixíry ×3', supply: 'potions', count: 3, price: 25, stock: 20, group: 'supplies' },
   capes: { name: 'Plášte statočnosti ×10', supply: 'braveryCapes', count: 10, price: 100, stock: 5, group: 'supplies' },
   ore: { name: 'Ruda ×5', supply: 'material:ore', count: 5, price: 100, stock: 12, group: 'materials' },
@@ -683,7 +688,7 @@ const MARKET_GOODS = {
 };
 const MARKET_TRADERS = {
   merchant: { name: 'Obchodník', goods: ['potions','capes','ore','hide','essence'], rare: false },
-  armsdealer: { name: 'Zbrojár', goods: ['ore','crystal','forgeCore'], rare: true },
+  armsdealer: { name: 'Zbrojár', goods: ['ore','crystal','forgeCore','catalog-fms','catalog-poison'], rare: true },
   alchemist: { name: 'Alchymista', goods: ['herb','dust','extract','mana'], rare: false }
 };
 const MARKET_MATERIAL_PRICES = { ore:20, hide:30, herb:20, essence:30, dust:80, extract:180, crystal:250, forgeCore:6000 };
@@ -741,6 +746,46 @@ const WORLD_EVENTS={
  ruins:{name:'Skryté ruiny',kind:'secret',chance:.015,duration:480,count:0,color:'#8ed9d1',objective:'Nájdi ruiny. Značka sa objaví až pri priblížení.',reward:'Yang, materiály, výbava z primeranej mapy a trvalý záznam objavu.'},
  convoy:{name:'Démonický sprievod',kind:'group',chance:.01,duration:420,count:5,color:'#e49ac2',objective:'Poraz päť rôznych členov sprievodu.',reward:'Yang, materiály a epická alebo lepšia výbava z primeraného cieľa.'}
 };
+
+
+// src/js/data/item-catalog.js
+const ITEM_DEFINITIONS=Object.create(null);
+function registerItemDefinition(def){if(!def||typeof def.id!=='string'||!/^[a-zA-Z0-9:_-]+$/.test(def.id)||Object.hasOwn(ITEM_DEFINITIONS,def.id)||!['equipment','material','consumable','gem','relic'].includes(def.type)||typeof def.name!=='string'||def.type==='equipment'&&!Object.hasOwn(EQUIPMENT,def.slot))throw Error('Neplatná alebo duplicitná definícia predmetu.');ITEM_DEFINITIONS[def.id]=Object.freeze({...def});}
+for(const slot of Object.keys(EQUIPMENT))for(const kind of slot==='weapon'?['sword','bow','daggers','fan']:[''])registerItemDefinition({id:'equipment:'+slot+(kind?':'+kind:''),type:'equipment',name:EQUIPMENT[slot].name,slot,weaponKind:kind||undefined,generic:true});
+for(const [id,name]of Object.entries(MATERIALS))registerItemDefinition({id:'material:'+id,type:'material',name,rarity:0,modelId:id});
+for(const [id,g]of Object.entries(GEMS))registerItemDefinition({id:'gem:'+id,type:'gem',name:g.name,rarity:1,modelId:id});
+for(const [id,a]of Object.entries(ALCHEMY_PRODUCTS))registerItemDefinition({id:'alchemy:'+id,type:'consumable',name:a.name,rarity:0,modelId:a.icon});
+for(const [id,r]of Object.entries(RELICS))registerItemDefinition({id:'relic:'+id,type:'relic',name:r.name,rarity:2,modelId:'relic-'+id});
+registerItemDefinition({id:'potions',type:'consumable',name:'Elixír',rarity:0,modelId:'potion'});registerItemDefinition({id:'braveryCapes',type:'consumable',name:'Plášť statočnosti',rarity:0,modelId:'cape'});
+const ICONIC_ITEMS={
+ fms:{id:'weapon:fms',name:'Meč splnu (FMS)',level:30,bonus:48,modelId:'fms',classes:['warrior','ninja','sura'],schools:['body','mental','blade','weapon','black'],weaponKind:'sword',baseStats:{attackSpeed:.05}},
+ poison:{id:'weapon:poison-sword',name:'Jedovatý meč',level:75,bonus:110,modelId:'poison-sword',classes:['warrior','ninja','sura'],schools:['body','mental','blade','weapon','black'],weaponKind:'sword',baseStats:{attackSpeed:.1}},
+ rib:{id:'weapon:red-iron-blade',name:'Čepeľ červeného železa (RIB)',level:30,bonus:60,modelId:'red-iron-blade',classes:['warrior'],schools:['body','mental'],weaponKind:'sword',baseStats:{hp:30}},
+ blackleaf:{id:'weapon:black-leaf',name:'Dýky Čierny list',level:30,bonus:44,modelId:'black-leaf',classes:['ninja'],schools:['blade'],weaponKind:'daggers',baseStats:{crit:.025}},
+ autumn:{id:'weapon:autumn-fan',name:'Vejár jesenného vetra',level:30,bonus:42,modelId:'autumn-fan',classes:['shaman'],schools:['dragon','healing'],weaponKind:'fan',baseStats:{magic:18}}
+};
+for(const spec of Object.values(ICONIC_ITEMS))registerItemDefinition({...spec,type:'equipment',slot:'weapon',rarity:spec.level>=75?2:1});
+registerEquipmentModel('weapon','fms',look=>[modelPath('M32 2Q53 21 38 57L27 59Q37 31 23 16Z','#d6e5e8','#effcff'),modelPath('M12 55q20 19 40-4l-4 18-16-5-15 7ZM28 66h8v23h-8Z','#6684a5','#c3d6ea'),modelGem(32,59,5,'#9cdaf2')]);
+registerEquipmentModel('weapon','poison-sword',look=>[modelPath('M32 1 44 12 38 25 47 36 36 60H25L19 42l9-11-5-15Z','#a3c98b','#e4f8b5'),modelPath('M27 10l9 16-7 16 5 13','none','#405d47',3),modelPath('M9 60l15-10 8 8 8-8 15 10-9 8-14-4-15 4ZM28 66h8v24h-8Z','#53734b','#ceba77'),modelGem(32,59,5,'#82eb78')]);
+registerEquipmentModel('weapon','red-iron-blade',look=>[modelPath('M25 1h15l8 12-5 12 6 9-9 25H20l7-19-7-12Z','#ab6254','#f2b194'),modelPath('M31 5v51','none','#f3ccb3',2),modelPath('M10 58h44v8H10ZM28 66h9v23h-9Z','#704935','#d8ae78')]);
+registerEquipmentModel('weapon','black-leaf',look=>[modelPath('M18 6 28 22 20 60l-8-10 8-22ZM46 2 56 19 46 57l-8-10 9-22Z','#587a69','#bad2b5'),modelPath('m7 57 22 5-2 6-22-5Zm27-4 24 6-2 6-24-6ZM15 67l7 1-4 21-7-1Zm28-5 7 2-6 23-7-2Z','#474c40','#d2b57d')]);
+registerEquipmentModel('weapon','autumn-fan',look=>[modelPath('M32 60 4 26Q30-8 60 26Z','#bd784b','#edc58f'),modelPath('M32 60 9 27m23 33L20 16m12 44V9m0 51 12-44M32 60l23-33','none','#784b39',2),modelPath('m29 55 6 0 3 27-6 8-6-8Z','#c9ac78','#f4dca4'),modelGem(32,34,7,'#e8d390')]);
+
+for(const [key,d]of Object.entries(ICONIC_ITEMS))CRAFT_RECIPES['iconic-'+key]={name:d.name,profession:'crafting',level:d.level===75?10:6,playerLevel:d.level,xp:d.level===75?120:65,cost:d.level===75?{primal:8,ingot:30,crystal:30,forgeCore:5,gold:500000}:{ingot:15,crystal:10,ore:50,gold:50000},output:{definitionId:d.id,slot:'weapon',count:1}};
+
+
+// src/js/data/loot-pools.js
+// Content registries contain definitions, never mutable item instances.
+const LOOT_POOLS=Object.create(null);
+function registerLootPool(id,pool){if(Object.hasOwn(LOOT_POOLS,id)||!pool||!Array.isArray(pool.catalog))throw Error('Neplatný loot pool.');for(const e of pool.catalog)if(!ITEM_DEFINITIONS[e.definitionId]||!Number.isFinite(e.chance)||e.chance<0||e.chance>1)throw Error('Neplatný drop.');LOOT_POOLS[id]=pool;}
+const ENEMY_LOOT_DEFAULTS={gear:{normal:.03,elite:.2,rare:1,boss:1},potionChance:.25,gold:{boss:120,min:7,range:7},capes:{boss:3,rare:2,eliteChance:.25,normalChance:.02}};
+function enemyLootDefaults(){return JSON.parse(JSON.stringify(ENEMY_LOOT_DEFAULTS));}
+for(const skin of ['wolf','scorpion','yeti','demon'])registerLootPool('enemy:'+skin,{...enemyLootDefaults(),catalog:[]});
+for(const id of Object.keys(MAPS))registerLootPool('boss:'+id,{...enemyLootDefaults(),catalog:[]});
+for(const [id,type]of Object.entries(METIN_TYPES))registerLootPool('metin:'+id,{metin:type.loot,catalog:[]});
+for(const id of Object.keys(DUNGEONS))registerLootPool('dungeon:'+id,{...enemyLootDefaults(),catalog:[]});
+const ICONIC_DROP_ENTRIES=Object.values(ICONIC_ITEMS).map(d=>({definitionId:d.id,minLevel:d.level,chance:d.level===75?.02:.015}));
+for(const [id,pool]of Object.entries(LOOT_POOLS))if(id.startsWith('boss:')||id.startsWith('metin:')||id.startsWith('dungeon:'))pool.catalog=ICONIC_DROP_ENTRIES.map(e=>({...e}));
 
 
 // src/js/systems/discovery.js
@@ -834,7 +879,7 @@ function loadPlayerSave() {
   try {
     const raw=(localStorage.getItem(CHARACTER_RULES.storageKey)??null);characterStore.raw=raw;
     if(raw!==null){
-      const stored=JSON.parse(raw);migrateForgeMaterials(stored);validateCharacterAccount(stored);characterStore.account=stored;
+      const stored=JSON.parse(raw);migrateForgeMaterials(stored);migrateItemAccount(stored);validateCharacterAccount(stored);characterStore.account=stored;
       return stored.selectedId?copyCharacterData(profileIdentity(stored.profiles[stored.selectedId],stored.profiles[stored.selectedId].data)):null;
     }
     const legacy=loadLegacyPlayerSave(),candidates=legacy?[legacy]:[...pendingSaveImports];pendingSaveImports.length=0;
@@ -899,7 +944,7 @@ function accountWithActiveSnapshot() {
   if(!id)return copyCharacterData(characterStore.account);
   const record=characterStore.account.profiles[id];
   if(!record||p.characterId!==id||p.classId!==record.classId)throw new Error('Identita postavy nesúhlasí. Uloženie bolo zastavené.');
-  expireGroundDrops();pruneStoredGroundDrops();snapshotMap();
+  expireGroundDrops();pruneStoredGroundDrops();snapshotMap();migrateItemProfile(p,p.characterId);
   const next=copyCharacterData(characterStore.account),saved=next.profiles[id];saved.lastPlayedAt=Date.now();p.lastPlayedAt=saved.lastPlayedAt;
   saved.data=copyCharacterData(profileIdentity(saved,p));next.selectedId=id;next.settings.sound=sound;return next;
 }
@@ -962,7 +1007,7 @@ function prepareCharacterImport(text) {
     for(const source of data.characters){assertCharacterObject(source,'profil starej zálohy');assertCharacterObject(source.data,'údaje starej zálohy');const record=copyCharacterData(source);record.isGM??=false;record.lastPlayedAt??=null;record.data.characterId=record.id;record.data.name=record.name;record.data.isGM=record.isGM;record.data.bestiary??={};record.data.achievements??={};if(Object.hasOwn(account.profiles,record.id))throw new Error('Duplicitné ID v zálohe.');account.order.push(record.id);account.profiles[record.id]=record;}
     account.selectedId=account.order[0]||null;data={...data,version:CHARACTER_RULES.backupVersion,account};
   }
-  migrateForgeMaterials(data.account);validateCharacterAccount(data.account);return {account:copyCharacterData(data.account),baseRaw:characterStore.raw};
+  migrateForgeMaterials(data.account);migrateItemAccount(data.account);validateCharacterAccount(data.account);return {account:copyCharacterData(data.account),baseRaw:characterStore.raw};
 }
 function remapImportedCharacterReferences(value,idMap) {
   if(!value||typeof value!=='object')return;
@@ -984,7 +1029,7 @@ function importCharacterBackup(prepared,mode,{renames={},confirmReplace=false}={
   for(const source of listCharacters(prepared.account)){
     const record=copyCharacterData(source),identity=validateCharacterName(renames[source.id]||characterInputName(record),listCharacters(next));
     record.id=idMap[source.id];record.name=identity.name;record.isGM=identity.isGM;remapImportedCharacterReferences(record.data,idMap);
-    record.data=profileIdentity(record,record.data);next.profiles[record.id]=record;next.order.push(record.id);
+    record.data=profileIdentity(record,record.data);rebaseImportedItems(record.data,source.id,record.id);next.profiles[record.id]=record;next.order.push(record.id);
   }
   if(mode==='replace'||!next.selectedId)next.selectedId=idMap[prepared.account.selectedId]||next.order[0]||null;
   validateCharacterAccount(next);commitCharacterAccount(next,{safetyBackup:mode==='replace',allowRecovery:mode==='replace'});return next.order.length;
@@ -1013,7 +1058,7 @@ function assertSafeCharacterJSON(value) {
   };visit(value,0);
 }
 function validateCharacterItem(item,slot=null) {
-  assertCharacterObject(item,'predmet');
+  assertCharacterObject(item,'predmet');validateItemModel(item);
   if(item.weaponKind!==undefined && (item.slot!=='weapon'||!['sword','bow','daggers','fan'].includes(item.weaponKind)))characterDataError('typ zbrane.');
   if(item.modelId!==undefined && (typeof item.modelId!=='string'||!Object.hasOwn(EQUIPMENT_MODELS[item.slot]||{},item.modelId)))characterDataError('model predmetu.');
   if(!Object.hasOwn(EQUIPMENT,item.slot)||slot&&item.slot!==slot)characterDataError('neplatný slot predmetu.');
@@ -1027,6 +1072,7 @@ function validateCharacterItem(item,slot=null) {
   if(item.cell!==undefined)assertCharacterNumber(item.cell,'políčko',0,4499,true);
   if(item.icon!==undefined&&!Object.hasOwn(EQUIPMENT,item.icon))characterDataError('ikona výbavy.');
   if(item.classes!==undefined&&(!Array.isArray(item.classes)||item.classes.some(id=>!Object.hasOwn(CLASSES,id))))characterDataError('povolanie predmetu.');
+  if(item.allowedSchools!==undefined&&(!Array.isArray(item.allowedSchools)||item.allowedSchools.some(id=>!Object.hasOwn(SCHOOLS,id))))characterDataError('škola predmetu.');
   if(item.stats!==undefined){assertCharacterObject(item.stats,'bonusy predmetu');for(const [key,value]of Object.entries(item.stats)){if(!Object.hasOwn(ITEM_STATS,key))characterDataError('neznámy bonus predmetu.');assertCharacterNumber(value,'hodnota bonusu',-.5,1e9);}}
   validateGeneratedItem(item);
   if(item.uniqueId!==undefined&&(!Object.hasOwn(DUNGEON_UNIQUES,item.uniqueId)||DUNGEON_UNIQUES[item.uniqueId].slot!==item.slot))characterDataError('unikát dungeonu.');
@@ -1121,6 +1167,7 @@ function validateCharacterAccount(account) {
   assertCharacterNumber(account.revision,'revízia',0,Number.MAX_SAFE_INTEGER,true);assertCharacterObject(account.settings,'globálne nastavenia');if(typeof account.settings.sound!=='boolean')characterDataError('nastavenie zvuku.');
   assertCharacterObject(account.profiles,'profily');if(new Set(account.order).size!==account.order.length||Object.keys(account.profiles).length!==account.order.length)characterDataError('duplicitné alebo chýbajúce profily.');
   const names=new Set();for(const id of account.order){if(typeof id!=='string'||!Object.hasOwn(account.profiles,id))characterDataError('referencia postavy.');const record=account.profiles[id];validateCharacterProfile(record);if(id!==record.id||names.has(characterNameKey(record.name)))characterDataError('duplicitné meno alebo ID.');names.add(characterNameKey(record.name));}
+  const itemInstances=new Set();for(const record of Object.values(account.profiles))validateProfileItemIdentities(record.data,itemInstances);
   const checkReferences=(value,ownerId)=>{if(!value||typeof value!=='object')return;for(const [key,item]of Object.entries(value)){if(['characterId','ownerCharacterId','selectedCharacterId'].includes(key)&&item!==null&&(typeof item!=='string'||!account.order.includes(item)))characterDataError('referencia na neexistujúcu postavu.');if(item&&typeof item==='object')checkReferences(item,ownerId);}};
   for(const record of Object.values(account.profiles))checkReferences(record.data,record.id);
   if(account.selectedId!==null&&!account.order.includes(account.selectedId))characterDataError('vybraná postava.');
@@ -1144,7 +1191,7 @@ function createPlayerState(profile = {}) {
   player.schools??={};for(const [id,school] of Object.entries(DEFAULT_SCHOOLS))if(SCHOOLS[player.schools[id]]?.classId!==id)player.schools[id]=school;
   player.bestiary??={};player.achievements??={};return player;
 }
-let p=createPlayerState(loadPlayerSave()||{});
+let p=createPlayerState();
 const spellKeys=['q','r','t','v','u','o'],buffs={},effects=[],shots=[];
 let spellCD=[0,0,0,0,0,0],castPose=0,castStyle='',spiritTick=0;
 const role=()=>CLASSES[p.classId],equippedBonus=slot=>(p.equipped[slot]?.bonus||0)+enhancementBonus(p.equipped[slot]);
@@ -1218,11 +1265,9 @@ function hit(m, amount, type='physical',penetrated=false) {
     const gained = enemyXP(m); careerKill(m);prestigeKill(m);dropForgeSupplies(m);dropCraftMaterials(m);
     if (m.type === 'stone') { m.metinCombat = 0; m.metinWaveTimer = 0; dropMetinLoot(m);for(const guard of mobs.filter(guard=>guard.hp>0&&guard.metinParentId===m.spawnId&&guard.metinGeneration===m.metinGeneration))hit(guard,guard.hp,'arcane',true); }
     else {
-      farmBonusLoot(m);
-      spawnGroundDrop({ kind: 'gold', count: Math.round((m.type === 'boss' ? 120 : 7 + Math.floor(rand() * 7)) * (m.metinParentId ? m.attackScale * .5 : map().scale) * (ENEMY_VARIANTS[m.variant]?.gold || 1)) }, m);
-      if(!m.dungeonBoss)dropFarmEquipment(m);
-      if (rand() < .25) spawnGroundDrop({ kind: 'supply', supplyId: 'potions', count: 1 }, m);
+      dropEnemyLoot(m);
     }
+    dropCatalogLoot(m);
     if(m.dungeonBoss)dungeonBossReward(m);
     experience(gained);worldEventKill(m);
     float(gained ? '+' + gained + ' EXP' : 'Slabý cieľ · bez EXP', m.x, m.y - 85, gained ? '#d6c28c' : '#8e9f92');
@@ -1542,6 +1587,7 @@ function xpForLevel(level) {
 }
 
 function initializeCareer() {
+  migrateItemProfile(p,p.characterId||'legacy');
   const old = p.career;
   if (!old || old.schema !== PROGRESSION.schema) {
     const progress = Math.max(0, Math.min(.999999, p.xp / (60 + (p.level - 1) * 35)));
@@ -1968,7 +2014,7 @@ function craftRecipe(id) {
   if (craftingMessage) return false;
   const r = CRAFT_RECIPES[id], out = r.output;
   // Validate every input and the output space before consuming resources or randomness.
-  const item = out.slot ? generateEquipmentItem(out.slot, out.rarity, out.tier) : null;
+  const item = out.slot ? (out.definitionId?createItem(out.definitionId):generateEquipmentItem(out.slot, out.rarity, out.tier)) : null;
   if (item && !addGearItem(item)) return false;
   pay(r.cost);
   for (const [key, n] of Object.entries(r.ingredients || {})) p.career.alchemy.products[key] -= n;
@@ -2046,9 +2092,10 @@ function makeRareOffers(cycle) {
   return [0,1].map(index=>({id:'rare-'+index,stock:1,item:generateEquipmentItem(slots[Math.floor(rng()*slots.length)],tier>=35&&index===1?2:1,tier,generatedWeaponKind(),rng)}));
 }
 function initializeEconomy() {
-  if(p.economy)return;
+  if(p.economy){initializeCatalogMarket();return;}
   p.economy={schema:ECONOMY_RULES.schema,elapsed:0,cycle:0,demand:{supplies:0,materials:0,gear:0},stock:{},rare:makeRareOffers(0)};
   for(const [trader,cfg] of Object.entries(MARKET_TRADERS))for(const id of cfg.goods)p.economy.stock[trader+':'+id]=MARKET_GOODS[id].stock;
+  initializeCatalogMarket();
 }
 function updateEconomy(dt) {
   const e=p.economy;e.elapsed+=dt;
@@ -2057,7 +2104,7 @@ function updateEconomy(dt) {
   e.cycle=Math.min(ECONOMY_RULES.maxCycles,e.cycle+periods);
   for(const group of Object.keys(e.demand))e.demand[group]=Math.trunc(e.demand[group]/2);
   for(const [trader,cfg] of Object.entries(MARKET_TRADERS))for(const id of cfg.goods)e.stock[trader+':'+id]=MARKET_GOODS[id].stock;
-  e.rare=makeRareOffers(e.cycle);
+  e.rare=makeRareOffers(e.cycle);e.catalogItems=undefined;initializeCatalogMarket();
 }
 function marketFactor(group) {
   const e=p.economy;if(!e)return 1;
@@ -2069,7 +2116,7 @@ function currentTrader(){return Object.keys(MARKET_TRADERS).filter(id=>nearNPC(i
 function marketCanTrade(trader){return running&&p.hp>0&&Object.hasOwn(MARKET_TRADERS,trader)&&nearNPC(trader);}
 function marketOffers(trader) {
   if(!Object.hasOwn(MARKET_TRADERS,trader))return [];
-  const list=MARKET_TRADERS[trader].goods.map(id=>{const g=MARKET_GOODS[id];return {id,name:g.name,price:Math.ceil(g.price*marketFactor(g.group)),stock:p.economy.stock[trader+':'+id],level:g.level||1,group:g.group,supply:g.supply,count:g.count};});
+  const list=MARKET_TRADERS[trader].goods.map(id=>{const g=MARKET_GOODS[id];return {id,name:g.name,price:Math.ceil(g.price*marketFactor(g.group)),stock:p.economy.stock[trader+':'+id],level:g.level||1,group:g.group,supply:g.supply,count:g.count,...(g.definitionId?{item:p.economy.catalogItems[id]}:{})};});
   if(MARKET_TRADERS[trader].rare)for(const r of p.economy.rare)list.push({id:r.id,name:r.item.name,price:Math.ceil(Math.max(1000,itemMarketValue(r.item)*4)*marketFactor('gear')),stock:r.stock,level:requiredItemLevel(r.item),group:'gear',item:r.item,count:1});
   return list;
 }
@@ -2086,7 +2133,7 @@ function buyMarketOffer(trader,id,expectedPrice=null,expectedCycle=null) {
     if(!entry||entry.count+offer.count>1e12||!grantGroundSupply(offer.supply,offer.count)){marketMessage='Zásoba dosiahla maximum.';return false;}
   }
   p.gold-=offer.price;
-  if(offer.item)p.economy.rare.find(r=>r.id===id).stock--;else p.economy.stock[trader+':'+id]--;
+  if(id.startsWith('rare-'))p.economy.rare.find(r=>r.id===id).stock--;else p.economy.stock[trader+':'+id]--;
   changeDemand(offer.group,1);marketMessage='Kúpené: '+offer.name+' · −'+offer.price+' Yang.';save();updateHUD();return true;
 }
 function marketGearSaleValue(item,trader=currentTrader()) {
@@ -2119,8 +2166,11 @@ function validateEconomyProfile(data) {
   for(const [trader,cfg]of Object.entries(MARKET_TRADERS))for(const id of cfg.goods){const key=trader+':'+id;keys.push(key);assertCharacterNumber(e.stock[key],'zásoba ponuky',0,MARKET_GOODS[id].stock,true);}
   if(Object.keys(e.stock).some(key=>!keys.includes(key)))characterDataError('neznáma ponuka.');
   if(!Array.isArray(e.rare)||e.rare.length!==2)characterDataError('vzácne ponuky.');
+  if(e.catalogItems!==undefined){assertCharacterObject(e.catalogItems,'katalóg obchodu');for(const [trader,cfg]of Object.entries(MARKET_TRADERS))for(const id of cfg.goods)if(MARKET_GOODS[id].definitionId&&e.stock[trader+':'+id]>0&&!e.catalogItems[id])characterDataError('neúplná ponuka.');for(const [id,item]of Object.entries(e.catalogItems)){if(!MARKET_GOODS[id]?.definitionId||item.definitionId!==MARKET_GOODS[id].definitionId)characterDataError('predmet ponuky.');validateCharacterItem(item);}}
   e.rare.forEach((r,i)=>{assertCharacterObject(r,'vzácna ponuka');if(r.id!=='rare-'+i)characterDataError('ID ponuky.');assertCharacterNumber(r.stock,'vzácna zásoba',0,1,true);validateCharacterItem(r.item);});
 }
+
+function initializeCatalogMarket(){p.economy.catalogItems??={};for(const [id,g]of Object.entries(MARKET_GOODS))if(g.definitionId&&!Object.hasOwn(p.economy.catalogItems,id)){let seed=marketSeed(p.characterId+':'+id+':'+p.economy.cycle);const rng=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};p.economy.catalogItems[id]=createItem(g.definitionId,{rng});for(const [trader,cfg]of Object.entries(MARKET_TRADERS))if(cfg.goods.includes(id))p.economy.stock[trader+':'+id]=g.stock;}}
 
 
 // src/js/systems/dungeons.js
@@ -2519,7 +2569,8 @@ function buyBraveryCapes() {
 
 function farmBonusLoot(m) {
   const eligible = rewardEligible(m), rare = m.variant === 'rare', elite = m.variant === 'elite';
-  let capes = m.type === 'boss' ? 3 : rare ? 2 : rand() < (elite ? .25 : .02) ? 1 : 0;
+  const cfg=enemyLootPool(m).capes;
+  let capes = m.type === 'boss' ? cfg.boss : rare ? cfg.rare : rand() < (elite ? cfg.eliteChance : cfg.normalChance) ? 1 : 0;
   if (capes) spawnGroundDrop({ kind: 'supply', supplyId: 'braveryCapes', count: capes }, m);
   if (!eligible || m.type !== 'wolf') return;
   if (rare) { dropMaterial('ore', 3, m); dropMaterial('dust', 3, m); dropMaterial('books', 1, m); dropMaterial('training', 1, m); }
@@ -2528,16 +2579,16 @@ function farmBonusLoot(m) {
 
 function dropFarmEquipment(m) {
   const rare = m.variant === 'rare', elite = m.variant === 'elite';
-  if (m.type === 'boss') return spawnGroundDrop({ kind: 'gear', item: makeItem(false, m) }, m);
-  if (m.type === 'stone' || rare || rand() < (elite ? .2 : .03)) return spawnGroundDrop({ kind: 'gear', item: makeItem(false, m) }, m);
+  const chance=m.type==='stone'?1:enemyLootPool(m).gear[m.type==='boss'?'boss':rare?'rare':elite?'elite':'normal'];
+  if (chance>=1 || rand() < chance) return spawnGroundDrop({ kind: 'gear', item: makeItem(false, m) }, m);
 }
 
 
 
 // src/js/systems/inventory.js
 function requiredItemLevel(item) { return Number.isSafeInteger(item.requiredLevel) && item.requiredLevel > 0 ? item.requiredLevel : 1; }
-function canEquipItem(item) { return !!EQUIPMENT[item?.slot] && p.level >= requiredItemLevel(item) && (!Array.isArray(item.classes) || item.classes.includes(p.classId)); }
-function itemEquipReason(item) { if (!EQUIPMENT[item?.slot]) return 'Predmet nemožno vybaviť.'; if (p.level < requiredItemLevel(item)) return 'Nedostatočná úroveň · vyžaduje ' + requiredItemLevel(item); if (Array.isArray(item.classes) && !item.classes.includes(p.classId)) return 'Predmet nie je pre tvoje povolanie.'; return 'Možno vybaviť · ' + EQUIPMENT[item.slot].name; }
+function canEquipItem(item) { return !!EQUIPMENT[item?.slot] && p.level >= requiredItemLevel(item) && (!Array.isArray(item.classes) || item.classes.includes(p.classId)) && (!Array.isArray(item.allowedSchools)||item.allowedSchools.includes(p.schools[p.classId])); }
+function itemEquipReason(item) { if (!EQUIPMENT[item?.slot]) return 'Predmet nemožno vybaviť.'; if (p.level < requiredItemLevel(item)) return 'Nedostatočná úroveň · vyžaduje ' + requiredItemLevel(item); if (Array.isArray(item.classes) && !item.classes.includes(p.classId)) return 'Predmet nie je pre tvoje povolanie.'; if(Array.isArray(item.allowedSchools)&&!item.allowedSchools.includes(p.schools[p.classId]))return 'Predmet nie je pre tvoju školu schopností.';return 'Možno vybaviť · ' + EQUIPMENT[item.slot].name; }
 
 function itemSize(item) { return EQUIPMENT[item.slot]?.size || [1, 1]; }
 
@@ -2567,7 +2618,7 @@ function gearLayout(items, pages = p.inventory.pages, preserve = true) {
 function applyGearLayout(layout) { for (const [item, cell] of layout) item.cell = cell; }
 
 function initializeInventory() {
-  p.inventory ??= { schema: INVENTORY.schema, pages: INVENTORY.pages, serial: 0, supplyCells: {} };
+  ensureItemState();
   p.inventory.pages = Math.max(INVENTORY.pages, Math.floor(Number(p.inventory.pages) || 0));
   p.inventory.serial = Math.max(0, Math.floor(Number(p.inventory.serial) || 0));
   p.inventory.supplyCells ??= {};
@@ -2575,7 +2626,7 @@ function initializeInventory() {
   for (const item of [...p.bag, ...Object.values(p.equipped).filter(Boolean)]) {
     if (!EQUIPMENT[item.slot]) item.slot = 'talisman';
     if (!Number.isSafeInteger(item.uid) || item.uid < 1 || used.has(item.uid)) item.uid = ++p.inventory.serial;
-    used.add(item.uid); p.inventory.serial = Math.max(p.inventory.serial, item.uid);
+    ensureItemIdentity(item);used.add(item.uid); p.inventory.serial = Math.max(p.inventory.serial, item.uid);
   }
   for (const id of Object.keys(EQUIPMENT)) p.equipped[id] ??= null;
   // Expand only to preserve existing items during migration; ordinary drops never expand the bag.
@@ -2589,6 +2640,7 @@ function itemBonuses(item) {
   if (!item || !EQUIPMENT[item.slot]) return b;
   const stat = EQUIPMENT[item.slot].stat;
   b[stat] += ((Number(item.bonus) || 0) + enhancementBonus(item)) * (stat === 'crit' ? .01 : 1);
+  for (const [id, value] of Object.entries(item.baseStats || {})) if (Object.hasOwn(b, id) && Number.isFinite(value)) b[id] += value;
   for (const [id, value] of Object.entries(item.stats || {})) if (Object.hasOwn(b, id) && Number.isFinite(value)) b[id] += value;
   return b;
 }
@@ -2607,7 +2659,7 @@ function addGearItem(item) {
   if (!EQUIPMENT[item.slot]) return false;
   const layout = gearLayout([...p.bag, item]);
   if (!layout) return false;
-  item.uid = ++p.inventory.serial; p.bag.push(item); applyGearLayout(layout);trackCollectionGear();trackPrestigeUniques(); return true;
+  ensureItemIdentity(item);if([...p.bag,...Object.values(p.equipped).filter(Boolean)].some(owned=>owned.instanceId===item.instanceId||owned.uid===item.uid))return false;delete item.cell;p.bag.push(item); applyGearLayout(layout);trackCollectionGear();trackPrestigeUniques(); return true;
 }
 
 function finishInventoryChange() {
@@ -2659,7 +2711,7 @@ function supplyDefinitions() {
     ...Object.entries(MATERIALS).map(([id, name]) => ({ id: 'material:' + id, name, count: p.career.materials[id], icon: id, description: BIOLOGY.some(stage=>stage.item===id)?'Odovzdanie: Biológ v Meste.':['ore','upgradeStones','forgeCore','smithCharm','protectionScroll'].includes(id)?'Použitie: kováč.':'Materiál na progresiu.', action: 'material', material: id })),
     ...Object.entries(ALCHEMY_PRODUCTS).map(([id, product]) => ({ id: 'alchemy:' + id, name: product.name, count: p.career.alchemy.products[id], icon: product.icon, description: product.text, action: 'product' })),
     ...Object.entries(GEMS).map(([id, gem]) => ({ id: 'gem:' + id, name: gem.name, count: p.career.alchemy.stock[id], icon: id, description: gem.text + ' Použitie otvorí alchýmiu.', action: 'alchemy' }))
-  ];
+  ].map(entry=>({...stackItemView(entry.id,entry.count),...entry}));
 }
 
 function supplyEntries() {
@@ -2864,6 +2916,51 @@ function equipmentItemName(slot,rarity,weaponKind) {
 }
 
 
+// src/js/systems/item-model.js
+function ensureItemState(){p.inventory??={schema:INVENTORY.schema,pages:INVENTORY.pages,serial:0,supplyCells:{}};p.inventory.serial??=0;return p.inventory;}
+function cloneItem(item){return JSON.parse(JSON.stringify(item));}
+function genericItemDefinition(item){return 'equipment:'+item.slot+(item.slot==='weapon'?':'+(item.weaponKind||'sword'):'');}
+function normalizeItemFields(item,owner,uid){
+ if(item.itemSchema===1)return item;
+ item.uid=uid;item.itemSchema=1;item.instanceId??=owner+':item:'+uid;item.definitionId??=genericItemDefinition(item);item.type??='equipment';item.rarity??=0;item.tier??=item.requiredLevel||1;item.requiredLevel??=1;item.enhance??=0;item.bonus??=0;item.value??=0;item.stats??={};item.baseStats??={};
+ const kind=item.slot==='weapon'&&['bow','daggers','fan'].includes(item.weaponKind)?item.weaponKind:item.slot;item.modelId??=kind+'-'+raritySpec(item.rarity).family;return item;
+}
+function profileItemReferences(data,history=true){
+ const items=[...(Array.isArray(data.bag)?data.bag:[]),...Object.values(data.equipped||{}).filter(Boolean)];
+ for(const state of [...Object.values(data.worldStates||{}),data.career?.normalTemple])for(const drop of state?.drops||[])if(drop.kind==='gear'&&drop.item)items.push(drop.item);
+ for(const offer of data.economy?.rare||[])if(history||offer.stock>0)items.push(offer.item);
+ for(const [id,item]of Object.entries(data.economy?.catalogItems||{}))if(history||Object.entries(MARKET_TRADERS).some(([trader,cfg])=>cfg.goods.includes(id)&&data.economy.stock[trader+':'+id]>0))items.push(item);
+ return items;
+}
+function migrateItemProfile(data,owner){
+ if(!data||typeof data!=='object')return;
+ data.inventory??={schema:INVENTORY.schema,pages:INVENTORY.pages,serial:0,supplyCells:{}};if(typeof data.inventory!=='object'||Array.isArray(data.inventory))return;
+ const items=profileItemReferences(data),seen=new Set(),objects=new Set();let serial=Number.isSafeInteger(data.inventory.serial)?data.inventory.serial:0;
+ for(const item of items)if(Number.isSafeInteger(item?.uid))serial=Math.max(serial,item.uid);
+ for(const item of items){if(!item||typeof item!=='object'||objects.has(item)||!Object.hasOwn(EQUIPMENT,item.slot))continue;objects.add(item);if(item.itemSchema!==1){let uid=item.uid;if(!Number.isSafeInteger(uid)||uid<1||seen.has(uid))uid=++serial;normalizeItemFields(item,owner,uid);}seen.add(item.uid);}
+ data.inventory.serial=Math.max(serial,data.inventory.serial||0);
+ if(data.economy&&data.economy.stock)for(const [trader,cfg]of Object.entries(MARKET_TRADERS))for(const id of cfg.goods)data.economy.stock[trader+':'+id]??=0;
+}
+function migrateItemAccount(account){if(!account?.profiles||typeof account.profiles!=='object')return;for(const record of Object.values(account.profiles))if(record?.data)migrateItemProfile(record.data,record.id);}
+function ensureItemIdentity(item){if(item.itemSchema===1)return item;const state=ensureItemState(),uid=Number.isSafeInteger(item.uid)&&item.uid>0?item.uid:++state.serial;state.serial=Math.max(state.serial,uid);return normalizeItemFields(item,p.characterId||'legacy',uid);}
+function createItem(definitionId,options={}){
+ const def=ITEM_DEFINITIONS[definitionId];if(!def)throw Error('Neznáma definícia predmetu.');if(def.type!=='equipment')return stackItemView(definitionId,options.count||1);
+ const item=generateEquipmentItem(def.slot,options.rarity??def.rarity??0,options.tier??def.level??1,def.weaponKind||options.weaponKind||generatedWeaponKind(),options.rng||rand);
+ if(!def.generic){item.definitionId=def.id;item.name=def.name;item.requiredLevel=def.level;item.bonus=def.bonus;item.modelId=def.modelId;item.classes=[...def.classes];item.allowedSchools=[...def.schools];item.baseStats={...def.baseStats};item.value=itemSaleValue(item);}return item;
+}
+function stackItemView(id,count){const def=ITEM_DEFINITIONS[id];if(!def)return null;return {itemSchema:1,instanceId:(p.characterId||'legacy')+':stack:'+id,definitionId:id,type:def.type,name:def.name,rarity:def.rarity,modelId:def.modelId,stats:{},baseStats:{},count};}
+function rebaseImportedItems(data,oldId,newId){if(oldId===newId)return;for(const item of profileItemReferences(data))if(item.instanceId?.startsWith(oldId+':item:'))item.instanceId=newId+item.instanceId.slice(oldId.length);}
+function validateItemModel(item){
+ if(item.itemSchema===undefined)return;if(item.itemSchema!==1||item.type!=='equipment'||typeof item.instanceId!=='string'||!/^[-a-zA-Z0-9_:]{1,200}$/.test(item.instanceId)||!Number.isSafeInteger(item.uid))characterDataError('identita predmetu.');
+ const def=ITEM_DEFINITIONS[item.definitionId];if(!def||def.type!=='equipment'||def.slot!==item.slot)characterDataError('definícia predmetu.');if(!Object.hasOwn(EQUIPMENT_MODELS[item.slot]||{},item.modelId))characterDataError('vizuálny model predmetu.');
+ assertCharacterObject(item.baseStats,'základné bonusy');for(const [stat,n]of Object.entries(item.baseStats)){if(!Object.hasOwn(ITEM_STATS,stat))characterDataError('základný atribút predmetu.');assertCharacterNumber(n,'základný bonus',-.5,1e9);}
+ if(!def.generic&&(item.bonus!==def.bonus||item.modelId!==def.modelId||item.weaponKind!==def.weaponKind||item.requiredLevel!==def.level||JSON.stringify(item.baseStats)!==JSON.stringify(def.baseStats)||JSON.stringify(item.classes)!==JSON.stringify(def.classes)||JSON.stringify(item.allowedSchools)!==JSON.stringify(def.schools)))characterDataError('nesúlad katalógového predmetu.');
+}
+function validateProfileItemIdentities(data,seen=new Set()){
+ const uids=new Set();for(const item of profileItemReferences(data,false)){if(item.itemSchema===undefined)continue;validateItemModel(item);if(seen.has(item.instanceId)||uids.has(item.uid))characterDataError('duplicitná identita predmetu.');seen.add(item.instanceId);uids.add(item.uid);if(item.uid>data.inventory.serial)characterDataError('séria predmetov.');}return seen;
+}
+
+
 // src/js/systems/item-generation.js
 function raritySpec(id) {return RARITIES.find(spec=>spec.id===id)||RARITIES[0];}
 function rarityRank(id) {return raritySpec(id).rank;}
@@ -2915,7 +3012,7 @@ function itemSaleValue(item) {return item.generationVersion===ITEM_GENERATION.ve
 function generateEquipmentItem(slot,rarity,tier,weaponKind=generatedWeaponKind(),rng=rand) {
  const spec=EQUIPMENT[slot],rank=raritySpec(rarity),item={generationVersion:ITEM_GENERATION.version,name:equipmentItemName(slot,rarity,weaponKind),slot,rarity,tier,requiredLevel:tier,enhance:0,bonus:spec.base+Math.floor(tier*spec.scale)+Math.round(rank.power*spec.rare)};
  if(slot==='weapon')item.weaponKind=weaponKind;
- Object.assign(item,rollItemAffixes(item,rng));item.value=itemSaleValue(item);return item;
+ Object.assign(item,rollItemAffixes(item,rng));item.value=itemSaleValue(item);return ensureItemIdentity(item);
 }
 function validateGeneratedItem(item) {
  if(item.generationVersion===undefined){if(item.affixes!==undefined)characterDataError('bonusy bez verzie generátora.');return;}
@@ -2970,9 +3067,8 @@ function initializeLoot() {
   }
 }
 
-function cloneGroundDrop(drop) {
-  return { ...drop, ...(drop.item ? { item: { ...drop.item, ...(drop.item.stats ? { stats: { ...drop.item.stats } } : {}), ...(drop.item.special ? { special: [...drop.item.special] } : {}) } } : {}) };
-}
+function cloneGroundDrop(drop) {return {...drop,...(drop.item?{item:cloneItem(drop.item)}:{})};}
+
 
 function hydrateGroundDrops(saved) {
   const ids = new Set();
@@ -2992,6 +3088,7 @@ function hydrateGroundDrops(saved) {
 }
 
 function spawnGroundDrop(payload, source) {
+  if(payload.kind==='gear')ensureItemIdentity(payload.item);
   const angle = rand() * Math.PI * 2, radius = 22 + rand() * 64;
   const drop = {
     ...payload, id: ++p.lootSerial,
@@ -3148,6 +3245,13 @@ function updateGroundLoot(dt) {
 
 
 
+// src/js/systems/loot-pools.js
+function enemyLootPoolId(enemy){if(enemy.type==='stone')return 'metin:'+(enemy.metinType||metinTypeForLevel(enemyLevel(enemy)));if(enemy.dungeonBoss)return 'dungeon:'+(enemy.dungeonId||'crypt');return enemy.type==='boss'?'boss:'+(enemy.mapId||p.mapId):'enemy:'+(enemy.skin||map().skin);}
+function enemyLootPool(enemy){return LOOT_POOLS[enemyLootPoolId(enemy)]||LOOT_POOLS['enemy:wolf'];}
+function dropCatalogLoot(enemy){if(!rewardEligible(enemy)||enemy.metinParentId)return;for(const entry of enemyLootPool(enemy).catalog)if(enemyLevel(enemy)>=entry.minLevel&&rand()<entry.chance)spawnGroundDrop({kind:'gear',item:createItem(entry.definitionId)},enemy);}
+function dropEnemyLoot(enemy){const pool=enemyLootPool(enemy);farmBonusLoot(enemy);spawnGroundDrop({kind:'gold',count:Math.round((enemy.type==='boss'?pool.gold.boss:pool.gold.min+Math.floor(rand()*pool.gold.range))*(enemy.metinParentId?enemy.attackScale*.5:map().scale)*(ENEMY_VARIANTS[enemy.variant]?.gold||1))},enemy);if(!enemy.dungeonBoss)dropFarmEquipment(enemy);if(rand()<pool.potionChance)spawnGroundDrop({kind:'supply',supplyId:'potions',count:1},enemy);}
+
+
 // src/js/systems/metins.js
 function metinTypeForLevel(level) {
   return Object.keys(METIN_TYPES).find(id => level <= METIN_TYPES[id].levels[1]) || 'doom';
@@ -3274,7 +3378,7 @@ function updateMetins(dt, safe) {
 function metinLootAmount(min, max) { return min + Math.floor(rand() * (max - min + 1)); }
 
 function dropMetinLoot(stone) {
-  const type = METIN_TYPES[stone.metinType || metinTypeForLevel(stone.level)], pool = type.loot;
+  const type = METIN_TYPES[stone.metinType || metinTypeForLevel(stone.level)], pool = enemyLootPool(stone).metin;
   spawnGroundDrop({ kind: 'gold', currencyName: 'Yang', count: Math.round(metinLootAmount(...pool.yang) * (1 + stone.level * .12)) }, stone);
   if (!rewardEligible(stone)) return;
   for (const id of ['ore', 'books', 'essence', 'dust', 'upgradeStones']) {
@@ -4057,7 +4161,7 @@ function groundDropTooltip(drop) {
   let details;
   if (gear) {
     const spec = EQUIPMENT[item.slot], base = (Number(item.bonus) || 0) * (spec.stat === 'crit' ? .01 : 1);
-    const extras = Object.entries(item.stats || {}).filter(([stat, value]) => ITEM_STATS[stat] && Number.isFinite(value));
+    const extras = Object.entries(Object.fromEntries(Object.keys(ITEM_STATS).map(stat=>[stat,(item.baseStats?.[stat]||0)+(item.stats?.[stat]||0)]))).filter(([stat, value]) => ITEM_STATS[stat] && Number.isFinite(value));
     const specials = Array.isArray(item.special) ? item.special : [];
     details = `<h4>Základné atribúty</h4><div class="loot-stat"><span>${ITEM_STATS[spec.stat]}</span><b>${signedItemStat(spec.stat, base)}</b></div><div class="loot-stat"><span>Vylepšenie +${item.enhance || 0}</span><b>${signedItemStat(spec.stat, enhancementBonus(item) * (spec.stat === 'crit' ? .01 : 1))}</b></div>${extras.length ? '<h4>Bonusy</h4>'+extras.map(([stat, value]) => `<div class="loot-stat"><span>${ITEM_STATS[stat]}</span><b>${signedItemStat(stat, value)}</b></div>`).join('') : ''}${specials.length?'<h4>Špeciálne vlastnosti</h4><p>'+specials.map(value=>escapeHTML(value)).join('<br>')+'</p>':''}<p class="${usable ? 'stat-gain' : 'stat-loss'}">${usable ? 'Možno vybaviť · ' + spec.name : escapeHTML(itemEquipReason(item))}</p>${usable ? groundItemComparison(item) : ''}`;
   } else details = `<p>${escapeHTML(item.description)}</p><div class="loot-stat"><span>Množstvo</span><b>${item.count.toLocaleString('sk-SK')}</b></div><h4>Vybavenie</h4><p>${drop.kind === 'relic' ? 'Relikvia zbierky · nezaberá slot výbavy.' : 'Nie je výbava postavy.'}</p>`;
@@ -4375,7 +4479,7 @@ function careerEndgame() {
 function careerPanel(tab = careerTab) {
   if (!running) return;
   const tabs = {
-    discovery: ['Bestiár a zbierky', discoveryPanel], overview: ['Prehľad', careerOverview], training: ['Atribúty', careerTraining],
+    items: ['Predmety', itemCatalogPanel], discovery: ['Bestiár a zbierky', discoveryPanel], overview: ['Prehľad', careerOverview], training: ['Atribúty', careerTraining],
     skills: ['Schopnosti', careerSkills], biology: ['Biológ', careerBiology],
     forge: ['Vylepšovanie', careerForge], crafting: ['Výroba', () => craftingRecipesPanel('crafting')], alchemy: ['Alchýmia', () => craftingRecipesPanel('alchemy') + careerAlchemy()],
     collection: ['Relikvie', careerCollection], specialization: ['Špecializácia', careerSpecialization],
@@ -4409,6 +4513,12 @@ function careerPanel(tab = careerTab) {
   });
 }
 
+
+function itemCatalogPanel(){return '<div class="item-catalog">'+Object.entries(ICONIC_ITEMS).map(([key,d])=>{
+const preview={slot:'weapon',name:d.name,modelId:d.modelId,rarity:ITEM_DEFINITIONS[d.id].rarity,tier:d.level,bonus:d.bonus,weaponKind:d.weaponKind};
+const chance=ICONIC_DROP_ENTRIES.find(e=>e.definitionId===d.id).chance;
+return '<div class="career-card">'+itemIcon(preview)+'<h3>'+d.name+'</h3><p>Vyžaduje úroveň '+d.level+' · '+d.classes.map(id=>CLASSES[id].name).join(', ')+'</p><p>Útok +'+d.bonus+' · '+Object.entries(d.baseStats).map(([stat,n])=>ITEM_STATS[stat]+' '+signedItemStat(stat,n)).join(' · ')+'</p><p>Bossovia a Metiny od úrovne '+d.level+': '+(chance*100)+' % za zbraň. Výroba: kováč, remeslo '+CRAFT_RECIPES['iconic-'+key].level+'.'+(['fms','poison'].includes(key)?' Predaj: zbrojár.':'')+'</p></div>';
+}).join('')+'</div>';}
 
 
 // src/js/ui/crafting.js
@@ -4956,6 +5066,8 @@ function drawBattleEffects() {
 
 
 // src/js/main.js
+// Load persisted data only after all data registries and validators are available.
+p=createPlayerState(loadPlayerSave()||{});
 initializeCareer();
 initializeInventory();
 initializeFarming();

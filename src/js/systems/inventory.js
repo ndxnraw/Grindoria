@@ -1,6 +1,6 @@
 function requiredItemLevel(item) { return Number.isSafeInteger(item.requiredLevel) && item.requiredLevel > 0 ? item.requiredLevel : 1; }
-function canEquipItem(item) { return !!EQUIPMENT[item?.slot] && p.level >= requiredItemLevel(item) && (!Array.isArray(item.classes) || item.classes.includes(p.classId)); }
-function itemEquipReason(item) { if (!EQUIPMENT[item?.slot]) return 'Predmet nemožno vybaviť.'; if (p.level < requiredItemLevel(item)) return 'Nedostatočná úroveň · vyžaduje ' + requiredItemLevel(item); if (Array.isArray(item.classes) && !item.classes.includes(p.classId)) return 'Predmet nie je pre tvoje povolanie.'; return 'Možno vybaviť · ' + EQUIPMENT[item.slot].name; }
+function canEquipItem(item) { return !!EQUIPMENT[item?.slot] && p.level >= requiredItemLevel(item) && (!Array.isArray(item.classes) || item.classes.includes(p.classId)) && (!Array.isArray(item.allowedSchools)||item.allowedSchools.includes(p.schools[p.classId])); }
+function itemEquipReason(item) { if (!EQUIPMENT[item?.slot]) return 'Predmet nemožno vybaviť.'; if (p.level < requiredItemLevel(item)) return 'Nedostatočná úroveň · vyžaduje ' + requiredItemLevel(item); if (Array.isArray(item.classes) && !item.classes.includes(p.classId)) return 'Predmet nie je pre tvoje povolanie.'; if(Array.isArray(item.allowedSchools)&&!item.allowedSchools.includes(p.schools[p.classId]))return 'Predmet nie je pre tvoju školu schopností.';return 'Možno vybaviť · ' + EQUIPMENT[item.slot].name; }
 
 function itemSize(item) { return EQUIPMENT[item.slot]?.size || [1, 1]; }
 
@@ -30,7 +30,7 @@ function gearLayout(items, pages = p.inventory.pages, preserve = true) {
 function applyGearLayout(layout) { for (const [item, cell] of layout) item.cell = cell; }
 
 function initializeInventory() {
-  p.inventory ??= { schema: INVENTORY.schema, pages: INVENTORY.pages, serial: 0, supplyCells: {} };
+  ensureItemState();
   p.inventory.pages = Math.max(INVENTORY.pages, Math.floor(Number(p.inventory.pages) || 0));
   p.inventory.serial = Math.max(0, Math.floor(Number(p.inventory.serial) || 0));
   p.inventory.supplyCells ??= {};
@@ -38,7 +38,7 @@ function initializeInventory() {
   for (const item of [...p.bag, ...Object.values(p.equipped).filter(Boolean)]) {
     if (!EQUIPMENT[item.slot]) item.slot = 'talisman';
     if (!Number.isSafeInteger(item.uid) || item.uid < 1 || used.has(item.uid)) item.uid = ++p.inventory.serial;
-    used.add(item.uid); p.inventory.serial = Math.max(p.inventory.serial, item.uid);
+    ensureItemIdentity(item);used.add(item.uid); p.inventory.serial = Math.max(p.inventory.serial, item.uid);
   }
   for (const id of Object.keys(EQUIPMENT)) p.equipped[id] ??= null;
   // Expand only to preserve existing items during migration; ordinary drops never expand the bag.
@@ -52,6 +52,7 @@ function itemBonuses(item) {
   if (!item || !EQUIPMENT[item.slot]) return b;
   const stat = EQUIPMENT[item.slot].stat;
   b[stat] += ((Number(item.bonus) || 0) + enhancementBonus(item)) * (stat === 'crit' ? .01 : 1);
+  for (const [id, value] of Object.entries(item.baseStats || {})) if (Object.hasOwn(b, id) && Number.isFinite(value)) b[id] += value;
   for (const [id, value] of Object.entries(item.stats || {})) if (Object.hasOwn(b, id) && Number.isFinite(value)) b[id] += value;
   return b;
 }
@@ -70,7 +71,7 @@ function addGearItem(item) {
   if (!EQUIPMENT[item.slot]) return false;
   const layout = gearLayout([...p.bag, item]);
   if (!layout) return false;
-  item.uid = ++p.inventory.serial; p.bag.push(item); applyGearLayout(layout);trackCollectionGear();trackPrestigeUniques(); return true;
+  ensureItemIdentity(item);if([...p.bag,...Object.values(p.equipped).filter(Boolean)].some(owned=>owned.instanceId===item.instanceId||owned.uid===item.uid))return false;delete item.cell;p.bag.push(item); applyGearLayout(layout);trackCollectionGear();trackPrestigeUniques(); return true;
 }
 
 function finishInventoryChange() {
@@ -122,7 +123,7 @@ function supplyDefinitions() {
     ...Object.entries(MATERIALS).map(([id, name]) => ({ id: 'material:' + id, name, count: p.career.materials[id], icon: id, description: BIOLOGY.some(stage=>stage.item===id)?'Odovzdanie: Biológ v Meste.':['ore','upgradeStones','forgeCore','smithCharm','protectionScroll'].includes(id)?'Použitie: kováč.':'Materiál na progresiu.', action: 'material', material: id })),
     ...Object.entries(ALCHEMY_PRODUCTS).map(([id, product]) => ({ id: 'alchemy:' + id, name: product.name, count: p.career.alchemy.products[id], icon: product.icon, description: product.text, action: 'product' })),
     ...Object.entries(GEMS).map(([id, gem]) => ({ id: 'gem:' + id, name: gem.name, count: p.career.alchemy.stock[id], icon: id, description: gem.text + ' Použitie otvorí alchýmiu.', action: 'alchemy' }))
-  ];
+  ].map(entry=>({...stackItemView(entry.id,entry.count),...entry}));
 }
 
 function supplyEntries() {

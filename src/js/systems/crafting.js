@@ -38,7 +38,7 @@ function craftRecipe(id) {
   if (craftingMessage) return false;
   const r = CRAFT_RECIPES[id], out = r.output;
   // Validate every input and the output space before consuming resources or randomness.
-  const item = out.slot ? generateEquipmentItem(out.slot, out.rarity, out.tier) : null;
+  const item = out.slot ? (out.definitionId?createItem(out.definitionId):generateEquipmentItem(out.slot, out.rarity, out.tier)) : null;
   if (item && !addGearItem(item)) return false;
   pay(r.cost);
   for (const [key, n] of Object.entries(r.ingredients || {})) p.career.alchemy.products[key] -= n;

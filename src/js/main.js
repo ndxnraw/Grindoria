@@ -1,3 +1,5 @@
+// Load persisted data only after all data registries and validators are available.
+p=createPlayerState(loadPlayerSave()||{});
 initializeCareer();
 initializeInventory();
 initializeFarming();
