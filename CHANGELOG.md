@@ -10,6 +10,15 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.33.1] - 2026-11-05
+
+### Added
+
+### Changed
+
+### Fixed
+- Horná navigácia zostáva iba v Prehľade; Bestiár a zbierky aj Atlas Metinov zobrazujú vlastný obsah bez opakovaných preklikov.
+
 ## [0.33.0] - 2026-11-05
 
 ### Added
@@ -610,7 +619,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.33.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.33.1...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -647,3 +656,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.31.0]: https://github.com/ndxnraw/Grindoria/compare/v0.30.0...v0.31.0
 [0.32.0]: https://github.com/ndxnraw/Grindoria/compare/v0.31.0...v0.32.0
 [0.33.0]: https://github.com/ndxnraw/Grindoria/compare/v0.32.0...v0.33.0
+[0.33.1]: https://github.com/ndxnraw/Grindoria/compare/v0.33.0...v0.33.1

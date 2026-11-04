@@ -14,7 +14,7 @@ Tab otvára a zatvára Cestovanie; Shift+Tab zachováva spätný pohyb fokusu. Z
 
 - C: atribúty, špecializácia, prestíž a trvalé posilnenie; bez plateného tréningu a odkazov na iné okná.
 - V: jediná kniha schopností vrátane štúdia Normál 1–20, M1–M10, G1–G10 a P.
-- P: prehľad, bestiár a Atlas Metinov. Biologický výskum je v N → Podrobnosti výskumu.
+- P: prehľad, bestiár a Atlas Metinov. Horné prekliky sú iba v Prehľade; otvorený bestiár ani atlas ich neopakujú. Biologický výskum je v N → Podrobnosti výskumu.
 - Biológ: po interakcii samostatné okno odovzdávania iba aktuálnej etapy.
 - Kováč: malé menu Vylepšovanie / Výroba; služby nie sú v P.
 - Dungeon Majster: dungeony, prestížne výpravy a trhliny. Aktívna výprava má stavový panel; samostatné okno Endgame neexistuje.
