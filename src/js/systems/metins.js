@@ -59,9 +59,9 @@ function upgradeLegacyMetin(m, point) {
 }
 
 function restoreMetinGuards(population, prior) {
-  const parents = new Set(population.filter(m => m.type === 'stone').map(m => m.spawnId));
+  const parents = new Map(population.filter(m => m.type === 'stone').map(m => [m.spawnId,m])),priorParents=new Map((prior||[]).filter(m=>m.type==='stone').map(m=>[m.spawnId,m]));
   for (const m of prior || []) if (m.metinParentId && m.hp > 0 && m.metinLife > 0 && parents.has(m.metinParentId)) {
-    const parent = population.find(stone => stone.spawnId === m.metinParentId), priorParent = prior.find(stone => stone.spawnId === m.metinParentId);
+    const parent = parents.get(m.metinParentId), priorParent = priorParents.get(m.metinParentId);
     const dx = priorParent ? parent.x - priorParent.x : 0, dy = priorParent ? parent.y - priorParent.y : 0;
     const restorePosition = (x, y) => {
       x = Math.max(45, Math.min(SIZE-45, x+dx)); y = Math.max(45, Math.min(SIZE-45, y+dy));
@@ -86,9 +86,8 @@ function registerMetinAttack(m) {
 
 function spawnMetinGuards(stone) {
   if (stone.hp <= 0) return 0;
-  const spec = METIN_TYPES[stone.metinType], guards = mobs.filter(m => m.metinParentId && m.hp > 0);
-  const own = guards.filter(m => m.metinParentId === stone.spawnId && m.metinGeneration === stone.metinGeneration).length;
-  const count = Math.max(0, Math.min(spec.wave, METIN_RULES.maxGuards - own, METIN_RULES.globalGuards - guards.length));
+  const spec = METIN_TYPES[stone.metinType];let own=0,total=0;for(const m of mobs)if(m.metinParentId&&m.hp>0){total++;if(m.metinParentId===stone.spawnId&&m.metinGeneration===stone.metinGeneration)own++;}
+  const count = Math.max(0, Math.min(spec.wave, METIN_RULES.maxGuards - own, METIN_RULES.globalGuards - total));
   const tier = METIN_GUARDS.find(t => stone.level <= t.max) || METIN_GUARDS.at(-1);
   for (let i = 0; i < count; i++) {
     const angle = rand() * Math.PI * 2, radius = 70 + rand() * 40;
@@ -104,17 +103,20 @@ function spawnMetinGuards(stone) {
 
 function updateMetins(dt, safe) {
   if (!running || paused) return;
+  const parents=new Map();for(const m of mobs)if(m.type==='stone')parents.set(m.spawnId,m);
   for (let i = mobs.length - 1; i >= 0; i--) {
     const guard = mobs[i]; if (!guard.metinParentId) continue;
-    const parent=mobs.find(m=>m.spawnId===guard.metinParentId);if(guard.hp>0&&parent&&parent.hp<=0&&guard.metinGeneration===parent.metinGeneration)hit(guard,guard.hp,'arcane',true);
+    const parent=parents.get(guard.metinParentId);if(guard.hp>0&&parent&&parent.hp<=0&&guard.metinGeneration===parent.metinGeneration)hit(guard,guard.hp,'arcane',true);
     guard.metinLife -= dt;
     if (guard.hp <= 0) guard.dead -= dt;
     if (guard.metinLife <= 0 || guard.hp <= 0 && guard.dead <= 0) { mobs.splice(i, 1); continue; }
   }
-  for (const stone of mobs.filter(m => m.type === 'stone' && m.hp > 0)) {
+  const groups=new Map();for(const guard of mobs)if(guard.metinParentId&&guard.hp>0){if(!groups.has(guard.metinParentId))groups.set(guard.metinParentId,[]);groups.get(guard.metinParentId).push(guard);}
+  for (const stone of parents.values()) {
+    if(stone.hp<=0)continue;
     stone.metinCombat = Math.max(0, (stone.metinCombat || 0) - dt);
     if (!stone.metinCombat || safe || active('stealth') || p.hp <= 0 || Math.hypot(stone.x - p.x, stone.y - p.y) > 850) continue;
-    for (const guard of mobs) if (guard.hp > 0 && guard.metinParentId === stone.spawnId && guard.metinGeneration === stone.metinGeneration) guard.engaged = Math.max(guard.engaged || 0, 8);
+    for (const guard of groups.get(stone.spawnId)||EMPTY_NEIGHBORS) if (guard.metinGeneration === stone.metinGeneration) guard.engaged = Math.max(guard.engaged || 0, 8);
     stone.metinWaveTimer = Math.max(0, (stone.metinWaveTimer || 0) - dt);
     if (stone.metinWaveTimer <= 0) { spawnMetinGuards(stone); stone.metinWaveTimer = METIN_TYPES[stone.metinType].interval; }
   }

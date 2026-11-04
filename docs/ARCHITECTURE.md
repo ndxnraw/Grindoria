@@ -132,3 +132,7 @@ Data/dungeons.js registruje lokality, obtiažnosti, unikáty a vyhradený inšta
 ## Spoločné predmety
 
 Definície, identity kusov a loot registre: [ITEM_MODEL.md](ITEM_MODEL.md). Nové zdroje výbavy používajú createItem alebo existujúci generátor; inventár, výbava, trh a zem zachovávajú instanceId. Materiály ostávajú v pôvodných počítadlách, spoločné dátové pohľady nevytvárajú ďalší save.
+
+## Výkon
+
+Prechodné plánovanie a indexy sú v systems/performance.js; vykresľovacie cache ostávajú pri príslušnom rendereri. Nepridávajú ďalšie uložené kópie entít. [Pravidlá, limity a merania](PERFORMANCE.md).

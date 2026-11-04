@@ -10,6 +10,21 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.27.0] - 2026-11-04
+
+### Added
+- Odstupňovaná a rozložená aktualizácia vzdialenej neaktívnej AI pri zachovaní plnej frekvencie boja, efektov a respawnov.
+- Opakovateľný CPU benchmark, lokálne porovnanie HTML zostáv v prehliadači a 16 výkonových regresií.
+
+### Changed
+- Culling pred triedením scény, znovupoužitie renderovacích záznamov, separačných buniek a gradientu.
+- Bitmapová cache koristi s limitom počtu ikon aj práce na snímok; vzdialená korisť používa značku rarity, blízka a označená vlastnú ikonu.
+- Vyhľadávanie cieľov bez triedenia, index spawnov a lineárne mapovanie Metinov na posily.
+- Hromadná expirácia koristi bez opakovaného posúvania poľa, menej duplicitných výpočtov HUD a vykresľovanie pozadia menu na 10 Hz.
+
+### Fixed
+- Zbytočné generovanie geometrie a dekódovanie SVG ikon pri každom snímku s veľkým množstvom koristi.
+
 ## [0.26.0] - 2026-11-04
 
 ### Added
@@ -493,7 +508,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.26.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.27.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -523,3 +538,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.24.0]: https://github.com/ndxnraw/Grindoria/compare/v0.23.0...v0.24.0
 [0.25.0]: https://github.com/ndxnraw/Grindoria/compare/v0.24.0...v0.25.0
 [0.26.0]: https://github.com/ndxnraw/Grindoria/compare/v0.25.0...v0.26.0
+[0.27.0]: https://github.com/ndxnraw/Grindoria/compare/v0.26.0...v0.27.0

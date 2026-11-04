@@ -16,7 +16,7 @@ function pruneStoredGroundDrops(now = Date.now()) {
 }
 
 function expireGroundDrops(now = Date.now()) {
-  for (let i = drops.length - 1; i >= 0; i--) if (drops[i].expiresAt <= now) drops.splice(i, 1);
+  let kept=0;for(const drop of drops)if(!(drop.expiresAt<=now))drops[kept++]=drop;drops.length=kept;
 }
 const lootSupplyCatalog = new Map();
 
@@ -114,7 +114,8 @@ function groundDropVisual(drop) {
 function groundDropAt(x, y) {
   let closest = null, distance = Infinity;
   for (let i = drops.length - 1; i >= 0; i--) {
-    const drop = drops[i], visual = groundDropVisual(drop), dx = Math.abs(x - visual.x), dy = Math.abs(y - visual.y);
+    const drop=drops[i];let vx,vy;if((drop.fallAge??LOOT_RULES.fallDuration)>=LOOT_RULES.fallDuration){vx=W/2+drop.x-cam.x;vy=H/2+(drop.y-cam.y)*.62-17;}else{const visual=groundDropVisual(drop);vx=visual.x;vy=visual.y;}
+    const dx=Math.abs(x-vx),dy=Math.abs(y-vy);
     if (dx > 19 || dy > 21) continue;
     const d = Math.hypot(dx, dy);
     if (d < distance) { closest = drop; distance = d; }
@@ -200,8 +201,7 @@ function pickNearbyGroundDrops() {
 function updateGroundLoot(dt) {
   expireGroundDrops();
   if (!running || paused || p.hp <= 0) { updateLootHover(); return; }
-  for (const drop of drops) drop.fallAge = Math.min(LOOT_RULES.fallDuration, (drop.fallAge || 0) + dt);
-  for(let i=drops.length-1;i>=0;i--)if(!drops[i].manualPickup&&(drops[i].kind==='gold'||drops[i].kind==='supply')&&grantAutomaticDrop(drops[i]))drops.splice(i,1);
+  let kept=0;for(const drop of drops){drop.fallAge=Math.min(LOOT_RULES.fallDuration,(drop.fallAge||0)+dt);if(!drop.manualPickup&&(drop.kind==='gold'||drop.kind==='supply')&&grantAutomaticDrop(drop))continue;drops[kept++]=drop;}drops.length=kept;
   flushAutomaticLoot();
   updateLootHover(dt);
 }

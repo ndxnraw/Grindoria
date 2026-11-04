@@ -57,7 +57,7 @@ function speedValue(){return dungeonSpeedFactor()*(role().speed+p.dexterity*2+eq
 
 function criticalChance(){return Math.min(.8,role().crit+p.dexterity*.01+careerBonuses().crit+equipmentBonuses().crit+passiveBonuses().crit+(active('dragonPower')?.25:0));}
 
-function nearest(range=500,from=p){return mobs.filter(m=>m.hp>0&&Math.hypot(m.x-from.x,m.y-from.y)<range).sort((a,b)=>Math.hypot(a.x-from.x,a.y-from.y)-Math.hypot(b.x-from.x,b.y-from.y))[0];}
+function nearest(range=500,from=p){if(!(range>0))return undefined;let best,minimum=range*range;for(const m of mobs){if(m.hp<=0)continue;const dx=m.x-from.x,dy=m.y-from.y,distance=dx*dx+dy*dy;if(distance<minimum){minimum=distance;best=m;}}return best;}
 
 function hurtMob(m,mult=1,magic=false,key=castingSkillKey,opts={}) {
   if(!m||m.hp<=0)return 0;if(key)rememberSkill(m,key);
@@ -111,4 +111,4 @@ function updateCombat(dt) {
 function updateSingleBoss(b,dt,safe){if(!b||b.hp<=0||b.stun>0)return;if(b.dungeonBoss){updateDungeonBoss(b,dt,safe);return;}const d=Math.hypot(b.x-p.x,b.y-p.y);if(safe||(!(b.taunt>0||b.engaged>0)&&d>500)||active('stealth')){b.windup=0;b.taunt=0;b.engaged=0;const home=Math.hypot(b.x-b.homeX,b.y-b.homeY);if(home>4)walkEnemy(b,b.homeX,b.homeY,90,dt);b.hp=Math.min(b.max,b.hp+10*dt);return;}const enraged=b.hp<b.max*.3&&!(b.suppressed>0);if(b.windup>0){b.windup-=dt;if(b.windup<=0){b.cd=enraged?2:3;if(d<120){takeDamage(Math.round(26*(b.attackScale||map().scale)*(enraged?1.3:1)),b);beep(90,.25);}else float('ÚHYB!',p.x,p.y-75,'#acd9b0');}return;}if(d<100&&b.cd<=0){b.windup=1;beep(100,.2);return;}if(d>65){const speed=(enraged?115:90)*(b.slow>0?.55:1)*(active('fear')?.65:1);walkEnemy(b,p.x,p.y,speed,dt);}}
 
 
-function updateBoss(dt,safe){for(const boss of mobs.filter(m=>m.type==='boss'&&m.hp>0))updateSingleBoss(boss,dt,safe);}
+function updateBoss(dt,safe){for(const boss of mobs)if(boss.type==='boss'&&boss.hp>0)updateSingleBoss(boss,dt,safe);}

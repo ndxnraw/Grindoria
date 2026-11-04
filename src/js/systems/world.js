@@ -21,7 +21,7 @@ function loadMap(id, initial=false) {
     snapshotMap();
   }
   const resumePosition={x:p.x,y:p.y};
-  resetCombatFlow();
+  resetCombatFlow();resetPerformanceState();
   p.mapId=id;
   const cfg=map(), prior=p.worldStates[id],old=migrateMapSize(prior,id);SIZE=cfg.size;
   if(initial&&prior&&(prior.worldSize||2000)!==cfg.size){const factor=cfg.size/(prior.worldSize||2000);resumePosition.x*=factor;resumePosition.y*=factor;if(Math.hypot(resumePosition.x-1000*factor,resumePosition.y-1050*factor)<190*factor)Object.assign(resumePosition,cfg.entry);}

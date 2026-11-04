@@ -39,7 +39,7 @@ function aimEnemy(range, attacking = false) {
   if (selected) return Math.hypot(selected.x-p.x,selected.y-p.y)<=range ? selected : null;
   const assisted = assistedAimEnemy(range, attacking);
   if (assisted) return assisted;
-  return mobs.filter(m=>enemyInArc(m,range)).sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0] || null;
+  let best=null,minimum=Infinity;for(const m of mobs)if(enemyInArc(m,range)){const distance=(m.x-p.x)**2+(m.y-p.y)**2;if(distance<minimum){minimum=distance;best=m;}}return best;
 }
 
 function aimedPoint(range) {
@@ -51,11 +51,11 @@ function aimedPoint(range) {
 }
 
 function enemyAtPointer(x,y) {
-  return mobs.filter(m=>m.hp>0).sort((a,b)=>b.y-a.y).find(m=>{
-    if(m.type==='stone')return metinHitTest(m,x,y);
+  let best=null;for(const m of mobs){if(m.hp<=0||best&&m.y<=best.y)continue;
+    if(m.type==='stone'){if(metinHitTest(m,x,y))best=m;continue;}
     const a=screen(m.x,m.y),width=m.type==='boss'?48:m.skin==='wolf'?31:38,height=m.type==='boss'?112:m.skin==='wolf'?48:74;
-    return Math.abs(x-a.x)<=width && y>=a.y-height && y<=a.y+9;
-  }) || null;
+    if(Math.abs(x-a.x)<=width && y>=a.y-height && y<=a.y+9)best=m;
+  }return best;
 }
 
 function rangedBasic() { return p.classId==='ninja' && p.schools.ninja==='archery'; }

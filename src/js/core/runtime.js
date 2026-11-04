@@ -10,7 +10,8 @@ function float(t,x,y,color='#f4db9d',big=false){particles.push({t,x,y,age:0,colo
 
 function beep(freq,duration=.08){if(!sound)return;try{audio??=new(window.AudioContext||window.webkitAudioContext)();audio.resume();const o=audio.createOscillator(),g=audio.createGain();o.frequency.value=freq;o.type='triangle';g.gain.setValueAtTime(.035,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+duration);o.connect(g).connect(audio.destination);o.start();o.stop(audio.currentTime+duration);}catch{}}
 
-function frame(t){const dt=Math.min((t-last)/1000,.05);last=t;update(dt);draw();requestAnimationFrame(frame);}
+let lastSceneDraw=-Infinity;
+function frame(t){const dt=Math.min((t-last)/1000,.05);last=t;update(dt);if(running&&!paused||t-lastSceneDraw>=100){draw();lastSceneDraw=t;}requestAnimationFrame(frame);}
 
 function keysClear(){Object.keys(keys).forEach(k=>keys[k]=false);}
 

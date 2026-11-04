@@ -118,7 +118,7 @@ function loadLegacyRift(old) {
 }
 
 function respawnEnemy(m) {
-  const point = spawnPoints.find(p => p.id === m.spawnPointId);
+  const point = spawnPointById(m.spawnPointId);
   if (!point || legacyRiftLayout) {
     m.hp = m.max; m.x = m.homeX ?? m.x; m.y = m.homeY ?? m.y;
     m.dead = 0; m.cd = 1; m.taunt = 0; m.engaged = 0; m.stun = 0; m.slow = 0; m.dot = null; m.dots=[]; m.windup = 0; m.skillContributors = [];
@@ -143,10 +143,10 @@ function respawnEnemy(m) {
 }
 
 function buildMobGrid() {
-  const grid = new Map();
+  const grid = reusableMobGrid;for(const bucket of mobGridBuckets)bucket.length=0;
   for (const m of mobs) if (m.type === 'wolf' && m.hp > 0) {
-    const key = Math.floor(m.x / 70) + ':' + Math.floor(m.y / 70);
-    if (!grid.has(key)) grid.set(key, []);
+    const key = mobGridKey(Math.floor(m.x / 70),Math.floor(m.y / 70));
+    if (!grid.has(key)){const bucket=[];grid.set(key,bucket);mobGridBuckets.push(bucket);}
     grid.get(key).push(m);
   }
   return grid;
@@ -159,7 +159,7 @@ function walkEnemy(m, x, y, speed, dt, grid = null) {
   if (grid) {
     const col = Math.floor(m.x / 70), row = Math.floor(m.y / 70);
     for (let cx = col - 1; cx <= col + 1; cx++) for (let cy = row - 1; cy <= row + 1; cy++) {
-      for (const other of grid.get(cx + ':' + cy) || []) {
+      for (const other of grid.get(mobGridKey(cx,cy)) || EMPTY_NEIGHBORS) {
         if (other === m) continue;
         const ox = m.x - other.x, oy = m.y - other.y, d = Math.hypot(ox, oy);
         if (d > .01 && d < 25) { vx += ox / d * (25 - d) / 20; vy += oy / d * (25 - d) / 20; }
@@ -221,17 +221,20 @@ function wanderEnemy(m, dt, grid) {
 function updateEnemySpawns(dt, safe) {
   capeCooldown = Math.max(0, capeCooldown - dt);
   const grid = buildMobGrid();
+  let enemyIndex=0;const stealth=active('stealth');
   for (const m of mobs) {
+    enemyIndex++;
     m.hit = Math.max(0, (m.hit || 0) - dt); m.cd = (m.cd || 0) - dt;
     m.taunt = Math.max(0, (m.taunt || 0) - dt); m.engaged = Math.max(0, (m.engaged || 0) - dt);
-    if (safe || active('stealth')) { m.taunt = 0; m.engaged = 0; }
+    if (safe || stealth) { m.taunt = 0; m.engaged = 0; }
     if (m.hp <= 0) { if (m.metinParentId||m.noRespawn) continue; m.dead -= dt; if (m.dead <= 0) respawnEnemy(m); continue; }
     if(m.dungeonSeal)continue;
     if(m.dungeonId&&!safe&&Math.hypot(m.x-p.x,m.y-p.y)<260)m.engaged=Math.max(m.engaged,5);
     if (m.type !== 'wolf' || m.stun > 0) continue;
+    const movementDt=enemyMovementStep(m,dt,enemyIndex);if(!movementDt)continue;
     const d = Math.hypot(m.x - p.x, m.y - p.y), home = Math.hypot(m.x - m.homeX, m.y - m.homeY);
     const forced = m.taunt > 0 || m.engaged > 0;
-    const chasing = !safe && !active('stealth') && forced && (m.taunt > 0 || home < SPAWN_RULES.leash);
+    const chasing = !safe && !stealth && forced && (m.taunt > 0 || home < SPAWN_RULES.leash);
     if (chasing) {
       m.returning = true; m.roamTarget = null;
       const slow = (active('fear') && d < 300 ? .5 : 1) * (m.slow > 0 ? .55 : 1);
@@ -246,7 +249,7 @@ function updateEnemySpawns(dt, safe) {
         if (Math.hypot(m.x - m.homeX, m.y - m.homeY) <= 4) {
           m.returning = false; m.roamTarget = null; m.roamWait = 1.5 + rand() * 3.5;
         }
-      } else wanderEnemy(m, dt, grid);
+      } else wanderEnemy(m, movementDt, grid);
     }
   }
 }
@@ -285,3 +288,5 @@ function dropFarmEquipment(m) {
   if (chance>=1 || rand() < chance) return spawnGroundDrop({ kind: 'gear', item: makeItem(false, m) }, m);
 }
 
+
+const EMPTY_NEIGHBORS=[];

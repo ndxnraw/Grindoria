@@ -49,6 +49,10 @@ Zlato a zásoby sa pripíšu priamo, bez predmetu na zemi. Výbava a relikvie zo
 
 - Náhodné udalosti, vzácni bossovia a Metiny, elitné skupiny, dočasné ruiny a drop eventy. [Živý svet](docs/WORLD_EVENTS.md).
 
+## Výkon
+
+Vzdialená neaktívna AI má odstupňované aktualizácie; aktívny boj zostáva priebežný. Vykresľovanie vynecháva neviditeľné objekty a využíva bitmapovú cache koristi. [Merania a opakovanie testu](docs/PERFORMANCE.md).
+
 ## Vývoj
 
 Node.js 22+; bez externých balíčkov.
