@@ -19,10 +19,18 @@ function windowBounds(){const r=$('game-shell').getBoundingClientRect();return {
 function clampGameWindow(entry){
   const bounds=windowBounds(),rect=entry.node.getBoundingClientRect();
   entry.x=Math.max(0,Math.min(entry.x,Math.max(0,bounds.width-rect.width)));
-  const reserve=bounds.width<=700?154:110;
+  let reserve=bounds.width<=700?154:110;
+  if(entry.key==='inventory'&&!entry.minimized){
+    const hotbar=document.querySelector('.hotbar')?.getBoundingClientRect(),shell=$('game-shell').getBoundingClientRect();
+    if(Number.isFinite(hotbar?.top))reserve=Math.min(reserve,Math.max(72,bounds.height-hotbar.top+(shell.top||0)+8));
+    entry.y=Math.min(entry.y,bounds.height<400?0:16);
+  }
   entry.y=Math.max(0,Math.min(entry.y,Math.max(0,bounds.height-reserve-76)));
   entry.node.style.maxHeight=Math.max(70,bounds.height-entry.y-reserve)+'px';
   entry.node.style.left=entry.x+'px';entry.node.style.top=entry.y+'px';
+  if(entry.key==='inventory'&&!entry.minimized){
+    fitInventoryLayout(entry);entry.x=Math.max(0,Math.min(entry.x,Math.max(0,bounds.width-entry.node.getBoundingClientRect().width)));entry.node.style.left=entry.x+'px';
+  }
 }
 function saveWindowLayout(){
   for(const w of gameWindows.values())windowLayout[w.key]={x:w.x,y:w.y};
@@ -52,7 +60,7 @@ function createGameWindow(key,title){
   titlebar.addEventListener('keydown',event=>{const delta={ArrowLeft:[-20,0],ArrowRight:[20,0],ArrowUp:[0,-20],ArrowDown:[0,20]}[event.key];if(!delta||event.target!==titlebar)return;event.preventDefault();event.stopPropagation();entry.x+=delta[0];entry.y+=delta[1];clampGameWindow(entry);saveWindowLayout();});
   $('modal').appendChild(node);gameWindows.set(key,entry);
   const bounds=windowBounds(),saved=windowLayout[key],offset=(gameWindows.size-1)%7*26;
-  entry.x=Number.isFinite(saved?.x)?saved.x:key==='inventory'?bounds.width-600:key==='character'?20:Math.max(24,bounds.width*.28)+offset;
+  entry.x=Number.isFinite(saved?.x)?saved.x:key==='inventory'?bounds.width-230:key==='character'?20:Math.max(24,bounds.width*.28)+offset;
   entry.y=Number.isFinite(saved?.y)?saved.y:115+offset;
   // Interact.js ships locally and is bundled into both offline HTML builds.
   entry.drag=interact(node).draggable({allowFrom:'.window-titlebar',ignoreFrom:'button',inertia:false,listeners:{start(){frontGameWindow(entry);keysClear();},move(event){entry.x+=event.dx;entry.y+=event.dy;clampGameWindow(entry);},end(){saveWindowLayout();}}});
@@ -89,7 +97,7 @@ function closeModal(key=activeGameWindow?.key){
   const entry=gameWindows.get(key);if(!entry)return;
   if(key==='inventory'&&gameWindows.has('inventory-drop'))closeModal('inventory-drop');if(key==='inventory-drop')inventoryDropPending=null;
   entry.drag?.unset();entry.node.remove();gameWindows.delete(key);
-  if(key==='inventory'){inventoryDropPending=null;inventoryDrag=null;}
+  if(key==='inventory'){inventoryDropPending=null;clearInventoryDrag();}
   const top=[...gameWindows.values()].sort((a,b)=>Number(b.node.style.zIndex)-Number(a.node.style.zIndex))[0];
   activeGameWindow=top||null;panelState.key=top?.key||null;
   $('modal').hidden=!gameWindows.size;paused=false;updateHotbarState();

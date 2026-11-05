@@ -227,9 +227,73 @@ body.started{background:#10140f;overflow:hidden}body.started>header,body.started
 .game-window .item-tooltip .stat-gain,.game-window .item-tooltip .stat-gain b{color:#9bce85!important}
 .game-window .item-tooltip .stat-loss,.game-window .item-tooltip .stat-loss b{color:#e58f7f!important}
 .game-window .item-tooltip .stat-same,.game-window .item-tooltip .stat-same b{color:#aaa796!important}
+
+/* Inventory sizing follows the available window height, with all 45 cells visible. */
+.window-layer .game-window[data-window-key="inventory"]{--inventory-cell:36px;width:max(200px,calc(var(--inventory-cell)*5 + 34px))}
+.game-window[data-window-key="inventory"] .inventory-title{display:flex;align-items:center;justify-content:space-between;gap:8px;height:auto!important;min-height:0;padding:4px 8px!important;box-shadow:none}
+.game-window[data-window-key="inventory"] .inventory-title>small{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:10px!important;line-height:16px}
+.game-window[data-window-key="inventory"] .inv-level{display:block;flex:none;margin:0;font-size:10px}
+.game-window[data-window-key="inventory"] .inventory-columns{padding:8px;gap:8px;grid-template-columns:minmax(0,1fr);align-items:start}
+.game-window[data-window-key="inventory"] .bag-heading{margin:0 0 4px;min-height:14px}
+.game-window[data-window-key="inventory"] .bag-heading h3,.game-window[data-window-key="inventory"] .character-panel>h3{font-size:11px!important;line-height:14px;margin:0 0 4px}
+.game-window[data-window-key="inventory"] .bag-heading small{font-size:9px;white-space:nowrap}
+.game-window[data-window-key="inventory"] .inventory-tabs{display:flex;flex-wrap:nowrap;gap:3px;margin:0 0 4px}
+.game-window[data-window-key="inventory"] .inventory-tabs button{flex:1;min-width:0;min-height:24px;padding:2px 4px!important;font-size:10px!important;line-height:16px}
+.game-window[data-window-key="inventory"] .inventory-pages{display:flex;gap:2px;margin:0 0 4px;flex-wrap:wrap}
+.game-window[data-window-key="inventory"] .inventory-pages button{min-height:22px;min-width:18px;padding:1px 4px!important;font-size:10px!important;line-height:16px}
+.game-window[data-window-key="inventory"] .inventory-grid{--cell:var(--inventory-cell);width:100%;box-sizing:border-box;max-width:100%;margin:0;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:repeat(9,var(--inventory-cell));gap:2px;padding:3px}
+.game-window[data-window-key="inventory"] .inventory-cell,.game-window[data-window-key="inventory"] .grid-item{min-height:0;min-width:0;padding:1px!important}
+.game-window[data-window-key="inventory"] .grid-item .item-icon{width:86%;height:86%;min-width:0;min-height:0;max-width:100%;max-height:100%}
+.game-window[data-window-key="inventory"] .equipment-board{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(6,var(--inventory-cell));grid-template-areas:"weapon helmet . ." "weapon armor shield ." ". armor bracelet earrings" ". . . necklace" "talisman . belt ." ". boots . .";gap:4px;padding:3px;box-sizing:border-box}
+.game-window[data-window-key="inventory"] .slot-weapon{grid-area:weapon}
+.game-window[data-window-key="inventory"] .slot-helmet{grid-area:helmet}
+.game-window[data-window-key="inventory"] .slot-armor{grid-area:armor}
+.game-window[data-window-key="inventory"] .slot-shield{grid-area:shield}
+.game-window[data-window-key="inventory"] .slot-bracelet{grid-area:bracelet}
+.game-window[data-window-key="inventory"] .slot-earrings{grid-area:earrings}
+.game-window[data-window-key="inventory"] .slot-necklace{grid-area:necklace}
+.game-window[data-window-key="inventory"] .slot-talisman{grid-area:talisman}
+.game-window[data-window-key="inventory"] .slot-belt{grid-area:belt}
+.game-window[data-window-key="inventory"] .slot-boots{grid-area:boots}
+.game-window[data-window-key="inventory"] .equipment-slot{width:100%;height:100%;min-height:0;min-width:0;padding:2px!important;gap:1px}
+.game-window[data-window-key="inventory"] .equipment-slot>span{flex:1;min-height:0;height:auto!important;width:100%}
+.game-window[data-window-key="inventory"] .equipment-slot .item-icon{width:100%;height:100%;min-height:0;max-height:100%;max-width:100%}
+.game-window[data-window-key="inventory"] .equipment-slot small{font-size:8px!important;line-height:9px;max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex:none}
+.game-window[data-window-key="inventory"] .equipment-figure{width:60%;height:100%;left:7.5%;top:0}
+.game-window[data-window-key="inventory"] .inventory-money{padding:5px 7px;gap:4px;min-height:24px;box-sizing:border-box;margin-top:5px}
+.game-window[data-window-key="inventory"] .inventory-controls:has(.inventory-message:empty){display:none}
+.game-window[data-window-key="inventory"] .inventory-message{font-size:10px!important;line-height:13px!important;margin:0;max-width:100%}
+.game-window[data-window-key="inventory"].inventory-compact .inventory-columns{padding:4px;gap:5px}
+.game-window[data-window-key="inventory"].inventory-compact .inventory-tabs button,.game-window[data-window-key="inventory"].inventory-compact .inventory-pages button{min-height:18px;font-size:9px!important;line-height:14px;padding:1px 3px!important}
+.game-window[data-window-key="inventory"].inventory-compact .inventory-money{padding:2px 4px;min-height:20px;margin-top:3px}
+.game-window[data-window-key="inventory"].inventory-compact .inventory-grid{gap:1px;padding:2px}
+.game-window[data-window-key="inventory"].inventory-compact .equipment-board{gap:2px;padding:2px}
+.game-window[data-window-key="inventory"].inventory-compact .bag-heading{min-height:12px;margin-bottom:2px}
+.game-window[data-window-key="inventory"].inventory-compact .bag-heading h3,.game-window[data-window-key="inventory"].inventory-compact .character-panel>h3{line-height:12px;margin-bottom:2px}
+
+/* The classic inventory is one vertical panel: equipment, pages, bag, Yang. */
+.game-window[data-window-key="inventory"] .inventory-title,.game-window[data-window-key="inventory"] .bag-heading,.game-window[data-window-key="inventory"] .character-panel>h3,.game-window[data-window-key="inventory"] .equipment-slot small{display:none}
+.game-window[data-window-key="inventory"] .inventory-columns{gap:5px;padding:6px;grid-template-columns:minmax(0,1fr)}
+.game-window[data-window-key="inventory"] .equipment-board{gap:3px;padding:3px}
+.game-window[data-window-key="inventory"] .inventory-tabs button{min-height:20px!important;line-height:14px}
+.game-window[data-window-key="inventory"] .inventory-pages button{min-height:20px!important;line-height:14px}
+.game-window[data-window-key="inventory"] .inventory-pages [data-inv-page]{flex:1}
+.game-window[data-window-key="inventory"] .inventory-money{margin:0;min-height:24px}
+.game-window[data-window-key="inventory"] .inventory-money b{font-size:13px}
+.game-window[data-window-key="inventory"] .bag-panel{width:100%}
+
+.game-window[data-window-key="inventory"] .inventory-pages #rarity-guide,.game-window[data-window-key="inventory"] .inventory-pages #inv-sort,.game-window[data-window-key="inventory"] .inventory-pages [data-ui-id="rarity-guide"],.game-window[data-window-key="inventory"] .inventory-pages [data-ui-id="inv-sort"]{width:22px;flex:none}
+.game-window[data-window-key="inventory"].inventory-compact .inventory-columns{padding:4px;gap:2px}
+.game-window[data-window-key="inventory"].inventory-compact .equipment-board{grid-template-rows:repeat(6,calc(var(--inventory-cell)*.75));gap:1px;padding:2px}
+.game-window[data-window-key="inventory"].inventory-compact .inventory-tabs button,.game-window[data-window-key="inventory"].inventory-compact .inventory-pages button{min-height:16px!important;line-height:12px;padding:0 3px!important}
+.game-window[data-window-key="inventory"].inventory-compact .inventory-money{min-height:20px;padding:2px 4px}
+
+.inventory-drag-preview{position:fixed!important;z-index:10000!important;pointer-events:none!important;margin:0;opacity:.9;box-sizing:border-box;display:grid;place-items:center}
+.inventory-drag-preview.is-invalid{background:#6e1e20ed!important;border:2px solid #ff544c!important;box-shadow:inset 0 0 12px #ff303088,0 0 5px #ff3020!important}
+.inventory-drag-preview.is-invalid .item-icon{filter:sepia(1) saturate(5) hue-rotate(320deg) drop-shadow(0 0 2px #ff2222)}
 </style></head>
 <body>
-<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Schopnosti <kbd>4</kbd></button><button id="journal">Úlohy <kbd>N</kbd></button><button id="help">Pomoc <kbd>H</kbd></button><button id="desktop-updates" hidden>Aktualizácie</button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.35.0</b></span></header>
+<header><a class="brand" href="#"><span class="seal">G</span><span>GRINDORIA<small>Definitely not Metin</small></span></a><nav><button id="characters">Postavy</button><button id="backup-characters">Záloha</button><span class="active">HRA</span><button id="career">Progres <kbd>P</kbd></button><button id="travel">Mapy <kbd>M</kbd></button><button id="spellbook">Schopnosti <kbd>4</kbd></button><button id="journal">Úlohy <kbd>N</kbd></button><button id="help">Pomoc <kbd>H</kbd></button><button id="desktop-updates" hidden>Aktualizácie</button></nav><span class="version"><i></i> SÓLO <b id="game-version">ALPHA 0.35.1</b></span></header>
 <main><div class="world-title"><div><h1 id="maptitle">Údolie tichého vetra</h1><p id="mapdesc">Divoký vlk · Strážca pralesa</p></div><div class="world-info"><span id="mapregion">◈ VÝCHODNÉ KRÁĽOVSTVO</span><small id="maplevel">Odporúčaná úroveň 1+</small></div></div>
 <section id="game-shell" class="game-shell"><canvas id="game" tabindex="0" aria-label="Herný svet. Pohyb kliknutím na zem, WASD alebo šípkami, výber cieľa kliknutím, nasledovanie a útok druhým klikom na rovnaký cieľ, smerový útok medzerníkom, schopnosti 1 až 6, liečenie 7, korisť ľavým kliknutím alebo Y v okolí, zlato a zásoby automaticky."></canvas><div class="vignette"></div><div id="loot-tooltip" class="loot-tooltip" role="tooltip" hidden></div>
 <div class="hud player"><div id="portrait" class="portrait">侍</div><div><div class="player-name"><b id="playername">Pútnik</b><small id="playerclass" hidden>Bojovník</small> <span id="level">ÚR. 1</span></div><div class="bar health"><div id="hpbar"></div><span id="hptext">100 / 100</span></div><div class="bar mana"><div id="mpbar"></div><span id="mptext">100 / 100</span></div><div class="bar xp"><div id="xpbar"></div></div><small id="xptext">0 / 154 skúseností</small></div></div>
@@ -490,16 +554,16 @@ MAPS.suterland.balanceVersion=2;
 // src/js/data/items.js
 const INVENTORY = { schema: 1, columns: 5, rows: 9, pageSize: 45, pages: 5 };
 const EQUIPMENT = {
-  weapon: { name: 'Zbraň', size: [1, 3], stat: 'attack', base: 4, scale: .6, rare: 9, names: ['Pútnický meč', 'Mesačný meč', 'Dračí meč'] },
-  armor: { name: 'Brnenie', size: [2, 3], stat: 'defense', base: 2, scale: .25, rare: 3, names: ['Pútnická zbroj', 'Mesačná zbroj', 'Dračia zbroj'] },
-  helmet: { name: 'Prilba', size: [2, 1], stat: 'defense', base: 1, scale: .12, rare: 2, names: ['Železná prilba', 'Mesačná prilba', 'Dračia prilba'] },
-  shield: { name: 'Štít', size: [2, 2], stat: 'defense', base: 2, scale: .18, rare: 3, names: ['Okrúhly štít', 'Mesačný štít', 'Dračí štít'] },
-  boots: { name: 'Obuv', size: [2, 2], stat: 'speed', base: 3, scale: .12, rare: 3, names: ['Kožené čižmy', 'Tieňové čižmy', 'Dračie čižmy'] },
+  weapon: { name: 'Zbraň', size: [1, 2], stat: 'attack', base: 4, scale: .6, rare: 9, names: ['Pútnický meč', 'Mesačný meč', 'Dračí meč'] },
+  armor: { name: 'Brnenie', size: [1, 2], stat: 'defense', base: 2, scale: .25, rare: 3, names: ['Pútnická zbroj', 'Mesačná zbroj', 'Dračia zbroj'] },
+  helmet: { name: 'Prilba', size: [1, 1], stat: 'defense', base: 1, scale: .12, rare: 2, names: ['Železná prilba', 'Mesačná prilba', 'Dračia prilba'] },
+  shield: { name: 'Štít', size: [1, 1], stat: 'defense', base: 2, scale: .18, rare: 3, names: ['Okrúhly štít', 'Mesačný štít', 'Dračí štít'] },
+  boots: { name: 'Obuv', size: [1, 1], stat: 'speed', base: 3, scale: .12, rare: 3, names: ['Kožené čižmy', 'Tieňové čižmy', 'Dračie čižmy'] },
   bracelet: { name: 'Náramok', size: [1, 1], stat: 'hp', base: 15, scale: 1.5, rare: 20, names: ['Medený náramok', 'Strieborný náramok', 'Dračí náramok'] },
   necklace: { name: 'Náhrdelník', size: [1, 1], stat: 'mp', base: 12, scale: 1.2, rare: 15, names: ['Medený náhrdelník', 'Mesačný náhrdelník', 'Dračí náhrdelník'] },
   earrings: { name: 'Náušnice', size: [1, 1], stat: 'magic', base: 2, scale: .2, rare: 4, names: ['Medené náušnice', 'Mesačné náušnice', 'Dračie náušnice'] },
-  belt: { name: 'Opasok', size: [2, 1], stat: 'defense', base: 1, scale: .1, rare: 2, names: ['Kožený opasok', 'Strážcov opasok', 'Dračí opasok'] },
-  talisman: { name: 'Talizman', size: [1, 2], stat: 'crit', base: 1, scale: .025, rare: 1, names: ['Pečať pútnika', 'Mesačná pečať', 'Dračia pečať'] }
+  belt: { name: 'Opasok', size: [1, 1], stat: 'defense', base: 1, scale: .1, rare: 2, names: ['Kožený opasok', 'Strážcov opasok', 'Dračí opasok'] },
+  talisman: { name: 'Talizman', size: [1, 1], stat: 'crit', base: 1, scale: .025, rare: 1, names: ['Pečať pútnika', 'Mesačná pečať', 'Dračia pečať'] }
 };
 const ITEM_STATS = { attack: 'Útok', defense: 'Obrana', hp: 'Max. zdravie', mp: 'Max. mana', magic: 'Sila kúziel', speed: 'Rýchlosť pohybu', crit: 'Kritický zásah' };
 
@@ -2914,18 +2978,17 @@ function unequipItem(slot, cell = null) {
   finishInventoryChange(); inventory(); return true;
 }
 
+function gearCellAvailable(item, cell) {
+  const cells=item&&itemCells(item,cell);
+  if(!cells||cells.some(n=>n>=p.inventory.pages*INVENTORY.pageSize))return false;
+  const target=new Set(cells);
+  return !p.bag.some(other=>other!==item&&itemCells(other,other.cell)?.some(n=>target.has(n)));
+}
+
 function moveGearItem(uid, cell) {
   const item = p.bag.find(item => item.uid === uid);
-  if (!item || !itemCells(item, cell) || cell >= p.inventory.pages * INVENTORY.pageSize) return false;
-  const target = new Set(itemCells(item, cell)), conflicts = p.bag.filter(other => other !== item && itemCells(other, other.cell)?.some(n => target.has(n)));
-  if (conflicts.length > 1) return false;
-  const other = conflicts[0], old = item.cell, otherCell = other?.cell;
-  item.cell = cell; if (other) other.cell = old;
-  const layout = gearLayout(p.bag);
-  if (!layout || p.bag.some(m => layout.get(m) !== m.cell)) {
-    item.cell = old; if (other) other.cell = otherCell; return false;
-  }
-  applyGearLayout(layout); finishInventoryChange(); return true;
+  if (!gearCellAvailable(item,cell)) return false;
+  item.cell=cell;finishInventoryChange(); return true;
 }
 
 function supplyDefinitions() {
@@ -2954,8 +3017,7 @@ function moveSupplyItem(id, cell) {
   if (!Number.isInteger(cell) || cell < 0 || cell >= INVENTORY.pageSize) return false;
   const entries = supplyEntries(), item = entries.find(item => item.id === id);
   if (!item) return false;
-  const other = entries.find(item => item.cell === cell);
-  if (other) p.inventory.supplyCells[other.id] = item.cell;
+  if (entries.some(other => other.id !== id && other.cell === cell)) return false;
   p.inventory.supplyCells[id] = cell; save(); return true;
 }
 
@@ -3032,7 +3094,7 @@ function handleInventoryOutsideDrop(event){
   const rect=(gameWindows.get('inventory')?.node||$('modalcard')).getBoundingClientRect();
   if(event.clientX>=rect.left&&event.clientX<=rect.right&&event.clientY>=rect.top&&event.clientY<=rect.bottom)return false;
   event.preventDefault();event.stopPropagation?.();
-  const id=inventoryDrag.id;inventoryDrag=null;
+  const id=inventoryDrag.id;clearInventoryDrag();
   if(!requestInventoryDrop(id)){inventoryMessage('Nasadený predmet najprv zlož do batohu.');return false;}return true;
 }
 function inventoryDropConfirmation(){
@@ -4172,10 +4234,18 @@ function windowBounds(){const r=$('game-shell').getBoundingClientRect();return {
 function clampGameWindow(entry){
   const bounds=windowBounds(),rect=entry.node.getBoundingClientRect();
   entry.x=Math.max(0,Math.min(entry.x,Math.max(0,bounds.width-rect.width)));
-  const reserve=bounds.width<=700?154:110;
+  let reserve=bounds.width<=700?154:110;
+  if(entry.key==='inventory'&&!entry.minimized){
+    const hotbar=document.querySelector('.hotbar')?.getBoundingClientRect(),shell=$('game-shell').getBoundingClientRect();
+    if(Number.isFinite(hotbar?.top))reserve=Math.min(reserve,Math.max(72,bounds.height-hotbar.top+(shell.top||0)+8));
+    entry.y=Math.min(entry.y,bounds.height<400?0:16);
+  }
   entry.y=Math.max(0,Math.min(entry.y,Math.max(0,bounds.height-reserve-76)));
   entry.node.style.maxHeight=Math.max(70,bounds.height-entry.y-reserve)+'px';
   entry.node.style.left=entry.x+'px';entry.node.style.top=entry.y+'px';
+  if(entry.key==='inventory'&&!entry.minimized){
+    fitInventoryLayout(entry);entry.x=Math.max(0,Math.min(entry.x,Math.max(0,bounds.width-entry.node.getBoundingClientRect().width)));entry.node.style.left=entry.x+'px';
+  }
 }
 function saveWindowLayout(){
   for(const w of gameWindows.values())windowLayout[w.key]={x:w.x,y:w.y};
@@ -4205,7 +4275,7 @@ function createGameWindow(key,title){
   titlebar.addEventListener('keydown',event=>{const delta={ArrowLeft:[-20,0],ArrowRight:[20,0],ArrowUp:[0,-20],ArrowDown:[0,20]}[event.key];if(!delta||event.target!==titlebar)return;event.preventDefault();event.stopPropagation();entry.x+=delta[0];entry.y+=delta[1];clampGameWindow(entry);saveWindowLayout();});
   $('modal').appendChild(node);gameWindows.set(key,entry);
   const bounds=windowBounds(),saved=windowLayout[key],offset=(gameWindows.size-1)%7*26;
-  entry.x=Number.isFinite(saved?.x)?saved.x:key==='inventory'?bounds.width-600:key==='character'?20:Math.max(24,bounds.width*.28)+offset;
+  entry.x=Number.isFinite(saved?.x)?saved.x:key==='inventory'?bounds.width-230:key==='character'?20:Math.max(24,bounds.width*.28)+offset;
   entry.y=Number.isFinite(saved?.y)?saved.y:115+offset;
   // Interact.js ships locally and is bundled into both offline HTML builds.
   entry.drag=interact(node).draggable({allowFrom:'.window-titlebar',ignoreFrom:'button',inertia:false,listeners:{start(){frontGameWindow(entry);keysClear();},move(event){entry.x+=event.dx;entry.y+=event.dy;clampGameWindow(entry);},end(){saveWindowLayout();}}});
@@ -4242,7 +4312,7 @@ function closeModal(key=activeGameWindow?.key){
   const entry=gameWindows.get(key);if(!entry)return;
   if(key==='inventory'&&gameWindows.has('inventory-drop'))closeModal('inventory-drop');if(key==='inventory-drop')inventoryDropPending=null;
   entry.drag?.unset();entry.node.remove();gameWindows.delete(key);
-  if(key==='inventory'){inventoryDropPending=null;inventoryDrag=null;}
+  if(key==='inventory'){inventoryDropPending=null;clearInventoryDrag();}
   const top=[...gameWindows.values()].sort((a,b)=>Number(b.node.style.zIndex)-Number(a.node.style.zIndex))[0];
   activeGameWindow=top||null;panelState.key=top?.key||null;
   $('modal').hidden=!gameWindows.size;paused=false;updateHotbarState();
@@ -4439,7 +4509,7 @@ function equipmentFigure() {
 
 
 // src/js/ui/inventory.js
-let inventoryTab = 'gear', inventoryPage = 0, inventorySelection = null, inventoryDrag = null;
+let inventoryTab = 'gear', inventoryPage = 0, inventorySelection = null, inventoryDrag = null, inventoryDragPreview = null;
 
 function inventoryEntry(id) {
   if (!id) return null;
@@ -4471,17 +4541,17 @@ function inventory() {
   const page = inventoryTab === 'supplies' ? 0 : inventoryPage, offset = page * INVENTORY.pageSize;
   const entries = inventoryTab === 'supplies' ? supplyEntries().map(item => ({ id: item.id, item, kind: 'supply' })) : p.bag.filter(item => Math.floor(item.cell / INVENTORY.pageSize) === page).map(item => ({ id: 'gear:' + item.uid, item, kind: 'gear' }));
   const occupied = p.bag.reduce((n, item) => n + itemSize(item)[0] * itemSize(item)[1], 0);
-  modal(`<section class="inventory-window"><header class="inventory-title"><span class="window-sigil">G</span><div><small>${escapeHTML(characterDisplayName(p))} · ${role().name}</small><h2>Výbava a inventár</h2></div><span class="inv-level">ÚR. ${p.level}</span></header>
+  modal(`<section class="inventory-window"><header class="inventory-title"><small>${escapeHTML(characterDisplayName(p))} · ${role().name}</small><span class="inv-level">ÚR. ${p.level}</span></header>
     <div class="inventory-columns"><section class="character-panel"><h3>Vybavenie postavy</h3><div class="equipment-board">${equipmentFigure()}${Object.entries(EQUIPMENT).map(([id, spec]) => {
       const item = p.equipped[id];
       return `<button class="equipment-slot slot-${id} ${item ? 'filled rarity-' + item.rarity : ''}" data-equip-slot="${id}" ${item ? `data-entry="equipped:${id}" draggable="true"` : ''} aria-label="${spec.name}${item ? ': ' + escapeHTML(item.name) + ' · ' + rarityName(item.rarity) : ': prázdny slot'}"><span>${itemIcon(item || { slot: id }, !item)}</span><small>${spec.name}</small>${item ? '<i>✓</i>' : ''}</button>`;
-    }).join('')}</div><div class="inventory-money">◉ <b>${p.gold.toLocaleString('sk-SK')}</b> <small>YANG</small></div></section>
-    <section class="bag-panel"><div class="bag-heading"><h3>Inventár</h3><small>${inventoryTab === 'gear' ? occupied + ' / ' + p.inventory.pages * INVENTORY.pageSize + ' políčok' : supplyEntries().length+' typov'}</small></div><div class="inventory-tabs"><button data-inv-tab="gear" aria-pressed="${inventoryTab === 'gear'}">Predmety</button><button data-inv-tab="supplies" aria-pressed="${inventoryTab === 'supplies'}">Zásoby</button></div><div class="inventory-pages">${inventoryTab === 'gear' ? Array.from({ length: p.inventory.pages }, (_, i) => `<button data-inv-page="${i}" aria-label="Strana ${i + 1}" aria-pressed="${page === i}">${i + 1}</button>`).join('') : ''}<button id="rarity-guide" type="button">Rarity</button><button id="inv-sort" title="Zoradiť podľa veľkosti, vzácnosti a stupňa">Zoradiť</button></div>
+    }).join('')}</div></section>
+    <section class="bag-panel"><div class="bag-heading"><h3>Inventár</h3><small>${inventoryTab === 'gear' ? occupied + ' / ' + p.inventory.pages * INVENTORY.pageSize + ' políčok' : supplyEntries().length+' typov'}</small></div><div class="inventory-tabs"><button data-inv-tab="gear" aria-pressed="${inventoryTab === 'gear'}">Predmety</button><button data-inv-tab="supplies" aria-pressed="${inventoryTab === 'supplies'}">Zásoby</button></div><div class="inventory-pages">${inventoryTab === 'gear' ? Array.from({ length: p.inventory.pages }, (_, i) => `<button data-inv-page="${i}" aria-label="Strana ${i + 1}" aria-pressed="${page === i}">${i + 1}</button>`).join('') : ''}<button id="rarity-guide" type="button" title="Rarity" aria-label="Rarity">◇</button><button id="inv-sort" title="Zoradiť podľa veľkosti, vzácnosti a stupňa" aria-label="Zoradiť">↕</button></div>
     <div class="inventory-grid" id="inventory-grid" role="group" aria-label="Mriežka inventára, 5 stĺpcov a 9 riadkov">${Array.from({ length: INVENTORY.pageSize }, (_, i) => `<button class="inventory-cell" data-cell="${offset + i}" aria-label="Prázdne políčko ${offset + i + 1}" style="grid-column:${i % 5 + 1};grid-row:${Math.floor(i / 5) + 1}"></button>`).join('')}${entries.map(entry => {
       const item = entry.item, [w, h] = entry.kind === 'gear' ? itemSize(item) : [1, 1], local = item.cell % INVENTORY.pageSize;
       return `<button class="grid-item rarity-${item.rarity || 0}" draggable="true" data-entry="${entry.id}" aria-label="${escapeHTML(item.name)}${entry.kind === 'gear' ? ' · ' + rarityName(item.rarity) : ''}${entry.kind === 'supply' ? ', ' + item.count + ' kusov' : ', +' + (item.enhance || 0)}" aria-pressed="${inventorySelection === entry.id}" style="grid-column:${local % 5 + 1} / span ${w};grid-row:${Math.floor(local / 5) + 1} / span ${h}">${itemIcon(item)}${entry.kind === 'supply' ? `<b class="stack-count">${item.count}</b>` : `<b class="enhance-count">+${item.enhance || 0}</b>`}</button>`;
     }).join('')}</div></section>
-    <div class="inventory-controls"><p class="inventory-message" id="inventory-message" role="status"></p></div></div><div id="item-tooltip" class="item-tooltip loot-tooltip" role="tooltip" hidden></div></section>`,{key:'inventory',refresh:()=>{if(gameWindows.get('inventory')?.inventorySignature!==inventoryContentSignature())inventory();}});
+    <div class="inventory-money">◉ <b>${p.gold.toLocaleString('sk-SK')}</b> <small>YANG</small></div><div class="inventory-controls"><p class="inventory-message" id="inventory-message" role="status"></p></div></div><div id="item-tooltip" class="item-tooltip loot-tooltip" role="tooltip" hidden></div></section>`,{key:'inventory',title:'Inventár',refresh:()=>{if(gameWindows.get('inventory')?.inventorySignature!==inventoryContentSignature())inventory();}});
   $('rarity-guide').onclick=rarityGuide;
   $('inv-sort').onclick = () => { if (sortInventory(inventoryTab)) inventory(); else inventoryMessage('Predmety sa do tohto rozloženia nezmestia.'); };
   panelQueryAll('[data-inv-tab]').forEach(button => button.onclick = () => { inventoryTab = button.dataset.invTab; inventorySelection = null; inventory(); });
@@ -4496,36 +4566,40 @@ function inventory() {
     button.onfocus = () => withGameWindow('inventory',()=>showItemTooltip(button.dataset.entry,{clientX:button.getBoundingClientRect().left,clientY:button.getBoundingClientRect().bottom}));
     button.onblur = () => withGameWindow('inventory',()=>{$('item-tooltip').hidden=true;});
     button.ondragstart = event => {
-      inventoryDrag = { id: button.dataset.entry, x: 0, y: 0 };
+      clearInventoryDrag();
+      const sourceRect=button.getBoundingClientRect();
+      inventoryDrag = { id: button.dataset.entry, x: 0, y: 0, grabX:event.clientX-sourceRect.left,grabY:event.clientY-sourceRect.top };
       if (button.className.includes('grid-item')) {
-        const rect = button.getBoundingClientRect(), grid = $('inventory-grid').getBoundingClientRect();
-        inventoryDrag.x = Math.floor((event.clientX - rect.left) / (grid.width / 5));
-        inventoryDrag.y = Math.floor((event.clientY - rect.top) / (grid.height / 9));
+        const pitch=inventoryGridPitch();
+        inventoryDrag.x = Math.floor(inventoryDrag.grabX/pitch.x);
+        inventoryDrag.y = Math.floor(inventoryDrag.grabY/pitch.y);
       }
+      inventoryDragPreview=document.createElement('div');inventoryDragPreview.className='grid-item inventory-drag-preview rarity-'+(inventoryEntry(inventoryDrag.id)?.item.rarity||0);inventoryDragPreview.innerHTML=button.innerHTML;inventoryDragPreview.setAttribute('aria-hidden','true');inventoryDragPreview.style.width=sourceRect.width+'px';inventoryDragPreview.style.height=sourceRect.height+'px';document.body.appendChild(inventoryDragPreview);
+      const blank=document.createElement('canvas');blank.width=blank.height=1;event.dataTransfer.setDragImage?.(blank,0,0);updateInventoryDragPreview(event);
       event.dataTransfer.setData('text/plain', button.dataset.entry); event.dataTransfer.effectAllowed = 'move'; $('item-tooltip').hidden = true;
     };
-    button.ondragend = () => { inventoryDrag = null; };
+    button.ondragend = clearInventoryDrag;
   });
   panelQueryAll('[data-equip-slot]').forEach(button => {
     if (!button.dataset.entry) button.onclick = () => dropOnEquipment(button.dataset.equipSlot, inventorySelection);
     else { const choose = button.onclick; button.onclick = () => inventoryEntry(inventorySelection)?.kind === 'gear' && inventoryEntry(inventorySelection).item.slot === button.dataset.equipSlot ? dropOnEquipment(button.dataset.equipSlot, inventorySelection) : choose(); }
     button.ondragover = event => { event.preventDefault(); event.dataTransfer.dropEffect = 'move'; };
-    button.ondrop = event => { event.preventDefault(); dropOnEquipment(button.dataset.equipSlot, inventoryDrag?.id); inventoryDrag = null; };
+    button.ondrop = event => { event.preventDefault(); dropOnEquipment(button.dataset.equipSlot, inventoryDrag?.id); clearInventoryDrag(); };
   });
   panelQueryAll('[data-cell]').forEach(button => button.onclick = () => dropOnInventoryCell(inventorySelection, Number(button.dataset.cell)));
   const grid = $('inventory-grid');
-  grid.ondragover = event => { event.preventDefault(); event.dataTransfer.dropEffect = 'move'; };
+  grid.ondragover = event => { event.preventDefault(); event.dataTransfer.dropEffect = canDropInventoryEntry(inventoryDrag?.id,inventoryPointerCell(event))?'move':'none'; };
   grid.ondrop = event => {
     event.preventDefault(); if (!inventoryDrag) return;
-    const rect = grid.getBoundingClientRect(), col = Math.floor((event.clientX - rect.left) / (rect.width / 5)) - inventoryDrag.x, row = Math.floor((event.clientY - rect.top) / (rect.height / 9)) - inventoryDrag.y;
-    if (col >= 0 && col < 5 && row >= 0 && row < 9) dropOnInventoryCell(inventoryDrag.id, offset + row * 5 + col);
+    const cell=inventoryPointerCell(event);
+    if (cell!==null) dropOnInventoryCell(inventoryDrag.id,cell);
     else inventoryMessage('Predmet by presahoval okraj mriežky.');
-    inventoryDrag = null;
+    clearInventoryDrag();
   };
   selectInventoryEntry(inventoryEntry(inventorySelection) ? inventorySelection : null);activeGameWindow.inventorySignature=inventoryContentSignature();
 }
 
-function inventoryMessage(message) { $('inventory-message').textContent = message; }
+function inventoryMessage(message) { $('inventory-message').textContent = message;const entry=gameWindows.get('inventory');if(entry)clampGameWindow(entry); }
 
 function selectInventoryEntry(id) {
   inventorySelection = id;
@@ -4572,6 +4646,48 @@ function positionItemTooltip(event) {
 
 
 function inventoryContentSignature(){return JSON.stringify([p.level,p.gold,p.bag,p.equipped,p.potions,p.braveryCapes,p.career.materials,p.inventory.supplyCells,currentTrader()]);}
+
+// Fit equipment and all nine bag rows to the available window, including toolbar wrapping.
+function fitInventoryLayout(entry){
+ const grid=entry.content.querySelector('.inventory-grid'),bag=entry.content.querySelector('.bag-panel');if(!grid||!bag)return;
+ const titlebar=entry.node.querySelector('.window-titlebar'),border=Math.max(0,entry.node.offsetHeight-entry.node.clientHeight);
+ const budget=Math.max(1,parseFloat(entry.node.style.maxHeight)-titlebar.getBoundingClientRect().height-border);
+ entry.node.classList.toggle('inventory-compact',budget<320);
+ let cell=Math.max(8,Math.min(36,Math.floor((windowBounds().width-32)/5)));
+ entry.node.style.setProperty('--inventory-cell',cell+'px');
+ for(let attempt=0;attempt<8;attempt++){
+  const excess=entry.content.scrollHeight-budget;if(!(excess>0)||cell<=8)break;
+  cell=Math.max(8,cell-Math.max(1,Math.ceil(excess/15)));entry.node.style.setProperty('--inventory-cell',cell+'px');
+ }
+ // A formerly scrolled inventory must reopen at its first visible row after a resize.
+ entry.body.scrollTop=0;entry.body.scrollLeft=0;
+}
+
+function inventoryGridPitch(){
+ const cells=gameWindows.get('inventory').content.querySelectorAll('[data-cell]'),first=cells[0].getBoundingClientRect();
+ return {x:cells[1].getBoundingClientRect().left-first.left,y:cells[5].getBoundingClientRect().top-first.top,first};
+}
+function inventoryPointerCell(event){
+ const {x,y,first}=inventoryGridPitch(),col=Math.floor((event.clientX-first.left)/x)-(inventoryDrag?.x||0),row=Math.floor((event.clientY-first.top)/y)-(inventoryDrag?.y||0);
+ return col>=0&&col<5&&row>=0&&row<9?(inventoryTab==='gear'?inventoryPage*INVENTORY.pageSize:0)+row*5+col:null;
+}
+function canDropInventoryEntry(id,cell){
+ const entry=inventoryEntry(id);if(!entry||cell===null)return false;
+ if(entry.kind==='supply')return inventoryTab==='supplies'&&Number.isInteger(cell)&&cell>=0&&cell<INVENTORY.pageSize&&!supplyEntries().some(other=>other.id!==id&&other.cell===cell);
+ return inventoryTab==='gear'&&gearCellAvailable(entry.item,cell);
+}
+function clearInventoryDrag(){inventoryDragPreview?.remove();inventoryDragPreview=null;inventoryDrag=null;}
+function updateInventoryDragPreview(event){
+ if(!inventoryDragPreview||!inventoryDrag)return;
+ inventoryDragPreview.style.left=event.clientX-inventoryDrag.grabX+'px';inventoryDragPreview.style.top=event.clientY-inventoryDrag.grabY+'px';
+ const entry=gameWindows.get('inventory'),grid=entry?.content.querySelector('.inventory-grid'),slot=event.target.closest?.('[data-equip-slot]');
+ let valid=!entry?.node.contains(event.target);
+ if(grid?.contains(event.target))valid=canDropInventoryEntry(inventoryDrag.id,inventoryPointerCell(event));
+ else if(slot){const item=inventoryEntry(inventoryDrag.id);valid=item?.kind==='gear'&&item.item.slot===slot.dataset.equipSlot&&canEquipItem(item.item);}
+ inventoryDragPreview.classList.toggle('is-invalid',!valid);
+}
+document.addEventListener('dragover',updateInventoryDragPreview);
+window.addEventListener('blur',clearInventoryDrag);
 
 
 // src/js/ui/rarities.js

@@ -102,18 +102,17 @@ function unequipItem(slot, cell = null) {
   finishInventoryChange(); inventory(); return true;
 }
 
+function gearCellAvailable(item, cell) {
+  const cells=item&&itemCells(item,cell);
+  if(!cells||cells.some(n=>n>=p.inventory.pages*INVENTORY.pageSize))return false;
+  const target=new Set(cells);
+  return !p.bag.some(other=>other!==item&&itemCells(other,other.cell)?.some(n=>target.has(n)));
+}
+
 function moveGearItem(uid, cell) {
   const item = p.bag.find(item => item.uid === uid);
-  if (!item || !itemCells(item, cell) || cell >= p.inventory.pages * INVENTORY.pageSize) return false;
-  const target = new Set(itemCells(item, cell)), conflicts = p.bag.filter(other => other !== item && itemCells(other, other.cell)?.some(n => target.has(n)));
-  if (conflicts.length > 1) return false;
-  const other = conflicts[0], old = item.cell, otherCell = other?.cell;
-  item.cell = cell; if (other) other.cell = old;
-  const layout = gearLayout(p.bag);
-  if (!layout || p.bag.some(m => layout.get(m) !== m.cell)) {
-    item.cell = old; if (other) other.cell = otherCell; return false;
-  }
-  applyGearLayout(layout); finishInventoryChange(); return true;
+  if (!gearCellAvailable(item,cell)) return false;
+  item.cell=cell;finishInventoryChange(); return true;
 }
 
 function supplyDefinitions() {
@@ -142,8 +141,7 @@ function moveSupplyItem(id, cell) {
   if (!Number.isInteger(cell) || cell < 0 || cell >= INVENTORY.pageSize) return false;
   const entries = supplyEntries(), item = entries.find(item => item.id === id);
   if (!item) return false;
-  const other = entries.find(item => item.cell === cell);
-  if (other) p.inventory.supplyCells[other.id] = item.cell;
+  if (entries.some(other => other.id !== id && other.cell === cell)) return false;
   p.inventory.supplyCells[id] = cell; save(); return true;
 }
 

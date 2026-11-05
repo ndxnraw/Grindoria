@@ -6,7 +6,7 @@ Panel **I** otvorí samostatnú presúvateľnú vrstvu s bronzovým rámom; svet
 
 - **Predmety:** päť strán po 5 × 9 políčok, spolu 225. Viacpolíčkový predmet nemôže presahovať okraj ani prechádzať medzi stranami.
 - **Zásoby:** samostatná mriežka pre elixíry, plášte, materiály. Každý typ tvorí jeden zásobník bez limitu 200 kusov; zobrazuje skutočné uložené množstvo.
-- Presunutie myšou alebo výber predmetu a následné kliknutie na prázdne políčko zmení jeho pozíciu. Výmena dvoch predmetov je možná, ak sa oba zmestia na nové miesto.
+- Presunutie myšou alebo výber predmetu a následné kliknutie na prázdne políčko zmení jeho pozíciu. Obsadené miesto presun odmietne; ťahaný predmet sa zobrazí červenou. Predmety ani zásoby si nevymieňajú pozície.
 - Presunutie na zodpovedajúci slot alebo **Nasadiť** vybaví postavu. **Zložiť výbavu** vráti predmet do batohu, iba ak má dosť súvislého miesta.
 - Dvojklik predmet použije alebo nasadí. Náhľad pri myši alebo zameraní ukazuje názov, vzácnosť, stupeň, vylepšenie, rozmery, bonusy a predajnú cenu. Náhľad porovnáva bonusy s aktuálne nasadeným predmetom rovnako ako pri koristi. Samostatný panel Predmet v inventári neexistuje.
 - **Zoradiť** usporiada výbavu podľa veľkosti, vzácnosti, stupňa a názvu; zásoby podľa názvu. Ak nové rozloženie nemožno umiestniť, pôvodné ostáva zachované.
@@ -18,16 +18,16 @@ Elixír možno vypiť aj v otvorenom inventári. Plášť sa použije bez zatvor
 
 | Slot | Rozmery v batohu | Hlavný bonus |
 | --- | --- | --- |
-| Zbraň | 1 × 3 | Útok |
-| Brnenie | 2 × 3 | Obrana |
-| Prilba | 2 × 1 | Obrana |
-| Štít | 2 × 2 | Obrana |
-| Obuv | 2 × 2 | Rýchlosť pohybu |
+| Zbraň | 1 × 2 | Útok |
+| Brnenie | 1 × 2 | Obrana |
+| Prilba | 1 × 1 | Obrana |
+| Štít | 1 × 1 | Obrana |
+| Obuv | 1 × 1 | Rýchlosť pohybu |
 | Náramok | 1 × 1 | Maximálne zdravie |
 | Náhrdelník | 1 × 1 | Maximálna mana |
 | Náušnice | 1 × 1 | Sila kúziel |
-| Opasok | 2 × 1 | Obrana |
-| Talizman | 1 × 2 | Kritický zásah |
+| Opasok | 1 × 1 | Obrana |
+| Talizman | 1 × 1 | Kritický zásah |
 
 Každý typ padá z bežných zdrojov výbavy v troch vzácnostiach. Nové predmety uvádzajú a kontrolujú požadovanú úroveň; stará výbava bez tejto požiadavky zostáva použiteľná. Všetkých desať slotov možno vylepšovať u kováča. Od cieľového stupňa +4 spotrebuje okrem rudy a zlata aj kamene vylepšenia z Metinov. Rozmery a číselné bonusy predstavujú vlastné nastavenie Grindorie.
 
@@ -39,7 +39,7 @@ Bonusy sa počítajú zo skutočne nasadených predmetov pri útoku, kúzlení, 
 
 Migrácia zachová mená, bonusy, vzácnosť aj vylepšenia starých predmetov a rozloží ich do mriežky. Ak starý batoh potrebuje viac miesta, dostane dodatočné strany; predmety sa nevymažú ani automaticky nepredajú. Bežný nový drop strany nepridáva. Pri plnom batohu zostáva korisť z nepriateľa alebo kameňa na zemi, bez automatického predaja. Podrobnosti ručného zbierania opisuje [LOOT.md](LOOT.md). Výslovne vyzdvihnuté odmeny úloh naďalej používajú pôvodné pravidlo náhrady za plný batoh.
 
-Presun aj výmena výbavy najprv overia rozloženie. Neplatná operácia ponechá pôvodné predmety a štatistiky. Pozície aj množstvá prežijú uloženie a načítanie hry.
+Presun najprv overí celú plochu predmetu vrátane spodného políčka zbrane či brnenia. Neplatná operácia ponechá pôvodné predmety a štatistiky. Pozície aj množstvá prežijú uloženie a načítanie hry.
 
 ## Boj od 0.10.0
 
@@ -61,4 +61,10 @@ Vyhodenie otvorí samostatné kompaktné okno v strede hernej plochy. Enter potv
 
 Výber predmetu už neotvára spodné menu akcií. Porovnanie s vybaveným predmetom používa rovnakú ukážku ako drop: zelené zlepšenie, červené zhoršenie a červený nesplnený požadovaný level. Dvojklik nasadí, zloží alebo použije predmet; presúvanie a potvrdené vytiahnutie mimo okna zostávajú dostupné. Predaj výbavy prebieha v okne obchodníka.
 
-Yang je pod vybavením postavy. Ovládanie presunu, použitia a vyhodenia je opísané v H → Inventár a korisť; v inventári sa neopakuje.
+Inventár je úzky zvislý panel: vybavenie hore, päť strán batohu pod ním a Yang úplne dole. Ovládanie presunu, použitia a vyhodenia je opísané v H → Inventár a korisť; v inventári sa neopakuje.
+
+Inventár prispôsobuje veľkosť políčok dostupnej výške a šírke okna. Celá aktuálna strana 5 × 9 políčok, výbava, Yang a ovládanie zostávajú viditeľné bez posúvania; kapacita piatich strán sa nemení. Rozloženie sa prepočíta aj po zmene veľkosti obrazovky a presunutí okna.
+
+Vybavenie používa rozloženie podľa Metinu2: zbraň vľavo hore, prilba nad brnením, štít vpravo od brnenia a náramok pod štítom. Náušnice a náhrdelník sú na pravom okraji, talizman vľavo dole, opasok vpravo dole a obuv pod postavou. Prázdne miesta medzi slotmi zostávajú voľné.
+
+Mriežka vypĺňa celú šírku batohu. Zbrane a brnenia zaberajú dve políčka pod sebou; ostatná výbava a zásoby jedno. Pri načítaní sa zachovajú platné pozície aj všetky vlastnosti predmetov.

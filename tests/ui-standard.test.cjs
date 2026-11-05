@@ -8,9 +8,9 @@ test('same panel rerenders preserve scroll; changing or reopening a panel starts
 test('requirements show owned, required and missing counts without color dependence',()=>{
  const {run}=setup();run('p.career.materials.ore=2;');const html=run('costRequirements({ore:5,gold:10001})');assert.match(html,/Máš \/ Potrebuješ/);assert.match(html,/Chýba 3/);assert.match(html,/Chýba 1/);assert.match(html,/>2<\/b>/);assert.match(run('costRequirements({ore:1})'),/Splnené/);
 });
-test('market sales and inventory refresh keep their current scroll positions',()=>{
+test('market sales preserve scroll; inventory refresh clears obsolete scrolling',()=>{
  const {run}=setup();run('marketPanel("merchant");$("modalcard").scrollTop=360;sellMarketGear(p.bag[0].uid,"merchant");marketPanel("merchant");');assert.equal(run('$("modalcard").scrollTop'),360);
- run('inventory();$("modalcard").scrollTop=220;inventory();');assert.equal(run('$("modalcard").scrollTop'),220);
+ run('inventory();$("modalcard").scrollTop=220;inventory();');assert.equal(run('$("modalcard").scrollTop'),0);
 });
 test('drop confirmation leaves items untouched until confirmed and can be canceled',()=>{
  const {run}=setup();run('inventory();var uid=p.bag[0].uid;');assert(run('requestInventoryDrop("gear:"+uid)'));assert.equal(run('p.bag.length'),1);assert.equal(run('drops.length'),0);

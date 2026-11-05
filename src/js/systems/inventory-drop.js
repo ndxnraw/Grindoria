@@ -20,7 +20,7 @@ function handleInventoryOutsideDrop(event){
   const rect=(gameWindows.get('inventory')?.node||$('modalcard')).getBoundingClientRect();
   if(event.clientX>=rect.left&&event.clientX<=rect.right&&event.clientY>=rect.top&&event.clientY<=rect.bottom)return false;
   event.preventDefault();event.stopPropagation?.();
-  const id=inventoryDrag.id;inventoryDrag=null;
+  const id=inventoryDrag.id;clearInventoryDrag();
   if(!requestInventoryDrop(id)){inventoryMessage('Nasadený predmet najprv zlož do batohu.');return false;}return true;
 }
 function inventoryDropConfirmation(){

@@ -10,6 +10,20 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.35.1] - 2026-11-05
+
+### Added
+
+### Changed
+- Presun predmetu na obsadené políčka sa odmietne bez výmeny pozícií. Ťahaný predmet má pri neplatnom umiestnení červený náhľad; kontrola platí aj pre zásoby a celý dvojpolíčkový predmet.
+- Batoh vypĺňa celú šírku inventára. Zbrane a brnenia majú rozmery 1 × 2, ostatné predmety 1 × 1; staré predmety aj platné pozície zostávajú zachované.
+- Úzky zvislý inventár podľa Metinu2: vybavenie nad batohom, menšie ikony predmetov, päť strán a Yang v spodnom riadku. Presúvanie, vyhadzovanie, porovnanie aj dvojklik zostávajú zachované.
+- Rozmiestnenie vybavenia podľa Metinu2: zbraň vľavo, prilba nad brnením, štít a náramok vpravo od brnenia, šperky na pravom okraji, talizman a opasok dole a obuv pod postavou.
+- Inventár prispôsobuje veľkosť políčok dostupnej výške okna; výbava, Yang, ovládanie a všetkých 45 políčok aktuálnej strany sú viditeľné bez scrollovania.
+
+### Fixed
+- Odstránené duplicitné záhlavie inventára a nadbytočné rozostupy. Rozloženie sa prepočíta pri otvorení, presune a zmene veľkosti obrazovky.
+
 ## [0.35.0] - 2026-11-05
 
 ### Added
@@ -657,7 +671,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.35.0...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.35.1...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -698,3 +712,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.34.0]: https://github.com/ndxnraw/Grindoria/compare/v0.33.1...v0.34.0
 [0.34.1]: https://github.com/ndxnraw/Grindoria/compare/v0.34.0...v0.34.1
 [0.35.0]: https://github.com/ndxnraw/Grindoria/compare/v0.34.1...v0.35.0
+[0.35.1]: https://github.com/ndxnraw/Grindoria/compare/v0.35.0...v0.35.1

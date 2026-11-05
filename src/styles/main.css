@@ -225,3 +225,67 @@ body.started{background:#10140f;overflow:hidden}body.started>header,body.started
 .game-window .item-tooltip .stat-gain,.game-window .item-tooltip .stat-gain b{color:#9bce85!important}
 .game-window .item-tooltip .stat-loss,.game-window .item-tooltip .stat-loss b{color:#e58f7f!important}
 .game-window .item-tooltip .stat-same,.game-window .item-tooltip .stat-same b{color:#aaa796!important}
+
+/* Inventory sizing follows the available window height, with all 45 cells visible. */
+.window-layer .game-window[data-window-key="inventory"]{--inventory-cell:36px;width:max(200px,calc(var(--inventory-cell)*5 + 34px))}
+.game-window[data-window-key="inventory"] .inventory-title{display:flex;align-items:center;justify-content:space-between;gap:8px;height:auto!important;min-height:0;padding:4px 8px!important;box-shadow:none}
+.game-window[data-window-key="inventory"] .inventory-title>small{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:10px!important;line-height:16px}
+.game-window[data-window-key="inventory"] .inv-level{display:block;flex:none;margin:0;font-size:10px}
+.game-window[data-window-key="inventory"] .inventory-columns{padding:8px;gap:8px;grid-template-columns:minmax(0,1fr);align-items:start}
+.game-window[data-window-key="inventory"] .bag-heading{margin:0 0 4px;min-height:14px}
+.game-window[data-window-key="inventory"] .bag-heading h3,.game-window[data-window-key="inventory"] .character-panel>h3{font-size:11px!important;line-height:14px;margin:0 0 4px}
+.game-window[data-window-key="inventory"] .bag-heading small{font-size:9px;white-space:nowrap}
+.game-window[data-window-key="inventory"] .inventory-tabs{display:flex;flex-wrap:nowrap;gap:3px;margin:0 0 4px}
+.game-window[data-window-key="inventory"] .inventory-tabs button{flex:1;min-width:0;min-height:24px;padding:2px 4px!important;font-size:10px!important;line-height:16px}
+.game-window[data-window-key="inventory"] .inventory-pages{display:flex;gap:2px;margin:0 0 4px;flex-wrap:wrap}
+.game-window[data-window-key="inventory"] .inventory-pages button{min-height:22px;min-width:18px;padding:1px 4px!important;font-size:10px!important;line-height:16px}
+.game-window[data-window-key="inventory"] .inventory-grid{--cell:var(--inventory-cell);width:100%;box-sizing:border-box;max-width:100%;margin:0;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:repeat(9,var(--inventory-cell));gap:2px;padding:3px}
+.game-window[data-window-key="inventory"] .inventory-cell,.game-window[data-window-key="inventory"] .grid-item{min-height:0;min-width:0;padding:1px!important}
+.game-window[data-window-key="inventory"] .grid-item .item-icon{width:86%;height:86%;min-width:0;min-height:0;max-width:100%;max-height:100%}
+.game-window[data-window-key="inventory"] .equipment-board{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(6,var(--inventory-cell));grid-template-areas:"weapon helmet . ." "weapon armor shield ." ". armor bracelet earrings" ". . . necklace" "talisman . belt ." ". boots . .";gap:4px;padding:3px;box-sizing:border-box}
+.game-window[data-window-key="inventory"] .slot-weapon{grid-area:weapon}
+.game-window[data-window-key="inventory"] .slot-helmet{grid-area:helmet}
+.game-window[data-window-key="inventory"] .slot-armor{grid-area:armor}
+.game-window[data-window-key="inventory"] .slot-shield{grid-area:shield}
+.game-window[data-window-key="inventory"] .slot-bracelet{grid-area:bracelet}
+.game-window[data-window-key="inventory"] .slot-earrings{grid-area:earrings}
+.game-window[data-window-key="inventory"] .slot-necklace{grid-area:necklace}
+.game-window[data-window-key="inventory"] .slot-talisman{grid-area:talisman}
+.game-window[data-window-key="inventory"] .slot-belt{grid-area:belt}
+.game-window[data-window-key="inventory"] .slot-boots{grid-area:boots}
+.game-window[data-window-key="inventory"] .equipment-slot{width:100%;height:100%;min-height:0;min-width:0;padding:2px!important;gap:1px}
+.game-window[data-window-key="inventory"] .equipment-slot>span{flex:1;min-height:0;height:auto!important;width:100%}
+.game-window[data-window-key="inventory"] .equipment-slot .item-icon{width:100%;height:100%;min-height:0;max-height:100%;max-width:100%}
+.game-window[data-window-key="inventory"] .equipment-slot small{font-size:8px!important;line-height:9px;max-width:100%;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex:none}
+.game-window[data-window-key="inventory"] .equipment-figure{width:60%;height:100%;left:7.5%;top:0}
+.game-window[data-window-key="inventory"] .inventory-money{padding:5px 7px;gap:4px;min-height:24px;box-sizing:border-box;margin-top:5px}
+.game-window[data-window-key="inventory"] .inventory-controls:has(.inventory-message:empty){display:none}
+.game-window[data-window-key="inventory"] .inventory-message{font-size:10px!important;line-height:13px!important;margin:0;max-width:100%}
+.game-window[data-window-key="inventory"].inventory-compact .inventory-columns{padding:4px;gap:5px}
+.game-window[data-window-key="inventory"].inventory-compact .inventory-tabs button,.game-window[data-window-key="inventory"].inventory-compact .inventory-pages button{min-height:18px;font-size:9px!important;line-height:14px;padding:1px 3px!important}
+.game-window[data-window-key="inventory"].inventory-compact .inventory-money{padding:2px 4px;min-height:20px;margin-top:3px}
+.game-window[data-window-key="inventory"].inventory-compact .inventory-grid{gap:1px;padding:2px}
+.game-window[data-window-key="inventory"].inventory-compact .equipment-board{gap:2px;padding:2px}
+.game-window[data-window-key="inventory"].inventory-compact .bag-heading{min-height:12px;margin-bottom:2px}
+.game-window[data-window-key="inventory"].inventory-compact .bag-heading h3,.game-window[data-window-key="inventory"].inventory-compact .character-panel>h3{line-height:12px;margin-bottom:2px}
+
+/* The classic inventory is one vertical panel: equipment, pages, bag, Yang. */
+.game-window[data-window-key="inventory"] .inventory-title,.game-window[data-window-key="inventory"] .bag-heading,.game-window[data-window-key="inventory"] .character-panel>h3,.game-window[data-window-key="inventory"] .equipment-slot small{display:none}
+.game-window[data-window-key="inventory"] .inventory-columns{gap:5px;padding:6px;grid-template-columns:minmax(0,1fr)}
+.game-window[data-window-key="inventory"] .equipment-board{gap:3px;padding:3px}
+.game-window[data-window-key="inventory"] .inventory-tabs button{min-height:20px!important;line-height:14px}
+.game-window[data-window-key="inventory"] .inventory-pages button{min-height:20px!important;line-height:14px}
+.game-window[data-window-key="inventory"] .inventory-pages [data-inv-page]{flex:1}
+.game-window[data-window-key="inventory"] .inventory-money{margin:0;min-height:24px}
+.game-window[data-window-key="inventory"] .inventory-money b{font-size:13px}
+.game-window[data-window-key="inventory"] .bag-panel{width:100%}
+
+.game-window[data-window-key="inventory"] .inventory-pages #rarity-guide,.game-window[data-window-key="inventory"] .inventory-pages #inv-sort,.game-window[data-window-key="inventory"] .inventory-pages [data-ui-id="rarity-guide"],.game-window[data-window-key="inventory"] .inventory-pages [data-ui-id="inv-sort"]{width:22px;flex:none}
+.game-window[data-window-key="inventory"].inventory-compact .inventory-columns{padding:4px;gap:2px}
+.game-window[data-window-key="inventory"].inventory-compact .equipment-board{grid-template-rows:repeat(6,calc(var(--inventory-cell)*.75));gap:1px;padding:2px}
+.game-window[data-window-key="inventory"].inventory-compact .inventory-tabs button,.game-window[data-window-key="inventory"].inventory-compact .inventory-pages button{min-height:16px!important;line-height:12px;padding:0 3px!important}
+.game-window[data-window-key="inventory"].inventory-compact .inventory-money{min-height:20px;padding:2px 4px}
+
+.inventory-drag-preview{position:fixed!important;z-index:10000!important;pointer-events:none!important;margin:0;opacity:.9;box-sizing:border-box;display:grid;place-items:center}
+.inventory-drag-preview.is-invalid{background:#6e1e20ed!important;border:2px solid #ff544c!important;box-shadow:inset 0 0 12px #ff303088,0 0 5px #ff3020!important}
+.inventory-drag-preview.is-invalid .item-icon{filter:sepia(1) saturate(5) hue-rotate(320deg) drop-shadow(0 0 2px #ff2222)}
