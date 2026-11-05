@@ -42,7 +42,7 @@ function initializeCareer() {
       materials: Object.fromEntries(Object.keys(MATERIALS).map(id => [id, 0])),
       eligibleKills: (p.huntClaimed || 0) * 10, training: { strength: 0, vitality: 0, dexterity: 0, intelligence: 0 },
       skills: {}, skillUpgrades: 0,
-      biology: { stage: 0, delivered: 0, nextKill: 0 },
+      biology: { stage: 0, delivered: 0 },
       samplePity: {}, keyPity: 0,
       specialization: { focus: null, rank: 0, points: 0 },
       endgame: { highest: 0, paragon: 0, run: null }
@@ -50,6 +50,7 @@ function initializeCareer() {
   }
   migrateBalanceProfile(p);
   for (const id of Object.keys(MATERIALS)) p.career.materials[id] ??= 0;
+  migrateQuestProfile(p);
   initializeBiology();
   initializeDiscovery();
   initializeCrafting();

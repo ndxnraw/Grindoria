@@ -60,3 +60,5 @@ Tlačidlo Rarity otvorí šance a pravidlá generovania. Nové predmety zobrazuj
 Vyhodenie otvorí samostatné kompaktné okno v strede hernej plochy. Enter potvrdí aj zadané množstvo; Esc alebo Zrušiť nič nespotrebujú. Výbava sa prenesie až po potvrdení a staré potvrdenie pre inú mapu či postavu neplatí.
 
 Výber predmetu už neotvára spodné menu akcií. Porovnanie s vybaveným predmetom používa rovnakú ukážku ako drop: zelené zlepšenie, červené zhoršenie a červený nesplnený požadovaný level. Dvojklik nasadí, zloží alebo použije predmet; presúvanie a potvrdené vytiahnutie mimo okna zostávajú dostupné. Predaj výbavy prebieha v okne obchodníka.
+
+Yang je pod vybavením postavy. Ovládanie presunu, použitia a vyhodenia je opísané v H → Inventár a korisť; v inventári sa neopakuje.

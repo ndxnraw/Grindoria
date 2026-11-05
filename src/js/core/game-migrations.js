@@ -1,6 +1,7 @@
 // Compatibility only: removed systems never enter active gameplay or new saves.
 function migrateGameSystems(data){
- const c=data?.career;if(!c||c.schema!==PROGRESSION.schema||c.systemsVersion===1)return false;
+ const questChanged=migrateQuestProfile(data);
+ const c=data?.career;if(!c||c.schema!==PROGRESSION.schema||c.systemsVersion===1)return questChanged;
  let refund=0;
  const count=(n,label,max=1e12)=>{assertCharacterNumber(n,label,0,max,true);return n;};
  const removedSupplyValue=id=>id.startsWith('gem:')?100:id==='material:extract'?45:({mana:70,might:40,guard:50,vitality:75,greaterMight:400})[id.slice(8)];
@@ -25,4 +26,17 @@ function migrateGameSystems(data){
  c.materials.soulStones??=0;c.systemsVersion=1;
  data.gold=Math.min(1e12,count(data.gold,'Yang')+refund);
  return true;
+}
+
+// Preserve all completed ten-kill legacy rounds, then switch to adaptive rounds.
+function migrateQuestProfile(data){
+ const c=data?.career;if(!c||c.schema!==PROGRESSION.schema)return false;
+ let changed=false;
+ if(c.hunt===undefined){
+  assertCharacterNumber(c.eligibleKills,'zabitia Lovca',0,1e12,true);assertCharacterNumber(data.huntClaimed,'odmeny Lovca',0,1e12,true);assertCharacterNumber(data.level,'úroveň Lovca',1,99,true);
+  const consumed=Math.min(c.eligibleKills,data.huntClaimed*10);
+  c.hunt={schema:1,consumed,level:data.level,legacy:Math.floor((c.eligibleKills-consumed)/10)};changed=true;
+ }
+ if(c.biology&&Object.hasOwn(c.biology,'nextKill')){delete c.biology.nextKill;changed=true;}
+ return changed;
 }

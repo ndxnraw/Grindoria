@@ -7,7 +7,6 @@ const BIOLOGY = [
 
 const BIOLOGY_MATERIALS={ancientVenom:'Koncentrovaný jed',frozenMarrow:'Mrazivá dreň',demonHeart:'Démonické srdce',ancientOrgan:'Prastarý orgán'};
 Object.assign(MATERIALS,BIOLOGY_MATERIALS);
-const BIOLOGY_RULES={killGap:5};
 BIOLOGY.forEach((stage,index)=>Object.assign(stage,{id:stage.item,dropEvery:[4,6,8,10][index],cooldown:0,fee:25*(index+1),source:'Príšery danej mapy'}));
 BIOLOGY.push(
  {id:'ancientVenom',name:'Koncentrácia jedu',map:'quarry',level:40,item:'ancientVenom',count:15,bonus:{hp:180,speed:8},text:'+180 zdravie, +8 rýchlosť pohybu',cooldown:120,fee:200,variants:['elite','rare'],chance:.25,pity:8,source:'Elitní a vzácni kamenní strážcovia'},

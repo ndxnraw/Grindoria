@@ -32,13 +32,13 @@ test('real rare monster death grants a sample once without increasing EXP from a
  const {run}=createGame();run('running=true;loadMap("ruins",true);p.level=70;p.career.biology.stage=6;rand=()=>0;var m=mobs.find(m=>m.type==="wolf");m.variant="rare";m.level=50;m.hp=1;var xp=p.xp;hit(m,999999);');assert.equal(run('p.career.materials.demonHeart'),1);assert.equal(run('p.xp'),run('xp'));run('hit(m,999999);');assert.equal(run('p.career.materials.demonHeart'),1);
 });
 
-test('submissions require the NPC, level, living session, one sample, Yang and intervening kills; rejection is atomic',()=>{
- for(const setup of ['running=false;','p.hp=0;','p.x=100;p.y=100;','p.mapId="quarry";','p.level=39;','p.career.materials.ancientVenom=0;','p.gold=0;','p.career.biology.nextKill=p.career.eligibleKills+1;','p.career.biology.nextDeliveryAt=Date.now()+10000;']){
+test('submissions require the NPC, level, living session, one sample, Yang and cooldown; rejection is atomic',()=>{
+ for(const setup of ['running=false;','p.hp=0;','p.x=100;p.y=100;','p.mapId="quarry";','p.level=39;','p.career.materials.ancientVenom=0;','p.gold=0;','p.career.biology.nextDeliveryAt=Date.now()+10000;']){
   const {run}=biologist();run(setup+'var before=JSON.stringify(p);');assert(!run('completeBiology()'));assert.equal(run('JSON.stringify(p)'),run('before'));assert(run('biologyMessage.length>0'));
  }
 });
 
-test('successful submission charges only one sample and fee, and enforces both persisted real-time and kill cooldowns',()=>{
+test('successful submission charges only one sample and fee, and enforces the persisted real-time cooldown',()=>{
  const {run}=biologist();run('var gold=p.gold,samples=p.career.materials.ancientVenom;');assert(run('completeBiology()'));assert.equal(run('p.gold'),run('gold-200'));assert.equal(run('p.career.materials.ancientVenom'),run('samples-1'));assert.equal(run('p.career.biology.delivered'),1);assert.equal(run('p.career.biology.nextDeliveryAt'),2000000120000);assert.equal(run('biologyCooldown()'),120);
  run('p.career.eligibleKills+=5;');assert(!run('completeBiology()'));run('Date.now=()=>2000000119999;');assert(!run('completeBiology()'));run('Date.now=()=>2000000120000;');assert(run('completeBiology()'));assert.equal(run('p.career.biology.delivered'),2);
 });
@@ -55,7 +55,7 @@ test('completion grants permanent real HP, defense, attack, magic and movement s
 });
 
 test('all eight stages finish sequentially and permanent bonuses survive export, import and reload without duplication',()=>{
- const g=biologist(0);g.run('for(var i=0;i<BIOLOGY.length;i++){var b=BIOLOGY[i];for(var j=0;j<b.count;j++){p.career.eligibleKills=p.career.biology.nextKill;p.career.biology.nextDeliveryAt=0;if(!completeBiology())throw Error("submission failed");}}var hp=maxHP(),attack=damage(),def=defense(),speed=speedValue();save();var backup=exportCharacters();');assert.equal(g.run('p.career.biology.stage'),8);assert(!g.run('completeBiology()'));
+ const g=biologist(0);g.run('for(var i=0;i<BIOLOGY.length;i++){var b=BIOLOGY[i];for(var j=0;j<b.count;j++){p.career.biology.nextDeliveryAt=0;if(!completeBiology())throw Error("submission failed");}}var hp=maxHP(),attack=damage(),def=defense(),speed=speedValue();save();var backup=exportCharacters();');assert.equal(g.run('p.career.biology.stage'),8);assert(!g.run('completeBiology()'));
  const target=createEmptyGame();target.run('importCharacterBackup(prepareCharacterImport('+JSON.stringify(g.run('backup'))+'),"add");playCharacter();');for(const [expr,val]of [['maxHP()','hp'],['damage()','attack'],['defense()','def'],['speedValue()','speed']])assert.equal(target.run(expr),g.run(val));target.run('save();');const again=createGame(readSavedProfile(target.saved));assert.equal(again.run('p.career.biology.stage'),8);assert.equal(again.run('speedValue()'),g.run('speed'));
 });
 
@@ -71,6 +71,6 @@ test('old backups migrate additively; malformed timers, sample counters and new 
 
 test('NPC panel shows objectives, exact sources, drop/pity, prices, timers and rewards; timer refresh keeps the same dialog',()=>{
  const {run,elements}=biologist();run('p.career.biology.nextDeliveryAt=Date.now()+1000;npcSessions.set("biologist",characterStore.activeId+":"+p.mapId);biologyNPCPanel();');let html=elements.get('modalcontent').innerHTML;for(const text of ['Koncentrácia jedu','Koncentrovaný jed','Elitní a vzácni kamenní strážcovia','25 %','8. vhodného','200','+8 rýchlosť','biology-submit'])assert(html.includes(text),text);assert.match(html,/biology-submit[^>]+disabled/);
- run('Date.now=()=>2000000001000;refreshBiologyPanel();');assert.equal(elements.get('biology-submit').disabled,false);assert.equal(elements.get('biology-status').textContent,'');assert.equal(elements.get('modalcontent').innerHTML,html);assert.equal(run('paused'),false);
+ run('Date.now=()=>2000000001000;refreshBiologyPanel();');assert.equal(elements.get('biology-submit').disabled,false);assert.equal(elements.get('biology-block').textContent,'');assert.equal(elements.get('modalcontent').innerHTML,html);assert.equal(run('paused'),false);
  run('closeModal();journal();');assert(elements.get('modalcontent').innerHTML.includes('Biológ ·'));run('biologyInfoPanel();');assert(run('panelState.key==="quest:biology"'));
 });

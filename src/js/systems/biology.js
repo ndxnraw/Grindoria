@@ -11,7 +11,6 @@ function biologyBlockReason(now=Date.now()){
  if(!running||p.hp<=0)return 'Postava musí byť nažive v hre.';
  if(p.level<stage.level)return 'Vyžaduje úroveň '+stage.level+'.';
  if(!nearNPC('biologist'))return 'Odovzdanie: Biológ v Meste.';
- if(p.career.eligibleKills<bio.nextKill)return 'Zostáva '+(bio.nextKill-p.career.eligibleKills)+' primeraných zabití.';
  const cooldown=biologyCooldown(now);if(cooldown)return 'Ďalšie odovzdanie o '+biologyWaitLabel(cooldown)+'.';
  if(p.career.materials[stage.item]<1)return 'Chýba vzorka: '+MATERIALS[stage.item]+'.';
  if(p.gold<stage.fee)return 'Chýba '+(stage.fee-p.gold)+' Yang.';
@@ -20,7 +19,7 @@ function biologyBlockReason(now=Date.now()){
 function completeBiology(){
  biologyMessage=biologyBlockReason();if(biologyMessage)return false;
  const bio=p.career.biology,stage=BIOLOGY[bio.stage];if(!pay(biologyCost(stage)))return false;
- bio.delivered++;bio.nextKill=p.career.eligibleKills+BIOLOGY_RULES.killGap;bio.nextDeliveryAt=Date.now()+stage.cooldown*1000;
+ bio.delivered++;bio.nextDeliveryAt=Date.now()+stage.cooldown*1000;
  biologyMessage='Vzorka odovzdaná: '+bio.delivered+' / '+stage.count+'.';
  if(bio.delivered>=stage.count){bio.stage++;bio.delivered=0;bio.sampleKills=0;biologyMessage='Etapa dokončená · '+stage.text;toast(biologyMessage);}
  save();updateHUD();return true;

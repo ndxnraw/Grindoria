@@ -2,8 +2,8 @@ function metinPercent(value) { return Number((value * 100).toFixed(2)).toLocaleS
 
 function metinCodex(){return careerPanel('metins');}
 function metinCodexContent() {
-  return `<span class="eyebrow">ŠUTERLAND · 1–99</span><p>Šuterland: Metiny 1–99. Útok privoláva obrancov podľa úrovne; prvá vlna za 0,1 s.</p>${Object.entries(METIN_TYPES).map(([id, type]) => {
+  return `<span class="eyebrow">ŠUTERLAND · 1–99</span>${Object.entries(METIN_TYPES).map(([id, type]) => {
     const pool = type.loot, example = metinStats(type.levels[0], id);
     return `<section class="career-card metin-card" style="border-left-color:${type.glow}"><h3>${type.name}</h3><p>Úroveň ${type.levels.join('–')} · ${type.difficulty}<br>Vlny: ${type.wave} / ${type.interval.toLocaleString('sk-SK')} s<br>Na Lv.${type.levels[0]}: HP ${example.hp} · pancier ${example.armor} · odolnosť ${Math.round(example.resistance * 100)} %<br>Typy: ${Object.entries(METIN_RESISTS[id]||{}).map(([kind,value])=>DAMAGE_TYPES[kind].name+' '+resistanceText(value)).join(', ')}</p><h4>Dropy</h4><p>Yang: 100 % · ${pool.yang.join('–')} × (1 + úroveň × 0,12)<br>${['ore', 'books', 'essence', 'dust', 'upgradeStones'].map(key => MATERIALS[key] + ': ' + metinPercent(pool[key][0]) + ' · ' + pool[key][1] + '–' + pool[key][2] + ' ks').join('<br>')}<br>Výbava: ${metinPercent(pool.gear)} · ${pool.slots.map(slot => EQUIPMENT[slot].name).join(', ')}<br>Rarity výbavy na Lv.${type.levels[0]}: ${itemRarityChances({type:'stone',metinType:id,level:type.levels[0]}).map(entry=>rarityName(entry.id)+' '+Number((entry.chance*100).toFixed(4)).toLocaleString('sk-SK')+' %').join(', ')}<br>${MATERIALS[pool.extra[0]]}: ${metinPercent(pool.extra[1])}</p></section>`;
-  }).join('')}<p>Drop materiálov a výbavy: kameň najviac o 5 úrovní slabší. Kamene vylepšenia: kováč od +4. Limit obrancov: 8 na kameň, 60 na mapu; po 45 s zmiznú bez odmeny.</p>`;
+  }).join('')}`;
 }

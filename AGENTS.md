@@ -4,7 +4,7 @@
 
 - Slovenčina: stručná, vecná, herná. Bez marketingu, poetických úvodov, fantasy klišé a komentárov o implementácii.
 - Každý text musí pomáhať ovládať hru, pochopiť pravidlo alebo rozhodnúť. Jedna informácia má jedno hlavné miesto.
-- Ako hrať: klávesy a základné ovládanie. Bojový manuál: pokročilé pravidlá, typy poškodenia, odolnosti, kombá a stručná automatika.
+- Ako hrať: stručné ovládanie a pravidlá všetkých systémov vrátane pokročilého boja. Ostatné okná: aktuálne stavy, hodnoty, podmienky, ceny a akcie; neopakuj v nich návody.
 - Kniha schopností: kláves, názov, stupeň, typ, mana, cooldown, účinok a kombo. Progresia: čísla, podmienky, ceny, tlačidlá; najviac jedna potrebná krátka vysvetľujúca veta na kartu.
 - Výber a tvorba postavy sú funkčné menu. Mapy: názov, odporúčaná úroveň, nepriatelia, boss. Úlohy: cieľ, progres, odmena. Tooltipy: názov, rarita, požiadavky, štatistiky, bonusy, cena, použitie.
 - Zachovaj názvy, číselné hodnoty, náklady, dosahy, trvania, šance, pity, podmienky, chyby a bezpečnostné upozornenia pri strate dát.

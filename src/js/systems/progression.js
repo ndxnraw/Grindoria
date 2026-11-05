@@ -28,16 +28,25 @@ function allocate(stat){if(p.points<=0||!['strength','vitality','dexterity','int
 
 function claimBoss(){if(p.bossClaimed||p.bossKills<1)return;p.bossClaimed=true;p.gold+=200;experience(80);awardItem(true,{type:'boss',level:8});save();updateHUD();if(gameWindows.has('journal'))journal();}
 
-// Every ten eligible kills: level-scaled Yang and ore, with study/forge milestones.
-function huntReward(level=p.level,claim=p.huntClaimed+1){
- const reward={gold:100+25*level+level*level,ore:2+Math.floor(level/10)};
- if(claim%5===0)reward.books=1+Math.floor(level/30);
- if(claim%10===0)reward.upgradeStones=1+Math.floor(level/40);
+function huntRequired(data=p){const hunt=data.career.hunt;return hunt.legacy>0?10:Math.min(200,10+5*data.huntClaimed+5*Math.floor((hunt.level-1)/10));}
+function huntProgress(data=p){return data.career.eligibleKills-data.career.hunt.consumed;}
+function huntReward(level=p.career.hunt.level,claim=p.huntClaimed+1,required=huntRequired()){
+ const scale=required/10,reward={gold:Math.round((100+25*level+level*level)*scale),ore:Math.ceil((2+Math.floor(level/10))*scale)};
+ if(claim%5===0)reward.books=Math.ceil((1+Math.floor(level/30))*scale);
+ if(claim%10===0)reward.upgradeStones=Math.ceil((1+Math.floor(level/40))*scale);
  return reward;
 }
+function validateHuntProfile(data){
+ const hunt=data.career.hunt;assertCharacterObject(hunt,'Lovec');if(hunt.schema!==1)characterDataError('verzia Lovca.');
+ assertCharacterNumber(hunt.consumed,'započítané zabitia Lovca',0,data.career.eligibleKills,true);
+ assertCharacterNumber(hunt.level,'úroveň série Lovca',1,data.level,true);
+ assertCharacterNumber(hunt.legacy,'staré série Lovca',0,Math.floor((data.career.eligibleKills-hunt.consumed)/10),true);
+}
 function claimHunt(){
- if(!running||p.hp<=0||p.career.eligibleKills<(p.huntClaimed+1)*10)return false;
- const reward=huntReward();p.huntClaimed++;p.gold+=reward.gold;
+ if(!running||p.hp<=0||p.huntClaimed>=1e12||huntProgress()<huntRequired())return false;
+ const required=huntRequired(),reward=huntReward(),hunt=p.career.hunt;
+ if(p.gold+reward.gold>1e12||Object.entries(reward).some(([id,n])=>id!=='gold'&&p.career.materials[id]+n>1e12)){toast('Odmenu nemožno prevziať: limit zásob.');return false;}
+ hunt.consumed+=required;if(hunt.legacy>0)hunt.legacy--;p.huntClaimed++;hunt.level=p.level;p.gold+=reward.gold;
  for(const [id,count]of Object.entries(reward))if(id!=='gold')addMaterial(id,count);
  toast('Lovec dokončený.\n'+costLabel(reward));save();updateHUD();if(gameWindows.has('journal'))journal();return true;
 }

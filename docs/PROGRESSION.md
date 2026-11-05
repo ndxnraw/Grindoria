@@ -41,4 +41,8 @@ Staré schopnosti 1–9 prejdú na Normál `2r − 1`, 10–19 na M1–M10 a sta
 
 ## Lovec
 
-Za každých desať primeraných cieľov možno vyzdvihnúť jednu odmenu; prebytočné zabitia sa prenášajú do nasledujúcej úlohy a počítadlo zobrazuje skutočný počet aj po splnení. Pre level L pri vyzdvihnutí: `100 + 25L + L²` Yang a `2 + floor(L/10)` rudy. Každé piate odovzdanie navyše dá `1 + floor(L/30)` kníh, každé desiate aj `1 + floor(L/40)` kameňov vylepšenia. Náhľad zobrazuje presne ďalšiu odmenu. Bez náhradných EXP za slabé ciele. Napríklad Lv.50: 3850 Yang + 7 rudy, každé piate odovzdanie +2 knihy a každé desiate aj +2 kamene.
+Nová séria vyžaduje `min(200, 10 + 5 × dokončené série + 5 × floor((level − 1)/10))` primeraných cieľov. Počet a level pre odmenu sa uzamknú pri začatí série; level-up ich nezmení. Denník ukazuje skutočný počet zabití v aktuálnej sérii, aj nad cieľ. Prebytok sa prenesie.
+
+Odmena je úmerná dĺžke série: základ `100 + 25L + L²` Yang a `2 + floor(L/10)` rudy sa násobí počtom cieľov / 10. Každá piata séria pridá `1 + floor(L/30)` kníh a každá desiata aj `1 + floor(L/40)` kameňov vylepšenia, rovnako násobené dĺžkou / 10. Yang sa zaokrúhli, materiály nahor. Napríklad pri Lv.50: 10 cieľov dá 3850 Yang + 7 rudy; 200 cieľov 77 000 Yang + 140 rudy. EXP navyše sa nepridáva.
+
+`career.hunt = {schema:1, consumed, level, legacy}` uchová spotrebované zabitia, level aktuálnej série a počet už splnených starých desaťzabitových sérií. Migrácia zachová všetky staré nároky; nové zabitia už nepremenia na ďalšie staré série. Prenosné zálohy a neaktívne profily používajú rovnaký prevod. Neúspešné prevzatie nič nespotrebuje a limity meny/materiálov sa overia pred odmenou.

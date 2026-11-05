@@ -51,15 +51,15 @@ test('skill practice requires a real eligible kill; repeated hits do not multipl
   assert.equal(run('upgradeSkill("black:0")'), false);
 });
 
-test('biologist consumes samples, requires farming between submissions and grants permanent bonuses', () => {
+test('biologist consumes samples, allows successive basic-stage submissions and grants permanent bonuses', () => {
   const { run } = createGame();
   run('running=true;loadMap("town",true);p.x=NPCS.biologist.x;p.y=NPCS.biologist.y;p.gold=10000;p.career.materials.wolf=20;');
-  assert.equal(run('completeBiology()'), true); assert.equal(run('completeBiology()'), false);
-  assert.equal(run('p.career.materials.wolf'), 19);
+  assert.equal(run('completeBiology()'), true); assert.equal(run('completeBiology()'), true);
+  assert.equal(run('p.career.materials.wolf'), 18);
   run('p.x=100;p.y=100;p.career.eligibleKills=10;'); assert.equal(run('completeBiology()'), false);
   run('p.x=NPCS.biologist.x;p.y=NPCS.biologist.y;');
   const hp = run('maxHP()');
-  for (let i = 1; i < 10; i++) { run(`p.career.eligibleKills=${i * 10};`); assert.equal(run('completeBiology()'), true); }
+  for (let i = 2; i < 10; i++) { run(`p.career.eligibleKills=${i * 10};`); assert.equal(run('completeBiology()'), true); }
   assert.equal(run('p.career.biology.stage'), 1); assert.equal(run('maxHP()'), hp + 80);
   assert.equal(run('p.career.materials.wolf'), 10);
   assert.equal(run('completeBiology()'), false);

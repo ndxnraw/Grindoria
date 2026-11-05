@@ -27,5 +27,5 @@ function drawTownNPC(id){
  polygon([[a.x-10,a.y-33],[a.x-12,a.y-10],[a.x+12,a.y-10],[a.x+10,a.y-33]],npc.color,'#dcc79b');ellipse(a.x,a.y-43,7,9,'#d5bd97');
  if(id==='smith'){line(a.x+12,a.y-20,a.x+22,a.y-40,'#675343',4);ctx.fillStyle='#b7bbb0';ctx.fillRect(a.x+16,a.y-47,18,9);}
  else if(id==='biologist'){line(a.x-12,a.y-25,a.x-18,a.y-14,'#9bba8c',4);ellipse(a.x-20,a.y-12,5,7,'#80b5b4');}
- text(npc.name+' · F',a.x,a.y-65,'#e4d1a1',11);
+ text(npc.name,a.x,a.y-65,'#e4d1a1',11);
 }

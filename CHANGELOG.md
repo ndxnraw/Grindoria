@@ -10,6 +10,21 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.35.0] - 2026-11-05
+
+### Added
+- Škálované série Lovca s cieľom a odmenou uzamknutou pri začiatku série; prevod uložených nárokov, importov a neaktívnych postáv.
+- Regresie opakovaného odovzdávania biológovi, zvyšovania cieľov, prebytku zabití, level-upu, odmien a atómového importu.
+
+### Changed
+- Lovec začína na 10 cieľoch, rastie podľa dokončení a levelu do 200; odmeny rastú úmerne dĺžke série.
+- Biológ už nevyžaduje zabitia medzi odovzdaniami. Pokročilé časové cooldowny, vzorky, Yang, levely a odmeny zostávajú.
+- Návody a pravidlá systémov sú sústredené v Ako hrať; ostatné okná majú len relevantné údaje, podmienky, stav a akcie.
+
+### Fixed
+- Mená NPC bez prípony F, Yang pod vybavením v inventári a obchodník bez nesúvisiaceho tlačidla Kováča.
+- Biológ neukazuje rovnakú blokujúcu podmienku dvakrát. Rozpracovaná séria Lovca sa nezmení po level-upe ani načítaní.
+
 ## [0.34.1] - 2026-11-05
 
 ### Added
@@ -642,7 +657,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.34.1...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.35.0...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -682,3 +697,4 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.33.1]: https://github.com/ndxnraw/Grindoria/compare/v0.33.0...v0.33.1
 [0.34.0]: https://github.com/ndxnraw/Grindoria/compare/v0.33.1...v0.34.0
 [0.34.1]: https://github.com/ndxnraw/Grindoria/compare/v0.34.0...v0.34.1
+[0.35.0]: https://github.com/ndxnraw/Grindoria/compare/v0.34.1...v0.35.0
