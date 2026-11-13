@@ -9,14 +9,6 @@ const RARITIES = [
  {id:5,name:'Mythic',rank:5,color:'#f17eaa',family:2,affixes:5,power:5,market:180}
 ];
 const ITEM_GENERATION = {version:1,legendaryLevel:50,mythicLevel:75,maxAttackSpeed:.6,maxPenetration:.5,maxEnemyBonus:1};
-const RARITY_WEIGHTS = {
- normal:[450000,350000,175000,22000,2900,100],
- elite:[200000,350000,350000,90000,9500,500],
- rare:[50000,200000,500000,220000,28000,2000],
- boss:[0,50000,500000,365000,80000,5000],
- metin:[250000,350000,300000,85000,14500,500],
- reward:[0,0,0,950000,48000,2000]
-};
 const ITEM_AFFIXES = {
  attack:{base:3,scale:.3},hp:{base:25,scale:2},mp:{base:20,scale:1.6},
  crit:{base:.01,scale:.0002,percent:true},penetration:{base:.012,scale:.0002,percent:true},
@@ -26,6 +18,6 @@ const ITEM_AFFIXES = {
  darkResist:{base:.015,scale:.0003,percent:true},lightningResist:{base:.015,scale:.0003,percent:true},arcaneResist:{base:.015,scale:.0003,percent:true},
  wolfDamage:{base:.025,scale:.0005,percent:true},scorpionDamage:{base:.025,scale:.0005,percent:true},
  yetiDamage:{base:.025,scale:.0005,percent:true},demonDamage:{base:.025,scale:.0005,percent:true},
- metinDamage:{base:.025,scale:.0005,percent:true},bossDamage:{base:.025,scale:.0005,percent:true}
+ metinDamage:{base:.025,scale:.0005,percent:true},bossDamage:{base:.025,scale:.0005,percent:true},bonusExp:{base:.01,scale:.001,percent:true}
 };
 Object.assign(ITEM_STATS,{penetration:'Prenikavý zásah',attackSpeed:'Rýchlosť útoku',wolfDamage:'Poškodenie · vlci',scorpionDamage:'Poškodenie · škorpióny',yetiDamage:'Poškodenie · yeti',demonDamage:'Poškodenie · démoni',metinDamage:'Poškodenie · Metiny',bossDamage:'Poškodenie · bossovia'});

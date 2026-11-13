@@ -27,7 +27,7 @@ let p=createPlayerState();
 const spellKeys=['1','2','3','4','5','6'],buffs={},effects=[],shots=[];
 let spellCD=[0,0,0,0,0,0],castPose=0,castStyle='',spiritTick=0;
 const role=()=>CLASSES[p.classId],equippedBonus=slot=>(p.equipped[slot]?.bonus||0)+enhancementBonus(p.equipped[slot]);
-const maxHP=()=>100+(p.level-1)*22+p.vitality*10+role().health+careerBonuses().hp+equipmentBonuses().hp,damage=()=>Math.round((18+(p.level-1)*2+p.strength*3+equipmentBonuses().attack+careerBonuses().attack)*attackPower()*(1+careerBonuses().attackPercent)),defense=()=>equipmentBonuses().defense+Math.floor(p.vitality/3)+armorBonus()+careerBonuses().defense,needXP=()=>xpForLevel(p.level);
+const maxHP=()=>{const gear=equipmentBonuses();return Math.round((100+(p.level-1)*22+p.vitality*10+role().health+careerBonuses().hp+gear.hp)*(1+gear.maxHpPercent));},damage=()=>Math.round((18+(p.level-1)*2+p.strength*3+equipmentBonuses().attack+careerBonuses().attack)*attackPower()*(1+careerBonuses().attackPercent)),defense=()=>equipmentBonuses().defense+Math.floor(p.vitality/3)+armorBonus()+careerBonuses().defense,needXP=()=>xpForLevel(p.level);
 const mobs=[],particles=[],drops=[],decor=[];let seed=78231;
 
 let castingSkillKey=null, careerTab="overview";

@@ -1,0 +1,33 @@
+name: Remove obsolete installers
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/cleanup-installers.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove obsolete installer release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          node --input-type=module <<'JS'
+          const base='https://api.github.com/repos/'+process.env.REPOSITORY;
+          const headers={Authorization:'Bearer '+process.env.GH_TOKEN,Accept:'application/vnd.github+json'};
+          const response=await fetch(base+'/releases/tags/v0.31.0',{headers});
+          if(response.status===404)process.exit(0);
+          if(!response.ok)throw Error('Cannot inspect release: '+response.status);
+          const release=await response.json();
+          const expected=['Grindoria-Setup-0.31.0-x64.exe','Grindoria-Setup-0.31.0-x64.exe.blockmap','latest.yml'];
+          if(release.assets.length!==expected.length||release.assets.some(asset=>!expected.includes(asset.name)))
+            throw Error('Release contents changed; retained for inspection.');
+          const deleted=await fetch(base+'/releases/'+release.id,{method:'DELETE',headers});
+          if(!deleted.ok)throw Error('Cannot remove release: '+deleted.status);
+          console.log('Obsolete installer release removed.');
+          JS

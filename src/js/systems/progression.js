@@ -1,26 +1,31 @@
 function experience(n) {
-  if (!Number.isFinite(n) || n <= 0 || p.level >= PROGRESSION.maxLevel) return;
-  p.xp += Math.floor(n);
-  while (p.level < PROGRESSION.maxLevel && p.xp >= needXP()) {
-    p.xp -= needXP(); p.level++; p.points += 3;
-    p.hp = maxHP(); p.mp = maxMP();
-    float('ÚROVEŇ ' + p.level, p.x, p.y - 100, '#f9df93', true);
-    toast('Nová úroveň ' + p.level + '!\n+3 body vlastností · zdravie a mana obnovené');
-    beep(660, .25);
+  if(p.xpLocked || !Number.isFinite(n) || n<=0)return;
+  let remaining=Math.floor(n);
+  while(remaining>0 && p.level<PROGRESSION.maxLevel){
+    const needed=needXP(),gained=Math.min(remaining,needed-p.xp);
+    const quarters=xp=>Math.min(3,Math.floor(xp*4/needed));
+    p.points+=quarters(p.xp+gained)-quarters(p.xp);
+    remaining-=gained;
+    p.xp+=gained;
+    if(p.xp<needed)break;
+    p.xp=0;p.level++;p.skillPoints=Math.min(120,(p.skillPoints||0)+1);
+    p.hp=maxHP();p.mp=maxMP();
+    float('ÚROVEŇ '+p.level,p.x,p.y-100,'#f9df93',true);
+    toast('Nová úroveň '+p.level+'!\n+1 bod schopností');
+    beep(660,.25);
   }
-  if (p.level === PROGRESSION.maxLevel) p.xp = 0;
 }
 
 function rarityName(r){return raritySpec(r).name;}
 
-function equipmentDropLevel(source){return raritySourceLevel(source);}
+function equipmentDropLevel(source){return equipmentSourceLevel(source);}
 
 function makeItem(epic=false, source=null, forcedSlot=null) {
-  const rarity=rollItemRarity(source,epic),slots=Object.keys(EQUIPMENT),slot=forcedSlot||slots[Math.min(slots.length-1,Math.floor(itemRandom()*slots.length))];
-  return generateEquipmentItem(slot,rarity,equipmentDropLevel(source));
+  const slots=Object.keys(EQUIPMENT),slot=forcedSlot||slots[Math.min(slots.length-1,Math.floor(itemRandom()*slots.length))];
+  return rewardEquipment(slot,0,equipmentDropLevel(source));
 }
 
-function awardItem(epic=false,source=null){const item=makeItem(epic,source);if(!addGearItem(item)){p.gold+=itemSaleValue(item);float('Batoh plný · +'+itemSaleValue(item)+' zlata',p.x,p.y-110,'#d6cb99');return item;}float(item.name+' → I',p.x,p.y-110,rarityColor(item.rarity));return item;}
+function awardItem(epic=false,source=null){const item=makeItem(epic,source);if(!addGearItem(item)){p.gold+=itemSaleValue(item);float('Batoh plný · +'+itemSaleValue(item)+' zlata',p.x,p.y-110,'#d6cb99');return item;}float(item.name+' → I',p.x,p.y-110,'#d6cb99');return item;}
 
 
 

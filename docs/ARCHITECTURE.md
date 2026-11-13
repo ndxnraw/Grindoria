@@ -90,7 +90,7 @@ Jed a oheň sú samostatné položky `dots`; staré `dot` sa importuje raz. Sní
 
 Korisť nesie absolútny `expiresAt`. Čistenie aktívnych a uložených máp nepridáva odmeny. Hover má kandidáta a čas zastavenia; ukazovateľ mierenia nevytvára okamžité tooltipy.
 
-`ui/fullscreen.js` riadi jeden herný shell. V prehliadači žiada Fullscreen API a reaguje na skutočný `fullscreenchange`; v Electron hoste používa iba `window.grindoriaDesktop.fullscreen`. Most poskytuje get/set/onChange. Native fullscreen CSS zaplní okno, bežný webový režim nemení. Podrobnosti: [DESKTOP.md](DESKTOP.md).
+`ui/fullscreen.js` ovláda hernú plochu cez Fullscreen API a reaguje na udalosť fullscreenchange.
 
 ## Pomoc v boji a fokus od 0.12.0
 

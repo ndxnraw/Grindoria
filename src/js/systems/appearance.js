@@ -3,10 +3,10 @@ const appearancePaths = new Map();
 function appearanceHash(value) { let n=2166136261; for(const c of value) {n^=c.codePointAt(0);n=Math.imul(n,16777619);}return n>>>0; }
 function equipmentAppearance(item) {
   if(!item || !Object.hasOwn(EQUIPMENT,item.slot))return null;
-  const rarity=raritySpec(item.rarity).id,rarityInfo=raritySpec(rarity);
+  const rarity=0,rarityInfo=raritySpec(rarity);
   const tier=Math.max(1,Math.min(99,Math.floor(Number(item.tier)||Number(item.requiredLevel)||1)));
   const enhance=Math.max(0,Math.min(9,Math.floor(Number(item.enhance)||0)));
-  const family=rarityInfo.family,kind=['bow','daggers','fan'].includes(item.weaponKind)?item.weaponKind:item.slot;
+  const family=standardGearFamily(tier),kind=['bow','daggers','fan','greatsword','bell'].includes(item.weaponKind)?item.weaponKind:item.slot;
   const models=EQUIPMENT_MODELS[item.slot],fallback=kind+'-'+family;
   const model=typeof item.modelId==='string' && Object.hasOwn(models,item.modelId)?item.modelId:fallback;
   const seed=appearanceHash(String(item.name||EQUIPMENT[item.slot].names[family])+JSON.stringify(item.affixes||[]));
@@ -83,7 +83,10 @@ function drawWornEquipment(gear,x,y,step=0) {
 }
 function generatedWeaponKind() { return p.classId==='shaman'?'fan':p.classId==='ninja'?(p.schools.ninja==='archery'?'bow':'daggers'):'sword'; }
 function equipmentItemName(slot,rarity,weaponKind) {
- const name=EQUIPMENT[slot].names[raritySpec(rarity).family];
- if(slot==='weapon'&&weaponKind==='daggers')return ['Pútnické dvojdýky','Mesačné dvojdýky','Dračie dvojdýky'][raritySpec(rarity).family];
+ return equipmentFamilyName(slot,raritySpec(rarity).family,weaponKind);
+}
+function equipmentFamilyName(slot,family,weaponKind) {
+ const name=EQUIPMENT[slot].names[family];
+ if(slot==='weapon'&&weaponKind==='daggers')return ['Pútnické dvojdýky','Mesačné dvojdýky','Dračie dvojdýky'][family];
  return slot==='weapon'?name.replace('meč',({bow:'luk',daggers:'dvojdýky',fan:'vejár'})[weaponKind]||'meč'):name;
 }

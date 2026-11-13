@@ -3,17 +3,17 @@ const { createGame, readSavedProfile } = require('./helpers/game.cjs');
 
 test('EXP curve supports bounded leveling, scales with enemy level, and suppresses weak targets', () => {
   const { run } = createGame();
-  assert.equal(run('needXP()'), 154);
+  assert.equal(run('needXP()'), 300);
   assert.equal(run('enemyXP({type:"wolf",level:1})'), 6);
   assert.equal(run('enemyXP({type:"wolf",level:2})') > run('enemyXP({type:"wolf",level:1})'), true);
-  assert.equal(run('enemyXP({type:"boss",level:90})') <= 210, true);
+  assert.equal(run('enemyXP({type:"boss",level:90})') <= 30, true);
   for (const level of [2, 5, 10, 20, 35, 60, 98]) assert(run(`xpForLevel(${level + 1}) > xpForLevel(${level})`));
-  assert(run('xpForLevel(10) >= 3000 && xpForLevel(10) < 4000'));
-  run('experience(153);'); assert.equal(run('p.level'), 1);
+  assert(run('xpForLevel(10) === 33000'));
+  run('experience(299);'); assert.equal(run('p.level'), 1);
   run('experience(1);'); assert.equal(run('p.level'), 2); assert.equal(run('p.points'), 3);
   run('p.level=20;'); assert.equal(run('enemyXP({type:"wolf",level:1})'), 0);
   assert(run('enemyXP({type:"wolf",level:18}) < enemyXP({type:"wolf",level:20})'));
-  run('p.level=99;p.xp=0;experience(1000000);'); assert.equal(run('p.level'), 99); assert.equal(run('p.xp'), 0);
+  run('p.level=120;p.xp=0;experience(1000000);'); assert.equal(run('p.level'), 120); assert.equal(run('p.xp'), 0);
 });
 
 test('legacy saves keep level, EXP percentage, equipment power and their schema migrates once', () => {
@@ -117,7 +117,7 @@ test('repeatable quest cannot bypass EXP penalties and capped systems do not con
   run('p.equipped.weapon={slot:"weapon",bonus:10,enhance:9};p.career.materials.ore=10000;');
   assert.equal(run('enhanceEquipment("weapon")'), false); assert.equal(run('p.career.materials.ore'), 10000);
   run('for(let i=0;i<20000;i++)experience(enemyXP({type:"wolf",level:1}));');
-  assert(run('p.level < 10'));
+  assert(run('p.level < 13'));
 });
 
 test('an active expedition survives reload and abandoning restores the ordinary map', () => {

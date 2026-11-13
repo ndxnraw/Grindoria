@@ -1,4 +1,5 @@
 const INVENTORY = { schema: 1, columns: 5, rows: 9, pageSize: 45, pages: 5 };
+const STANDARD_GEAR_LEVELS = [1, 30, 60];
 const EQUIPMENT = {
   weapon: { name: 'Zbraň', size: [1, 2], stat: 'attack', base: 4, scale: .6, rare: 9, names: ['Pútnický meč', 'Mesačný meč', 'Dračí meč'] },
   armor: { name: 'Brnenie', size: [1, 2], stat: 'defense', base: 2, scale: .25, rare: 3, names: ['Pútnická zbroj', 'Mesačná zbroj', 'Dračia zbroj'] },
@@ -11,4 +12,4 @@ const EQUIPMENT = {
   belt: { name: 'Opasok', size: [1, 1], stat: 'defense', base: 1, scale: .1, rare: 2, names: ['Kožený opasok', 'Strážcov opasok', 'Dračí opasok'] },
   talisman: { name: 'Talizman', size: [1, 1], stat: 'crit', base: 1, scale: .025, rare: 1, names: ['Pečať pútnika', 'Mesačná pečať', 'Dračia pečať'] }
 };
-const ITEM_STATS = { attack: 'Útok', defense: 'Obrana', hp: 'Max. zdravie', mp: 'Max. mana', magic: 'Sila kúziel', speed: 'Rýchlosť pohybu', crit: 'Kritický zásah' };
+const ITEM_STATS = { attack: 'Útok', defense: 'Obrana', hp: 'Max. zdravie', mp: 'Max. mana', magic: 'Sila kúziel', speed: 'Rýchlosť pohybu', crit: 'Kritický zásah', maxHpPercent:'Max. zdravie', magicResist:'Odolnosť proti mágii', skillDamage:'Poškodenie schopností', skillHaste:'Rýchlosť kúzlenia', monsterDamage:'Poškodenie · príšery', skillResist:'Odolnosť proti schopnostiam', hpRegen:'Obnova zdravia', manaSteal:'Šanca prevziať manu', bonusExp:'Šanca na bonus EXP' };

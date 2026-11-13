@@ -8,7 +8,7 @@ function forgeFailureText(item,options={}){
 }
 function enhancementCost(item,options={}){
  if(!item||!EQUIPMENT[item.slot]||(item.enhance||0)>=9)return null;
- const rank=(item.enhance||0)+1,multiplier=1+(item.tier||1)/30+rarityRank(item.rarity)*.25;
+ const rank=(item.enhance||0)+1,multiplier=1+(item.tier||1)/30;
  return {ore:2*rank+Math.floor(rank*rank/4),gold:Math.ceil(40*rank**2*multiplier),...(rank>=3?{upgradeStones:Math.ceil(rank/3)}:{}),...(rank>=5?{dust:2*(rank-4)}:{}),...(rank>=7?{forgeCore:Math.ceil((rank-6)/2)}:{}),...(options.charm&&FORGE_RULES.success[rank]<.95?{smithCharm:1}:{}),...(options.protect&&rank>=4?{protectionScroll:1}:{})};
 }
 function enhanceEquipment(slot,options={}){

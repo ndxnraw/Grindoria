@@ -17,7 +17,7 @@ run('p.points=0;allocate("vitality");');assert.equal(run('p.vitality'),0);run('c
 const baseDamage=run('damage()');run('equipItem(0);');assert.equal(run('damage()'),baseDamage+20);assert.equal(run('p.bag.length'),0);
 run('p.bag.push({name:"Nový meč",slot:"weapon",rarity:2,bonus:35,value:50});equipItem(0);');assert.equal(run('p.bag[0].name'),'Test meč');assert.equal(run('damage()'),baseDamage+35);run('p.x=NPCS.merchant.x;p.y=NPCS.merchant.y;');const sellGold=run('p.gold');run('sellItem(0);');assert.equal(run('p.gold'),sellGold+30);
 run('p.bag=[];for(let i=0;i<p.inventory.pages*INVENTORY.pageSize;i++)addGearItem({name:"Test",slot:"bracelet",bonus:1,value:1});');const fullGold=run('p.gold');run('awardItem(true);');assert.equal(run('p.bag.length'),225);assert.ok(run('p.gold')>fullGold);
-run('p.bag=[];awardItem(true);');assert.equal(run('p.bag[0].rarity'),2);
+run('p.bag=[];awardItem(true);');assert.equal(run('p.bag[0].rarity'),0);
 run('p.kills=9;p.huntClaimed=0;');const noReward=run('p.gold');run('claimHunt();');assert.equal(run('p.gold'),noReward);run('p.kills=20;p.career.eligibleKills=25;claimHunt();claimHunt();');assert.equal(run('p.huntClaimed'),2);const reward=run('p.gold');run('claimHunt();');assert.equal(run('p.gold'),reward);
 run('p.bossKills=1;p.bossClaimed=false;claimBoss();');assert.equal(run('p.bossClaimed'),true);const bossGold=run('p.gold');run('claimBoss();');assert.equal(run('p.gold'),bossGold);
 run('closeModal();loadMap("valley",true);p.x=1690;p.y=330;p.hp=maxHP();let boss=mobs.find(m=>m.type==="boss");boss.x=1690;boss.y=330;boss.hp=620;boss.cd=0;boss.windup=0;updateBoss(.05,false);');assert.equal(run('boss.windup'),1);const before=run('p.hp');run('updateBoss(1.1,false);');assert.ok(run('p.hp')<before);

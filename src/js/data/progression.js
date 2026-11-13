@@ -1,6 +1,6 @@
 const PROGRESSION = {
   schema: 2,
-  maxLevel: 99,
+  maxLevel: 120,
   maxSkillRank: 41,
   maxTraining: 20,
   maxEnhancement: 9,
@@ -10,6 +10,7 @@ const PROGRESSION = {
 };
 
 const MATERIALS = {
+  strengthenItem: 'Zosilniť predmet', enchantItem: 'Začarovať predmet',
   essence: 'Esencia', ore: 'Ruda', training: 'Tréningové pečate',
   books: 'Knihy schopností', dust: 'Kováčsky prach', soulStones: 'Kamene duše', upgradeStones: 'Kamene vylepšenia',
   wolf: 'Vlčie tkanivo', venom: 'Vak jedu', frost: 'Ľadové jadro',

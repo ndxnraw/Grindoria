@@ -16,7 +16,7 @@ function hydrateDungeonPopulation(old){
  list.push(createDungeonEnemy('boss',0,900,330));return list;
 }
 function enterDungeon(id,difficulty='normal',prestige=false){
- if(prestige&&(p.level!==99||!prestigeRank()||difficulty!=='mythic'))return false;
+ if(prestige&&(p.level<99||!prestigeRank()||difficulty!=='mythic'))return false;
  if(!nearNPC('dungeonMaster')||!Object.hasOwn(DUNGEONS,id)||!Object.hasOwn(DUNGEON_DIFFICULTIES,difficulty)||!running||dungeonRun()||p.career.endgame.run||p.level<dungeonLevel(id,difficulty)||!canTravel())return false;
  const d=DUNGEONS[id];if(!canPayRecipe(d.cost))return false;
  snapshotMap();pay(d.cost);const c=p.career.dungeons;
@@ -28,12 +28,13 @@ function dungeonBossReward(boss){
  const r=dungeonRun();if(!r||r.rewarded||boss.dungeonRunId!==r.id)return;
  const c=p.career.dungeons,d=DUNGEONS[r.dungeon],diff=dungeonCombatDifficulty(r),key=r.dungeon+':'+r.difficulty;
  r.rewarded=true;r.cleared=true;r.hazards=[];prestigeDungeonReward(boss);c.clears[key]=(c.clears[key]||0)+1;
- const unique=DUNGEON_UNIQUES[d.unique],rarity=r.difficulty==='normal'?1:r.difficulty==='mythic'&&boss.level>=50?4:2;
- const item=generateEquipmentItem(unique.slot,rarity,boss.level);item.name=unique.name;item.uniqueId=d.unique;item.bonus+=unique.bonus;item.special=['Výlučná korisť: '+d.name];spawnGroundDrop({kind:'gear',item},boss);
+ const unique=DUNGEON_UNIQUES[d.unique];
+ const item=ensureItemIdentity(newBonusEquipment(unique.slot,0,Math.min(99,boss.level),unique.slot==='weapon'?generatedWeaponKind():undefined));item.name=unique.name;item.uniqueId=d.unique;item.requiredLevel=d.level;item.bonus+=unique.bonus;item.special=['Výlučná korisť: '+d.name];spawnGroundDrop({kind:'gear',item},boss);
  dropMaterial('shards',(5+Math.floor(d.level/5))*diff.reward,boss);
  if(d.endgame||r.difficulty!=='normal')dropMaterial('primal',diff.reward,boss);
- if(d.endgame||r.prestigeTier){const chance=r.prestigeTier?.08+.02*r.prestigeTier:r.difficulty==='mythic'?.08:r.difficulty==='hard'?.03:0;let mythic=false;if(chance){c.pity[key]=(c.pity[key]||0)+1;mythic=c.pity[key]>=DUNGEON_RULES.mythicPity||rand()<chance;if(mythic)c.pity[key]=0;}
-  const rare=generateEquipmentItem(Object.keys(EQUIPMENT)[Math.floor(rand()*Object.keys(EQUIPMENT).length)],mythic?5:4,boss.level);spawnGroundDrop({kind:'gear',item:rare},boss);
+ if(d.endgame||r.prestigeTier){
+  dropMaterial('xpChest',1,boss);
+  const gear=rewardEquipment(Object.keys(EQUIPMENT)[Math.floor(rand()*Object.keys(EQUIPMENT).length)],0,boss.level);spawnGroundDrop({kind:'gear',item:gear},boss);
  }
  if(r.dungeon==='crypt')dropMaterial('keys',1,boss);
  toast('Dungeon dokončený. Korisť je pri bossovi. Návrat cez M alebo P.');
@@ -52,7 +53,7 @@ function updateDungeon(dt,safe){
  const r=dungeonRun();if(!r||r.cleared)return;r.time+=dt;dungeonUnlocked();
  const d=DUNGEONS[r.dungeon],diff=dungeonCombatDifficulty(r);r.hazardTimer-=dt;
  if(r.hazardTimer<=0){r.hazardTimer=(d.endgame?9:14)/(1+(r.prestigeTier||0)*.15);if(!safe){prestigeDungeonPulse();if(r.dungeon==='frost')makeDungeonHazard('frost',p.x,p.y,dungeonAttackBase(r)*.3*diff.damage,'physical',{radius:125,duration:4});else makeDungeonHazard('circle',p.x,p.y,dungeonAttackBase(r)*.4*diff.damage,d.type,{radius:d.endgame?130:100});}}
- for(const h of r.hazards){h.age+=dt;if(h.age<h.delay)continue;h.tick=Math.max(0,h.tick-dt);if(!safe&&h.tick<=0&&hazardContains(h)){takeDamage(h.damage,null,h.type);h.tick=1;}}
+ for(const h of r.hazards){h.age+=dt;if(h.age<h.delay)continue;h.tick=Math.max(0,h.tick-dt);if(!safe&&h.tick<=0&&hazardContains(h)){takeDamage(h.damage,null,h.type,true);h.tick=1;}}
  r.hazards=r.hazards.filter(h=>h.age<h.delay+h.duration);
 }
 function dungeonSpeedFactor(){const r=dungeonRun();return r?.hazards.some(h=>h.kind==='frost'&&h.age>=h.delay&&hazardContains(h))?.65:1;}
@@ -61,7 +62,7 @@ function updateDungeonBoss(b,dt,safe){
  if(safe||active('stealth')){b.attackPlan=null;b.hp=Math.min(b.max,b.hp+b.max*dt*.1);return;}
  const d=DUNGEONS[r.dungeon],diff=dungeonCombatDifficulty(r),ratio=b.hp/b.max;
  for(const [threshold,bit]of [[.5,1],[.25,2]])if(ratio<=threshold&&!(b.phaseMask&bit)){b.phaseMask|=bit;for(let i=0;i<2;i++){const add=createDungeonEnemy('add',bit*10+i,b.x+(i?100:-100),b.y+100);add.engaged=20;mobs.push(add);}}
- if(b.attackPlan){b.attackPlan.age+=dt;if(b.attackPlan.age>=b.attackPlan.delay){const plan=b.attackPlan;if(hazardContains(plan)&&!safe)takeDamage(plan.damage,b,d.type);if(plan.kind==='line'){b.x=Math.max(80,Math.min(SIZE-80,plan.x+Math.cos(plan.angle)*plan.length));b.y=Math.max(80,Math.min(SIZE-80,plan.y+Math.sin(plan.angle)*plan.length));}b.attackPlan=null;b.cd=ratio<.5?2:3.5;}return;}
+ if(b.attackPlan){b.attackPlan.age+=dt;if(b.attackPlan.age>=b.attackPlan.delay){const plan=b.attackPlan;if(hazardContains(plan)&&!safe)takeDamage(plan.damage,b,d.type,true);if(plan.kind==='line'){b.x=Math.max(80,Math.min(SIZE-80,plan.x+Math.cos(plan.angle)*plan.length));b.y=Math.max(80,Math.min(SIZE-80,plan.y+Math.sin(plan.angle)*plan.length));}b.attackPlan=null;b.cd=ratio<.5?2:3.5;}return;}
  if(b.cd>0)return;
  const step=b.attackStep++%3,angle=Math.atan2(p.y-b.y,p.x-b.x),damage=Math.round(dungeonAttackBase(r)*diff.damage*(ratio<.25?1.3:1));
  if(r.dungeon==='frost'&&step!==2)b.attackPlan={kind:'line',x:b.x,y:b.y,angle,length:Math.min(650,Math.hypot(p.x-b.x,p.y-b.y)+80),width:65,radius:0,age:0,delay:1.3,damage};
@@ -76,7 +77,7 @@ function validateDungeonProfile(data){
  for(const field of ['clears','pity']){assertCharacterObject(c[field],field);for(const [key,value]of Object.entries(c[field])){const [id,difficulty]=key.split(':');if(!Object.hasOwn(DUNGEONS,id)||!Object.hasOwn(DUNGEON_DIFFICULTIES,difficulty)||key!==id+':'+difficulty)characterDataError('záznam dungeonu.');assertCharacterNumber(value,'počet výprav',0,field==='pity'?11:1e12,true);}}
  const r=c.run;if(r==null){if(data.mapId==='dungeon')characterDataError('mapa bez výpravy.');return;}
  assertCharacterObject(r,'výprava dungeonu');if(!Object.hasOwn(DUNGEONS,r.dungeon)||!Object.hasOwn(DUNGEON_DIFFICULTIES,r.difficulty)||data.mapId!=='dungeon'||data.career.endgame.run)characterDataError('stav dungeonu.');
- if(r.prestigeTier!==undefined){assertCharacterNumber(r.prestigeTier,'stupeň prestížnej výzvy',1,data.career.prestige?.rank||0,true);if(data.level!==99||r.difficulty!=='mythic')characterDataError('prestížna obtiažnosť.');assertCharacterNumber(r.prestigePulse,'cyklus prestížnej mechaniky',0,1e12,true);}
+ if(r.prestigeTier!==undefined){assertCharacterNumber(r.prestigeTier,'stupeň prestížnej výzvy',1,data.career.prestige?.rank||0,true);if(data.level<99||r.difficulty!=='mythic')characterDataError('prestížna obtiažnosť.');assertCharacterNumber(r.prestigePulse,'cyklus prestížnej mechaniky',0,1e12,true);}
  assertCharacterNumber(r.id,'ID dungeonu',1,c.serial,true);for(const key of ['unlocked','cleared','rewarded'])if(typeof r[key]!=='boolean')characterDataError('stav odmeny dungeonu.');
  assertCharacterNumber(r.time,'čas dungeonu',0,1e12);assertCharacterNumber(r.hazardTimer,'čas mechaniky',-1,15);
  if(r.cleared!==r.rewarded)characterDataError('odmena dungeonu.');if(!Array.isArray(r.hazards)||r.hazards.length>12)characterDataError('mechaniky dungeonu.');

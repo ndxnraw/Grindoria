@@ -1,14 +1,8 @@
 let fullscreenLockRequest=0;
-const fullscreenState = { active: false, native: false, busy: false, keyboardLocked: false };
+const fullscreenState = { active: false, busy: false, keyboardLocked: false };
 
-function nativeFullscreenBridge() {
-  const api = window.grindoriaDesktop?.fullscreen;
-  return api && typeof api.get === 'function' && typeof api.set === 'function' && typeof api.onChange === 'function' ? api : null;
-}
-
-function syncFullscreen(active, native = false) {
-  fullscreenState.active = Boolean(active); fullscreenState.native = native;
-  document.body.classList.toggle('native-fullscreen', native && fullscreenState.active);
+function syncFullscreen(active) {
+  fullscreenState.active = Boolean(active);
   const button = $('fullscreen');
   button.setAttribute('aria-pressed', String(fullscreenState.active));
   const label = fullscreenState.active ? 'Celá obrazovka · ukončiť klávesom F10' : 'Celá obrazovka';
@@ -25,15 +19,11 @@ async function setGameFullscreen(wanted) {
   if (fullscreenState.busy) return false;
   fullscreenState.busy = true;
   try {
-    const bridge = nativeFullscreenBridge();
-    if (bridge) syncFullscreen(await bridge.set(Boolean(wanted)), true);
-    else {
-      if (wanted) {
-        if (typeof $('game-shell').requestFullscreen !== 'function') throw new Error('Fullscreen nie je dostupný.');
-        await $('game-shell').requestFullscreen({navigationUI:'hide'});void lockFullscreenKeys();
-      } else if (document.fullscreenElement){releaseFullscreenKeys();await document.exitFullscreen();}
-      syncBrowserFullscreen();
-    }
+    if (wanted) {
+      if (typeof $('game-shell').requestFullscreen !== 'function') throw new Error('Fullscreen nie je dostupný.');
+      await $('game-shell').requestFullscreen({navigationUI:'hide'});void lockFullscreenKeys();
+    } else if (document.fullscreenElement){releaseFullscreenKeys();await document.exitFullscreen();}
+    syncBrowserFullscreen();
     canvas.focus(); return fullscreenState.active === Boolean(wanted);
   } catch {
     toast('Celú obrazovku sa nepodarilo prepnúť. Skús tlačidlo ⛶ v minimape.'); return false;
@@ -44,15 +34,7 @@ function toggleGameFullscreen(source='button'){if(fullscreenState.active&&source
 
 function initializeFullscreen() {
   $('fullscreen').onclick=()=>toggleGameFullscreen();
-  const bridge = nativeFullscreenBridge();
-  if (bridge) {
-    fullscreenState.native = true;
-    let notified = false;
-    bridge.onChange(active => { notified = true; syncFullscreen(active, true); });
-    Promise.resolve(bridge.get()).then(active => { if (!notified) syncFullscreen(active, true); }).catch(() => {});
-  } else {
-    document.addEventListener('fullscreenchange', syncBrowserFullscreen);
-    document.addEventListener('fullscreenerror', () => toast('Prehliadač nepovolil celú obrazovku.'));
-    syncBrowserFullscreen();
-  }
+  document.addEventListener('fullscreenchange', syncBrowserFullscreen);
+  document.addEventListener('fullscreenerror', () => toast('Prehliadač nepovolil celú obrazovku.'));
+  syncBrowserFullscreen();
 }

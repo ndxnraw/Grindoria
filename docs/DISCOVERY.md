@@ -1,6 +1,6 @@
 # Bestiár a zbierky
 
-PC: Progres (P) → Bestiár a zbierky. Klávesy pôvodnej hry zostávajú zachované. Offline prehliadač a existujúci Electron obal používajú tie isté moduly.
+PC: Progres (P) → Bestiár a zbierky. Klávesy pôvodnej hry zostávajú zachované. Hra funguje v offline prehliadači.
 
 Živý nepriateľ sa objaví v bestiári pri priblížení do 420 jednotiek. Karta zobrazuje poslednú pozorovanú úroveň, maximálne HP, útočný násobok, typ poškodenia, pancier, známe lokality a dropy. Model vykresľuje pôvodný renderer. Elitné varianty a obtiažnosti menia atribúty; karta nie je zárukou rovnakých hodnôt pri ďalšom stretnutí. Staršie počty zabití ostávajú zachované; chýbajúce pozorovanie doplní ďalšie stretnutie.
 

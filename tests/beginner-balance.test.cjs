@@ -23,9 +23,9 @@ test('a level-one starter can finish the stronger low Metin with finite potions 
 const {run}=createGame(null,undefined,{}, {keepStarter:true});run('running=true;var stone=mobs.find(m=>m.type==="stone"&&m.level===1);mobs.length=0;mobs.push(stone);p.x=stone.x-76;p.y=stone.y;cam.x=p.x;cam.y=p.y;rand=()=>.99;p.combatAssist.autoPotion=true;var now=100000;Date.now=()=>now;var dead=false;death=()=>dead=true;selectCombatTarget(stone,true);for(var i=0;i<600&&stone.hp>0&&!dead;i++){now+=50;update(.05);}');
 assert.equal(run('stone.hp'),0);assert.equal(run('dead'),false);assert(run('p.hp>0'));assert(run('p.potions>=0&&p.potions<5'));assert(run('mobs.filter(m=>m.metinParentId).every(m=>m.hp===0)'));
 });
-test('ordinary loot requirements match enemy levels independently of player level',()=>{
+test('ordinary armor loot has a fixed catalog requirement appropriate for the enemy',()=>{
 const {run}=createGame();run('p.level=99;');
-for(const [level,required]of [[1,1],[2,2],[4,4],[5,5],[9,9],[14,14],[29,29],[30,30],[75,75],[99,99]]){run('var drop=makeItem(false,{type:"wolf",level:'+level+'},"armor");');assert.equal(run('drop.requiredLevel'),required);run('validateCharacterItem(drop);');}
+for(const level of [1,2,4,5,9,14,29,30,75,99]){run('var drop=makeItem(false,{type:"wolf",level:'+level+'},"armor");');assert(run('drop.requiredLevel<='+level+' && drop.requiredLevel===ITEM_DEFINITIONS[drop.definitionId].level'));run('validateCharacterItem(drop);');}
 assert.equal(run('createItem("weapon:poison-sword").requiredLevel'),75);
 });
 test('new maps have different safe zones, valid populations, local Metins and their own boss loot pools',()=>{
@@ -57,5 +57,5 @@ const {run}=createGame();run('loadMap("ruins",true);');assert(run('mobs.some(m=>
 });
 
 test('all ordinary maps put their lowest-level area at entry and keep bosses outside immediate aggro range',()=>{
-const {run}=createGame();for(const id of Array.from(run('Object.keys(MAPS).filter(id=>!MAPS[id].town&&!MAPS[id].instance&&!MAPS[id].metinsOnly)'))){run('loadMap("'+id+'",true);var area=farmAreaAt(map().entry),range=farmAreaLevelRange(area);');assert.equal(run('range[0]'),run('map().enemyLevel'),id);assert(run('Math.hypot(map().bossPosition.x-map().entry.x,map().bossPosition.y-map().entry.y)>650'),id);}
+const {run}=createGame();for(const id of Array.from(run('Object.keys(MAPS).filter(id=>!MAPS[id].town&&!MAPS[id].instance&&!MAPS[id].metinsOnly&&!MAPS[id].metinWorld)'))){run('loadMap("'+id+'",true);var area=farmAreaAt(map().entry),range=farmAreaLevelRange(area);');assert.equal(run('range[0]'),run('map().enemyLevel'),id);assert(run('Math.hypot(map().bossPosition.x-map().entry.x,map().bossPosition.y-map().entry.y)>650'),id);}
 });

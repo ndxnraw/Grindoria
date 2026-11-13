@@ -36,3 +36,10 @@ test('Escape first cancels a discard, then closes the layer, then opens the syst
  const g=setup();g.run('p.career.materials.ore=4;inventory();requestInventoryDrop("material:ore");');press(g,'Escape');assert.equal(g.run('inventoryDropPending'),null);assert.equal(g.run('gameWindows.size'),1);assert.equal(g.run('p.career.materials.ore'),4);
  press(g,'Escape');assert.equal(g.run('gameWindows.size'),0);press(g,'Escape');assert.equal(g.run('gameWindows.has("system-menu")'),true);
 });
+test('movement clears inventory selection while keeping inventory open and movement active',()=>{
+ const g=setup();g.run('addGearItem({slot:"weapon",name:"Meč",bonus:1});inventory();var id="gear:"+p.bag[0].uid;');
+ for(const key of ['w','a','s','d','ArrowUp','ArrowDown','ArrowLeft','ArrowRight']){
+  g.run('selectInventoryEntry(id);');press(g,key);assert.equal(g.run('inventorySelection'),null,key);assert(g.run('gameWindows.has("inventory")'));assert.equal(g.run('keys['+JSON.stringify(key)+']'),true);
+ }
+ g.run('selectInventoryEntry(id);keysClear();');press(g,'w',{target:{tagName:'INPUT'}});assert.equal(g.run('inventorySelection'),g.run('id'));assert.equal(g.run('keys.w'),false);
+});

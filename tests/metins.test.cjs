@@ -90,7 +90,7 @@ test('every Metin pool covers Yang, materials, books, forge materials, upgrade s
     run(`drops.length=0;rand=()=>0;var s={type:'stone',metinType:'${id}',level:METIN_TYPES['${id}'].levels[0],x:400,y:400};p.level=s.level;dropMetinLoot(s);`);
     assert(run('p.gold>0'));assert(!run('drops.some(d=>d.kind==="gold")'));
     for (const material of ['ore','books','essence','dust','upgradeStones']) assert(run(`p.career.materials['${material}']>0`), id+': '+material);
-    assert(run('drops.some(d=>d.kind==="gear"&&METIN_TYPES[s.metinType].loot.slots.includes(d.item.slot)&&d.item.requiredLevel===s.level)'));
+    assert(run('drops.some(d=>d.kind==="gear"&&METIN_TYPES[s.metinType].loot.slots.includes(d.item.slot)&&d.item.requiredLevel<=s.level)'));
     assert(run('drops.every(d=>d.kind!=="relic")'));
     assert(run('drops.every(d=>d.fallAge===0)')); assert.equal(run('p.bag.length'),0);
   }
@@ -144,7 +144,7 @@ test('old stones retain HP percentage, death timers and loot while gaining new t
 
 test('the Atlas and travel menu expose Šuterland and every type-specific loot chance', () => {
   const { run, elements } = createGame(); run('running=true;travelMenu();');
-  assert.match(elements.get('modalcontent').innerHTML,/Šuterland/); assert.match(elements.get('modalcontent').innerHTML,/Metiny Lv.1–99/);
+  assert.match(elements.get('modalcontent').innerHTML,/Šuterland/); assert.match(elements.get('modalcontent').innerHTML,/Metiny 1–99/);
   assert(!elements.get('modalcontent').innerHTML.includes('metinAtlas'));run('careerPanel("metins");'); const html=elements.get('modalcontent').innerHTML;
   assert.equal(run('metinPercent(.025)'), '2,5 %');
   for(const name of ['Metin praskliny','Metin skazy','Kamene vylepšenia','Yang','Kováčsky prach'])assert(html.includes(name));

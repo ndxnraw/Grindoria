@@ -1,13 +1,13 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const {createGame,readSavedAccount,createEmptyGame}=require('./helpers/game.cjs');
 test('generated instances share attributes but never identity; clones preserve identity and isolate nested affixes',()=>{
-const {run}=createGame();run('var a=createItem("weapon:fms",{rng:layoutRandom("a")}),b=createItem("weapon:fms",{rng:layoutRandom("a")});validateCharacterItem(a);var c=cloneItem(a);c.stats.hp=777;c.affixes[0].roll=0;');
-assert.notEqual(run('a.instanceId'),run('b.instanceId'));assert.notEqual(run('a.uid'),run('b.uid'));assert.equal(run('c.instanceId'),run('a.instanceId'));assert(!run('a.stats.hp===777'));
+const {run}=createGame();run('var a=createItem("weapon:fms",{rng:layoutRandom("a")}),b=createItem("weapon:fms",{rng:layoutRandom("a")});validateCharacterItem(a);var c=cloneItem(a);c.stats.hp=777;c.affixes.push({stat:"hp",roll:0});');
+assert.notEqual(run('a.instanceId'),run('b.instanceId'));assert.notEqual(run('a.uid'),run('b.uid'));assert.equal(run('c.instanceId'),run('a.instanceId'));assert(!run('a.stats.hp===777'));assert.equal(run('a.affixes.length'),0);
 });
 test('every iconic weapon has unique geometry, valid canonical attributes and real innate combat bonuses',()=>{
 const {run}=createGame();run('var icons=new Set();p.level=99;');
 for(const key of ['fms','poison','rib','blackleaf','autumn']){
-run('var d=ICONIC_ITEMS["'+key+'"],a=createItem(d.id);validateCharacterItem(a);icons.add(equipmentAppearance(a).parts[0].d);');
+run('var d=ITEM_DEFINITIONS[ICONIC_ITEMS["'+key+'"].id],a=createItem(d.id);validateCharacterItem(a);icons.add(equipmentAppearance(a).parts[0].d);');
 assert.equal(run('a.requiredLevel'),run('d.level'));assert.equal(run('a.bonus'),run('d.bonus'));
 assert(run('Object.entries(d.baseStats).every(([s,n])=>itemBonuses(a)[s]>=n)'));
 }assert.equal(run('icons.size'),5);
@@ -69,4 +69,71 @@ run('running=true;returnToCharacters();var prepared=prepareCharacterImport(expor
 test('separate browser script files restore canonical saves only after all registries load',()=>{
 const g=createGame();g.run('addGearItem(createItem("weapon:fms"));save();');const account=readSavedAccount(g.saved);
 const reload=createGame(null,'grindoria-save-v1',{'grindoria-characters-v1':account},{separateScripts:true});assert.equal(reload.run('characterStore.error'),'');assert.equal(reload.run('p.bag[0].definitionId'),'weapon:fms');assert.equal(reload.run('p.bag[0].instanceId'),g.run('p.bag[0].instanceId'));
+});
+
+test('all sourced weapons and armor have fixed requirements and no extra bonuses on acquisition',()=>{
+ const {run}=createGame();
+ assert.equal(run('METIN_EQUIPMENT.filter(d=>d.slot==="weapon").length'),147);
+ assert.equal(run('METIN_EQUIPMENT.filter(d=>d.slot==="armor").length'),88);
+ assert(run('METIN_EQUIPMENT.every(d=>{const item=createItem(d.id,{tier:1,rarity:5});validateCharacterItem(item);return item.requiredLevel===d.level && item.tier===d.level && !item.affixes.length && Object.keys(item.stats).length===0;})'));
+ assert.equal(run('createItem("weapon:fms").baseStats.attackSpeed'),.15);
+ assert.equal(run('createItem("weapon:fms").bonus'),33);
+ assert(run('METIN_EQUIPMENT.filter(d=>d.slot==="armor"&&d.level===1).every(d=>d.bonus>0)'));
+});
+
+test('bought tools add four distinct lines then reroll just the added attributes',()=>{
+ const {run}=createGame();
+ run('running=true;loadMap("town",true);p.x=NPCS.merchant.x;p.y=NPCS.merchant.y;p.level=99;p.gold=1e6;var weapon=createItem("weapon:fms");addGearItem(weapon);var key="gear:"+weapon.uid,add="material:strengthenItem",reroll="material:enchantItem";var fixed=JSON.stringify([weapon.uid,weapon.instanceId,weapon.requiredLevel,weapon.baseStats,weapon.enhance]);');
+ assert(run('buyMarketOffer("merchant","enchantItem")'));
+ assert(!run('applyItemBonus(reroll,key)'));
+ assert.equal(run('p.career.materials.enchantItem'),1);
+ assert(run('Array.from({length:5},()=>buyMarketOffer("merchant","strengthenItem")).every(Boolean)'));
+ assert(run('Array.from({length:4},()=>applyItemBonus(add,key,()=>0)).every(Boolean)'));
+ assert(!run('applyItemBonus(add,key)'));
+ assert.equal(run('p.career.materials.strengthenItem'),1);
+ run('var previous=weapon.affixes.map(a=>a.stat);equipItem(p.bag.indexOf(weapon));');
+ assert(run('applyItemBonus(reroll,"equipped:weapon",()=>.5)'));
+ assert.equal(run('p.career.materials.enchantItem'),0);
+ assert(run('weapon.affixes.length===4 && new Set(weapon.affixes.map(a=>a.stat)).size===4 && weapon.affixes.every(a=>!previous.includes(a.stat))'));
+ assert.equal(run('JSON.stringify([weapon.uid,weapon.instanceId,weapon.requiredLevel,weapon.baseStats,weapon.enhance])'),run('fixed'));
+ run('validateCharacterAccount(accountWithActiveSnapshot());');
+});
+
+test('profiles predating the bonus tools load their holdings and merchant stock',()=>{
+ const {run,saved}=createGame();
+ run('var previous=LEGACY_ICONIC_DEFINITIONS["weapon:fms"];var old=generateEquipmentItem("weapon",previous.rarity,previous.level,"sword",()=>0);Object.assign(old,{definitionId:previous.id,name:previous.name,bonus:previous.bonus,modelId:previous.modelId,classes:[...previous.classes],allowedSchools:[...previous.schools],baseStats:{...previous.baseStats}});addGearItem(old);save();');
+ const account=readSavedAccount(saved), data=account.profiles[account.selectedId].data;
+ for(const id of ['strengthenItem','enchantItem']){delete data.career.materials[id];delete data.economy.stock['merchant:'+id];}
+ const old=JSON.stringify(data.bag[0]);
+ const reload=createEmptyGame({'grindoria-characters-v1':account});
+ assert.equal(reload.run('characterStore.error'),'');
+ reload.run('playCharacter();');
+ assert.equal(reload.run('JSON.stringify(p.bag[0])'),old);
+ assert(reload.run('Object.keys(ITEM_BONUS_TOOLS).every(id=>p.career.materials[id]===0 && p.economy.stock["merchant:"+id]===MARKET_GOODS[id].stock)'));
+});
+
+test('the same gear name has one required level across source levels and rarities',()=>{
+ const {run}=createGame();
+ assert(run(`const levelsByName=new Map();
+   Object.keys(EQUIPMENT).every(slot=>[1,18,23,29,30,45,59,60,75,99].every(level=>
+     RARITIES.every(({id})=>{
+       const item=rewardEquipment(slot,id,level,undefined,()=>0);
+       const previous=levelsByName.get(item.name);
+       levelsByName.set(item.name,item.requiredLevel);
+       return item.requiredLevel<=level && (previous===undefined||previous===item.requiredLevel);
+     })))`));
+});
+
+test('saved gear gets its fixed requirement without changing its rolled stats or identity',()=>{
+ const {run}=createGame();
+ assert(run(`const shield=generateEquipmentItem('shield',1,23,undefined,()=>.5);
+   const unique={...generateEquipmentItem('bracelet',1,32),uniqueId:'crypt',name:DUNGEON_UNIQUES.crypt.name};
+   const data=copyCharacterData(p);
+   data.bag=[shield];data.equipped.bracelet=unique;
+   const rolls=JSON.stringify([shield.uid,shield.instanceId,shield.tier,shield.stats,shield.affixes]);
+   migrateItemProfile(data,p.characterId);
+   migrateItemProfile(data,p.characterId);
+   validateCharacterItem(shield);validateCharacterItem(unique);
+   shield.requiredLevel===30 && unique.requiredLevel===20 &&
+     rolls===JSON.stringify([shield.uid,shield.instanceId,shield.tier,shield.stats,shield.affixes])`));
 });

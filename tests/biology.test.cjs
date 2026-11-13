@@ -28,8 +28,8 @@ test('each advanced source uses its own chance and finite pity, and wrong source
  }
 });
 
-test('real rare monster death grants a sample once without increasing EXP from a weak enemy',()=>{
- const {run}=createGame();run('running=true;loadMap("ruins",true);p.level=70;p.career.biology.stage=6;rand=()=>0;var m=mobs.find(m=>m.type==="wolf");m.variant="rare";m.level=50;m.hp=1;var xp=p.xp;hit(m,999999);');assert.equal(run('p.career.materials.demonHeart'),1);assert.equal(run('p.xp'),run('xp'));run('hit(m,999999);');assert.equal(run('p.career.materials.demonHeart'),1);
+test('real rare monster death grants a sample once and only 1% base EXP for a weak enemy',()=>{
+ const {run}=createGame();run('running=true;loadMap("ruins",true);p.level=70;p.career.biology.stage=6;rand=()=>0;var m=mobs.find(m=>m.type==="wolf");m.variant="rare";m.level=50;m.hp=1;var xp=p.xp;hit(m,999999);');assert.equal(run('p.career.materials.demonHeart'),1);assert.equal(run('p.xp'),run('xp+enemyXP(m)'));run('hit(m,999999);');assert.equal(run('p.career.materials.demonHeart'),1);
 });
 
 test('submissions require the NPC, level, living session, one sample, Yang and cooldown; rejection is atomic',()=>{

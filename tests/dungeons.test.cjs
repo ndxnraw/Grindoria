@@ -38,13 +38,14 @@ test('phase adds are bounded and reset after death without duplicate spawn ident
 test('boss unique rewards and completion counters are paid once and preserve generated affixes',()=>{
  const {run}=ready();run('enterDungeon("crypt");');unlock(run);run('var boss=mobs.find(m=>m.dungeonBoss),keyCount=p.career.materials.keys;hit(boss,1e9,"arcane",true);var gear=drops.find(d=>d.item?.uniqueId);validateCharacterItem(gear.item);var before=JSON.stringify(p.career.dungeons),count=drops.length;hit(boss,1e9);');assert(run('dungeonRun().cleared'));assert.equal(run('gear.item.uniqueId'),'crypt');assert.equal(run('p.career.materials.keys'),run('keyCount+1'));assert.equal(run('drops.length'),run('count'));assert.equal(run('JSON.stringify(p.career.dungeons)'),run('before'));assert.equal(run('p.career.dungeons.clears["crypt:normal"]'),1);run('validateCharacterAccount(accountWithActiveSnapshot());');
 });
-test('endgame hard and mythic have genuine Mythic chances and bounded bad-luck protection',()=>{
- for(const difficulty of ['hard','mythic']){const {run}=ready();run(`enterDungeon('abyss','${difficulty}');p.career.dungeons.pity['abyss:${difficulty}']=11;rand=()=>.999;`);unlock(run);run('var boss=mobs.find(m=>m.dungeonBoss);hit(boss,1e9,"arcane",true);');assert(run('drops.some(d=>d.item?.rarity===5)'));assert.equal(run(`p.career.dungeons.pity['abyss:${difficulty}']`),0);assert(run('drops.some(d=>d.item?.uniqueId==="abyss")'));
+test('endgame grants a unique, bonus equipment and EXP chest on every difficulty',()=>{
+ for(const difficulty of ['normal','hard','mythic']){
+  const {run}=ready();run('enterDungeon("abyss","'+difficulty+'");rand=()=>.999;');
+  unlock(run);run('hit(mobs.find(m=>m.dungeonBoss),1e9,"arcane",true);');
+  assert(run('drops.some(d=>d.item?.uniqueId==="abyss")'));
+  assert(run('drops.some(d=>d.kind==="gear"&&!d.item.uniqueId&&d.item.rarity===0)'));
+  assert.equal(run('p.career.materials.xpChest'),1);
  }
- const {run}=ready();run('enterDungeon("abyss","mythic");rand=()=>0;');unlock(run);run('hit(mobs.find(m=>m.dungeonBoss),1e9,"arcane",true);');assert(run('drops.some(d=>d.item?.rarity===5)'));
-});
-test('failed endgame rolls increase pity, normal mode grants Legendary without Mythic',()=>{
- const {run}=ready();run('enterDungeon("abyss","hard");rand=()=>.999;');unlock(run);run('hit(mobs.find(m=>m.dungeonBoss),1e9,"arcane",true);');assert.equal(run('p.career.dungeons.pity["abyss:hard"]'),1);assert(!run('drops.some(d=>d.item?.rarity===5)'));assert(run('drops.some(d=>d.item?.rarity===4)'));
 });
 test('active dungeon, damage, telegraphs, hazards and dead units survive reload without respawn',()=>{
  const {run,saved}=ready();run('enterDungeon("frost","hard");');unlock(run);run('p.x=900;p.y=700;var boss=mobs.find(m=>m.dungeonBoss);hit(boss,100);boss.cd=0;updateDungeonBoss(boss,.01,false);makeDungeonHazard("frost",100,200,10,"physical");save();var hp=boss.hp;');const next=createGame(null,'grindoria-save-v1',Object.fromEntries(saved));assert.equal(next.run('p.mapId'),'dungeon');assert.equal(next.run('mobs.find(m=>m.dungeonBoss).hp'),run('hp'));assert(next.run('mobs.find(m=>m.dungeonBoss).attackPlan'));assert.equal(next.run('dungeonRun().hazards.length'),1);assert(next.run('mobs.filter(m=>m.dungeonRole==="guard").every(m=>m.hp===0)'));next.run('validateCharacterAccount(accountWithActiveSnapshot());');

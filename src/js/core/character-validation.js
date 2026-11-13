@@ -14,15 +14,15 @@ function assertSafeCharacterJSON(value) {
 }
 function validateCharacterItem(item,slot=null) {
   assertCharacterObject(item,'predmet');validateItemModel(item);
-  if(item.weaponKind!==undefined && (item.slot!=='weapon'||!['sword','bow','daggers','fan'].includes(item.weaponKind)))characterDataError('typ zbrane.');
+  if(item.weaponKind!==undefined && (item.slot!=='weapon'||!METIN_WEAPON_KINDS.includes(item.weaponKind)))characterDataError('typ zbrane.');
   if(item.modelId!==undefined && (typeof item.modelId!=='string'||!Object.hasOwn(EQUIPMENT_MODELS[item.slot]||{},item.modelId)))characterDataError('model predmetu.');
   if(!Object.hasOwn(EQUIPMENT,item.slot)||slot&&item.slot!==slot)characterDataError('neplatný slot predmetu.');
   if(typeof item.name!=='string'||!item.name.length||item.name.length>150)characterDataError('názov predmetu.');
   for(const key of ['bonus','value'])if(item[key]!==undefined)assertCharacterNumber(item[key],key);
   if(item.rarity!==undefined)assertCharacterNumber(item.rarity,'rarita',0,5,true);
   if(item.enhance!==undefined)assertCharacterNumber(item.enhance,'vylepšenie',0,PROGRESSION.maxEnhancement,true);
-  if(item.requiredLevel!==undefined)assertCharacterNumber(item.requiredLevel,'úroveň predmetu',1,105,true);
-  if(item.tier!==undefined)assertCharacterNumber(item.tier,'stupeň predmetu',0,105,true);
+  if(item.requiredLevel!==undefined)assertCharacterNumber(item.requiredLevel,'úroveň predmetu',1,120,true);
+  if(item.tier!==undefined)assertCharacterNumber(item.tier,'stupeň predmetu',0,120,true);
   if(item.uid!==undefined)assertCharacterNumber(item.uid,'ID predmetu',1,Number.MAX_SAFE_INTEGER,true);
   if(item.cell!==undefined)assertCharacterNumber(item.cell,'políčko',0,4499,true);
   if(item.icon!==undefined&&!Object.hasOwn(EQUIPMENT,item.icon))characterDataError('ikona výbavy.');
@@ -40,6 +40,7 @@ function validateCharacterWorld(state) {
   for(const mob of state.mobs){
     assertCharacterObject(mob,'nepriateľ');if(!['wolf','stone','boss'].includes(mob.type))characterDataError('typ nepriateľa.');
     for(const key of ['x','y','hp','max'])assertCharacterNumber(mob[key],'údaj nepriateľa '+key,key==='max'?1:0);
+    if(mob.monsterId!==undefined&&!Object.hasOwn(METIN_MONSTER_ROWS,mob.monsterId))characterDataError('druh nepriateľa.');
     if(mob.skin&&!['wolf','scorpion','yeti','demon'].includes(mob.skin))characterDataError('model nepriateľa.');
     if(mob.damageType&&!Object.hasOwn(DAMAGE_TYPES,mob.damageType))characterDataError('typ poškodenia.');
     if(mob.hp>mob.max)characterDataError('zdravie nepriateľa.');
@@ -75,7 +76,10 @@ function validateCharacterProfile(record) {
   if(data.combatRecovery!==undefined){const r=data.combatRecovery;assertCharacterObject(r,'obnova boja');if(!Array.isArray(r.skills)||r.skills.length!==6)characterDataError('obnova schopností.');for(const n of r.skills)assertCharacterNumber(n,'cooldown schopnosti',0,120);for(const key of ['attack','cape','travel'])assertCharacterNumber(r[key],'obnova boja',0,120);}
   if(data.starterWeaponGranted!==undefined&&typeof data.starterWeaponGranted!=='boolean')characterDataError('štartovacia výbava.');
   if(data.characterId!==record.id||data.classId!==record.classId||data.name!==record.name||data.isGM!==record.isGM)characterDataError('nesúlad identity a povolania.');
-  for(const key of ['level','xp','gold','potions','strength','vitality','dexterity','intelligence','points','kills','stones','bossKills','huntClaimed','braveryCapes'])assertCharacterNumber(data[key],key,key==='level'?1:0,key==='level'?99:1e12,true);
+  for(const key of ['level','xp','gold','potions','strength','vitality','dexterity','intelligence','points','kills','stones','bossKills','huntClaimed','braveryCapes'])assertCharacterNumber(data[key],key,key==='level'?1:0,key==='level'?PROGRESSION.maxLevel:1e12,true);
+  if(data.xpLocked!==undefined&&typeof data.xpLocked!=='boolean')characterDataError('zastavenie EXP.');
+  if(data.skillPoints!==undefined)assertCharacterNumber(data.skillPoints,'body schopností',0,120,true);
+  if(data.experienceBoosts!==undefined){assertCharacterObject(data.experienceBoosts,'bonusy EXP');for(const [id,until] of Object.entries(data.experienceBoosts)){if(!Object.hasOwn(EXPERIENCE_BOOSTS,id))characterDataError('typ bonusu EXP.');assertCharacterNumber(until,'trvanie bonusu EXP',0,Number.MAX_SAFE_INTEGER,true);}}
   for(const key of ['hp','mp'])assertCharacterNumber(data[key],key);for(const key of ['x','y'])assertCharacterNumber(data[key],key,45,(MAPS[data.mapId]?.size||2000)-45);
   if(!Object.hasOwn(MAPS,data.mapId))characterDataError('neznáma mapa.');
   for(const key of ['claimed','bossClaimed'])if(typeof data[key]!=='boolean')characterDataError('stav úlohy.');
@@ -112,7 +116,7 @@ function validateCharacterProfile(record) {
   validateWorldEventsProfile(data);
   validatePrestige(data);
   validateDungeonProfile(data);
-  validateDiscovery(data);assertCharacterObject(data.bestiary,'bestiár');for(const [key,value]of Object.entries(data.bestiary)){if(!['wolf','scorpion','yeti','demon'].includes(key)&&!(key.startsWith('dungeon:')&&Object.hasOwn(DUNGEONS,key.slice(8)))&&!(key.startsWith('metin:')&&Object.hasOwn(METIN_TYPES,key.slice(6)))&&!(key.startsWith('boss:')&&Object.hasOwn(MAPS,key.slice(5))))characterDataError('záznam bestiára.');assertCharacterNumber(value,'počet v bestiári',0,1e12,true);}
+  validateDiscovery(data);assertCharacterObject(data.bestiary,'bestiár');for(const [key,value]of Object.entries(data.bestiary)){if(!validDiscoveryKey(key)&&!(key.startsWith('dungeon:')&&Object.hasOwn(DUNGEONS,key.slice(8)))&&!(key.startsWith('metin:')&&Object.hasOwn(METIN_TYPES,key.slice(6)))&&!(key.startsWith('boss:')&&Object.hasOwn(MAPS,key.slice(5))))characterDataError('záznam bestiára.');assertCharacterNumber(value,'počet v bestiári',0,1e12,true);}
   assertCharacterObject(data.achievements,'úspechy');for(const [key,value]of Object.entries(data.achievements))if(!Object.hasOwn(CHARACTER_ACHIEVEMENTS,key)||typeof value!=='boolean')characterDataError('úspech.');
   if(data.potionReadyAt!==undefined)assertCharacterNumber(data.potionReadyAt,'čas elixíru',0,Number.MAX_SAFE_INTEGER);
   if(data.combatAssist?.autoPotion!==undefined&&typeof data.combatAssist.autoPotion!=='boolean')characterDataError('automatické elixíry.');

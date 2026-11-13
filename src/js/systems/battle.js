@@ -31,7 +31,7 @@ function enemyResistances(m) {
 
 function playerResistances() {
   const gear=equipmentBonuses(),passive=passiveBonuses();
-  return Object.fromEntries(Object.keys(DAMAGE_TYPES).map(type=>[type,Math.max(-.5,Math.min(.75,(gear[type+'Resist']||0)+(passive.resist[type]||0)+(prestigeRank()===5?.05:0)))]));
+  return Object.fromEntries(Object.keys(DAMAGE_TYPES).map(type=>[type,Math.max(-.5,Math.min(.75,(gear[type+'Resist']||0)+(!['physical','piercing'].includes(type)?gear.magicResist:0)+(passive.resist[type]||0)+(prestigeRank()===5?.05:0)))]));
 }
 
 // Skill power favors equipment over innate level/attribute damage; enemy level is not a damage gate.
@@ -50,7 +50,7 @@ function resolveEnemyDamage(m,amount,type='physical',penetrated=false) {
 function enemyDamageType(m) { return m?.damageType|| (m?.skin==='scorpion'?'poison':m?.skin==='demon'?'fire':'physical'); }
 function basicDamageType() { return rangedBasic()?'piercing':'physical'; }
 function skillDamageType(key) { return ACTIVE_SKILLS[key]?.type||'arcane'; }
-function percentItemStat(stat) { return stat==='crit'||Boolean(ITEM_AFFIXES[stat]?.percent)||stat.endsWith('Resist'); }
+function percentItemStat(stat) { return ['crit','maxHpPercent','skillDamage','skillHaste','monsterDamage','hpRegen','manaSteal','bonusExp'].includes(stat)||Boolean(ITEM_AFFIXES[stat]?.percent)||stat.endsWith('Resist'); }
 
 function resetCombatFlow() {
   combatAssist.aimTime = 0;

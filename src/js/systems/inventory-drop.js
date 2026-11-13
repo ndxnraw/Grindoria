@@ -1,9 +1,10 @@
 let inventoryDropPending=null;
 function requestInventoryDrop(id){
   const entry=inventoryEntry(id);
-  if(!running||p.hp<=0||!entry||entry.kind==='equipped')return false;
+  if(!running||p.hp<=0||!entry||entry.kind==='equipped'||inventoryBonusTool(id))return false;
+  if(gameWindows.has('market-sale'))closeModal('market-sale');
   inventoryDropPending={id,characterId:characterStore.activeId,mapId:p.mapId};
-  inventorySelection=id;inventoryDrag=null;if(!gameWindows.has('inventory'))inventory();inventoryDropDialog();return true;
+  finishInventoryItemDrag();if(!gameWindows.has('inventory'))inventory();inventoryDropDialog();return true;
 }
 function confirmInventoryDrop(count=1){
   const pending=inventoryDropPending,entry=pending&&inventoryEntry(pending.id);
@@ -20,7 +21,8 @@ function handleInventoryOutsideDrop(event){
   const rect=(gameWindows.get('inventory')?.node||$('modalcard')).getBoundingClientRect();
   if(event.clientX>=rect.left&&event.clientX<=rect.right&&event.clientY>=rect.top&&event.clientY<=rect.bottom)return false;
   event.preventDefault();event.stopPropagation?.();
-  const id=inventoryDrag.id;clearInventoryDrag();
+  const id=inventoryDrag.id;finishInventoryItemDrag();
+  if(inventoryBonusTool(id))return false;
   if(!requestInventoryDrop(id)){inventoryMessage('Nasadený predmet najprv zlož do batohu.');return false;}return true;
 }
 function inventoryDropConfirmation(){

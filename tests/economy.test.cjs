@@ -27,8 +27,8 @@ test('gear buyback uses rarity, quality, specialist bonus and live demand with n
 test('inventory sale requires an NPC and material sales reduce holdings and prices',()=>{
  const {run}=trader();run('addGearItem({slot:"weapon",name:"Test",value:50});p.x=50;p.y=50;');assert(!run('sellItem(0)'));assert.equal(run('p.bag.length'),1);run('p.x=NPCS.merchant.x;p.y=NPCS.merchant.y;p.career.materials.ore=20;var price=marketMaterialSaleValue("ore","merchant"),gold=p.gold;');assert(run('sellMarketMaterial("merchant","ore",10)'));assert.equal(run('p.gold'),run('gold+price*10'));assert.equal(run('p.career.materials.ore'),10);assert(run('marketMaterialSaleValue("ore","merchant")<=price'));assert(!run('sellMarketMaterial("merchant","keys",1)'));assert(!run('sellMarketMaterial("merchant","ore",-1)'));assert(!run('sellMarketMaterial("merchant","ore",11)'));
 });
-test('buying and immediately reselling every offered material always loses Yang',()=>{
- const {run}=trader();for(const vendor of ['merchant','armsdealer'])for(const offer of run(`marketOffers('${vendor}').filter(o=>o.supply?.startsWith('material:'))`)){
+test('buying and immediately reselling every tradeable material always loses Yang',()=>{
+ const {run}=trader();for(const vendor of ['merchant','armsdealer'])for(const offer of run(`marketOffers('${vendor}').filter(o=>o.supply?.startsWith('material:')&&Object.hasOwn(MARKET_MATERIAL_PRICES,o.supply.slice(9)))`)){
  run(`p.x=NPCS.${vendor}.x;p.y=NPCS.${vendor}.y;p.level=99;p.gold=100000;p.economy.demand.materials=0;var initial=p.gold;`);assert(run(`buyMarketOffer('${vendor}','${offer.id}')`));assert(run(`sellMarketMaterial('${vendor}','${offer.supply.slice(9)}',${offer.count})`));assert(run('p.gold<initial'));
  }
 });
@@ -44,5 +44,5 @@ test('markets remain isolated between characters and do not consume combat rando
  const {run}=trader();run('buyMarketOffer("merchant","ore");var first=characterStore.activeId;returnToCharacters();var other=createCharacter("Obchodnik","ninja");playCharacter(other);');assert.equal(run('p.economy.stock["merchant:ore"]'),12);run('returnToCharacters();playCharacter(first);');assert.equal(run('p.economy.stock["merchant:ore"]'),11);run('rand=()=>{throw Error("combat rng");};updateEconomy(600);');
 });
 test('all merchant screens show prices, stocks, refresh, buyback and specialist service',()=>{
- const {run,elements}=trader();for(const vendor of ['merchant','armsdealer']){run(`p.x=NPCS.${vendor}.x;p.y=NPCS.${vendor}.y;marketPanel('${vendor}');`);const html=elements.get('modalcontent').innerHTML;for(const word of ['Yang','zásoba','Obnova','Výkup'])assert(html.includes(word));}assert(!elements.get('modalcontent').innerHTML.includes("Alchymistické recepty"));assert.equal(run("Object.keys(MARKET_TRADERS).length"),2);
+ const {run,elements}=trader();for(const vendor of ['merchant','armsdealer']){run(`p.x=NPCS.${vendor}.x;p.y=NPCS.${vendor}.y;marketPanel('${vendor}');`);const html=elements.get('modalcontent').innerHTML;for(const word of ['Yang','zásoba','Obnova'])assert(html.includes(word));}assert(!elements.get('modalcontent').innerHTML.includes("Alchymistické recepty"));assert.equal(run("Object.keys(MARKET_TRADERS).length"),2);
 });

@@ -21,8 +21,16 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
  // Supply stacks also reject overlap without exchanging or merging quantities.
  await page.locator('[data-inv-tab="supplies"]').click();const supplies=await page.evaluate(()=>JSON.stringify(p.inventory.supplyCells));
  const oreCell=await page.evaluate(()=>p.inventory.supplyCells['material:ore']);await dragStart(page.locator('[data-entry="potions"]'));await hoverCell(oreCell);await page.locator('.inventory-drag-preview.is-invalid').waitFor();await page.mouse.up();assert.equal(await page.evaluate(()=>JSON.stringify(p.inventory.supplyCells)),supplies);
+ // Cancel, Escape and the titlebar close all clear the pending selection.
+ await page.locator('[data-inv-tab="gear"]').click();
+ for(const cancel of ['button','escape','close']){
+  const original=await page.evaluate(()=>JSON.stringify(p.bag));await item().press('Enter');assert.equal(await page.locator('[data-window-key="inventory"] [data-entry][aria-pressed="true"]').count(),1);await dragStart(item());await page.mouse.move(600,400,{steps:8});await page.mouse.up();const dialog=page.locator('[data-window-key="inventory-drop"]');await dialog.waitFor();
+  if(cancel==='button')await dialog.locator('[data-ui-id="inv-drop-cancel"]').click();else if(cancel==='escape')await page.keyboard.press('Escape');else await dialog.locator('.window-close').click();
+  assert.equal(await page.evaluate(()=>inventorySelection),null);assert.equal(await page.locator('[data-window-key="inventory"] [data-entry][aria-pressed="true"]').count(),0);assert.equal(await page.locator('.inventory-drag-preview').count(),0);
+  await page.locator('[data-window-key="inventory"] [data-cell="30"]').click();assert.equal(await page.evaluate(()=>JSON.stringify(p.bag)),original);
+ }
  // Dragging outside still asks before discarding, and Enter confirms.
- await page.locator('[data-inv-tab="gear"]').click();await dragStart(item());await page.mouse.move(600,400,{steps:8});await page.mouse.up();await page.locator('[data-window-key="inventory-drop"]').waitFor();await page.keyboard.press('Enter');assert.equal(await page.evaluate(uid=>p.bag.some(i=>i.uid===uid),armor),false);assert.equal(await page.locator('.inventory-drag-preview').count(),0);
- assert.deepEqual(errors,[]);fs.writeFileSync(path.join(output,'results.json'),JSON.stringify({blockedOverlap:true,blockedPartialOverlap:true,emptyCellMove:true,blockedSupplySwap:true,outsideDiscard:true,errors},null,2));console.log('Inventory drag checks passed.');
+ await dragStart(item());await page.mouse.move(600,400,{steps:8});await page.mouse.up();await page.locator('[data-window-key="inventory-drop"]').waitFor();await page.keyboard.press('Enter');assert.equal(await page.evaluate(uid=>p.bag.some(i=>i.uid===uid),armor),false);assert.equal(await page.locator('.inventory-drag-preview').count(),0);
+ assert.deepEqual(errors,[]);fs.writeFileSync(path.join(output,'results.json'),JSON.stringify({blockedOverlap:true,blockedPartialOverlap:true,emptyCellMove:true,blockedSupplySwap:true,cancelClearsSelection:true,outsideDiscard:true,errors},null,2));console.log('Inventory drag checks passed.');
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

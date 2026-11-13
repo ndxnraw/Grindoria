@@ -2,25 +2,32 @@ const npcSessions=new Map();
 function npcServiceOpened(id){return npcSessions.get(id)===characterStore.activeId+':'+p.mapId;}
 function smithMenu(){
  if(!running||!npcServiceOpened('smith')||!nearNPC('smith'))return false;
- modal('<h2>Kováč</h2><div class="system-menu-list"><button id="smith-forge">Vylepšovanie</button><button id="smith-craft">Výroba</button></div>',{key:'npc:smith-menu'});
+ modal('<h2>Kováč</h2><div class="smith-service-menu"><button id="smith-forge">'+itemIcon(serviceSupplyIcon('forgeCore'))+'<span>Vylepšovanie</span></button><button id="smith-craft">'+itemIcon(serviceSupplyIcon('ingot'))+'<span>Výroba</span></button></div>',{key:'npc:smith-menu'});
  $('smith-forge').onclick=()=>smithPanel('forge');$('smith-craft').onclick=()=>smithPanel('crafting');return true;
 }
 function smithPanel(service){
  if(!running||!npcServiceOpened('smith')||!['forge','crafting'].includes(service))return false;
  const key='npc:'+service,prior=gameWindows.get(key);if(!prior&&!nearNPC('smith'))return false;
  craftingFilter=prior?.craftingFilter||'all';
- modal('<h2>'+(service==='forge'?'Vylepšovanie':'Výroba')+'</h2>'+(!nearNPC('smith')?'<p class="service-unavailable">Priblíž sa ku kováčovi.</p>':'')+(service==='forge'?forgeContent():craftingRecipesPanel())+'<p id="smith-message" role="status"></p>',{key,refresh:()=>smithPanel(service)});
- if($('craft-filter'))$('craft-filter').onchange=event=>{activeGameWindow.craftingFilter=event.target.value;smithPanel(service);};
+ modal((!nearNPC('smith')?'<p class="service-unavailable">Priblíž sa ku kováčovi.</p>':'')+(service==='forge'?forgeContent(prior?.forgeSlot,prior?.servicePage||0):craftingRecipesPanel(prior?.recipeSelected,prior?.servicePage||0))+'<p id="smith-message" role="status"></p>',{key,title:service==='forge'?'Vylepšovanie':'Výroba',refresh:()=>smithPanel(service)});
+ const entry=activeGameWindow;
+ panelQueryAll('[data-forge-select]').forEach(button=>button.onclick=()=>{entry.forgeSlot=button.dataset.forgeSelect;smithPanel(service);});
+ panelQueryAll('[data-recipe-select]').forEach(button=>button.onclick=()=>{entry.recipeSelected=button.dataset.recipeSelect;smithPanel(service);});
+ panelQueryAll('[data-service-page]').forEach(button=>button.onclick=()=>{entry.servicePage=Number(button.dataset.servicePage);smithPanel(service);});
+ if($('craft-filter'))$('craft-filter').onchange=event=>{entry.craftingFilter=event.target.value;entry.recipeSelected=null;entry.servicePage=0;smithPanel(service);};
  panelQueryAll('[data-forge-option]').forEach(input=>input.onchange=()=>{(forgeOptions[input.dataset.slot]??={})[input.dataset.forgeOption]=input.checked;smithPanel(service);});
  panelQueryAll('[data-action]').forEach(button=>button.onclick=()=>{const action=button.dataset.action,id=button.dataset.id,ok=action==='enhance'?enhanceEquipment(id,forgeOptions[id]||{}):action==='recipe'?craftRecipe(id):false;smithPanel(service);$('smith-message').textContent=action==='enhance'?forgeResult?.message||'Vylepšenie nie je dostupné.':craftingMessage||'Výroba nie je dostupná.';return ok;});return true;
 }
-function forgeContent() {
- const available=nearNPC('smith');
- return ''+Object.keys(EQUIPMENT).map(slot=>{
-  const item=p.equipped[slot];if(!item)return '<div class="career-card"><h3>'+EQUIPMENT[slot].name+'</h3><p>Bez nasadeného predmetu.</p></div>';
-  const rank=item.enhance||0,options=forgeOptions[slot]||{},cost=enhancementCost(item,options);
-  return '<div class="career-card"><h3>'+escapeHTML(item.name)+' +'+rank+'</h3><p>'+ITEM_STATS[EQUIPMENT[slot].stat]+' z vylepšenia: '+signedItemStat(EQUIPMENT[slot].stat,enhancementBonus(item)*(EQUIPMENT[slot].stat==='crit'?.01:1))+(rank<9?' → '+signedItemStat(EQUIPMENT[slot].stat,enhancementBonus({...item,enhance:rank+1})*(EQUIPMENT[slot].stat==='crit'?.01:1)):' · maximum')+'</p>'+(cost?'<p>Úspech '+Math.round(forgeChance(item,options)*100)+' % · '+'</p>'+costRequirements(cost)+'<p>'+forgeFailureText(item,options)+'</p><label><input type="checkbox" data-forge-option="charm" data-slot="'+slot+'" '+(options.charm?'checked ':'')+(!p.career.materials.smithCharm||FORGE_RULES.success[rank+1]>=.95?'disabled':'')+'> Talizman kováča: +10 percentuálnych bodov · '+p.career.materials.smithCharm+' ks</label><br><label><input type="checkbox" data-forge-option="protect" data-slot="'+slot+'" '+(options.protect?'checked ':'')+(!p.career.materials.protectionScroll||rank<3?'disabled':'')+'> Ochranný zvitok: zachová predmet aj stupeň · '+p.career.materials.protectionScroll+' ks</label><br><button class="primary" data-action="enhance" data-id="'+slot+'" '+(!available||!canPayRecipe(cost)?'disabled':'')+'>Vylepšiť na +'+(rank+1)+'</button>':'')+'</div>';
- }).join('')+'';
+function forgeContent(selectedSlot,page=0) {
+ const available=nearNPC('smith'),slots=Object.keys(EQUIPMENT),slot=Object.hasOwn(EQUIPMENT,selectedSlot)?selectedSlot:slots.find(id=>p.equipped[id])||'weapon',item=p.equipped[slot];
+ const entries=slots.map(id=>({id,item:p.equipped[id]||{slot:id,name:EQUIPMENT[id].name,rarity:0},empty:!p.equipped[id],label:EQUIPMENT[id].name+(p.equipped[id]?' · '+p.equipped[id].name:' · prázdne'),badge:p.equipped[id]?'+'+(p.equipped[id].enhance||0):'—'}));
+ let detail='<p class="service-empty">'+EQUIPMENT[slot].name+' · bez nasadeného predmetu.</p>';
+ if(item){
+  const rank=item.enhance||0,options=forgeOptions[slot]||{},cost=enhancementCost(item,options),stat=EQUIPMENT[slot].stat,scale=stat==='crit'?.01:1;
+  detail='<h3>'+escapeHTML(item.name)+'</h3><div class="forge-preview"><span class="service-preview">'+itemIcon(item)+'<b>+'+rank+'</b></span><span aria-hidden="true">→</span><span class="service-preview">'+itemIcon({...item,enhance:Math.min(9,rank+1)})+'<b>+'+Math.min(9,rank+1)+'</b></span></div><p>'+ITEM_STATS[stat]+' z vylepšenia: '+signedItemStat(stat,enhancementBonus(item)*scale)+(cost?' → '+signedItemStat(stat,enhancementBonus({...item,enhance:rank+1})*scale):' · maximum')+'</p>';
+  if(cost)detail+='<p class="forge-chance">Úspech <b>'+Math.round(forgeChance(item,options)*100)+' %</b></p>'+serviceCostTiles(cost)+'<div class="forge-options">'+[['charm','smithCharm','Talizman kováča','+10 p. b.',!p.career.materials.smithCharm&&!options.charm||FORGE_RULES.success[rank+1]>=.95],['protect','protectionScroll','Ochranný zvitok','Zachová predmet aj stupeň',!p.career.materials.protectionScroll&&!options.protect||rank<3]].map(([key,material,name,effect,disabled])=>'<label class="service-option" title="'+name+' · '+effect+'"><input type="checkbox" data-forge-option="'+key+'" data-slot="'+slot+'" aria-label="'+name+'" '+(options[key]?'checked ':'')+(disabled?'disabled':'')+'>'+itemIcon(serviceSupplyIcon(material))+'<span>'+name+'<small>'+uiNumber(p.career.materials[material])+' ks · '+effect+'</small></span></label>').join('')+'</div><p class="forge-risk">'+forgeFailureText(item,options)+'</p><button class="primary service-action" data-action="enhance" data-id="'+slot+'" '+(!available||!canPayRecipe(cost)?'disabled':'')+'>Vylepšiť na +'+(rank+1)+'</button>';
+ }
+ return '<section class="forge-workshop service-panel"><div class="service-layout"><div class="service-bag">'+serviceTileGrid(entries,slot,'forge-select',page)+'</div><section class="service-details">'+detail+'</section></div><div class="service-wallet">◉ <b>'+uiNumber(p.gold)+'</b> Yang</div></section>';
 }
 
 function careerSpecialization() {

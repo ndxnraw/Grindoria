@@ -1,12 +1,12 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const {createGame,readSavedProfile}=require('./helpers/game.cjs');
 function item(slot,rarity=0,tier=1,extra={}){return {slot,name:slot+' '+rarity,rarity,tier,requiredLevel:tier,bonus:10,enhance:0,...extra};}
-test('all 44 registered models have distinct silhouettes and every slot has three actual shapes',()=>{
+test('all 50 registered models have distinct silhouettes and every slot has three actual shapes',()=>{
  const {run}=createGame();const shapes=new Set();let total=0;
  for(const slot of Object.keys(run('EQUIPMENT'))) {
   const variants=run('Object.keys(EQUIPMENT_MODELS["'+slot+'"])');assert(variants.length>=3);
   for(const model of variants){const gear=item(slot,0,1,{modelId:model});const shape=run('equipmentAppearance('+JSON.stringify(gear)+').parts[0].d');assert(!shapes.has(shape),model);shapes.add(shape);total++;}
- }assert.equal(total,44);
+ }assert.equal(total,50);
 });
 test('identity survives moving, equipping, serial changes and reload while tier, strength and enhancements alter visible detail',()=>{
  const {run,saved}=createGame();const gear=item('weapon',2,65,{name:'Dračí meč'});
@@ -20,9 +20,9 @@ test('all worn slots appear in portrait and inventory previews, swap immediately
  for(const slot of Object.keys(run('EQUIPMENT'))){run('addGearItem('+JSON.stringify(item(slot,1,20))+');equipItem(p.bag.length-1);closeModal();');}
  let avatar=run('characterAvatar({classId:p.classId,data:p})');
  for(const slot of Object.keys(run('EQUIPMENT')))assert.match(avatar,new RegExp('data-worn-slot="'+slot+'"'));
- assert.match(run('equipmentFigure()'),/data-equipment-model="helmet-1"/);
+ assert.match(run('equipmentFigure()'),/data-equipment-model="helmet-0"/);
  run('var oldStats=equipmentBonuses();addGearItem('+JSON.stringify(item('armor',2,40,{bonus:50}))+');equipItem(p.bag.length-1);closeModal();');
- assert.match(run('equipmentFigure()'),/data-equipment-model="armor-2"/);assert(run('equipmentBonuses().defense>oldStats.defense'));
+ assert.match(run('equipmentFigure()'),/data-equipment-model="armor-1"/);assert(run('equipmentBonuses().defense>oldStats.defense'));
  run('unequipItem("shield");closeModal();');assert.doesNotMatch(run('characterAvatar({classId:p.classId,data:p})'),/data-worn-slot="shield"/);
 });
 test('world draws the same registered paths for every slot, mirrors with facing and preserves animation',()=>{
@@ -31,13 +31,13 @@ test('world draws the same registered paths for every slot, mirrors with facing 
  run('face=Math.PI;keys.w=true;hero();');
  assert(run('scales.some(s=>s[0]===-1&&s[1]===1)'));
  for(const slot of Object.keys(run('EQUIPMENT')))assert(run('drawn.includes(equipmentAppearance(p.equipped["'+slot+'"]).parts[0].d)'),slot);
- const first=run('drawn.join("|")');run('drawn.length=0;p.equipped.weapon.rarity=0;hero();');assert.notEqual(run('drawn.join("|")'),first);
+ const first=run('drawn.join("|")');run('drawn.length=0;p.equipped.weapon.enhance=0;hero();');assert.notEqual(run('drawn.join("|")'),first);
 });
-test('new weapons use swords, daggers, bows and fans for the active class without changing combat stats or legacy item data',()=>{
+test('new weapons use all catalog families allowed for the active class and keep legacy item data intact',()=>{
  const {run}=createGame();run('rand=()=>0;');
- for(const [cls,school,kind]of [['warrior','body','sword'],['sura','weapon','sword'],['ninja','blade','daggers'],['ninja','archery','bow'],['shaman','dragon','fan']]){
-  run('p.classId="'+cls+'";p.schools[p.classId]="'+school+'";var gear=makeItem(true);');assert.equal(run('gear.weaponKind'),kind);assert.equal(run('gear.slot'),'weapon');assert.equal(run('gear.bonus'),run('EQUIPMENT.weapon.base+Math.floor(gear.tier*EQUIPMENT.weapon.scale)+2*EQUIPMENT.weapon.rare'));
-  assert.match(run('itemIcon(gear)'),new RegExp('data-equipment-model="'+(kind==='sword'?'weapon':kind)+'-2"'));
+ for(const [cls,school,kind]of [['warrior','body','sword'],['warrior','body','greatsword'],['sura','weapon','sword'],['ninja','blade','daggers'],['ninja','archery','bow'],['shaman','dragon','fan'],['shaman','dragon','bell']]){
+  run('p.classId="'+cls+'";p.schools[p.classId]="'+school+'";var gear=rewardEquipment("weapon",2,10,"'+kind+'");');assert.equal(run('gear.weaponKind'),kind);assert.equal(run('gear.slot'),'weapon');assert.equal(run('gear.bonus'),run('ITEM_DEFINITIONS[gear.definitionId].bonus'));
+  assert.match(run('itemIcon(gear)'),new RegExp('data-equipment-model="'+(kind==='sword'?'weapon':kind)+'-0"'));
  }
  const legacy={slot:'weapon',name:'Pamiatka',bonus:12};run('var legacy='+JSON.stringify(legacy)+';itemIcon(legacy);');assert.equal(run('JSON.stringify(legacy)'),JSON.stringify(legacy));
 });

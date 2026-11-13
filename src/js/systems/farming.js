@@ -14,6 +14,7 @@ function farmAreaAt(entity = p) {
 function buildSpawnPoints(id) {
   if(MAPS[id].town||MAPS[id].instance)return [];
   if (MAPS[id].metinsOnly) return buildSuterlandPoints();
+  if (MAPS[id].metinWorld) return buildMetinWorldSpawns(id);
   const points = [], random = layoutRandom(id + ':' + MAPS[id].seed + ':layout2'), perArea = MAPS[id].packCount / 4;
   for (const area of FARM_AREAS) {
     const local = [];
@@ -30,6 +31,28 @@ function buildSpawnPoints(id) {
   return points;
 }
 
+function buildMetinWorldSpawns(id) {
+  const random=layoutRandom(id+':metin-world'),points=[],cfg=MAPS[id];
+  const roster=[...cfg.roster].sort((a,b)=>METIN_MONSTER_ROWS[a][1]-METIN_MONSTER_ROWS[b][1]);
+  const distance=area=>Math.hypot((area.x1+area.x2)/2-cfg.entry.x,(area.y1+area.y2)/2-cfg.entry.y);
+  const areas=[...FARM_AREAS].sort((a,b)=>distance(a)-distance(b));
+  for(const [index,monsterId] of roster.entries()){
+    const row=METIN_MONSTER_ROWS[monsterId],area=areas[Math.min(3,Math.floor(index*4/roster.length))];
+    const kind=row[2]==='Boss'?'boss':row[5]?'rare':'pack';
+    const location=naturalSpawnLocation(area,points,random);
+    points.push({id:id+':species:'+monsterId,kind,...location,area:area.id,offset:0,monsterId});
+  }
+  const starterStones=[[5,'Metin smutku',2,1200],[10,'Metin boje',2,1200],[15,'Metin bitvy',4,1200],[20,'Metin lačnosti',1,1800],[25,'Metin černoty',1,1800]];
+  const stones=['joan','pyungmoo','yongan'].includes(id)?starterStones:
+    id==='cerveny-les'?[[85,'Metin Tu-Young',2,1800],[90,'Metin Jeon-Un',2,1800]]:[];
+  for(const [index,[metinLevel,name,count,respawnSeconds]] of stones.entries())for(let copy=0;copy<count;copy++){
+    const area=areas[(index+copy)%areas.length];
+    points.push({id:id+':stone:'+metinLevel+':'+copy,kind:'stone',...naturalSpawnLocation(area,points,random),
+      area:area.id,offset:0,metinLevel,metinType:metinTypeForLevel(metinLevel),name,respawnSeconds});
+  }
+  return points;
+}
+
 function rollEnemyVariant(point, slot) {
   if (point.kind === 'rare'){const roll=rand();return roll<.15?'rare':roll<.5?'elite':'normal';}
   if (map().beginner&&point.kind==='pack'&&point.area==='southwest')return 'normal';
@@ -43,19 +66,23 @@ function createSpawnEnemy(point, slot = 0) {
   const angle = rand() * Math.PI * 2, radius = point.kind === 'pack' ? Math.sqrt(rand()) * 90 : 0;
   let x = point.x + Math.cos(angle) * radius, y = point.y + Math.sin(angle) * radius;
   ({x,y}=safePosition({x,y},SPAWN_RULES.spawnClearance-safeZone().radius));
-  const variant = rollEnemyVariant(point, slot), v = ENEMY_VARIANTS[variant];
+  const species=METIN_MONSTER_ROWS[point.monsterId];
+  const variant = species?'normal':rollEnemyVariant(point, slot), v = ENEMY_VARIANTS[variant];
   const normalLevel = type==='boss'&&cfg.bossLevel?cfg.bossLevel:cfg.enemyLevel + point.offset + (type === 'boss' ? 5 : type === 'stone' ? (cfg.metinLevelOffset??2) : slot % ((cfg.mobLevelSpread??2)+1));
-  const level = Math.min(cfg.maxEnemyLevel||105,normalLevel + (type === 'wolf' ? v.level : 0));
-  const stats=enemyCombatStats(level,type,variant),hp=stats.hp,attack=stats.attack;
+  const level = species?.[1] ?? Math.min(cfg.maxEnemyLevel||105,normalLevel + (type === 'wolf' ? v.level : 0));
+  const rank=Number(species?.[2]);
+  const stats=enemyCombatStats(level,type,type==='wolf'&&rank>=3?'elite':variant),hp=stats.hp,attack=stats.attack;
   const enemy = {
     spawnId: point.id + ':' + slot, spawnPointId: point.id, spawnSlot: slot,
     type, skin: cfg.skin, area: point.area, variant, rareSlot: point.kind === 'rare',
     x, y, homeX: x, homeY: y, level, baseLevel: level, hp, max: hp, baseMax: hp,
     attackScale: attack, baseAttack: attack, speedScale: type === 'wolf' ? v.speed : 1,
-    respawnSeconds: type === 'boss' ? 40 : type === 'stone' ? 18 : point.kind === 'rare' ? 180 : v.respawn,
+    respawnSeconds: point.respawnSeconds ?? (type === 'boss' ? 40 : type === 'stone' ? 18 : point.kind === 'rare' ? 180 : v.respawn),
     dead: 0, cd: 1, hit: 0, windup: 0, taunt: 0, engaged: 0,
     roamTarget: null, roamWait: rand() * 4, returning: false, skillContributors: []
   };
+  if(species)Object.assign(enemy,{monsterId:point.monsterId,name:species[0]});
+  if(point.name)enemy.name=point.name;
   return type === 'stone' ? configureMetin(enemy, point) : enemy;
 }
 
@@ -72,7 +99,7 @@ function configuredRespawn(enemy){return enemy.type==='boss'?40:enemy.type==='st
 function hydrateSpawnPopulation(old) {
   const generated = [];
   for (const point of spawnPoints) {
-    for (let slot = 0; slot < (point.kind === 'pack' ? SPAWN_RULES.packSize : 1); slot++) {
+    for (let slot = 0; slot < (point.kind === 'pack' ? point.monsterId===undefined?SPAWN_RULES.packSize:3 : 1); slot++) {
       const m = createSpawnEnemy(point, slot), run = p.career.endgame.run;
       if (run && p.mapId === 'temple') applyRiftScaling(m, run.tier, run.id);
       generated.push(m);
@@ -233,7 +260,7 @@ function updateEnemySpawns(dt, safe) {
     if (m.type !== 'wolf' || m.stun > 0) continue;
     const movementDt=enemyMovementStep(m,dt,enemyIndex);if(!movementDt)continue;
     const d = Math.hypot(m.x - p.x, m.y - p.y), home = Math.hypot(m.x - m.homeX, m.y - m.homeY);
-    const forced = m.taunt > 0 || m.engaged > 0;
+    const forced = m.taunt > 0 || m.engaged > 0 || METIN_MONSTER_ROWS[m.monsterId]?.[6]&&d<200;
     const chasing = !safe && !stealth && forced && (m.taunt > 0 || home < SPAWN_RULES.leash);
     if (chasing) {
       m.returning = true; m.roamTarget = null;

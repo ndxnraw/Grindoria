@@ -7,10 +7,29 @@ function requirementRow(name,have,need) {
 function costRequirements(cost) {
   return '<div class="requirements"><div class="requirement-heading"><span>Požiadavka</span><span>Máš / Potrebuješ</span></div>'+Object.entries(cost).map(([id,n])=>requirementRow(id==='gold'?'Yang':MATERIALS[id],id==='gold'?p.gold:p.career.materials[id],n)).join('')+'</div>';
 }
+function serviceSupplyIcon(id){return {icon:id==='potions'?'potion':id==='braveryCapes'?'cape':id.replace(/^material:/,''),rarity:0};}
+function serviceCostTiles(cost){
+ return '<div class="service-cost-grid" role="group" aria-label="Potrebné suroviny">'+Object.entries(cost).map(([id,need])=>{
+  const name=id==='gold'?'Yang':MATERIALS[id],have=id==='gold'?p.gold:p.career.materials[id],ready=have>=need,status=ready?'Splnené':'Chýba '+uiNumber(need-have);
+  return '<div class="service-cost '+(ready?'is-ready':'is-missing')+'" title="'+escapeHTML(name+' · '+uiNumber(have)+' / '+uiNumber(need)+' · '+status)+'" aria-label="'+escapeHTML(name+' · '+uiNumber(have)+' / '+uiNumber(need)+' · '+status)+'">'+(id==='gold'?'<span class="service-coin" aria-hidden="true">◉</span>':itemIcon(serviceSupplyIcon(id)))+'<small>'+escapeHTML(name)+'</small><b>'+uiNumber(have)+' <span>/ '+uiNumber(need)+'</span></b></div>';
+ }).join('')+'</div>';
+}
+function serviceTileGrid(entries,selected,attribute,page=0,compact=false){
+ const wrappers=entries.map(entry=>({slot:entry.item?.slot,entry}));let pages=1,layout=gearLayout(wrappers,pages,false);
+ while(!layout){pages++;layout=gearLayout(wrappers,pages,false);}
+ page=Math.max(0,Math.min(pages-1,Math.floor(Number(page)||0)));
+ const visible=wrappers.filter(w=>Math.floor(layout.get(w)/INVENTORY.pageSize)===page),rows=compact?Math.max(3,...visible.map(w=>Math.floor((layout.get(w)%INVENTORY.pageSize)/5)+itemSize(w)[1])):INVENTORY.rows;
+ const cells=Array.from({length:rows*INVENTORY.columns},(_,i)=>'<span class="service-cell" aria-hidden="true" style="grid-column:'+(i%5+1)+';grid-row:'+(Math.floor(i/5)+1)+'"></span>').join('');
+ return '<div class="service-grid" role="group" aria-label="Predmety" style="--service-rows:'+rows+'">'+cells+visible.map(w=>{
+  const entry=w.entry,cell=layout.get(w)%INVENTORY.pageSize,[width,height]=itemSize(w),label=entry.label||entry.item.name;
+  return '<button type="button" class="service-tile'+(entry.blocked?' is-locked':'')+'" data-'+attribute+'="'+escapeHTML(String(entry.id))+'" aria-label="'+escapeHTML(label)+'" title="'+escapeHTML(label+(entry.meta?' · '+entry.meta:''))+'" aria-pressed="'+(String(entry.id)===String(selected))+'" style="grid-column:'+(cell%5+1)+' / span '+width+';grid-row:'+(Math.floor(cell/5)+1)+' / span '+height+'">'+itemIcon(entry.item,entry.empty===true)+(entry.badge!==undefined?'<b class="service-tile-count">'+escapeHTML(String(entry.badge))+'</b>':'')+(entry.blocked?'<span class="service-lock" aria-hidden="true">!</span>':'')+'</button>';
+ }).join('')+'</div>'+(pages>1?'<div class="service-pages" aria-label="Strany">'+Array.from({length:pages},(_,i)=>'<button type="button" data-service-page="'+i+'" aria-pressed="'+(i===page)+'">'+(i+1)+'</button>').join('')+'</div>':'');
+}
+function serviceItemDetails(item){return '<p class="service-type">'+'<span class="'+(p.level<requiredItemLevel(item)?'stat-loss':'')+'">Požadovaná úroveň '+requiredItemLevel(item)+'</span></p>'+itemBonusText(item);}
 function modalFocusToken(){
   const a=document.activeElement;if(!a)return null;
   if(a.id)return {id:a.id};
-  const attrs=['data-market-buy','data-market-sell','data-market-material','data-count','data-action','data-id','data-entry','data-forge-option','data-slot','data-career-tab'];
+  const attrs=['data-market-buy','data-market-sell','data-market-material','data-count','data-action','data-id','data-entry','data-forge-option','data-slot','data-career-tab','data-market-select','data-market-mode','data-forge-select','data-recipe-select','data-service-page'];
   const values=attrs.filter(key=>a.hasAttribute?.(key)).map(key=>[key,a.getAttribute(key)]);
   return values.length?{values}:null;
 }

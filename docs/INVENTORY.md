@@ -6,7 +6,7 @@ Panel **I** otvorí samostatnú presúvateľnú vrstvu s bronzovým rámom; svet
 
 - **Predmety:** päť strán po 5 × 9 políčok, spolu 225. Viacpolíčkový predmet nemôže presahovať okraj ani prechádzať medzi stranami.
 - **Zásoby:** samostatná mriežka pre elixíry, plášte, materiály. Každý typ tvorí jeden zásobník bez limitu 200 kusov; zobrazuje skutočné uložené množstvo.
-- Presunutie myšou alebo výber predmetu a následné kliknutie na prázdne políčko zmení jeho pozíciu. Obsadené miesto presun odmietne; ťahaný predmet sa zobrazí červenou. Predmety ani zásoby si nevymieňajú pozície.
+- Predmet presunieš potiahnutím alebo výberom predmetu a cieľového políčka klávesom Enter. Obsadené miesto presun odmietne; ťahaný predmet sa zobrazí červenou. Predmety ani zásoby si nevymieňajú pozície.
 - Presunutie na zodpovedajúci slot alebo **Nasadiť** vybaví postavu. **Zložiť výbavu** vráti predmet do batohu, iba ak má dosť súvislého miesta.
 - Dvojklik predmet použije alebo nasadí. Náhľad pri myši alebo zameraní ukazuje názov, vzácnosť, stupeň, vylepšenie, rozmery, bonusy a predajnú cenu. Náhľad porovnáva bonusy s aktuálne nasadeným predmetom rovnako ako pri koristi. Samostatný panel Predmet v inventári neexistuje.
 - **Zoradiť** usporiada výbavu podľa veľkosti, vzácnosti, stupňa a názvu; zásoby podľa názvu. Ak nové rozloženie nemožno umiestniť, pôvodné ostáva zachované.
@@ -29,7 +29,7 @@ Elixír možno vypiť aj v otvorenom inventári. Plášť sa použije bez zatvor
 | Opasok | 1 × 1 | Obrana |
 | Talizman | 1 × 1 | Kritický zásah |
 
-Každý typ padá z bežných zdrojov výbavy v troch vzácnostiach. Nové predmety uvádzajú a kontrolujú požadovanú úroveň; stará výbava bez tejto požiadavky zostáva použiteľná. Všetkých desať slotov možno vylepšovať u kováča. Od cieľového stupňa +4 spotrebuje okrem rudy a zlata aj kamene vylepšenia z Metinov. Rozmery a číselné bonusy predstavujú vlastné nastavenie Grindorie.
+Každý typ výbavy môže padnúť z bežných zdrojov. Rovnaká pomenovaná výbava má vždy rovnakú požadovanú úroveň. Pri načítaní staršieho uloženia sa upraví požiadavka rozpoznanej výbavy a zostanú jej bonusy aj vylepšenie. Všetkých desať slotov možno vylepšovať u kováča. Od cieľového stupňa +4 spotrebuje okrem rudy a zlata aj kamene vylepšenia z Metinov. Rozmery a číselné bonusy predstavujú vlastné nastavenie Grindorie.
 
 Bonusy sa počítajú zo skutočne nasadených predmetov pri útoku, kúzlení, prijatom poškodení aj pohybe. Zloženie predmetu zníži maximá zdravia a many a oreže aktuálne hodnoty na nový limit; opakované nasadzovanie neposkytuje bezplatné liečenie.
 
@@ -43,7 +43,7 @@ Presun najprv overí celú plochu predmetu vrátane spodného políčka zbrane �
 
 ## Boj od 0.10.0
 
-Nová vzácna výbava môže obsahovať typovú odolnosť; zbrane aj kritický zásah. Hodnoty sú percentá, sčítavajú sa zo všetkých slotov a okamžite sa používajú v boji. Staršie predmety si zachovávajú vlastné atribúty. Pozri [COMBAT.md](COMBAT.md).
+Typová odolnosť a kritický zásah môžu byť dodatočné bonusy výbavy. Hodnoty sú percentá, sčítavajú sa zo všetkých slotov a okamžite sa používajú v boji. Staršie predmety si zachovávajú vlastné atribúty. Pozri [COMBAT.md](COMBAT.md).
 
 ## Samostatné postavy od 0.13.0
 
@@ -51,20 +51,37 @@ Batoh, desať slotov, rozmiestnenie a zásobníky patria konkrétnemu profilu. U
 
 ## Vzhľad výbavy
 
-Každý katalógový predmet má odlišnú siluetu podľa rodiny a typu. Nasadenie okamžite zmení náhľad aj postavu vo svete. Úroveň, rarita a vylepšenie menia kovanie a zdobenie. Pozri [APPEARANCE.md](APPEARANCE.md).
+Každý katalógový predmet má odlišnú siluetu podľa rodiny a typu. Nasadenie okamžite zmení náhľad aj postavu vo svete. Úroveň a vylepšenie menia kovanie a zdobenie. Pozri [APPEARANCE.md](APPEARANCE.md).
 
 ## Rarity a bonusy
 
-Tlačidlo Rarity otvorí šance a pravidlá generovania. Nové predmety zobrazujú kvalitu náhodných bonusov, trhový odhad a skutočný výkup obchodníka. Triedenie rešpektuje poradie šiestich rarít; porovnanie zahŕňa aj nové bonusy. Pozri [RARITIES.md](RARITIES.md).
+Náhľad zobrazuje kvalitu pridaných bonusov, trhový odhad a výkup obchodníka. Inventár triedi podľa rozmeru, požadovanej úrovne a názvu. Údaje o pôvodných raritách opisuje [RARITIES.md](RARITIES.md).
 
 Vyhodenie otvorí samostatné kompaktné okno v strede hernej plochy. Enter potvrdí aj zadané množstvo; Esc alebo Zrušiť nič nespotrebujú. Výbava sa prenesie až po potvrdení a staré potvrdenie pre inú mapu či postavu neplatí.
 
-Výber predmetu už neotvára spodné menu akcií. Porovnanie s vybaveným predmetom používa rovnakú ukážku ako drop: zelené zlepšenie, červené zhoršenie a červený nesplnený požadovaný level. Dvojklik nasadí, zloží alebo použije predmet; presúvanie a potvrdené vytiahnutie mimo okna zostávajú dostupné. Predaj výbavy prebieha v okne obchodníka.
+Výber predmetu už neotvára spodné menu akcií. Porovnanie s vybaveným predmetom používa rovnakú ukážku ako drop: zelené zlepšenie, červené zhoršenie a červený nesplnený požadovaný level. Dvojklik nasadí, zloží alebo použije predmet; presúvanie a potvrdené vytiahnutie mimo okna zostávajú dostupné. Predaj výbavy prebieha pretiahnutím z inventára do okna obchodníka a potvrdením ceny v stredovom okne. Obchodovateľné materiály používajú rovnaký postup s výberom počtu kusov.
 
 Inventár je úzky zvislý panel: vybavenie hore, päť strán batohu pod ním a Yang úplne dole. Ovládanie presunu, použitia a vyhodenia je opísané v H → Inventár a korisť; v inventári sa neopakuje.
 
-Inventár prispôsobuje veľkosť políčok dostupnej výške a šírke okna. Celá aktuálna strana 5 × 9 políčok, výbava, Yang a ovládanie zostávajú viditeľné bez posúvania; kapacita piatich strán sa nemení. Rozloženie sa prepočíta aj po zmene veľkosti obrazovky a presunutí okna.
+Inventár prispôsobuje veľkosť políčok dostupnej výške a šírke obrazovky. Celá aktuálna strana 5 × 9 políčok, výbava, Yang a ovládanie zostávajú viditeľné bez posúvania; kapacita piatich strán sa nemení. Pri presúvaní okna zostávajú jeho rozmery rovnaké. Rozloženie sa prispôsobí pri zmene veľkosti obrazovky.
 
 Vybavenie používa rozloženie podľa Metinu2: zbraň vľavo hore, prilba nad brnením, štít vpravo od brnenia a náramok pod štítom. Náušnice a náhrdelník sú na pravom okraji, talizman vľavo dole, opasok vpravo dole a obuv pod postavou. Prázdne miesta medzi slotmi zostávajú voľné.
 
 Mriežka vypĺňa celú šírku batohu. Zbrane a brnenia zaberajú dve políčka pod sebou; ostatná výbava a zásoby jedno. Pri načítaní sa zachovajú platné pozície aj všetky vlastnosti predmetov.
+
+Opakovaný Enter na vybranom predmete alebo pohyb postavy zruší výber. Pri WASD a šípkach sa zameranie z inventára vráti na hernú plochu; pohyb nezvýrazňuje políčka. Po skončení dragu, zrušení vyhodenia alebo zatvorení inventára sa výber vyčistí vrátane vizuálneho rámika.
+
+## Katalóg zbraní a brnení
+
+Katalóg používa úrovne a základné atribúty výbavy pri +0. Spoločné zbrane majú jednu definíciu s viacerými povolaniami. Zbrane a brnenia z bežnej koristi sa vyberajú pre aktívne povolanie z úrovní do úrovne zdroja. Hra uprednostní rozsah posledných 10 úrovní. Výber výbavy používa skutočnú úroveň zdroja až po aktuálny strop 120.
+
+- Bojovník: [zbrane](https://cz-wiki.metin2.gameforge.com/index.php/V%C3%A1le%C4%8Dn%C3%ADk/Zbran%C4%9B), [brnenia](https://cz-wiki.metin2.gameforge.com/index.php/V%C3%A1le%C4%8Dn%C3%ADk/Brn%C4%9Bn%C3%AD)
+- Sura: [zbrane](https://cz-wiki.metin2.gameforge.com/index.php/Sura/Zbran%C4%9B), [brnenia](https://cz-wiki.metin2.gameforge.com/index.php/Sura/Brn%C4%9Bn%C3%AD)
+- Ninja: [zbrane](https://cz-wiki.metin2.gameforge.com/index.php/Ninja/Zbran%C4%9B), [brnenia](https://cz-wiki.metin2.gameforge.com/index.php/Ninja/Brn%C4%9Bn%C3%AD)
+- Šaman: [zbrane](https://cz-wiki.metin2.gameforge.com/index.php/%C5%A0aman/Zbran%C4%9B), [brnenia](https://cz-wiki.metin2.gameforge.com/index.php/%C5%A0aman/Brn%C4%9Bn%C3%AD)
+
+Zdrojové údaje sú uložené pri každej položke v `src/js/data/metin-equipment.js`. Útok používa polovicu priemeru pôvodného rozsahu, obrana 22 %, sila kúziel 20 % a ploché HP 40 %. Útok a obrana majú strop podľa úrovne predmetu. Percentuálne vlastnosti používajú pravidlá boja Grindorie, napríklad strop rýchlosti útoku. Postih pohybu sa používa v bodoch rýchlosti. Bonus EXP má uvedenú šancu pridať 30 % EXP z príšery. Špecifické účinky Metinu2 bez herného ekvivalentu, napríklad poškodenie proti poloľuďom, a pôvodné náhodné varianty zostávajú iba v zdrojových údajoch.
+
+Obchodník v Meste predáva **Zosilniť predmet** a **Začarovať predmet**. Obe zásoby môžeš potiahnuť z pásu nad batohom na položku v batohu alebo na nasadenú výbavu. Zosilnenie pridá jeden dodatočný bonus, najviac do štyroch. Začarovanie zmení typy aj hodnoty existujúcich dodatočných bonusov a zachová ich počet, aj keď stará výbava obsahuje päť. Základné atribúty a stupeň vylepšenia sa pri oboch akciách zachovajú. Neplatná akcia zásobu neminie.
+
+Predlohy: [Zesílit předmět](https://cz-wiki.metin2.gameforge.com/index.php/Zes%C3%ADlit_p%C5%99edm%C4%9Bt), [Začarovat předmět](https://cz-wiki.metin2.gameforge.com/index.php/Za%C4%8Darovat_p%C5%99edm%C4%9Bt).

@@ -29,8 +29,8 @@ test('prestige boss rewards are once per real run; abandonment and ordinary myth
  const g=ready();g.run('activatePrestige();enterPrestigeTrial("crypt");var marks=p.career.prestige.marks;finishDungeon();');assert.equal(g.run('p.career.prestige.marks'),g.run('marks'));g.run('enterDungeon("crypt","mythic");for(const m of [...mobs])hit(m,1e9,"arcane",true);finishDungeon();');assert.equal(g.run('p.career.prestige.marks'),g.run('marks'));finishTrial(g,'crypt');assert.equal(g.run('p.career.prestige.marks'),g.run('marks+1'));assert.equal(g.run('p.career.prestige.clears["crypt:1"]'),1);assert.equal(g.run('p.career.prestige.bosses.crypt'),1);
 });
 
-test('prestige loot grants a real Legendary or Mythic item with finite pity and persists after leaving',()=>{
- const g=ready();g.run('activatePrestige();p.career.dungeons.pity["crypt:mythic"]=11;');finishTrial(g,'crypt',false);assert(g.run('drops.some(d=>d.item?.rarity===5)'));assert.equal(g.run('p.career.dungeons.pity["crypt:mythic"]'),0);assert.equal(g.run('p.mapId'),'town');assert.equal(g.run('prestigeProgress({metric:"uniques"})'),0);
+test('prestige loot grants a unique and extra gear and persists after leaving',()=>{
+ const g=ready();g.run('activatePrestige();p.career.dungeons.pity["crypt:mythic"]=11;');finishTrial(g,'crypt',false);assert(g.run('drops.some(d=>d.item?.rarity===0&&!d.item.uniqueId)'));assert.equal(g.run('p.mapId'),'town');assert.equal(g.run('prestigeProgress({metric:"uniques"})'),0);
  g.run('for(const drop of [...drops]){drop.fallAge=LOOT_RULES.fallDuration;p.x=drop.x;p.y=drop.y;pickUpGroundDrop(drop.id);}');assert.equal(g.run('prestigeProgress({metric:"uniques"})'),1);g.run('var i=p.bag.findIndex(item=>item.uniqueId==="crypt");sellItem(i);');assert.equal(g.run('prestigeProgress({metric:"uniques"})'),1);
 });
 

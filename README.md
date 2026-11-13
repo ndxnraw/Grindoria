@@ -4,10 +4,6 @@
 
 Sólo RPG v prehliadači. Vlastník: [@ndxnraw](https://github.com/ndxnraw).
 
-## Windows EXE
-
-[Stiahnuť inštalátor](https://github.com/ndxnraw/Grindoria/releases/latest). Windows 10/11 x64. Aplikácia pri štarte skontroluje GitHub Releases; stiahnutie a reštart potvrdíš v Aktualizáciách. Pred inštaláciou aktualizácie sa uloží aktívna postava. Bez pripojenia možno hrať offline. Prenos postáv z prehliadača: export/import zálohy. [Desktop, zostavenie a vydávanie](docs/DESKTOP.md).
-
 ## Hranie
 
 [Stiahnuť Grindoria.html](https://github.com/ndxnraw/Grindoria/raw/refs/heads/main/dist/Grindoria.html) a otvoriť uložený súbor. Hra nepotrebuje server ani pripojenie. dist/index.html obsahuje rovnakú zostavu pre statický hosting.
@@ -64,7 +60,7 @@ Vzdialená neaktívna AI má odstupňované aktualizácie; aktívny boj zostáva
 
 ## Vývoj
 
-Browser zostava: Node.js 22+. EXE: Node.js 24 a npm ci; Electron a nástroje sú uzamknuté v package-lock.json.
+Zostavenie vyžaduje Node.js 22+.
 
 ```sh
 npm start
@@ -74,9 +70,9 @@ npm run build
 npm run check:dist
 ```
 
-Náhľad: [http://127.0.0.1:4173](http://127.0.0.1:4173). Zdrojové súbory sú v src/, Electron host v desktop/, nástroje v scripts/, testy v tests/. GitHub Actions overuje Windows a Linux.
+Náhľad: [http://127.0.0.1:4173](http://127.0.0.1:4173). Zdrojové súbory sú v src/, nástroje v scripts/, testy v tests/. GitHub Actions overuje Windows a Linux.
 
-Zmeny patria do sekcie Unreleased v [changelogu](CHANGELOG.md). Postup vydania: [RELEASING.md](docs/RELEASING.md). Ďalšie pravidlá: [AGENTS.md](AGENTS.md), [architektúra](docs/ARCHITECTURE.md), [prispievanie](CONTRIBUTING.md), [Electron](docs/DESKTOP.md).
+Zmeny patria do sekcie Unreleased v [changelogu](CHANGELOG.md). Postup vydania: [RELEASING.md](docs/RELEASING.md). Ďalšie pravidlá: [AGENTS.md](AGENTS.md), [architektúra](docs/ARCHITECTURE.md), [prispievanie](CONTRIBUTING.md).
 
 ## Pôvod a práva
 
@@ -101,6 +97,6 @@ Klik na Dungeon Majstra v Meste otvorí ponuku dungeonov a trhlín. Tri lokality
 
 ## Bestiár a objavovanie
 
-Progres (P) → Bestiár a zbierky: objavení nepriatelia, bossové trofeje, skryté lokality a dlhodobé ciele s trvalými odmenami. [Pravidlá](docs/DISCOVERY.md). Cieľová platforma: PC prehliadač a existujúci Electron obal.
+Progres (P) → Bestiár a zbierky: objavení nepriatelia, bossové trofeje, skryté lokality a dlhodobé ciele s trvalými odmenami. [Pravidlá](docs/DISCOVERY.md). Cieľová platforma: PC prehliadač.
 
 Od 0.32.0: inventár má päť strán po 45 políčok, porovnanie je v náhľade predmetu a vyhodenie potvrdzuje malé stredové okno aj kláves Enter. Dokončené úlohy sú v N → Splnené. [Aktuálne rozdelenie systémov a prevod starých postáv](docs/PROGRESSION.md).

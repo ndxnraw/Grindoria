@@ -119,7 +119,7 @@ function supplyDefinitions() {
   return [
     { id: 'potions', name: 'Liečivý elixír', count: p.potions, icon: 'potion', description: 'Obnoví 65 zdravia alebo 25 % maxima, podľa vyššej hodnoty. Kláves 7 / F7. Spoločný cooldown 4 s aj pre Autoelixíry.', action: 'drink' },
     { id: 'braveryCapes', name: 'Plášť statočnosti', count: p.braveryCapes, icon: 'cape', description: 'Privolá pohyblivých nepriateľov v dosahu 650 na 18 sekúnd. Kláves 8 / F8.', action: 'cape' },
-    ...Object.entries(MATERIALS).map(([id, name]) => ({ id: 'material:' + id, name, count: p.career.materials[id], icon: id, description: BIOLOGY.some(stage=>stage.item===id)?'Odovzdanie: Biológ v Meste.':['ore','upgradeStones','forgeCore','smithCharm','protectionScroll'].includes(id)?'Použitie: kováč.':'Materiál na progresiu.', action: 'material', material: id })),
+    ...Object.entries(MATERIALS).map(([id, name]) => ({ id: 'material:' + id, name, count: p.career.materials[id], icon: id, description: EXPERIENCE_BOOSTS[id]?'+'+Math.round((EXPERIENCE_BOOSTS[id].factor-1)*100)+' % EXP · '+EXPERIENCE_BOOSTS[id].seconds/60+' min':id==='xpChest'?'Obsahuje prsteň alebo elixír skúseností.':ITEM_BONUS_TOOLS[id]==='add'?'Potiahni na výbavu. Pridá jeden bonus, najviac do štyroch.':ITEM_BONUS_TOOLS[id]==='reroll'?'Potiahni na výbavu s bonusmi. Zmení ich typ aj hodnotu.':BIOLOGY.some(stage=>stage.item===id)?'Odovzdanie: Biológ v Meste.':['ore','upgradeStones','forgeCore','smithCharm','protectionScroll'].includes(id)?'Použitie: kováč.':'Materiál na progresiu.', action: 'material', material: id })),
   ].map(entry=>({...stackItemView(entry.id,entry.count),...entry}));
 }
 
@@ -149,7 +149,7 @@ function sortInventory(tab = 'gear') {
   if (tab === 'supplies') {
     supplyEntries().sort((a, b) => a.name.localeCompare(b.name, 'sk')).forEach((item, i) => p.inventory.supplyCells[item.id] = i);
   } else {
-    const sorted = [...p.bag].sort((a, b) => { const [aw, ah] = itemSize(a), [bw, bh] = itemSize(b); return bw * bh - aw * ah || rarityRank(b.rarity) - rarityRank(a.rarity) || (b.tier || 0) - (a.tier || 0) || String(a.name).localeCompare(String(b.name), 'sk'); });
+    const sorted = [...p.bag].sort((a, b) => { const [aw, ah] = itemSize(a), [bw, bh] = itemSize(b); return bw * bh - aw * ah || requiredItemLevel(b) - requiredItemLevel(a) || String(a.name).localeCompare(String(b.name), 'sk'); });
     const layout = gearLayout(sorted, p.inventory.pages, false);
     if (!layout) return false;
     p.bag = sorted; applyGearLayout(layout);
@@ -179,6 +179,13 @@ function useInventorySupply(id) {
   const item = supplyEntries().find(item => item.id === id);
   if (!item || !running || p.hp <= 0) return false;
   if (item.material && Object.hasOwn(CRAFT_MATERIALS, item.material)) { toast('Výrobu otvoríš u kováča v Meste.'); return true; }
+  if(item.material==='xpChest'){
+    if(!consumeSupply(id,1))return false;
+    const rewards=['xpLootRing','xpKnowledge','xpAscension','xpGreaterRing'];
+    const reward=rewards[Math.floor(itemRandom()*rewards.length)];
+    addMaterial(reward);finishInventoryChange();toast(EXPERIENCE_BOOSTS[reward].name);return true;
+  }
+  if (Object.hasOwn(EXPERIENCE_BOOSTS,item.material)) return useExperienceBoost(item.material);
   if (item.action === 'drink') return drinkPotion(true);
   if (item.action === 'cape') {
     if (isSanctuary(p) || capeCooldown > 0) return false;

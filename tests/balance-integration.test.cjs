@@ -1,30 +1,26 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const {createGame,createEmptyGame,readSavedAccount}=require('./helpers/game.cjs');
-test('leveling stays within 26–181 ordinary equal-level kills, with a genuine weak-target penalty',()=>{
- const g=createGame();
- for(let level=1;level<99;level++){
-  g.run(`p.level=${level};`);const count=g.run('Math.ceil(needXP()/enemyXP({type:"wolf",level:p.level}))');
-  assert(count>=26&&count<=181,`level ${level}: ${count}`);
-  if(level>=9)assert.equal(g.run('enemyXP({type:"wolf",level:p.level-8})'),0);
- }
- g.run('p.level=98;');assert(g.run('needXP()<250000'));assert(g.run('enemyXP({type:"boss",level:99})<=needXP()*.35'));
+test('Metin2 EXP thresholds and relative factors match the source',()=>{
+ const {run}=createGame();
+ assert.deepEqual(Array.from(run('[1,10,98,119,120].map(xpForLevel)')),[300,33000,2029047116,2760000000,0]);
+ assert.deepEqual(Array.from(run('[-30,-12,-10,-8,-1,0,13,14,15,25].map(relativeMonsterXP)')),[.01,.2,.5,.8,1,1,1.65,1.7,1.8,1.8]);
 });
 test('old EXP fractions migrate once without awarding levels or resetting owned items',()=>{
- const g=createGame();g.run('p.level=60;p.xp=Math.floor(600*60**2.15*(1+.025*59)*.63);delete p.career.balanceVersion;save();');
+ const g=createGame();g.run('p.level=60;p.xp=Math.floor(600*60**2.15*(1+.025*59)*.63);delete p.career.balanceVersion;delete p.career.metinExperience;save();');
  const next=createEmptyGame(Object.fromEntries(g.saved));assert(next.run('playCharacter()'));assert.equal(next.run('p.level'),60);
  assert(Math.abs(next.run('p.xp/needXP()')-.63)<.0001);
  const xp=next.run('p.xp');next.run('returnToCharacters();playCharacter();');assert.equal(next.run('p.xp'),xp);
 });
 test('all combat maps obey their advertised range, produce matching gear and keep bosses at the top',()=>{
  const g=createGame();
- for(const id of g.run('Object.keys(MAPS).filter(id=>!MAPS[id].town&&!MAPS[id].instance)')){
+ for(const id of g.run('Object.keys(MAPS).filter(id=>!MAPS[id].town&&!MAPS[id].instance&&!MAPS[id].metinWorld)')){
   g.run(`loadMap('${id}',true);`);
   assert(g.run('mobs.every(m=>m.level>=map().level&&m.level<=map().levelMax)'),id);
   if(id!=='suterland'){
    assert.equal(g.run('mobs.find(m=>m.type==="boss").level'),g.run('map().levelMax'));
    assert(g.run('mobs.some(m=>m.type==="wolf"&&m.level===map().enemyLevel)'));
   }
-  g.run('var loot=makeItem(false,mobs[0],"weapon");');assert.equal(g.run('loot.requiredLevel'),g.run('Math.min(99,mobs[0].level)'));
+  g.run('var loot=makeItem(false,mobs[0],"weapon");');assert(g.run('loot.requiredLevel<=Math.min(99,mobs[0].level) && loot.requiredLevel===ITEM_DEFINITIONS[loot.definitionId].level'));
  }
 });
 test('all six added bosses have usable loot without retired relic drops',()=>{for(const id of ['meadow','marsh','quarry','highlands','ruins','wastes']){const g=createGame();g.run('running=true;loadMap("'+id+'",true);p.level=map().level;rand=()=>0;hit(mobs.find(m=>m.type==="boss"),1e9,"arcane",true);');assert(g.run('drops.every(d=>d.kind!=="relic")'));assert(g.run('p.career.materials.books>0'));g.run('validateCharacterAccount(accountWithActiveSnapshot());');}});
@@ -41,9 +37,9 @@ test('quest reward level is independent of the claim map and crafting previews u
  for(const id of ['town','valley','wastes']){
   const g=createGame();g.run(`running=true;loadMap('${id}',true);p.bossKills=1;rand=()=>.5;claimBoss();`);levels.push(g.run('p.bag[0].requiredLevel'));
  }
- assert.deepEqual(levels,[8,8,8]);
+ assert.deepEqual(levels,[1,1,1]);
  const g=createGame();g.run('running=true;loadMap("town",true);p.x=NPCS.smith.x;p.y=NPCS.smith.y;interactNPC("smith");smithPanel("crafting");');const html=g.elements.get('modalcontent').innerHTML;
- assert(!html.includes('undefined'));assert(html.includes('Rare · požadovaná úroveň 30'));assert(html.includes('Epic · požadovaná úroveň 75'));
+ assert(!html.includes('undefined'));g.run('gameWindows.get("npc:crafting").recipeSelected="iconic-fms";smithPanel("crafting");');assert(g.elements.get('modalcontent').innerHTML.includes('Požadovaná úroveň 30'));g.run('gameWindows.get("npc:crafting").recipeSelected="iconic-poison";smithPanel("crafting");');assert(g.elements.get('modalcontent').innerHTML.includes('Požadovaná úroveň 75'));
  g.run('loadMap("suterland",true);var stone=mobs.find(m=>m.level===99);discoverEnemy(stone);');assert.equal(g.run('p.discovery.seen["metin:doom"].armor'),31);
 });
 test('real combat cooldowns persist across sessions and combat items cannot heal a paused fight',()=>{
@@ -75,7 +71,7 @@ test('all eight schools can defeat an ordinary group at representative progressi
 test('eight fully explored profiles fit five MiB and survive lossless storage, export and reload',()=>{
  const g=createEmptyGame();
  for(let i=0;i<8;i++){
-  g.run(`createCharacter('Profil${i}','warrior');playCharacter();for(const id of Object.keys(MAPS).filter(id=>!MAPS[id].town&&!MAPS[id].instance)){loadMap(id,true);for(const m of mobs)if(m.type==='wolf'){m.roamWait=0;for(let t=0;t<30;t++)wanderEnemy(m,.2,null);}mobs[0].hp=Math.max(1,Math.floor(mobs[0].hp*.7));snapshotMap();}save();returnToCharacters();`);
+  g.run(`createCharacter('Profil${i}','warrior');playCharacter();for(const id of Object.keys(MAPS).filter(id=>!MAPS[id].town&&!MAPS[id].instance)){loadMap(id,true);for(const m of mobs)if(m.type==='wolf'){m.roamWait=0;for(let t=0;t<30;t++)wanderEnemy(m,.2,null);}if(mobs.length)mobs[0].hp=Math.max(1,Math.floor(mobs[0].hp*.7));snapshotMap();}save();returnToCharacters();`);
   const raw=g.saved.get('grindoria-characters-v1');assert(raw.length*2<5*1024*1024,`profile ${i+1}: ${raw.length*2} bytes`);
  }
  const account=readSavedAccount(g.saved);assert.equal(account.order.length,8);

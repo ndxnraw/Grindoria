@@ -4,7 +4,7 @@ const lootPointer = { inside: false, x: 0, y: 0, clientX: 0, clientY: 0 };
 let hoveredLootId = null, lootTooltipSignature = '';
 const lootHover = { id: null, elapsed: 0 };
 
-function groundDropLifetime(drop) { return drop.kind === 'gear' && rarityRank(drop.item?.rarity) >= rarityRank(2) ? LOOT_RULES.rareLifetime : LOOT_RULES.lifetime; }
+function groundDropLifetime(drop) { return LOOT_RULES.lifetime; }
 function pruneStoredGroundDrops(now = Date.now()) {
   for (const state of [...Object.values(p.worldStates), p.career.normalTemple]) {
     if (!Array.isArray(state?.drops)) continue;

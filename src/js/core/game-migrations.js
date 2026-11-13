@@ -33,7 +33,7 @@ function migrateQuestProfile(data){
  const c=data?.career;if(!c||c.schema!==PROGRESSION.schema)return false;
  let changed=false;
  if(c.hunt===undefined){
-  assertCharacterNumber(c.eligibleKills,'zabitia Lovca',0,1e12,true);assertCharacterNumber(data.huntClaimed,'odmeny Lovca',0,1e12,true);assertCharacterNumber(data.level,'úroveň Lovca',1,99,true);
+  assertCharacterNumber(c.eligibleKills,'zabitia Lovca',0,1e12,true);assertCharacterNumber(data.huntClaimed,'odmeny Lovca',0,1e12,true);assertCharacterNumber(data.level,'úroveň Lovca',1,PROGRESSION.maxLevel,true);
   const consumed=Math.min(c.eligibleKills,data.huntClaimed*10);
   c.hunt={schema:1,consumed,level:data.level,legacy:Math.floor((c.eligibleKills-consumed)/10)};changed=true;
  }

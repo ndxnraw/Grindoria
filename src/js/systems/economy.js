@@ -3,8 +3,8 @@ function marketSeed(text) { let n=2166136261; for(const ch of text)n=Math.imul(n
 function makeRareOffers(cycle) {
   let seed=marketSeed((p.characterId||'hero')+':market:'+cycle);
   const rng=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
-  const tier=Math.max(1,Math.min(99,p.level)),slots=['weapon','armor','bracelet','necklace','earrings','talisman'];
-  return [0,1].map(index=>({id:'rare-'+index,stock:1,item:generateEquipmentItem(slots[Math.floor(rng()*slots.length)],tier>=35&&index===1?2:1,tier,generatedWeaponKind(),rng)}));
+  const tier=Math.max(1,Math.min(PROGRESSION.maxLevel,p.level)),slots=['weapon','armor','bracelet','necklace','earrings','talisman'];
+  return [0,1].map(index=>({id:'rare-'+index,stock:1,item:rewardEquipment(slots[Math.floor(rng()*slots.length)],0,tier,undefined,rng)}));
 }
 function initializeEconomy() {
   if(p.economy){initializeCatalogMarket();return;}

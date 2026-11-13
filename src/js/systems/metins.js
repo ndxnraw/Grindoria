@@ -3,6 +3,7 @@ function metinTypeForLevel(level) {
 }
 
 function farmAreaLevelRange(area) {
+  if(map().metinWorld){const levels=mobs.filter(m=>m.area===area.id).map(m=>m.level);return levels.length?[Math.min(...levels),Math.max(...levels)]:[map().level,map().levelMax];}
   if (map().metinsOnly) { const index = FARM_AREAS.findIndex(a => a.id === area.id); return [index * 25 + 1, Math.min(99, (index + 1) * 25)]; }
   const offset=map().areaLevelOffsets?.[FARM_AREAS.indexOf(area)]??area.offset;return [map().enemyLevel+offset,map().enemyLevel+offset+(map().mobLevelSpread??2)];
 }
@@ -86,18 +87,29 @@ function registerMetinAttack(m) {
   m.metinCombat = METIN_RULES.combatWindow;
 }
 
+const WORLD_METIN_GUARDS={
+  'Metin smutku':['Červený divočák','Divočák','Hladový divočák','Hladový červený divočák','Modrý silný vlk','Modrý vlk','Hladový modrý vlk','Hladový modrý silný vlk','Silný vlk','Vlk'],
+  'Metin boje':['Červený divočák','Hladový červený divočák','Medvěd','Hladový medvěd','Hladový šedý vlk','Šedý vlk','Šedý silný vlk'],
+  'Metin bitvy':['Černý medvěd','Medvěd grizzly','Hladový medvěd grizzly','Šedý vlk','Šedý silný vlk','Hladový šedý silný vlk','Tygr','Hladový tygr'],
+  'Metin lačnosti':['Bílý tygr','Hladový bílý tygr','Černý medvěd','Hladový černý medvěd','Hnědý medvěd','Hladový hnědý medvěd'],
+  'Metin černoty':['Velitelka Bílé Přísahy','Zbabělý velitel Přísahy','Lučištnice Bílé Přísahy','Zbabělý střelec Přísahy','Vojačka Bílé Přísahy'],
+  'Metin Tu-Young':['Červená dryáda','Červený pařez duchů','Červená vrba duchů'],
+  'Metin Jeon-Un':['Červená dryáda','Červený pařez duchů','Červená vrba duchů','Červený zlý strom']
+};
 function spawnMetinGuards(stone) {
   if (stone.hp <= 0) return 0;
   const spec = METIN_TYPES[stone.metinType];let own=0,total=0;for(const m of mobs)if(m.metinParentId&&m.hp>0){total++;if(m.metinParentId===stone.spawnId&&m.metinGeneration===stone.metinGeneration)own++;}
   const count = Math.max(0, Math.min(spec.wave, METIN_RULES.maxGuards - own, METIN_RULES.globalGuards - total));
   const tier = METIN_GUARDS.find(t => stone.level <= t.max) || METIN_GUARDS.at(-1);
+  const names=WORLD_METIN_GUARDS[stone.name],roster=names?map().roster?.filter(id=>names.includes(METIN_MONSTER_ROWS[id][0])):null;
   for (let i = 0; i < count; i++) {
     const angle = rand() * Math.PI * 2, radius = 70 + rand() * 40;
     let x = Math.max(45, Math.min(SIZE - 45, stone.x + Math.cos(angle) * radius)), y = Math.max(45, Math.min(SIZE - 45, stone.y + Math.sin(angle) * radius));
     ({x,y}=safePosition({x,y},23));
-    const level = Math.max(1, Math.min(105, stone.level - 1 + Math.floor(rand() * 3))), hp = Math.round(40 + level * 9 + level * level * .05);
+    const monsterId=roster?.length?roster[Math.floor(rand()*roster.length)]:undefined,species=METIN_MONSTER_ROWS[monsterId];
+    const level = species?.[1] ?? Math.max(1, Math.min(105, stone.level - 1 + Math.floor(rand() * 3))), hp = Math.round(40 + level * 9 + level * level * .05);
     const attack = 1 + level * .14 + level * level * .0015, serial = ++stone.metinGuardSerial;
-    mobs.push({ type: 'wolf', skin: tier.skin, name: tier.name, variant: 'normal', area: stone.area, level, baseLevel: level, x, y, homeX: x, homeY: y, hp, max: hp, baseMax: hp, attackScale: attack, baseAttack: attack, speedScale: 1 + Math.min(.3, level / 400), spawnId: stone.spawnId + ':guard:' + stone.metinGeneration + ':' + serial, spawnPointId: stone.spawnId + ':guards:' + stone.metinGeneration, spawnSlot: i, metinParentId: stone.spawnId, metinGeneration: stone.metinGeneration, metinLife: METIN_RULES.guardLifetime, dead: 0, cd: .6, hit: 0, taunt: 0, engaged: 8, skillContributors: [], ...(stone.riftId ? { riftId: stone.riftId, riftTier: stone.riftTier } : {}) });
+    mobs.push({ type: 'wolf', skin: species?map().skin:tier.skin, name: species?.[0]??tier.name, ...(species?{monsterId}:{}), variant: 'normal', area: stone.area, level, baseLevel: level, x, y, homeX: x, homeY: y, hp, max: hp, baseMax: hp, attackScale: attack, baseAttack: attack, speedScale: 1 + Math.min(.3, level / 400), spawnId: stone.spawnId + ':guard:' + stone.metinGeneration + ':' + serial, spawnPointId: stone.spawnId + ':guards:' + stone.metinGeneration, spawnSlot: i, metinParentId: stone.spawnId, metinGeneration: stone.metinGeneration, metinLife: METIN_RULES.guardLifetime, dead: 0, cd: .6, hit: 0, taunt: 0, engaged: 8, skillContributors: [], ...(stone.riftId ? { riftId: stone.riftId, riftTier: stone.riftTier } : {}) });
     fx('aura', x, y, spec.glow, .55);
   }
   return count;

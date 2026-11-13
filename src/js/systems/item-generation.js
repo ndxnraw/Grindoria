@@ -1,24 +1,7 @@
 function raritySpec(id) {return RARITIES.find(spec=>spec.id===id)||RARITIES[0];}
 function rarityRank(id) {return raritySpec(id).rank;}
-function rarityColor(id) {return raritySpec(id).color;}
-function raritySourceLevel(source) {return Math.max(1,Math.min(99,source?enemyLevel(source):map().enemyLevel));}
-function itemRarityWeights(source=null,epic=false) {
- const level=raritySourceLevel(source);
- let weights=[...RARITY_WEIGHTS[epic?'reward':source?.type==='boss'?'boss':source?.type==='stone'?'metin':source?.variant==='rare'?'rare':source?.variant==='elite'?'elite':'normal']];
- if(!epic&&source?.type==='stone'){
-  const chance=METIN_TYPES[source.metinType]?.loot.epic||0;
-  weights=weights.map((weight,i)=>weight*(1-chance)+RARITY_WEIGHTS.reward[i]*chance);
- }
- if(level<ITEM_GENERATION.legendaryLevel)weights[4]=0;
- if(level<ITEM_GENERATION.mythicLevel)weights[5]=0;
- return weights;
-}
-function itemRarityChances(source=null,epic=false) {const weights=itemRarityWeights(source,epic),sum=weights.reduce((a,b)=>a+b,0);return weights.map((weight,i)=>({id:RARITIES[i].id,chance:weight/sum}));}
+function equipmentSourceLevel(source) {return Math.max(1,Math.min(PROGRESSION.maxLevel,source?enemyLevel(source):map().enemyLevel));}
 function itemRandom(rng=rand) {const n=Number(rng());return Number.isFinite(n)?Math.max(0,Math.min(1-Number.EPSILON,n)):0;}
-function rollItemRarity(source=null,epic=false,rng=rand) {
- const chances=itemRarityChances(source,epic);let roll=itemRandom(rng);
- for(const entry of chances){roll-=entry.chance;if(roll<0)return entry.id;}return chances.findLast(entry=>entry.chance>0).id;
-}
 function affixValue(stat,tier,rarity,roll) {
  const spec=ITEM_AFFIXES[stat],rank=rarityRank(rarity);
  const value=(spec.base+Math.max(1,Math.min(99,tier))*spec.scale)*(1+rank*.22)*(.35+.65*roll/100);
@@ -50,9 +33,85 @@ function generateEquipmentItem(slot,rarity,tier,weaponKind=generatedWeaponKind()
  if(slot==='weapon')item.weaponKind=weaponKind;
  Object.assign(item,rollItemAffixes(item,rng));item.value=itemSaleValue(item);return ensureItemIdentity(item);
 }
+function newBonusEquipment(slot, rarity, tier, weaponKind) {
+  const spec = EQUIPMENT[slot];
+  const item = {slot, rarity, tier, requiredLevel:tier, name:equipmentItemName(slot, rarity, weaponKind),
+    bonus:spec.base+Math.floor(tier*spec.scale)+Math.round(raritySpec(rarity).power*spec.rare),
+    enhance:0, generationVersion:ITEM_GENERATION.version, bonusMode:'manual', affixes:[], stats:{}, value:0};
+  if (slot === 'weapon' && weaponKind) item.weaponKind = weaponKind;
+  return item;
+}
+
+function equipmentRewardDefinition(slot, tier, weaponKind, rng) {
+  const matching = METIN_EQUIPMENT.filter(def => def.slot === slot && def.classes.includes(p.classId) &&
+    def.level <= tier && (!weaponKind || def.weaponKind === weaponKind));
+  const pool = matching.filter(def => def.level >= tier-10);
+  if (matching.length) {
+    const choices = pool.length ? pool : matching.filter(def => def.level === Math.max(...matching.map(row=>row.level)));
+    return choices[Math.floor(itemRandom(rng)*choices.length)];
+  }
+  return null;
+}
+
+function standardGearFamily(level) {
+  return Math.max(0,STANDARD_GEAR_LEVELS.findLastIndex(required=>required<=level));
+}
+
+function rewardEquipment(slot, _legacyRarity, level, weaponKind, rng=rand) {
+  const tier = Math.max(1, Math.min(PROGRESSION.maxLevel, level));
+  const definition=equipmentRewardDefinition(slot,tier,weaponKind,rng);
+  if(definition)return createItem(definition.id);
+  const kind=slot==='weapon' ? weaponKind||generatedWeaponKind() : undefined;
+  const family=standardGearFamily(tier);
+  const item=newBonusEquipment(slot,0,STANDARD_GEAR_LEVELS[family],kind);
+  item.name=equipmentFamilyName(slot,family,kind);
+  return ensureItemIdentity(item);
+}
+
+function inventoryBonusTool(id) {
+  return id?.startsWith('material:') && Object.hasOwn(ITEM_BONUS_TOOLS,id.slice(9)) ? ITEM_BONUS_TOOLS[id.slice(9)] : null;
+}
+
+function canApplyItemBonus(sourceId, targetId) {
+  const mode = inventoryBonusTool(sourceId);
+  const target = inventoryEntry(targetId);
+  if (!running || p.hp<=0 || !mode || !(p.career.materials[sourceId.slice(9)]>0) ||
+      !target || target.kind==='supply') return false;
+  const item=target.item, count=item.affixes?.length||0;
+  if (!item.generationVersion && !ITEM_DEFINITIONS[item.definitionId]?.generic) return false;
+  return mode==='add' ? count<4 && Object.keys(ITEM_AFFIXES).some(stat=>!item.affixes?.some(a=>a.stat===stat))
+    : count>0;
+}
+
+function applyItemBonus(sourceId, targetId, rng=rand) {
+  if (!canApplyItemBonus(sourceId,targetId)) return false;
+  const item=inventoryEntry(targetId).item, mode=inventoryBonusTool(sourceId);
+  const previous=item.affixes||[];
+  const affixes=mode==='add' ? [...previous] : [];
+  // Prefer types that were absent before rerolling, keeping all lines unique.
+  const excluded=new Set(previous.map(a=>a.stat));
+  const pool=Object.keys(ITEM_AFFIXES).filter(stat=>!excluded.has(stat) && (stat!=='bonusExp'||['shield','boots','necklace'].includes(item.slot)));
+  const count=mode==='add' ? 1 : previous.length;
+  const legacyBase=item.generationVersion ? null : {...item.baseStats};
+  if(legacyBase) for(const [stat,value] of Object.entries(item.stats||{})) legacyBase[stat]=(legacyBase[stat]||0)+value;
+  for(let i=0;i<count;i++){
+    const stat=pool.splice(Math.floor(itemRandom(rng)*pool.length),1)[0];
+    affixes.push({stat,roll:Math.floor(itemRandom(rng)*101)});
+  }
+  if(!consumeSupply(sourceId,1))return false;
+  if(legacyBase){item.baseStats=legacyBase;item.tier=Math.max(1,item.tier||1);}
+  item.generationVersion=ITEM_GENERATION.version;
+  item.bonusMode='manual';
+  item.affixes=affixes;
+  item.stats=Object.fromEntries(affixes.map(({stat,roll})=>[stat,affixValue(stat,item.tier,item.rarity,roll)]));
+  item.value=itemSaleValue(item);
+  finishInventoryChange();
+  return true;
+}
+
 function validateGeneratedItem(item) {
  if(item.generationVersion===undefined){if(item.affixes!==undefined)characterDataError('bonusy bez verzie generátora.');return;}
- if(item.generationVersion!==ITEM_GENERATION.version||!RARITIES.some(spec=>spec.id===item.rarity)||!Number.isSafeInteger(item.tier)||item.tier<1||item.tier>99||!Array.isArray(item.affixes)||item.affixes.length!==raritySpec(item.rarity).affixes)characterDataError('generované bonusy predmetu.');
+ if(item.generationVersion!==ITEM_GENERATION.version||!RARITIES.some(spec=>spec.id===item.rarity)||!Number.isSafeInteger(item.tier)||item.tier<1||item.tier>(item.catalogVersion?120:105)||!Array.isArray(item.affixes)||(item.bonusMode==='manual'?item.affixes.length>5:item.affixes.length!==raritySpec(item.rarity).affixes))characterDataError('generované bonusy predmetu.');
  const seen=new Set();assertCharacterObject(item.stats,'generované štatistiky');
  for(const affix of item.affixes){
   assertCharacterObject(affix,'bonus predmetu');
@@ -64,7 +123,9 @@ function validateGeneratedItem(item) {
 }
 function penetrationChance(){return Math.max(0,Math.min(ITEM_GENERATION.maxPenetration,equipmentBonuses().penetration));}
 function itemAttackSpeed(){return Math.max(0,Math.min(ITEM_GENERATION.maxAttackSpeed,equipmentBonuses().attackSpeed));}
+function sourceIsMonster(enemy){return enemy.type!=='stone';}
 function enemyGearBonus(enemy) {
  const kind=enemy.type==='stone'?'metin':enemy.type==='boss'?'boss':enemy.skin||'wolf';
- return Math.max(0,Math.min(ITEM_GENERATION.maxEnemyBonus,equipmentBonuses()[kind+'Damage']||0));
+ const gear=equipmentBonuses();
+ return Math.max(0,Math.min(ITEM_GENERATION.maxEnemyBonus,(gear[kind+'Damage']||0)+(sourceIsMonster(enemy)?gear.monsterDamage:0)));
 }

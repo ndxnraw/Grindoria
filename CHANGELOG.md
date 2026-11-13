@@ -10,6 +10,132 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Fixed
 
+## [0.39.1] - 2026-11-13
+
+### Added
+
+### Changed
+- Distribúcia a vydávanie používajú offline HTML a webový prehliadač.
+
+### Fixed
+
+## [0.39.0] - 2026-11-05
+
+### Added
+- Cestovanie do oblastí podľa prehľadu Metin2 s lokálnymi súpiskami príšer, ich úrovňami, agresivitou a základným EXP.
+- Štyri diely EXP, body vlastností za štvrtiny, body schopností za úroveň, prsteň tajomstva a kombinovateľné bonusy EXP.
+
+### Changed
+- Normálne úrovne používajú tabuľku Metin2 až do úrovne 120. EXP z protivníka zohľadňuje rozdiel úrovní a limit 10 %.
+- Odmeny a výbava už nepoužívajú rarity. Pevné úrovne predmetov a existujúce bonusy zostávajú.
+
+### Fixed
+- Nové oblasti ukladajú kompaktné súpisky, aby osem prejdených profilov vošlo do úložiska prehliadača.
+
+## [0.38.1] - 2026-11-05
+
+### Added
+
+### Changed
+
+### Fixed
+- Bežná výbava a dungeonové unikáty majú pevnú požadovanú úroveň. Oprava sa použije aj na rozpoznanú výbavu v starších uloženiach.
+
+## [0.38.0] - 2026-11-05
+
+### Added
+- Katalóg 147 zbraní a 88 brnení so základnými atribútmi a pevnými úrovňami pre štyri povolania.
+- Obchodník predáva Zosilniť predmet a Začarovať predmet. Zásoby sa používajú potiahnutím na výbavu.
+
+### Changed
+- Nová výbava začína so základnými atribútmi. Dodatočné bonusy sa pridávajú a menia v inventári.
+- Korisť zbraní a brnení vyberá katalógové položky podľa úrovne zdroja a povolania.
+
+### Fixed
+- Staršie profily dostanú zásoby a ponuky pre nové predmety bez prepisu existujúcej výbavy.
+
+## [0.37.2] - 2026-11-05
+
+### Added
+
+### Changed
+
+### Fixed
+- Pohyb odoberie zameranie herným tlačidlám vrátane zatvárania okien. Kliknutia a otváranie okien zachovajú držané pohybové klávesy.
+
+## [0.37.1] - 2026-11-05
+
+### Added
+
+### Changed
+
+### Fixed
+- Kliknutie na predmet myšou už nevytvára výber a práca v inventári neruší držané klávesy pohybu.
+
+## [0.37.0] - 2026-11-05
+
+### Added
+- Predaj výbavy a obchodovateľných materiálov pretiahnutím z inventára do obchodu. Samostatné potvrdenie uprostred obrazovky s cenou, výberom množstva, Enter a Esc.
+- Regresie zrušenia predaja, neplatných alebo zmenených ponúk, jednorazovej platby a rozloženia všetkých ponúk oboch NPC na malých obrazovkách.
+
+### Changed
+- Obchodníci zobrazujú iba ponuku a cenu predmetu; odstránený hráčov zostatok, jeho porovnanie s cenou a záložky výkupu výbavy a materiálov.
+- Kompaktná mriežka obchodov sa prispôsobuje obrazovke bez scrollovania.
+
+### Fixed
+- Predaj cez obchod sa nezamení za vyhodenie na zem; neobchodovateľné predmety a nasadená výbava sa odmietnu.
+
+## [0.36.3] - 2026-11-05
+
+### Added
+
+### Changed
+
+### Fixed
+- Pohyb postavy cez WASD a šípky ruší výber inventárového predmetu a vracia zameranie z inventára na hernú plochu. Pohyb už nezapína zlatý rámik klávesového zamerania na políčkach.
+
+## [0.36.2] - 2026-11-05
+
+### Added
+
+### Changed
+
+### Fixed
+- Výber predmetu sa čistí aj po odmietnutom alebo prerušenom dragu a pri zatvorení inventára. Opakovaný klik na vybraný predmet výber zruší; rámik sa neobnoví po opätovnom otvorení inventára.
+
+## [0.36.1] - 2026-11-05
+
+### Added
+
+### Changed
+
+### Fixed
+- Zrušenie vyhodenia cez Zrušiť, Esc alebo zatváracie tlačidlo odstráni aj výber predmetu v inventári. Následný klik na prázdne políčko ho už omylom nepresunie.
+
+## [0.36.0] - 2026-11-05
+
+### Added
+- Spoločná grafická mriežka pre obchody, výkup výbavy a materiálov, vylepšovanie a recepty. Dvojpolíčkové zbrane a brnenia používajú rozmery batohu.
+- Prehliadačové kontroly grafického nákupu, predaja, výroby, vylepšovania, stránkovania, nedostatočného levelu a malých obrazoviek.
+
+### Changed
+- Textové zoznamy obchodov a kováča nahrádzajú ikony s výberom predmetu a jedným detailom. Suroviny majú vlastné políčka s počtom máš / potrebuješ; nesplnené požiadavky sú červené.
+- Obchod má záložky Ponuka, Výkup výbavy a Materiály; výroba zachováva kategórie receptov a pridáva stránky mriežky. Kováč ukazuje grafický náhľad pred a po vylepšení.
+
+### Fixed
+- Po spotrebovaní posledného talizmanu či ochranného zvitku možno zapnutú voľbu odškrtnúť a pokračovať bez nej.
+
+## [0.35.2] - 2026-11-05
+
+### Added
+- Prehliadačová regresia nemennej veľkosti inventára pri ťahaní okna a červeného náhľadu pri neplatnom presune vo fullscreene.
+
+### Changed
+
+### Fixed
+- Presúvanie inventárového okna už nemení jeho rozmery ani veľkosť políčok; veľkosť určuje dostupná plocha obrazovky.
+- Červený náhľad odmietnutého presunu predmetu je viditeľný aj vo fullscreene.
+
 ## [0.35.1] - 2026-11-05
 
 ### Added
@@ -143,10 +269,8 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 ## [0.29.0] - 2026-11-04
 
 ### Added
-- Windows x64 NSIS EXE cez electron-builder, vlastná ikona, uzamknuté závislosti a balenie celej offline hry.
 - Kontrola stabilných GitHub Releases pri štarte, ručné stiahnutie a uloženie aktívnej postavy pred inštaláciou a reštartom.
 - Offline pokračovanie, priebeh sťahovania, kontrola integrity a úzko obmedzené aktualizačné IPC.
-- GitHub workflow pre zostavenie, test EXE a publikovanie inštalátora, blockmap a latest.yml.
 - Desať regresií aktualizácií a test skutočného zabaleného hosta s oddeleným profilom.
 
 ### Changed
@@ -431,7 +555,6 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 
 ### Added
 - Skutočný fullscreen hernej plochy tlačidlom v minimape alebo F10, synchronizovaný s prehliadačom a návratom do okna.
-- Pripravený Electron host s izolovaným preload mostom a potvrdením natívnych fullscreen udalostí; dokumentácia DESKTOP.md.
 - Despawn koristi: 3 minúty pre bežné dropy, 10 minút pre epickú výbavu a relikvie, zachovaný cez uloženie, pauzu a neaktívne mapy.
 - Testy oneskoreného náhľadu, expirácie, náhodných spawnov, migrácie a browserového aj natívneho fullscreen rozhrania.
 
@@ -671,7 +794,7 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 - Minimapka, dotykové ovládanie, voliteľný zvuk a automatické ukladanie.
 - Samostatný HTML súbor hrateľný bez internetu.
 
-[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.35.1...HEAD
+[Unreleased]: https://github.com/ndxnraw/Grindoria/compare/v0.39.1...HEAD
 [0.3.1]: https://github.com/ndxnraw/Grindoria/tree/v0.3.1
 [0.3.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#030---2026-11-02
 [0.2.0]: https://github.com/ndxnraw/Grindoria/blob/main/CHANGELOG.md#020---2026-11-02
@@ -713,3 +836,15 @@ Zmeny projektu Grindoria. Používame sémantické verzie a sekciu `[Unreleased]
 [0.34.1]: https://github.com/ndxnraw/Grindoria/compare/v0.34.0...v0.34.1
 [0.35.0]: https://github.com/ndxnraw/Grindoria/compare/v0.34.1...v0.35.0
 [0.35.1]: https://github.com/ndxnraw/Grindoria/compare/v0.35.0...v0.35.1
+[0.35.2]: https://github.com/ndxnraw/Grindoria/compare/v0.35.1...v0.35.2
+[0.36.0]: https://github.com/ndxnraw/Grindoria/compare/v0.35.2...v0.36.0
+[0.36.1]: https://github.com/ndxnraw/Grindoria/compare/v0.36.0...v0.36.1
+[0.36.2]: https://github.com/ndxnraw/Grindoria/compare/v0.36.1...v0.36.2
+[0.36.3]: https://github.com/ndxnraw/Grindoria/compare/v0.36.2...v0.36.3
+[0.37.0]: https://github.com/ndxnraw/Grindoria/compare/v0.36.3...v0.37.0
+[0.37.1]: https://github.com/ndxnraw/Grindoria/compare/v0.37.0...v0.37.1
+[0.37.2]: https://github.com/ndxnraw/Grindoria/compare/v0.37.1...v0.37.2
+[0.38.0]: https://github.com/ndxnraw/Grindoria/compare/v0.37.2...v0.38.0
+[0.38.1]: https://github.com/ndxnraw/Grindoria/compare/v0.38.0...v0.38.1
+[0.39.0]: https://github.com/ndxnraw/Grindoria/compare/v0.38.1...v0.39.0
+[0.39.1]: https://github.com/ndxnraw/Grindoria/compare/v0.39.0...v0.39.1

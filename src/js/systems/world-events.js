@@ -1,6 +1,6 @@
 let worldEventState=null;
 function initializeWorldEvents(){p.career.worldEvents??={schema:1,serial:0,completed:{}};p.discovery.eventPlaces??={};}
-function worldEventMap(id=p.mapId){return Object.hasOwn(MAPS,id)&&!MAPS[id].town&&!MAPS[id].instance;}
+function worldEventMap(id=p.mapId){return Object.hasOwn(MAPS,id)&&!MAPS[id].town&&!MAPS[id].instance&&!MAPS[id].metinWorld;}
 function worldEventsAllowed(){return worldEventMap()&&!dungeonRun()&&!p.career.endgame.run;}
 function worldEventRandom(){worldEventState.seed=(Math.imul(worldEventState.seed,1664525)+1013904223)>>>0;return worldEventState.seed/4294967296;}
 function worldEventSnapshot(){return worldEventState?copyCharacterData(worldEventState):null;}
@@ -55,7 +55,7 @@ function finishWorldEvent(success,source=null){
    const at=source||event;spawnGroundDrop({kind:'gold',count:Math.round((['boss','stone'].includes(spec.kind)?300:100)*(1+event.level*.08))},at);
    if(rewardEligible({level:event.level})){
     dropMaterial('ore',spec.kind==='group'?5:12,at);dropMaterial('upgradeStones',spec.kind==='group'?1:3,at);
-    if(['boss','stone','secret'].includes(spec.kind)||event.type==='convoy'){const rarity=event.level>=75&&worldEventRandom()<.04?5:event.level>=50?4:2,slot=Object.keys(EQUIPMENT)[Math.floor(worldEventRandom()*Object.keys(EQUIPMENT).length)];spawnGroundDrop({kind:'gear',item:generateEquipmentItem(slot,rarity,event.level)},at);}
+    if(['boss','stone','secret'].includes(spec.kind)||event.type==='convoy'){const slot=Object.keys(EQUIPMENT)[Math.floor(worldEventRandom()*Object.keys(EQUIPMENT).length)];spawnGroundDrop({kind:'gear',item:rewardEquipment(slot,0,event.level)},at);}
    }
   }
   toast('Udalosť dokončená: '+spec.name);

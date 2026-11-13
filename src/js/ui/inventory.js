@@ -15,13 +15,13 @@ function inventoryEntry(id) {
 }
 
 function itemBonusText(item) {
-  return Object.entries(itemBonuses(item)).filter(([, value]) => value).map(([stat, value]) => `<span class="bonus-line">${ITEM_STATS[stat]} <b>+${percentItemStat(stat) ? (value * 100).toFixed(1) + ' %' : value}</b></span>`).join('');
+  return Object.entries(itemBonuses(item)).filter(([, value]) => value).map(([stat, value]) => `<span class="bonus-line">${ITEM_STATS[stat]} <b>${signedItemStat(stat,value)}</b></span>`).join('');
 }
 
 function itemDescription(entry, tooltip = false) {
   const item = entry.item, gear = entry.kind !== 'supply';
   const [w, h] = gear ? itemSize(item) : [1, 1];
-  return `<div class="item-description rarity-${item.rarity || 0}"><small>${gear ? (entry.kind === 'equipped' ? 'NASADENÉ · ' : '') + EQUIPMENT[item.slot].name : 'ZÁSOBY · ' + item.count.toLocaleString('sk-SK') + ' ks'}</small><h3>${escapeHTML(item.name)}${gear ? ' +' + (item.enhance || 0) : ''}</h3>${!tooltip ? `<div class="detail-icon">${itemIcon(item)}</div>` : ''}${gear ? `${item.uniqueId?'<p class="inventory-usable">Unikát · '+DUNGEONS[item.uniqueId].name+'</p>':''}<p>${rarityName(item.rarity)} · stupeň ${item.tier || 1} · ${w} × ${h} políčka</p><p class="${canEquipItem(item) ? 'inventory-usable' : 'inventory-unusable'}">Požadovaná úroveň: ${requiredItemLevel(item)}<br>${escapeHTML(itemEquipReason(item))}</p>${itemBonusText(item)}${itemGenerationDescription(item)}${item.generationVersion===ITEM_GENERATION.version?'':`<p class="item-price">Výkup: ${marketGearSaleValue(item)} Yang</p>`}` : `<p>${escapeHTML(item.description)}</p><p>Množstvo: <b>${item.count.toLocaleString('sk-SK')} ks</b></p>`}</div>`;
+  return `<div class="item-description"><small>${gear ? (entry.kind === 'equipped' ? 'NASADENÉ · ' : '') + EQUIPMENT[item.slot].name : 'ZÁSOBY · ' + item.count.toLocaleString('sk-SK') + ' ks'}</small><h3>${escapeHTML(item.name)}${gear ? ' +' + (item.enhance || 0) : ''}</h3>${!tooltip ? `<div class="detail-icon">${itemIcon(item)}</div>` : ''}${gear ? `${item.uniqueId?'<p class="inventory-usable">Unikát · '+DUNGEONS[item.uniqueId].name+'</p>':''}<p> ${w} × ${h} políčka</p><p class="${canEquipItem(item) ? 'inventory-usable' : 'inventory-unusable'}">Požadovaná úroveň: ${requiredItemLevel(item)}<br>${escapeHTML(itemEquipReason(item))}</p>${itemBonusText(item)}${itemGenerationDescription(item)}${item.generationVersion===ITEM_GENERATION.version?'':`<p class="item-price">Výkup: ${marketGearSaleValue(item)} Yang</p>`}` : `<p>${escapeHTML(item.description)}</p><p>Množstvo: <b>${item.count.toLocaleString('sk-SK')} ks</b></p>`}</div>`;
 }
 
 function inventory() {
@@ -29,25 +29,34 @@ function inventory() {
   inventoryPage = Math.min(inventoryPage, p.inventory.pages - 1);
   const page = inventoryTab === 'supplies' ? 0 : inventoryPage, offset = page * INVENTORY.pageSize;
   const entries = inventoryTab === 'supplies' ? supplyEntries().map(item => ({ id: item.id, item, kind: 'supply' })) : p.bag.filter(item => Math.floor(item.cell / INVENTORY.pageSize) === page).map(item => ({ id: 'gear:' + item.uid, item, kind: 'gear' }));
+  const bonusTools = inventoryTab === 'gear' ? supplyEntries().filter(item=>inventoryBonusTool(item.id)) : [];
   const occupied = p.bag.reduce((n, item) => n + itemSize(item)[0] * itemSize(item)[1], 0);
   modal(`<section class="inventory-window"><header class="inventory-title"><small>${escapeHTML(characterDisplayName(p))} · ${role().name}</small><span class="inv-level">ÚR. ${p.level}</span></header>
     <div class="inventory-columns"><section class="character-panel"><h3>Vybavenie postavy</h3><div class="equipment-board">${equipmentFigure()}${Object.entries(EQUIPMENT).map(([id, spec]) => {
       const item = p.equipped[id];
-      return `<button class="equipment-slot slot-${id} ${item ? 'filled rarity-' + item.rarity : ''}" data-equip-slot="${id}" ${item ? `data-entry="equipped:${id}" draggable="true"` : ''} aria-label="${spec.name}${item ? ': ' + escapeHTML(item.name) + ' · ' + rarityName(item.rarity) : ': prázdny slot'}"><span>${itemIcon(item || { slot: id }, !item)}</span><small>${spec.name}</small>${item ? '<i>✓</i>' : ''}</button>`;
+      return `<button class="equipment-slot slot-${id} ${item ? 'filled' : ''}" data-equip-slot="${id}" ${item ? `data-entry="equipped:${id}" draggable="true"` : ''} aria-label="${spec.name}${item ? ': ' + escapeHTML(item.name) : ': prázdny slot'}"><span>${itemIcon(item || { slot: id }, !item)}</span><small>${spec.name}</small>${item ? '<i>✓</i>' : ''}</button>`;
     }).join('')}</div></section>
-    <section class="bag-panel"><div class="bag-heading"><h3>Inventár</h3><small>${inventoryTab === 'gear' ? occupied + ' / ' + p.inventory.pages * INVENTORY.pageSize + ' políčok' : supplyEntries().length+' typov'}</small></div><div class="inventory-tabs"><button data-inv-tab="gear" aria-pressed="${inventoryTab === 'gear'}">Predmety</button><button data-inv-tab="supplies" aria-pressed="${inventoryTab === 'supplies'}">Zásoby</button></div><div class="inventory-pages">${inventoryTab === 'gear' ? Array.from({ length: p.inventory.pages }, (_, i) => `<button data-inv-page="${i}" aria-label="Strana ${i + 1}" aria-pressed="${page === i}">${i + 1}</button>`).join('') : ''}<button id="rarity-guide" type="button" title="Rarity" aria-label="Rarity">◇</button><button id="inv-sort" title="Zoradiť podľa veľkosti, vzácnosti a stupňa" aria-label="Zoradiť">↕</button></div>
+    <section class="bag-panel"><div class="bag-heading"><h3>Inventár</h3><small>${inventoryTab === 'gear' ? occupied + ' / ' + p.inventory.pages * INVENTORY.pageSize + ' políčok' : supplyEntries().length+' typov'}</small></div><div class="inventory-tabs"><button data-inv-tab="gear" aria-pressed="${inventoryTab === 'gear'}">Predmety</button><button data-inv-tab="supplies" aria-pressed="${inventoryTab === 'supplies'}">Zásoby</button></div><div class="inventory-pages">${inventoryTab === 'gear' ? Array.from({ length: p.inventory.pages }, (_, i) => `<button data-inv-page="${i}" aria-label="Strana ${i + 1}" aria-pressed="${page === i}">${i + 1}</button>`).join('') : ''}<button id="inv-sort" title="Zoradiť podľa veľkosti a požadovanej úrovne" aria-label="Zoradiť">↕</button></div>
+    ${bonusTools.length ? '<div class="inventory-bonus-tools">'+bonusTools.map(item=>`<button type="button" draggable="true" data-entry="${item.id}" aria-label="${escapeHTML(item.name)}" title="${escapeHTML(item.description)}">${itemIcon(item)}<b>${item.count}</b></button>`).join('')+'</div>' : ''}
     <div class="inventory-grid" id="inventory-grid" role="group" aria-label="Mriežka inventára, 5 stĺpcov a 9 riadkov">${Array.from({ length: INVENTORY.pageSize }, (_, i) => `<button class="inventory-cell" data-cell="${offset + i}" aria-label="Prázdne políčko ${offset + i + 1}" style="grid-column:${i % 5 + 1};grid-row:${Math.floor(i / 5) + 1}"></button>`).join('')}${entries.map(entry => {
       const item = entry.item, [w, h] = entry.kind === 'gear' ? itemSize(item) : [1, 1], local = item.cell % INVENTORY.pageSize;
-      return `<button class="grid-item rarity-${item.rarity || 0}" draggable="true" data-entry="${entry.id}" aria-label="${escapeHTML(item.name)}${entry.kind === 'gear' ? ' · ' + rarityName(item.rarity) : ''}${entry.kind === 'supply' ? ', ' + item.count + ' kusov' : ', +' + (item.enhance || 0)}" aria-pressed="${inventorySelection === entry.id}" style="grid-column:${local % 5 + 1} / span ${w};grid-row:${Math.floor(local / 5) + 1} / span ${h}">${itemIcon(item)}${entry.kind === 'supply' ? `<b class="stack-count">${item.count}</b>` : `<b class="enhance-count">+${item.enhance || 0}</b>`}</button>`;
+      return `<button class="grid-item" draggable="true" data-entry="${entry.id}" aria-label="${escapeHTML(item.name)}${''}${entry.kind === 'supply' ? ', ' + item.count + ' kusov' : ', +' + (item.enhance || 0)}" aria-pressed="${inventorySelection === entry.id}" style="grid-column:${local % 5 + 1} / span ${w};grid-row:${Math.floor(local / 5) + 1} / span ${h}">${itemIcon(item)}${entry.kind === 'supply' ? `<b class="stack-count">${item.count}</b>` : `<b class="enhance-count">+${item.enhance || 0}</b>`}</button>`;
     }).join('')}</div></section>
     <div class="inventory-money">◉ <b>${p.gold.toLocaleString('sk-SK')}</b> <small>YANG</small></div><div class="inventory-controls"><p class="inventory-message" id="inventory-message" role="status"></p></div></div><div id="item-tooltip" class="item-tooltip loot-tooltip" role="tooltip" hidden></div></section>`,{key:'inventory',title:'Inventár',refresh:()=>{if(gameWindows.get('inventory')?.inventorySignature!==inventoryContentSignature())inventory();}});
-  $('rarity-guide').onclick=rarityGuide;
   $('inv-sort').onclick = () => { if (sortInventory(inventoryTab)) inventory(); else inventoryMessage('Predmety sa do tohto rozloženia nezmestia.'); };
   panelQueryAll('[data-inv-tab]').forEach(button => button.onclick = () => { inventoryTab = button.dataset.invTab; inventorySelection = null; inventory(); });
   panelQueryAll('[data-inv-page]').forEach(button => button.onclick = () => { inventoryPage = Number(button.dataset.invPage); inventory(); });
   panelQueryAll('[data-stat]').forEach(button => button.onclick = () => allocate(button.dataset.stat));
   panelQueryAll('[data-entry]').forEach(button => {
-    button.onclick = () => selectInventoryEntry(button.dataset.entry);
+    button.onclick = event => {
+      if (event?.detail > 0) {
+        clearInventorySelection();
+        canvas.focus({preventScroll:true});
+        return;
+      }
+      if (inventorySelection === button.dataset.entry) clearInventorySelection();
+      else selectInventoryEntry(button.dataset.entry);
+    };
     button.ondblclick = () => activateInventoryEntry(button.dataset.entry);
     button.onmouseenter = event => withGameWindow('inventory',()=>showItemTooltip(button.dataset.entry,event));
     button.onmousemove = event => withGameWindow('inventory',()=>positionItemTooltip(event));
@@ -63,27 +72,37 @@ function inventory() {
         inventoryDrag.x = Math.floor(inventoryDrag.grabX/pitch.x);
         inventoryDrag.y = Math.floor(inventoryDrag.grabY/pitch.y);
       }
-      inventoryDragPreview=document.createElement('div');inventoryDragPreview.className='grid-item inventory-drag-preview rarity-'+(inventoryEntry(inventoryDrag.id)?.item.rarity||0);inventoryDragPreview.innerHTML=button.innerHTML;inventoryDragPreview.setAttribute('aria-hidden','true');inventoryDragPreview.style.width=sourceRect.width+'px';inventoryDragPreview.style.height=sourceRect.height+'px';document.body.appendChild(inventoryDragPreview);
+      inventoryDragPreview=document.createElement('div');inventoryDragPreview.className='grid-item inventory-drag-preview';inventoryDragPreview.innerHTML=button.innerHTML;inventoryDragPreview.setAttribute('aria-hidden','true');inventoryDragPreview.style.width=sourceRect.width+'px';inventoryDragPreview.style.height=sourceRect.height+'px';$('game-shell').appendChild(inventoryDragPreview);
       const blank=document.createElement('canvas');blank.width=blank.height=1;event.dataTransfer.setDragImage?.(blank,0,0);updateInventoryDragPreview(event);
       event.dataTransfer.setData('text/plain', button.dataset.entry); event.dataTransfer.effectAllowed = 'move'; $('item-tooltip').hidden = true;
     };
-    button.ondragend = clearInventoryDrag;
+    button.ondragend = finishInventoryItemDrag;
   });
   panelQueryAll('[data-equip-slot]').forEach(button => {
     if (!button.dataset.entry) button.onclick = () => dropOnEquipment(button.dataset.equipSlot, inventorySelection);
-    else { const choose = button.onclick; button.onclick = () => inventoryEntry(inventorySelection)?.kind === 'gear' && inventoryEntry(inventorySelection).item.slot === button.dataset.equipSlot ? dropOnEquipment(button.dataset.equipSlot, inventorySelection) : choose(); }
-    button.ondragover = event => { event.preventDefault(); event.dataTransfer.dropEffect = 'move'; };
-    button.ondrop = event => { event.preventDefault(); dropOnEquipment(button.dataset.equipSlot, inventoryDrag?.id); clearInventoryDrag(); };
+    else { const choose = button.onclick; button.onclick = event => !event?.detail && inventoryEntry(inventorySelection)?.kind === 'gear' && inventoryEntry(inventorySelection).item.slot === button.dataset.equipSlot ? dropOnEquipment(button.dataset.equipSlot, inventorySelection) : choose(event); }
+    button.ondragover = event => {
+      event.preventDefault();
+      const allowed = !inventoryBonusTool(inventoryDrag?.id) || canApplyItemBonus(inventoryDrag.id, button.dataset.entry);
+      event.dataTransfer.dropEffect = allowed ? 'move' : 'none';
+    };
+    button.ondrop = event => { event.preventDefault(); if (inventoryBonusTool(inventoryDrag?.id)) useDraggedBonus(button.dataset.entry); else dropOnEquipment(button.dataset.equipSlot, inventoryDrag?.id); finishInventoryItemDrag(); };
   });
   panelQueryAll('[data-cell]').forEach(button => button.onclick = () => dropOnInventoryCell(inventorySelection, Number(button.dataset.cell)));
   const grid = $('inventory-grid');
-  grid.ondragover = event => { event.preventDefault(); event.dataTransfer.dropEffect = canDropInventoryEntry(inventoryDrag?.id,inventoryPointerCell(event))?'move':'none'; };
+  grid.ondragover = event => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = canDropInventoryGrid(event) ? 'move' : 'none';
+  };
   grid.ondrop = event => {
     event.preventDefault(); if (!inventoryDrag) return;
+    const bonusTarget=inventoryGridBonusTarget(event);
+    if (bonusTarget) { useDraggedBonus(bonusTarget); finishInventoryItemDrag(); return; }
+    if(inventoryBonusTool(inventoryDrag.id) && inventoryTab==='gear'){finishInventoryItemDrag();return;}
     const cell=inventoryPointerCell(event);
     if (cell!==null) dropOnInventoryCell(inventoryDrag.id,cell);
     else inventoryMessage('Predmet by presahoval okraj mriežky.');
-    clearInventoryDrag();
+    finishInventoryItemDrag();
   };
   selectInventoryEntry(inventoryEntry(inventorySelection) ? inventorySelection : null);activeGameWindow.inventorySignature=inventoryContentSignature();
 }
@@ -94,13 +113,21 @@ function selectInventoryEntry(id) {
   inventorySelection = id;
   panelQueryAll('[data-entry]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.entry === id)));
 }
+function clearInventorySelection(blurItem=false){
+  inventorySelection=null;
+  const entry=gameWindows.get('inventory');if(!entry)return;
+  withGameWindow('inventory',()=>selectInventoryEntry(null));
+  const focused=document.activeElement;
+  if(blurItem&&focused&&entry.node.contains(focused)&&focused.hasAttribute('data-entry'))focused.blur();
+}
 
 function activateInventoryEntry(id) {
   const entry = inventoryEntry(id); if (!entry) return false;
   if (entry.kind === 'gear') { if (!canEquipItem(entry.item)) { inventoryMessage(itemEquipReason(entry.item)); return false; } return equipItem(p.bag.findIndex(item => item.uid === entry.item.uid)); }
   if (entry.kind === 'equipped') { const ok = unequipItem(entry.item.slot); if (!ok) inventoryMessage('V inventári nie je dosť súvislého miesta.'); return ok; }
   const ok = useInventorySupply(id);
-  if (ok && ['drink','cape'].includes(entry.item.action)) inventory();
+  if (ok && (['drink','cape'].includes(entry.item.action)||Object.hasOwn(EXPERIENCE_BOOSTS,entry.item.material)||entry.item.material==='xpChest')) inventory();
+  if(!ok&&Object.hasOwn(EXPERIENCE_BOOSTS,entry.item.material)){inventoryMessage('Tento bonus EXP už je aktívny.');return false;}
   if (!ok) inventoryMessage(entry.item.action === 'drink' ? 'Zdravie je plné alebo elixír nemožno použiť.' : 'Plášť použi mimo bezpečnej zóny a počkaj na obnovenie.');
   return ok;
 }
@@ -165,14 +192,32 @@ function canDropInventoryEntry(id,cell){
  if(entry.kind==='supply')return inventoryTab==='supplies'&&Number.isInteger(cell)&&cell>=0&&cell<INVENTORY.pageSize&&!supplyEntries().some(other=>other.id!==id&&other.cell===cell);
  return inventoryTab==='gear'&&gearCellAvailable(entry.item,cell);
 }
+function inventoryGridBonusTarget(event) {
+  if (!inventoryBonusTool(inventoryDrag?.id)) return null;
+  const id=event.target.closest?.('[data-entry]')?.dataset.entry;
+  return id?.startsWith('gear:') ? id : null;
+}
+function canDropInventoryGrid(event) {
+  const target=inventoryGridBonusTarget(event);
+  return target ? canApplyItemBonus(inventoryDrag.id,target) : canDropInventoryEntry(inventoryDrag?.id,inventoryPointerCell(event));
+}
+function useDraggedBonus(target) {
+  const mode=inventoryBonusTool(inventoryDrag?.id);
+  if (!applyItemBonus(inventoryDrag?.id,target)) return false;
+  inventory();
+  inventoryMessage(mode==='add' ? 'Bonus pridaný.' : 'Bonusy zmenené.');
+  return true;
+}
 function clearInventoryDrag(){inventoryDragPreview?.remove();inventoryDragPreview=null;inventoryDrag=null;}
+function finishInventoryItemDrag(){clearInventoryDrag();clearInventorySelection(true);}
 function updateInventoryDragPreview(event){
  if(!inventoryDragPreview||!inventoryDrag)return;
  inventoryDragPreview.style.left=event.clientX-inventoryDrag.grabX+'px';inventoryDragPreview.style.top=event.clientY-inventoryDrag.grabY+'px';
  const entry=gameWindows.get('inventory'),grid=entry?.content.querySelector('.inventory-grid'),slot=event.target.closest?.('[data-equip-slot]');
- let valid=!entry?.node.contains(event.target);
- if(grid?.contains(event.target))valid=canDropInventoryEntry(inventoryDrag.id,inventoryPointerCell(event));
- else if(slot){const item=inventoryEntry(inventoryDrag.id);valid=item?.kind==='gear'&&item.item.slot===slot.dataset.equipSlot&&canEquipItem(item.item);}
+ const marketNode=event.target.closest?.('[data-window-key^="market:"]');
+ let valid=marketNode?!!marketSaleQuote(marketNode.dataset.windowKey.slice(7),inventoryDrag.id):!inventoryBonusTool(inventoryDrag.id)&&!entry?.node.contains(event.target);
+ if(grid?.contains(event.target))valid=canDropInventoryGrid(event);
+ else if(slot){const item=inventoryEntry(inventoryDrag.id);valid=inventoryBonusTool(inventoryDrag.id)?canApplyItemBonus(inventoryDrag.id,slot.dataset.entry):item?.kind==='gear'&&item.item.slot===slot.dataset.equipSlot&&canEquipItem(item.item);}
  inventoryDragPreview.classList.toggle('is-invalid',!valid);
 }
 document.addEventListener('dragover',updateInventoryDragPreview);

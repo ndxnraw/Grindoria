@@ -7,10 +7,14 @@ function trimEnemySnapshot(enemy){
 }
 
 function snapshotMap() {
-  if (!mobs.length&&!map().town) return;
+  if (!mobs.length&&!drops.length&&!map().town) return;
   p.worldStates[p.mapId] = {
     balanceSchema:map().balanceVersion||0,events:worldEventSnapshot(),worldSize:SIZE,layoutSchema: SPAWN_LAYOUT_VERSION, progressionSchema: PROGRESSION.schema, spawnSchema: legacyRiftLayout ? 0 : SPAWN_RULES.schema,
-    mobs: mobs.map(m=>trimEnemySnapshot(cloneEnemyState(m))),
+    mobs: mobs.map(m=>{
+      const snapshot=trimEnemySnapshot(cloneEnemyState(m));
+      if(map().metinWorld)for(const key of ['x','y','homeX','homeY'])snapshot[key]=Math.round(snapshot[key]);
+      return snapshot;
+    }),
     drops: drops.map(cloneGroundDrop)
   };
 }

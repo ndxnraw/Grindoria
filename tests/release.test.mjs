@@ -41,7 +41,7 @@ test('Windows line endings are accepted', () => {
 test('release CLI dry run leaves files untouched; real run builds the new offline version', () => {
   const fixture = mkdtempSync(path.join(os.tmpdir(), 'grindoria-release-'));
   try {
-    for (const dir of ['src', 'scripts', 'desktop']) cpSync(path.join(root, dir), path.join(fixture, dir), { recursive: true });
+    for (const dir of ['src', 'scripts']) cpSync(path.join(root, dir), path.join(fixture, dir), { recursive: true });
     writeFileSync(path.join(fixture, 'package.json'), JSON.stringify(pkg));
     writeFileSync(path.join(fixture, 'CHANGELOG.md'), pending);
     mkdirSync(path.join(fixture, 'tests'));

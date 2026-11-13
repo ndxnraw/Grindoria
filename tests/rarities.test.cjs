@@ -1,18 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const {createGame,createEmptyGame,readSavedProfile}=require('./helpers/game.cjs');
-test('six stable rarity IDs have ordered ranks, colors and properly normalized source-specific odds',()=>{
- const {run}=createGame();assert.deepEqual(Array.from(run('RARITIES.map(r=>r.name)')),['Common','Uncommon','Rare','Epic','Legendary','Mythic']);
- assert.equal(run('new Set(RARITIES.map(r=>r.color)).size'),6);assert.equal(run('rarityName(1)'),'Rare');assert.equal(run('rarityName(2)'),'Epic');
- for(const type of ['normal','elite','rare','boss','metin']){
-  run('var source={type:"'+(type==='boss'?'boss':type==='metin'?'stone':'wolf')+'",variant:"'+type+'",level:99,metinType:"doom"};var odds=itemRarityChances(source);var cumulative=0;');
-  assert(Math.abs(run('odds.reduce((sum,r)=>sum+r.chance,0)')-1)<1e-12);
-  for(let i=0;i<6;i++){if(type==='boss'&&i===0){assert.equal(run('odds[0].chance'),0);continue;}assert(run('odds['+i+'].chance>0'));const midpoint=run('cumulative+odds['+i+'].chance/2');assert.equal(run('rollItemRarity(source,false,()=>'+midpoint+')'),run('RARITIES['+i+'].id'));run('cumulative+=odds['+i+'].chance;');}
- }
- assert(run('itemRarityChances({type:"boss",level:99})[5].chance>itemRarityChances({type:"wolf",level:99})[5].chance'));
- for(const [level,legendary,mythic]of [[49,false,false],[50,true,false],[74,true,false],[75,true,true]]){
-  run('var gated=itemRarityChances({type:"boss",level:'+level+'});');assert.equal(run('gated[4].chance>0'),legendary);assert.equal(run('gated[5].chance>0'),mythic);
- }
-});
 test('random affixes are unique, reproducible, tier-scaled and more numerous and stronger with rarity',()=>{
  const {run}=createGame();run('var rng=layoutRandom("affix-test");');
  for(const rarity of [0,3,1,2,4,5])for(const slot of Object.keys(run('EQUIPMENT'))){
@@ -69,13 +56,23 @@ test('invalid affix imports fail transactionally without touching current profil
  const mutations=[i=>i.affixes[0].roll=101,i=>i.affixes[0].stat='fake',i=>i.affixes[1]={...i.affixes[0]},i=>i.stats[i.affixes[0].stat]+=1,i=>i.affixes.pop(),i=>i.generationVersion=99,i=>i.rarity=9];
  for(const mutate of mutations){const doc=JSON.parse(backup),id=doc.account.order[0];mutate(doc.account.profiles[id].data.bag[0]);assert.throws(()=>run('prepareCharacterImport('+JSON.stringify(JSON.stringify(doc))+')'),/Neplatná/);assert.equal(run('JSON.stringify(characterStore.account)'),run('before'));}
 });
-test('legacy Rare and Epic retain all attributes and prices and rarity sorting uses rank instead of ID',()=>{
- const {run,saved}=createGame();run('p.level=99;for(var id of [0,3,1,2,4,5])addGearItem({name:"Starý "+id,slot:"bracelet",rarity:id,bonus:12,value:42,stats:{hp:20}});sortInventory();save();');
- assert.equal(run('p.bag.map(i=>i.rarity).join(",")'),'5,4,2,1,3,0');const reload=createGame(readSavedProfile(saved));assert.equal(reload.run('p.bag.find(i=>i.rarity===1).stats.hp'),20);assert.equal(reload.run('itemSaleValue(p.bag.find(i=>i.rarity===2))'),42);
+test('old equipment retains its attributes and inventory sorts by required level',()=>{
+ const {run,saved}=createGame();
+ run('p.level=99;addGearItem({name:"Starý A",slot:"bracelet",rarity:5,requiredLevel:1,bonus:12,value:42,stats:{hp:20}});addGearItem({name:"Starý B",slot:"bracelet",rarity:0,requiredLevel:30,bonus:12,value:42});sortInventory();save();');
+ assert.equal(run('p.bag[0].name'),'Starý B');
+ const reload=createGame(readSavedProfile(saved));
+ assert.equal(reload.run('p.bag[1].stats.hp'),20);
+ assert.equal(reload.run('itemSaleValue(p.bag[1])'),42);
 });
-test('six visual identities, full tooltips and guide reflect actual probability and pricing functions',()=>{
- const {run,elements}=createGame();const icons=new Set();
- for(const id of [0,3,1,2,4,5]){run('var item=generateEquipmentItem("weapon",'+id+',90,"sword",()=>.5);');icons.add(run('itemIcon(item)'));assert(!run('itemIcon(item).includes("undefined")'));run('var drop={kind:"gear",item,x:p.x,y:p.y,fallAge:1,expiresAt:Date.now()+10000};var tip=groundDropTooltip(drop);');assert(run('tip.includes(rarityName(item.rarity))'));assert.match(run('tip'),/Trhový odhad/);}
- run('help();');assert(elements.get('modalcontent').innerHTML.includes('25 %'));assert.equal(icons.size,6);run('running=true;inventory();');elements.get('rarity-guide').onclick();for(const label of ['Common','Uncommon','Rare','Epic','Legendary','Mythic','0,01'])assert(elements.get('modalcontent').innerHTML.includes(label),label);
- run('var mythic=generateEquipmentItem("helmet",5,90);');assert.equal(run('groundDropLifetime({kind:"gear",item:mythic})'),run('LOOT_RULES.rareLifetime'));
+test('new gear from every source has no rarity label, glow or roll',()=>{
+ const {run,elements}=createGame();
+ run('running=true;inventory();');
+ assert(!elements.get('modalcontent').innerHTML.includes('rarity-guide'));
+ for(const type of ['wolf','boss','stone']){
+  run('var item=makeItem(true,{type:"'+type+'",level:90},"weapon");var tip=groundDropTooltip({kind:"gear",item,x:p.x,y:p.y,fallAge:1});');
+  assert.equal(run('item.rarity'),0);
+  assert.equal(run('item.affixes.length'),0);
+  assert.doesNotMatch(run('tip'),/Common|Uncommon|Rare|Epic|Legendary|Mythic/);
+  assert.match(run('tip'),/Trhový odhad/);
+ }
 });

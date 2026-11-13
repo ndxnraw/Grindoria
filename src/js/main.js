@@ -1,3 +1,9 @@
+const movementKeys = ['w', 'a', 's', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+
+function isTextControl(element) {
+  return !!element && (['INPUT', 'SELECT', 'TEXTAREA'].includes(element.tagName) || element.isContentEditable);
+}
+
 // Load persisted data only after all data registries and validators are available.
 p=createPlayerState(loadPlayerSave()||{});
 initializeCareer();
@@ -6,7 +12,7 @@ initializeFarming();
 initializeLoot();
 initializeCharacterAccount();
 $('sound').textContent='Zvuk: '+(sound?'zapnutý':'vypnutý');
-initializeFullscreen();initializeDesktopUpdates();
+initializeFullscreen();
 initializeCombatAssist();initializeGameWindows();
 loadMap(p.mapId,true);
 window.addEventListener('resize',resize);resize();
@@ -20,16 +26,18 @@ window.addEventListener('keyup',e=>keys[e.key.length===1?e.key.toLowerCase():e.k
 function handleGameKeyDown(e) {
   const key=e.key.length===1?e.key.toLowerCase():e.key;
   if(key==='F10'){e.preventDefault();if(!e.repeat)toggleGameFullscreen('F10');return;}
+  if(key==='Enter'&&panelState.key==='market-sale'){e.preventDefault();if(!e.repeat)confirmPendingMarketSale();return;}
   if(key==='Enter'&&panelState.key==='inventory-drop'){e.preventDefault();if(!e.repeat)confirmPendingInventoryDrop();return;}
   if(key==='Escape'){
-    e.preventDefault();keysClear();
-    if(gameWindows.size){e.preventDefault();closeModal();return;}
+    e.preventDefault();
+    if(gameWindows.size){closeModal();return;}
+    keysClear();
 
     clearCombatTarget();stopCombatAssist();if(running)systemMenu();
     return;
   }
   // Text fields retain normal editing; focused game buttons never swallow Space.
-  if(e.target&&(['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)||e.target.isContentEditable))return;
+  if(isTextControl(e.target))return;
   if(!running||paused)return;
   if(e.ctrlKey||e.metaKey||e.altKey&&key!=='Alt')return;
   if([' ','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(key))e.preventDefault();
@@ -39,7 +47,13 @@ function handleGameKeyDown(e) {
   if(key==='Tab'&&e.shiftKey)return;
   if(windows[key]){e.preventDefault();if(!e.repeat)toggleGameWindow(...windows[key]);return;}
   if(key===' '&&e.target?.closest?.('.game-window')){e.preventDefault();return;}
-  if(['w','a','s','d','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(key))clearCombatTarget();
+  if(movementKeys.includes(key)){
+    e.preventDefault();
+    const focusInGameUI = document.activeElement?.closest?.('#game-shell') && document.activeElement !== canvas;
+    clearInventorySelection(true);
+    if(focusInGameUI)canvas.focus({preventScroll:true});
+    clearCombatTarget();
+  }
   keys[key]=true;if(e.repeat)return;
   if(key==='y'){e.preventDefault();pickNearbyGroundDrops();return;}
   const quick=/^(?:Digit|Numpad)([1-8])$/.exec(e.code||'')||/^F([1-8])$/.exec(key),slot=quick?Number(quick[1]):/^[1-8]$/.test(key)?Number(key):0;
@@ -48,6 +62,11 @@ function handleGameKeyDown(e) {
 
 }
 
+$('game-shell').addEventListener('click', event => {
+  if (event.detail > 0 && movementKeys.some(key => keys[key]) && !isTextControl(document.activeElement)) {
+    canvas.focus({preventScroll:true});
+  }
+});
 canvas.addEventListener('pointermove',setCombatPointer);canvas.addEventListener('pointerleave',leaveCombatPointer);window.addEventListener('blur',combatBlur);
 canvas.addEventListener('pointerdown',handleCombatClick);canvas.addEventListener('dblclick',handleCombatDoubleClick);
 $('attack').onclick=()=>hotbarAction(()=>attack());$('skill').onclick=()=>hotbarAction(()=>castSkill(0));$('potion').onclick=()=>hotbarAction(potion);$('inventory').onclick=()=>toggleGameWindow('inventory',inventory);$('claim').onclick=claimTrackedQuest;

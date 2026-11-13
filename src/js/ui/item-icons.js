@@ -1,10 +1,18 @@
 function itemIcon(item, empty = false) {
   if (!empty && Object.hasOwn(EQUIPMENT,item.slot)) { const model=equipmentAppearance(item);return `<svg class="item-icon" viewBox="0 0 64 ${model.height}" aria-hidden="true" focusable="false">${equipmentModelSVG(item)}</svg>`; }
-  const id = item.icon || item.slot, rarity = item.rarity || 0;
+  const id = item.icon || item.slot, rarity = 0;
   const metal = empty ? '#766c58' : ['#a5afae', '#9fcad5', '#d5b1e2'][rarity];
   const gold = empty ? '#766c58' : '#d8ad5c', dark = empty ? '#403d34' : '#444c52';
   const gem = empty ? '#4b463a' : ['#a24f3f', '#59b4c0', '#bc7bdb'][rarity];
   const shapes = {
+    xpChest:'<path d="M7 29 15 15h34l8 14v23H7Z" fill="#806638" stroke="#dbc282" stroke-width="3"/><path d="M7 31h50M27 27h10v15H27Z" stroke="#f7d685" stroke-width="3" fill="none"/>',
+    xpGreaterRing:'<circle cx="32" cy="38" r="17" fill="none" stroke="#e4c993" stroke-width="7"/><path d="m19 14 13-10 13 10-13 16Z" fill="#dc8eda"/><path d="M25 14h14M32 8v13" stroke="#fff6ec" stroke-width="2"/>',
+    xpRing:'<circle cx="32" cy="36" r="17" fill="none" stroke="#efc665" stroke-width="7"/><path d="m22 17 10-10 10 10-10 11Z" fill="#73bcf3"/>',
+    xpLootRing:'<circle cx="32" cy="36" r="17" fill="none" stroke="#bb9458" stroke-width="7"/><path d="m21 17 11-13 11 13-11 13Z" fill="#a5da82"/>',
+    xpKnowledge:'<path d="M24 6h16v16l11 16v11l-8 8H21l-8-8V38l11-16Z" fill="#8b61c8" stroke="#dfc8f5" stroke-width="3"/><path d="M21 39h22M32 31v16" stroke="#fff0b0" stroke-width="3"/>',
+    xpAscension:'<path d="M25 5h14v15l14 18-6 17H17l-6-17 14-18Z" fill="#388a94" stroke="#b4f2e3" stroke-width="3"/><path d="m23 38 9-9 9 9m-9-8v18" fill="none" stroke="#fff0b0" stroke-width="3"/>',
+    strengthenItem:'<path d="M14 6h36v44L32 59 14 50Z" fill="#b98342" stroke="#ffe2a1" stroke-width="3"/><path d="M32 15v29M18 29h28" stroke="#fff2bc" stroke-width="5"/>',
+    enchantItem:'<path d="M14 6h36v44L32 59 14 50Z" fill="#565da0" stroke="#b9cafa" stroke-width="3"/><path d="M20 33a12 12 0 1 1 13 9m-1 0 9 2m-9-2 4-8" fill="none" stroke="#e4f3ff" stroke-width="4"/>',
     ancientVenom:'<path d="M24 6h16v14l14 14v20L32 62 10 54V34l14-14Z" fill="#558554" stroke="#d5d288" stroke-width="2"/><path d="m32 27 11 17-11 11-11-11Z" fill="#b5d572"/><path d="M24 8h16m-8 24v16m-5-8h10" stroke="#e5efba" stroke-width="3"/>',
     frozenMarrow:'<path d="m8 12 11-8 13 12L45 4l11 8-8 17 9 17-12 13-13-9-13 9L7 46l9-17Z" fill="#86c2d0" stroke="#d9edf4" stroke-width="2"/><path d="m32 18 7 14-7 15-7-15Z" fill="#436eab"/><path d="m17 14 10 15-10 17m30-32-10 15 10 17" stroke="#e8f9fa" fill="none"/>',
     demonHeart:'<path d="M32 16Q8-1 5 21q-4 24 27 41 31-17 27-41Q56-1 32 16Z" fill="#9e475b" stroke="#ebc28a" stroke-width="2"/><path d="m24 9-7-7m24 7 6-7M13 33l11 2 5-13 7 23 5-10 10-3" fill="none" stroke="#f4b36f" stroke-width="3"/>',

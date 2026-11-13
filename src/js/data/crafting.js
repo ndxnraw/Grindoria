@@ -11,12 +11,11 @@ const CRAFT_RECIPES = {
   protectionScroll: { name: 'Ochranný zvitok', profession: 'crafting', level: 8, xp: 100, cost: FORGE_RULES.recipes.protectionScroll, output: { material: 'protectionScroll', count: 1 } },
   riftKey: { name: 'Kľúč trhliny', profession: 'crafting', level: 10, xp: 120, cost: { primal: 2, crystal: 10, ingot: 5, gold: 3000 }, output: { material: 'keys', count: 1 } }
 };
-// Equipment uses the same generator, slot sizes and rarity identities as natural loot.
-for (const [suffix, level, tier, rarity, ingots] of [['basic', 1, 1, 0, 2], ['adept', 4, 20, 1, 6], ['master', 8, 50, 2, 12]]) {
+// Recipe tiers select equipment from the same definitions as natural loot.
+for (const [suffix, level, tier, ingots] of [['basic', 1, 1, 2], ['adept', 4, 30, 6], ['master', 8, 60, 12]]) {
   for (const slot of Object.keys(EQUIPMENT)) CRAFT_RECIPES[slot + '-' + suffix] = {
-    name: EQUIPMENT[slot].name + ' · Lv.' + tier + ' · ' + rarityNameForRecipe(rarity), profession: 'crafting', level, playerLevel: tier, xp: 20 + level * 10,
+    name: EQUIPMENT[slot].name + ' · Lv.' + tier, profession: 'crafting', level, playerLevel: tier, xp: 20 + level * 10,
     cost: { ingot: ingots, hide: ingots, gold: tier * 25, ...(level >= 4 ? { crystal: ingots } : {}), ...(level >= 8 ? { primal: 1 } : {}) },
-    output: { slot, tier, rarity, count: 1 }
+    output: { slot, tier, count: 1 }
   };
 }
-function rarityNameForRecipe(rarity) { return RARITIES.find(spec => spec.id === rarity).name; }

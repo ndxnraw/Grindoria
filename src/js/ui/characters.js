@@ -4,7 +4,7 @@ function setCharacterScreenMode(selecting) {
 let characterDraft = null, pendingCharacterImport = null;
 function rosterMessage(text) { $('roster-message').textContent=text; }
 function characterEquipmentSummary(record) {
-  return '<div class="roster-equipment">'+Object.entries(EQUIPMENT).map(([slot,spec])=>{const item=record.data.equipped?.[slot];return '<div title="'+escapeHTML(item?item.name+' +'+(item.enhance||0):spec.name+' · prázdne')+'" class="'+(item?'has-gear rarity-'+item.rarity:'')+'">'+itemIcon(item||{slot},!item)+'<span>'+spec.name+'</span></div>';}).join('')+'</div>';
+  return '<div class="roster-equipment">'+Object.entries(EQUIPMENT).map(([slot,spec])=>{const item=record.data.equipped?.[slot];return '<div title="'+escapeHTML(item?item.name+' +'+(item.enhance||0):spec.name+' · prázdne')+'" class="'+(item?'has-gear':'')+'">'+itemIcon(item||{slot},!item)+'<span>'+spec.name+'</span></div>';}).join('')+'</div>';
 }
 function renderCharacterScreen() {
   characterDraft=null;$('intro').inert=false;document.body.classList.add('character-select');setCharacterScreenMode(true);

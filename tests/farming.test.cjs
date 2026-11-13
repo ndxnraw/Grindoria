@@ -34,9 +34,9 @@ test('rare kills have better gold, EXP, equipment and materials without bypassin
   const xp = run('p.xp'), gold = run('p.gold');
   run('let rare={...mobs[0],hp:1,level:10,variant:"rare",skillContributors:[]};hit(rare,2);');
   assert(run('p.xp') - xp > xp); assert.equal(run('p.gold')-gold, gold * 4);
-  assert(run('drops.some(d=>d.kind==="gear"&&d.item.rarity>=1)'));
+  assert(run('drops.some(d=>d.kind==="gear"&&d.item.rarity===0)'));
   run('running=true;for(const drop of [...drops]){drop.fallAge=LOOT_RULES.fallDuration;p.x=drop.x;p.y=drop.y;pickUpGroundDrop(drop.id);}');
-  assert(run('p.bag.at(-1).rarity>=1')); assert(run('p.career.materials.books>=1'));
+  assert(run('p.bag.at(-1).rarity===0')); assert(run('p.career.materials.books>=1'));
   assert(run('p.career.materials.ore>=3')); assert.equal(run('p.braveryCapes'), 12);
   const books = run('p.career.materials.books'); run('hit(rare,100);'); assert.equal(run('p.career.materials.books'), books);
   run('p.level=30;'); assert.equal(run('enemyXP({...rare,level:1})'), 0);

@@ -42,7 +42,7 @@ test('every equipment slot changes its real combat statistic immediately and rem
 });
 
 test('equipment clamps current HP and MP on removal without healing through repeated swaps', () => {
-  const { run } = createGame(); gear(run, 'bracelet', 50); gear(run, 'necklace', 50);
+  const { run } = createGame(); run('p.level=30;'); gear(run, 'bracelet', 50); gear(run, 'necklace', 50);
   run('equipItem(0);equipItem(0);p.hp=maxHP();p.mp=maxMP();');
   assert.equal(run('unequipItem("bracelet")'), true); assert.equal(run('p.hp'), run('maxHP()'));
   assert.equal(run('unequipItem("necklace")'), true); assert.equal(run('p.mp'), run('maxMP()'));

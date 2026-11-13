@@ -26,6 +26,27 @@ const MAP_LOCATIONS={
 for(const [id,d]of Object.entries(EXP_MAPS))MAP_LOCATIONS[id]={safeZone:d.safeZone,entry:d.entry,bossPosition:d.bossPosition,packCount:d.packCount};
 for(const [id,location]of Object.entries(MAP_LOCATIONS)){Object.assign(MAPS[id],location,{size:WORLD_RULES.combatSize});MAPS[id].count=MAPS[id].packCount?MAPS[id].packCount*6+4:0;}
 MAPS.town={name:'Mesto',region:'MESTO',desc:'Obchodník · Zbrojár · Kováč · Biológ · Dungeon Majster',level:1,enemyLevel:1,scale:1,seed:153170,ground:'#667461',patch:'#8f9b8130',path:'#c7b89c77',accent:'#d5c697',water:'#648b96',mob:'Bez nepriateľov',boss:'NPC',skin:'wolf',count:0,packCount:0,metinCount:0,town:true,size:WORLD_RULES.townSize,safeZone:{x:600,y:600,radius:10000},entry:{x:600,y:720}};
+const metinRegions=['Chunjo','Jinno','Shinsoo'];
+const metinTerrain={
+  'poust-yongbi':'desert','hora-sohan':'snow','ohniva-zeme':'temple',
+  'cerveny-les':'ruins','les-duchu':'meadow','bourne-hory':'highlands',
+  'zeme-obru':'quarry','nefritovy-zaliv':'marsh','zaliv-draciho-ohne':'temple'
+};
+for(const [index,[id,name]] of METIN_WORLD_ROWS.entries()){
+ const roster=METIN_MONSTER_ROWS.flatMap((row,monsterId)=>row[7].includes(id)?[monsterId]:[]);
+ const levels=roster.map(monsterId=>METIN_MONSTER_ROWS[monsterId][1]);
+ const level=levels.length?Math.min(...levels):1,levelMax=levels.length?Math.max(...levels,id==='cerveny-les'?90:1):1;
+ const terrain=MAPS[metinTerrain[id]||(index<15?'valley':index>=26?'temple':'meadow')];
+ const entrances=[{x:360,y:2770},{x:2800,y:2750},{x:480,y:420},{x:2800,y:420}];
+ const entry=entrances[index%entrances.length];
+ MAPS[id]={name,region:index<12?metinRegions[Math.floor(index/4)]:'Neutrálne oblasti',
+   metinWorld:true,roster,level,levelMax,enemyLevel:level,scale:terrain.scale,
+   ground:terrain.ground,patch:terrain.patch,path:terrain.path,accent:terrain.accent,water:terrain.water,
+   seed:17393+index*7919,skin:terrain.skin,size:WORLD_RULES.combatSize,entry,
+   safeZone:{...entry,radius:95},count:roster.length,mob:roster.length?METIN_MONSTER_ROWS[roster[0]][0]:'Bez príšer',
+   boss:roster.map(i=>METIN_MONSTER_ROWS[i]).find(row=>row[2]==='Boss')?.[0]||'',
+   desc:roster.length?roster.length+' druhov príšer':id==='chram-zverokruhu'?'Bez súpisky príšer':'Bez príšer'};
+}
 const NPCS={
  merchant:{name:'Obchodník',mapId:'town',x:440,y:630,color:'#c8ae75',service:'shop'},
  smith:{name:'Kováč',mapId:'town',x:760,y:630,color:'#b78664',service:'forge'},

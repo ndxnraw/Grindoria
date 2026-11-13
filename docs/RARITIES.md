@@ -1,8 +1,10 @@
-# Rarity a náhodné bonusy
+# Staršie rarity a dodatočné bonusy
+
+Od 0.39.0 sa nové rarity negenerujú ani nezobrazujú. Nasledujúce tabuľky popisujú historický formát a pravidlá starších verzií. Hodnoty pôvodných bonusov sa pri načítaní zachovávajú.
 
 Od 0.16.0 používa hra šesť rarít. Staré ID ostávajú platné: Common=0, Uncommon=3, Rare=1, Epic=2, Legendary=4, Mythic=5. Na poradie slúži rarityRank, nikdy samotné číslo. Existujúca výbava sa neprepisuje ani neprehodnocuje.
 
-| Rarita | Farba | Počet bonusov | Násobok základu hodnoty |
+| Rarita | Farba | Počet bonusov v starších dropoch | Násobok základu hodnoty |
 |---|---|---:|---:|
 | Common | sivá | 0 | 1 |
 | Uncommon | zelená | 1 | 2 |
@@ -13,7 +15,7 @@ Od 0.16.0 používa hra šesť rarít. Staré ID ostávajú platné: Common=0, U
 
 ## Drop
 
-Požadovaná úroveň obyčajne generovanej výbavy zodpovedá úrovni nepriateľa, najviac 99. Výber rarity naďalej používa skutočnú úroveň zdroja. Pomenované zbrane a pevné odmeny si zachovávajú svoje požiadavky.
+Zbrane a brnenia majú pevné katalógové požiadavky. Ostatná bežná výbava má tri pevné požiadavky podľa názvu: 1, 30 a 60. Úroveň zdroja určuje dostupnú skupinu. Dungeonové unikáty používajú základnú úroveň svojho dungeonu. Výber rarity používa skutočnú úroveň zdroja.
 
 Šanca výbavy z primeraného cieľa: obyčajná príšera 6 %, elita 20 %, vzácna príšera 60 %, privolaný obranca Metinu 2 %, boss zaručene; Metiny majú vlastné šance. Potom samostatný vážený výber určí raritu podľa zdroja. Legendary padá od úrovne nepriateľa 50, Mythic od 75. Pod týmito hranicami sa šance ostatných rarít pomerne prepočítajú.
 
@@ -28,11 +30,11 @@ Metiny miešajú vlastnú základnú tabuľku s tabuľkou prémiových odmien po
 
 ## Bonusy
 
-Generátor vyberá bez opakovania z 20 vlastností: útok, HP, MP, kritický a prenikavý zásah, rýchlosť útoku a pohybu, sedem typových odolností a šesť skupín bonusového poškodenia (vlci, škorpióny, yeti, démoni, Metiny, bossovia).
+Nová výbava začína bez dodatočných bonusov. Zosilnenie pridáva jednu vlastnosť do limitu štyroch. Začarovanie vymení existujúce dodatočné vlastnosti. Výber prebieha bez opakovania z 20 vlastností: útok, HP, MP, kritický a prenikavý zásah, rýchlosť útoku a pohybu, sedem typových odolností a šesť skupín bonusového poškodenia (vlci, škorpióny, yeti, démoni, Metiny, bossovia).
 
 Každý bonus má uložený hod 0–100. Výsledok je (základ + úroveň × koeficient) × (1 + poradie rarity × 0,22) × (0,35 + 0,65 × hod / 100). Celočíselné vlastnosti sa zaokrúhlia na celé čísla, percentuálne na štyri desatinné miesta. Údaje sú v data/rarities.js; systém v systems/item-generation.js. Nové predmety majú generationVersion=1 a zoznam affixes; import overuje počet, jedinečnosť, rozsah hodov aj presný súlad so stats.
 
-Kritický zásah používa pôvodný strop 80 %. Prenikavý má strop 50 % a pri zásahu ignoruje kladnú typovú odolnosť aj pancier a základnú ochranu Metinu; slabiny zachová. Rýchlosť základného útoku sa delí faktorom 1 + bonus, najviac +60 %, s minimálnym odstupom 0,16 sekundy. Cooldowny kúziel sa nemenia. Bonus proti skupine nepriateľa má strop +100 % a boss/Metin sa započítavajú iba do vlastnej kategórie. Typové odolnosti zachovávajú pôvodný strop 75 %.
+Kritický zásah používa pôvodný strop 80 %. Prenikavý má strop 50 % a pri zásahu ignoruje kladnú typovú odolnosť aj pancier a základnú ochranu Metinu; slabiny zachová. Rýchlosť základného útoku sa delí faktorom 1 + bonus, najviac +60 %, s minimálnym odstupom 0,16 sekundy. Rýchlosť základného útoku nemení cooldowny kúziel. Bonus proti skupine nepriateľa má strop +100 % a boss/Metin sa započítavajú iba do vlastnej kategórie. Typové odolnosti zachovávajú pôvodný strop 75 %.
 
 ## Hodnota
 

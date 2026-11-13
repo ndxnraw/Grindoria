@@ -20,7 +20,7 @@ const FARM_AREAS = [
 ];
 
 
-for(const cfg of Object.values(MAPS))if(!cfg.town&&!cfg.instance&&!cfg.metinsOnly){
+for(const cfg of Object.values(MAPS))if(!cfg.town&&!cfg.instance&&!cfg.metinsOnly&&!cfg.metinWorld){
  const span=cfg.levelMax-cfg.level;
  cfg.mobLevelSpread=Math.max(1,Math.min(3,Math.floor(span/4)));
  const last=Math.max(0,span-cfg.mobLevelSpread),steps=[0,Math.floor(last/3),Math.floor(last*2/3),last];

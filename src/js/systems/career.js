@@ -1,5 +1,15 @@
-function xpForLevel(level) {
-  return Math.ceil(baseEnemyXP(level) * (24 + 1.6 * level));
+function xpForLevel(level) { return METIN_LEVEL_XP[level] ?? 0; }
+function legacyXPForLevel(level) { return Math.ceil(baseEnemyXP(level) * (24 + 1.6 * level)); }
+function migrateExperience(data) {
+  if(data.career.metinExperience===1)return;
+  const previous=legacyXPForLevel(data.level);
+  data.xp=Math.floor(Math.min(.999999,Math.max(0,data.xp/previous))*xpForLevel(data.level));
+  data.career.metinExperience=1;
+}
+const LOWER_MONSTER_XP=[100,100,98,96,94,92,90,85,80,75,50,30,20,10,5,1];
+function relativeMonsterXP(delta) {
+  return delta<=0?LOWER_MONSTER_XP[Math.min(15,-delta)]/100:
+    delta>=15?1.8:delta===14?1.7:1+delta*.05;
 }
 function baseEnemyXP(level){return Math.max(6,Math.floor(6*Math.max(1,level)**1.15));}
 function paragonCost(rank){return {shards:25*rank};}
@@ -13,7 +23,7 @@ function enemyCombatStats(level,type='wolf',variant='normal'){
 function migrateBalanceProfile(data){
   if(!data?.career||data.career.balanceVersion===2)return;
   const oldNeed=Math.ceil(600*data.level**2.15*(1+.025*(data.level-1)));
-  data.xp=data.level===99?0:Math.floor(Math.min(.999999,Math.max(0,data.xp/oldNeed))*xpForLevel(data.level));
+  data.xp=data.level===99?0:Math.floor(Math.min(.999999,Math.max(0,data.xp/oldNeed))*legacyXPForLevel(data.level));
   for(const item of [...(data.bag||[]),...Object.values(data.equipped||{})])if(item&&item.rarity===0&&item.tier===1&&item.enhance===9&&['Začiatočnícky meč','Začiatočnícky luk','Začiatočnícke dýky','Začiatočnícky vejár'].includes(item.name))item.enhance=2;
   data.career.balanceVersion=2;
 }
@@ -38,7 +48,7 @@ function initializeCareer() {
     }
     p.weapon = 0;
     p.career = {
-      schema: PROGRESSION.schema, balanceVersion: 2, systemsVersion: 1,
+      schema: PROGRESSION.schema, balanceVersion: 2, systemsVersion: 1, metinExperience:1,
       materials: Object.fromEntries(Object.keys(MATERIALS).map(id => [id, 0])),
       eligibleKills: (p.huntClaimed || 0) * 10, training: { strength: 0, vitality: 0, dexterity: 0, intelligence: 0 },
       skills: {}, skillUpgrades: 0,
@@ -49,6 +59,8 @@ function initializeCareer() {
     };
   }
   migrateBalanceProfile(p);
+  migrateExperience(p);
+  p.xp=Math.min(p.xp,Math.max(0,xpForLevel(p.level)-1));
   for (const id of Object.keys(MATERIALS)) p.career.materials[id] ??= 0;
   migrateQuestProfile(p);
   initializeBiology();
@@ -90,13 +102,25 @@ function enemyLevel(m) {
 
 function rewardEligible(m) { return enemyLevel(m) >= p.level - 5; }
 
-function enemyXP(m) {
-  if (p.level >= PROGRESSION.maxLevel) return 0;
-  const delta = enemyLevel(m) - p.level;
-  const factor = delta >= 0 ? Math.min(1.5, 1 + delta * .05) : delta <= -8 ? 0 : [1, .85, .7, .55, .4, .25, .1, .05][-delta];
-  const type = m.type === 'boss' ? 12 : m.type === 'stone' ? 3 : 1;
-  const cap = m.type === 'boss' ? .35 : m.type === 'stone'||m.variant==='rare' ? .12 : m.variant==='elite' ? .08 : .06;
-  return Math.max(0, Math.floor(Math.min(baseEnemyXP(enemyLevel(m)) * type * factor * (ENEMY_VARIANTS[m.variant]?.xp||1) * (m.metinParentId ? .35 : 1), needXP() * cap)));
+function activeExperienceMultiplier(now=Date.now()) {
+  return Object.entries(EXPERIENCE_BOOSTS).reduce((factor,[id,boost])=>
+    (p.experienceBoosts?.[id]||0)>now?factor*boost.factor:factor,worldEventState?.active?1.5:1);
+}
+function useExperienceBoost(id) {
+  const boost=EXPERIENCE_BOOSTS[id],now=Date.now();
+  if(!boost || (p.experienceBoosts?.[id]||0)>now || !consumeSupply('material:'+id,1))return false;
+  (p.experienceBoosts??={})[id]=now+boost.seconds*1000;
+  finishInventoryChange();
+  return true;
+}
+function enemyXP(m, rng=rand) {
+  if(p.xpLocked || p.level>=PROGRESSION.maxLevel)return 0;
+  const level=enemyLevel(m),species=METIN_MONSTER_ROWS[m.monsterId];
+  const type=m.type==='boss'?12:m.type==='stone'?3:1;
+  const base=species?(species[4]??0):baseEnemyXP(level)*type*(ENEMY_VARIANTS[m.variant]?.xp||1)*(m.metinParentId?.35:1);
+  const chance=equipmentBonuses().bonusExp;
+  const equipmentMultiplier=m.type!=='stone'&&chance>0&&rng()<chance?1.3:1;
+  return Math.floor(Math.min(needXP()*.1,base*relativeMonsterXP(level-p.level)*equipmentMultiplier*activeExperienceMultiplier()));
 }
 
 function addMaterial(id, count = 1) {
@@ -130,14 +154,18 @@ function skillPowerSteps(rank){return rank<=20?(rank-1)*.5:rank<=30?10+rank-21:r
 function skillPracticeNeeded(rank){return rank<=20?10+rank*2:rank<=30?50+(rank-20)*4:90+(rank-30)*8;}
 function skillAttackFactor(key){return 1+skillPowerSteps(skillProgress(key)?.rank||1)*.025;}
 function skillFactor(key){return 1+skillPowerSteps(skillProgress(key)?.rank||1)*.04;}
-function skillCooldownReduction(key){return Math.min(.35,skillPowerSteps(skillProgress(key)?.rank||1)*.01);}
+function skillCooldownReduction(key){return Math.min(.35,skillPowerSteps(skillProgress(key)?.rank||1)*.01+equipmentBonuses().skillHaste);}
 function skillCost(key){const rank=skillProgress(key).rank;if(rank>=41)return {};if(rank<20)return {gold:20*rank};if(rank<30)return {books:1+Math.floor((rank-20)/2),gold:500+250*(rank-20)};return {soulStones:1+Math.floor((rank-30)/2),gold:2500*(rank-29)};}
 
 function upgradeSkill(key) {
   const skill = skillProgress(key);
-  if (!skill || !key.startsWith(p.schools[p.classId] + ':') || skill.rank >= PROGRESSION.maxSkillRank || skill.practice < skillPracticeNeeded(skill.rank)) return false;
-  if (!pay(skillCost(key))) return false;
-  skill.practice -= skillPracticeNeeded(skill.rank); skill.rank++;
+  if(!skill||!key.startsWith(p.schools[p.classId]+':')||skill.rank>=PROGRESSION.maxSkillRank)return false;
+  if(skill.rank<20 && p.skillPoints>0)p.skillPoints--;
+  else {
+    if(skill.practice<skillPracticeNeeded(skill.rank)||!pay(skillCost(key)))return false;
+    skill.practice-=skillPracticeNeeded(skill.rank);
+  }
+  skill.rank++;
   p.career.skillUpgrades++;
   if (p.career.skillUpgrades % 3 === 0) p.career.specialization.points++;
   save(); return true;
